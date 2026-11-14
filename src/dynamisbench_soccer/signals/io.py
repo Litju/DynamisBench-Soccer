@@ -111,35 +111,51 @@ def read_meta(stem: Path) -> BundleMeta:
     return BundleMeta.model_validate(migrate(raw))
 
 
-def read(stem: Path, verify: bool = True) -> SignalBundle:
-    """Read a bundle; by default verify the Parquet hash recorded in the sidecar."""
+def _open_parquet(stem: Path, verify: bool = True) -> tuple[BundleMeta, pq.ParquetFile]:
     parquet_path, _ = paths_for(stem)
     meta = read_meta(stem)
     if verify:
         if meta.data_sha256 is None:
             raise BundleIntegrityError("sidecar has no data_sha256")
-        actual = _sha256(parquet_path)
-        if actual != meta.data_sha256:
+        if _sha256(parquet_path) != meta.data_sha256:
             raise BundleIntegrityError(f"{parquet_path.name}: sha256 mismatch")
-    table = pq.read_table(parquet_path)
-    data: dict[str, FloatArray] = {
-        name: np.ascontiguousarray(table.column(name).to_numpy(), dtype=np.float64)
-        for name in table.column_names
+    pf = pq.ParquetFile(parquet_path)
+    names = [c.name for c in meta.channels]
+    if pf.schema_arrow.names != names or pf.metadata.num_rows != meta.n_rows:
+        raise BundleIntegrityError("Parquet columns/row count disagree with sidecar")
+    if any(field.type != pa.float64() for field in pf.schema_arrow):
+        raise BundleIntegrityError("Parquet channels must be stored as float64")
+    return meta, pf
+
+
+def _arrays(table: pa.Table | pa.RecordBatch) -> dict[str, FloatArray]:
+    return {
+        name: np.ascontiguousarray(table.column(i).to_numpy(), dtype=np.float64)
+        for i, name in enumerate(table.schema.names)
     }
-    return SignalBundle(meta, data)
+
+
+def read(stem: Path, verify: bool = True) -> SignalBundle:
+    """Read validated canonical storage; hash checking may be explicitly disabled."""
+    meta, pf = _open_parquet(stem, verify)
+    return SignalBundle(meta, _arrays(pf.read()))
 
 
 def iter_batches(
     stem: Path, columns: Sequence[str] | None = None, batch_rows: int = ROW_GROUP_ROWS
 ) -> Iterator[dict[str, FloatArray]]:
-    """Stream columns in bounded-memory batches (ADR-0001 rule 8)."""
-    parquet_path, _ = paths_for(stem)
-    pf = pq.ParquetFile(parquet_path)
-    for batch in pf.iter_batches(batch_size=batch_rows, columns=list(columns) if columns else None):
-        yield {
-            name: np.asarray(batch.column(i).to_numpy(), dtype=np.float64)
-            for i, name in enumerate(batch.schema.names)
-        }
+    """Verify identity/storage, then validate full batches before projecting columns."""
+    if batch_rows <= 0:
+        raise ValueError("batch_rows must be positive")
+    meta, pf = _open_parquet(stem)
+    if columns is not None and (
+        len(set(columns)) != len(columns) or set(columns) - set(pf.schema_arrow.names)
+    ):
+        raise ValueError("requested columns must be unique known channels")
+    for batch in pf.iter_batches(batch_size=batch_rows):
+        data = _arrays(batch)
+        SignalBundle(meta.model_copy(update={"n_rows": batch.num_rows}), data)
+        yield data if columns is None else {name: data[name] for name in columns}
 
 
 def json_schema() -> str:

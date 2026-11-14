@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from collections.abc import Callable, Mapping
+from functools import wraps
 
 import numpy as np
 
@@ -36,15 +37,39 @@ def _ok(**values: float) -> Outcome:
 
 def rule(rule_id: str) -> Callable[[Evaluator], Evaluator]:
     def deco(fn: Evaluator) -> Evaluator:
-        EVALUATORS[rule_id] = fn
-        return fn
+        @wraps(fn)
+        def checked(b: SignalBundle, p: Params, reference: SignalBundle | None) -> Outcome:
+            try:
+                return fn(b, p, reference)
+            except _TimingError as exc:
+                return _fail(str(exc))
+
+        EVALUATORS[rule_id] = checked
+        return checked
 
     return deco
 
 
 # --- helpers ------------------------------------------------------------------------------
+class _TimingError(ValueError):
+    pass
+
+
 def _fs(b: SignalBundle) -> float | None:
-    return b.meta.sampling.nominal_hz if b.meta.sampling else None
+    if b.meta.sampling is None:
+        return None
+    if "time" in b.data:
+        dt = np.diff(b["time"])
+        if (
+            len(dt) == 0
+            or np.any(dt <= 0)
+            or not np.allclose(dt, np.median(dt), rtol=1e-6, atol=1e-12)
+        ):
+            raise _TimingError("timing-dependent QC requires uniform increasing timestamps")
+        return float(1 / np.median(dt))
+    if b.meta.sampling.irregular:
+        raise _TimingError("irregular sampling requires measured timestamps")
+    return b.meta.sampling.measured_hz or b.meta.sampling.nominal_hz
 
 
 def _limb_forces(b: SignalBundle) -> dict[Side, FloatArray]:
@@ -82,7 +107,7 @@ def _weigh(b: SignalBundle, seconds: float) -> FloatArray | None:
         return None
     n = round(seconds * fs)
     total = _total(b)
-    return total[:n] if len(total) >= n else None
+    return total[:n] if n >= 1 and len(total) >= n else None
 
 
 def _airborne(b: SignalBundle, threshold_n: float, min_s: float) -> list[tuple[int, int]]:
@@ -132,11 +157,13 @@ def baseline_drift(b: SignalBundle, p: Params, _: SignalBundle | None) -> Outcom
         return _na("no sampling")
     n = round(p["window_s"] * fs)
     total = _total(b)
-    if len(total) < 3 * n:
+    if n < 1 or len(total) < 3 * n:
         return _na("record too short")
     first, last = float(np.mean(total[:n])), float(np.mean(total[-n:]))
     if last < 0.5 * first:
         return _na("record does not end in quiet stance")
+    if first <= 0:
+        return _fail("baseline system weight must be positive")
     rel = abs(last - first) / first
     if rel > p["max_relative_difference"]:
         return _fail(f"start/end system weight differ by {rel:.1%}", relative_difference=rel)
@@ -166,7 +193,7 @@ def clipping(b: SignalBundle, p: Params, _: SignalBundle | None) -> Outcome:
 
 @rule("QC-S04")
 def timestamp_integrity(b: SignalBundle, p: Params, _: SignalBundle | None) -> Outcome:
-    fs = _fs(b)
+    fs = b.meta.sampling.nominal_hz if b.meta.sampling else None
     if "time" not in b.data or fs is None:
         return _na("no device timestamps")
     dt = np.diff(b["time"])
@@ -192,11 +219,17 @@ def sampling_rate_adequacy(b: SignalBundle, p: Params, _: SignalBundle | None) -
             f"{s.nominal_hz:g} Hz below minimum {minimum:g} Hz for {b.meta.test_id}",
             nominal_hz=s.nominal_hz,
         )
-    if s.measured_hz is not None:
-        mismatch = abs(s.measured_hz - s.nominal_hz) / s.nominal_hz
+    measured = s.measured_hz
+    if "time" in b.data:
+        dt = np.diff(b["time"])
+        if len(dt) == 0 or np.any(dt <= 0):
+            return _fail("cannot estimate rate from non-increasing or insufficient timestamps")
+        measured = float(1 / np.median(dt))
+    if measured is not None:
+        mismatch = abs(measured - s.nominal_hz) / s.nominal_hz
         if mismatch > p["max_rate_mismatch"]:
             return _fail(
-                f"measured {s.measured_hz:.2f} Hz vs declared {s.nominal_hz:g} Hz",
+                f"measured {measured:.2f} Hz vs declared {s.nominal_hz:g} Hz",
                 mismatch=mismatch,
             )
     return _ok(nominal_hz=s.nominal_hz)
@@ -364,6 +397,8 @@ def squat_jump_countermovement(b: SignalBundle, p: Params, _: SignalBundle | Non
     if not flights:
         return _na("no flight phase")
     bw = float(np.mean(window))
+    if bw <= 0:
+        return _fail("baseline system weight must be positive")
     pre = _total(b)[len(window) : flights[0][0]]
     # ignore the final unloading to take-off: only look before peak propulsive force
     pre = pre[: int(np.argmax(pre))] if len(pre) else pre
@@ -398,6 +433,8 @@ def squeeze_pre_tension(b: SignalBundle, p: Params, _: SignalBundle | None) -> O
     if window is None:
         return _na("record too short")
     total = _total(b)
+    if total.max() <= 0:
+        return _fail("peak force must be positive")
     frac = float(np.mean(window)) / float(total.max())
     if frac > p["max_fraction_of_peak"]:
         return _fail(f"baseline force is {frac:.0%} of peak", baseline_fraction=frac)
@@ -428,6 +465,8 @@ def squeeze_position_missing(b: SignalBundle, p: Params, _: SignalBundle | None)
 def _gates(b: SignalBundle) -> tuple[FloatArray, FloatArray] | None:
     if b.meta.kind is not BundleKind.EVENTS:
         return None
+    if not {"distance_m", "t_s"} <= b.data.keys():
+        return None
     return b["distance_m"], b["t_s"]
 
 
@@ -446,6 +485,8 @@ def gates_split_speed_plausible(b: SignalBundle, p: Params, _: SignalBundle | No
     g = _gates(b)
     if g is None:
         return _na("not a gate event bundle")
+    if b.meta.n_rows < 2:
+        return _fail("split speed requires at least two gate events")
     dd, dt = np.diff(g[0]), np.diff(g[1])
     with np.errstate(divide="ignore", invalid="ignore"):
         speeds = np.where(dt > 0, dd / dt, np.inf)
@@ -476,6 +517,8 @@ def radar_acceleration_spikes(b: SignalBundle, p: Params, _: SignalBundle | None
     fs = _fs(b)
     if fs is None or "velocity" not in b.data:
         return _na("no velocity channel")
+    if b.meta.n_rows < 2:
+        return _fail("acceleration requires at least two velocity samples")
     accel = float(np.max(np.abs(np.diff(b["velocity"])))) * fs
     if accel > p["max_abs_accel_m_s2"]:
         return _fail(f"sample-to-sample acceleration {accel:.1f} m/s^2", max_accel=accel)
