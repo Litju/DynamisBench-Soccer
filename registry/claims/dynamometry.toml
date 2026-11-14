@@ -1,0 +1,127 @@
+# Nordic hamstring and hip adductor/abductor dynamometry
+
+[[claim]]
+id = "NH-001"
+subjects = ["nhe"]
+metrics = ["peak_force.left", "peak_force.right"]
+kind = "reliability"
+statement = "A field device measuring force at the ankles during the Nordic hamstring exercise gives reliable estimates of eccentric knee flexor strength for each limb."
+sources = ["opar2013"]
+evidence_grade = "B"
+
+[[claim]]
+id = "NH-002"
+subjects = ["nhe"]
+metrics = ["peak_force", "peak_torque"]
+kind = "definition"
+statement = "NHE devices measure force at the ankle; knee flexor torque requires multiplying by the lever arm (knee-to-sensor distance), so force and torque are distinct reported quantities."
+sources = ["opar2013"]
+evidence_grade = "B"
+
+[[claim]]
+id = "NH-003"
+subjects = ["nhe"]
+metrics = ["peak_force"]
+kind = "context"
+statement = "In Australian footballers, lower preseason eccentric hamstring strength in the NHE was associated with increased risk of subsequent hamstring strain injury; thresholds from this population do not transfer automatically to soccer."
+sources = ["opar2015"]
+population = { sport = "australian football", level = "elite", sex = "male" }
+evidence_grade = "B"
+
+[[claim]]
+id = "NH-004"
+subjects = ["nhe", "asymmetry"]
+metrics = ["peak_force", "between_limb_imbalance"]
+kind = "context"
+statement = "In rugby union, low eccentric knee flexor strength and between-limb imbalance were associated with hamstring injury risk; the association is population-specific."
+sources = ["bourne2015"]
+population = { sport = "rugby union", level = "elite", sex = "male" }
+evidence_grade = "B"
+
+[[claim]]
+id = "NH-005"
+subjects = ["nhe", "injury_surveillance"]
+metrics = []
+kind = "context"
+statement = "Injury-prevention programmes that include the Nordic hamstring exercise reduce hamstring injury rates by roughly half, which explains its routine use in soccer screening and training."
+sources = ["vandyk2019"]
+evidence_grade = "A"
+
+[[claim]]
+id = "NH-006"
+subjects = ["nhe", "soccer_context"]
+metrics = ["peak_force"]
+kind = "context"
+statement = "Match play acutely reduces hamstring strength in elite youth football players, so the timing of NHE testing relative to matches must be known when interpreting results."
+sources = ["wollin2016"]
+population = { sport = "soccer", level = "elite academy", sex = "male", age_group = "youth" }
+evidence_grade = "B"
+
+[[claim]]
+id = "NH-007"
+subjects = ["nhe", "reliability_stats", "soccer_context"]
+metrics = ["peak_force"]
+kind = "sensitivity"
+statement = "In elite youth soccer, Nordic hamstring strength was among the tests showing high sensitivity to change across the season."
+sources = ["asimakidis2025"]
+population = { sport = "soccer", level = "elite academy", age_group = "youth" }
+evidence_grade = "B"
+
+[[claim]]
+id = "HG-001"
+subjects = ["hip_add_abd", "injury_surveillance"]
+metrics = []
+kind = "taxonomy"
+statement = "The Doha agreement classifies groin pain in athletes into defined clinical entities (adductor-, iliopsoas-, inguinal- and pubic-related, plus hip-related); diagnosis is a clinical task, not a measurement output."
+sources = ["weir2015"]
+evidence_grade = "A"
+
+[[claim]]
+id = "HG-002"
+subjects = ["hip_add_abd"]
+metrics = ["squeeze_peak"]
+kind = "method"
+statement = "Hip position changes adductor squeeze test output; 45 degrees of hip flexion was identified as an optimal position for eliciting adductor activity and maximum pressure."
+sources = ["delahunt2011"]
+evidence_grade = "B"
+contested = true
+variants = ["hip_0_deg", "hip_45_deg", "hip_90_deg"]
+
+[[claim]]
+id = "HG-003"
+subjects = ["hip_add_abd"]
+metrics = ["adduction_peak", "abduction_peak"]
+kind = "reliability"
+statement = "Hand-held dynamometry of hip strength (including adduction and abduction) is reliable when standardised, with tester-related factors influencing results."
+sources = ["thorborg2010"]
+evidence_grade = "B"
+
+[[claim]]
+id = "HG-004"
+subjects = ["hip_add_abd", "soccer_context"]
+metrics = ["squeeze_peak", "squeeze_torque"]
+kind = "method"
+statement = "Common hip adductor squeeze test variants in elite football differ in precision and in the torque produced, so the variant (position, lever) must be recorded and results are not interchangeable."
+sources = ["light2016"]
+population = { sport = "soccer", level = "elite" }
+evidence_grade = "B"
+
+[[claim]]
+id = "HG-005"
+subjects = ["hip_add_abd", "reliability_stats"]
+metrics = ["adduction_peak"]
+kind = "reliability"
+statement = "A commercial adductor strength-assessment system showed acceptable measurement properties in professional Australian footballers."
+sources = ["ryan2019"]
+population = { sport = "australian football", level = "professional", sex = "male" }
+evidence_grade = "B"
+
+[[claim]]
+id = "HG-006"
+subjects = ["hip_add_abd", "nhe", "soccer_context"]
+metrics = ["adduction_peak", "peak_force"]
+kind = "context"
+statement = "In professional soccer players, post-match reductions in adductor isometric strength were not significantly associated with minutes played or match demands, while hamstring strength declined at about 40 h post-match."
+sources = ["oars_postmatch2025"]
+population = { sport = "soccer", level = "professional" }
+evidence_grade = "C"

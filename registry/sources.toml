@@ -1,0 +1,639 @@
+# Evidence registry: sources (RES-663)
+#
+# verification.method:
+#   crossref - DOI resolved on api.crossref.org and title + first author matched (date = check date)
+#   url      - landing page recorded only; metadata NOT machine-verified -> claims capped at grade C
+#
+# Two DOIs proposed during drafting failed Crossref verification and were removed:
+#   10.1016/j.math.2011.02.013 (resolved to an unrelated cervical-muscle paper; correct Delahunt DOI is ...014)
+#   10.3389/fspor.2026.1742295 (resolved to a strength-training study, not a soccer preseason study)
+
+# --- Force-plate jump methods -------------------------------------------------------------
+[[source]]
+id = "linthorne2001"
+type = "methods"
+first_author = "Linthorne"
+year = 2001
+title = "Analysis of standing vertical jumps using a force platform"
+venue = "American Journal of Physics"
+doi = "10.1119/1.1397460"
+verification = { method = "crossref", checked = "2026-11-14" }
+
+[[source]]
+id = "street2001"
+type = "primary"
+first_author = "Street"
+year = 2001
+title = "Sources of Error in Determining Countermovement Jump Height with the Impulse Method"
+venue = "Journal of Applied Biomechanics"
+doi = "10.1123/jab.17.1.43"
+verification = { method = "crossref", checked = "2026-11-14" }
+
+[[source]]
+id = "moir2008"
+type = "primary"
+first_author = "Moir"
+year = 2008
+title = "Three Different Methods of Calculating Vertical Jump Height from Force Platform Data in Men and Women"
+venue = "Measurement in Physical Education and Exercise Science"
+doi = "10.1080/10913670802349766"
+verification = { method = "crossref", checked = "2026-11-14" }
+
+[[source]]
+id = "owen2014"
+type = "primary"
+first_author = "Owen"
+year = 2014
+title = "Development of a Criterion Method to Determine Peak Mechanical Power Output in a Countermovement Jump"
+venue = "Journal of Strength and Conditioning Research"
+doi = "10.1519/JSC.0000000000000311"
+verification = { method = "crossref", checked = "2026-11-14" }
+
+[[source]]
+id = "mcmahon2018"
+type = "methods"
+first_author = "McMahon"
+year = 2018
+title = "Understanding the Key Phases of the Countermovement Jump Force-Time Curve"
+venue = "Strength & Conditioning Journal"
+doi = "10.1519/SSC.0000000000000375"
+verification = { method = "crossref", checked = "2026-11-14" }
+
+[[source]]
+id = "chavda2018"
+type = "methods"
+first_author = "Chavda"
+year = 2018
+title = "Force-Time Characteristics of the Countermovement Jump: Analyzing the Curve in Excel"
+venue = "Strength & Conditioning Journal"
+doi = "10.1519/SSC.0000000000000353"
+verification = { method = "crossref", checked = "2026-11-14" }
+
+[[source]]
+id = "lake2018"
+type = "primary"
+first_author = "Lake"
+year = 2018
+title = "Concurrent Validity of a Portable Force Plate Using Vertical Jump Force-Time Characteristics"
+venue = "Journal of Applied Biomechanics"
+doi = "10.1123/jab.2017-0371"
+verification = { method = "crossref", checked = "2026-11-14" }
+
+[[source]]
+id = "cormack2008"
+type = "primary"
+first_author = "Cormack"
+year = 2008
+title = "Reliability of Measures Obtained During Single and Repeated Countermovement Jumps"
+venue = "International Journal of Sports Physiology and Performance"
+doi = "10.1123/ijspp.3.2.131"
+verification = { method = "crossref", checked = "2026-11-14" }
+
+[[source]]
+id = "gathercole2015"
+type = "primary"
+first_author = "Gathercole"
+year = 2015
+title = "Alternative Countermovement-Jump Analysis to Quantify Acute Neuromuscular Fatigue"
+venue = "International Journal of Sports Physiology and Performance"
+doi = "10.1123/ijspp.2013-0413"
+verification = { method = "crossref", checked = "2026-11-14" }
+
+[[source]]
+id = "ebben2010"
+type = "primary"
+first_author = "Ebben"
+year = 2010
+title = "Using the Reactive Strength Index Modified to Evaluate Plyometric Performance"
+venue = "Journal of Strength and Conditioning Research"
+doi = "10.1519/JSC.0b013e3181e72466"
+verification = { method = "crossref", checked = "2026-11-14" }
+
+[[source]]
+id = "claudino2017"
+type = "systematic-review"
+first_author = "Claudino"
+year = 2017
+title = "The countermovement jump to monitor neuromuscular status: A meta-analysis"
+venue = "Journal of Science and Medicine in Sport"
+doi = "10.1016/j.jsams.2016.08.011"
+verification = { method = "crossref", checked = "2026-11-14" }
+
+[[source]]
+id = "ijesab_onset2024"
+type = "primary"
+first_author = "(not recorded)"
+year = 2024
+title = "Influence of onset movement threshold on phase duration during the countermovement jump"
+venue = "International Journal of Exercise Science: Conference Proceedings (vol 16 iss 3)"
+url = "https://digitalcommons.wku.edu/ijesab/vol16/iss3/235"
+verification = { method = "url", checked = "2026-11-14" }
+
+[[source]]
+id = "onset_methods2024"
+type = "primary"
+first_author = "(not recorded)"
+year = 2024
+title = "Movement onset detection methods: a comparison using force plate recordings"
+venue = "Indexed in SPOLIT/LIDA (record 4081969)"
+url = "https://lida.sport-iat.de/ta/Record/4081969?lng=en"
+verification = { method = "url", checked = "2026-11-14" }
+
+[[source]]
+id = "aleksic2026"
+type = "primary"
+first_author = "Aleksic"
+year = 2026
+title = "Countermovement jump metrics across force-plate sampling frequencies (2400/1200/600 Hz)"
+venue = "Montenegrin Journal of Sports Science and Medicine (September 2026)"
+url = "https://www.mjssm.me/clanci/MJSSM_September_2026_Aleksic.pdf"
+verification = { method = "url", checked = "2026-11-14" }
+
+# --- Drop jump / repeated jumps -----------------------------------------------------------
+[[source]]
+id = "flanagan2008"
+type = "methods"
+first_author = "Flanagan"
+year = 2008
+title = "The Use of Contact Time and the Reactive Strength Index to Optimize Fast Stretch-Shortening Cycle Training"
+venue = "Strength & Conditioning Journal"
+doi = "10.1519/SSC.0b013e318187e25b"
+verification = { method = "crossref", checked = "2026-11-14" }
+
+[[source]]
+id = "stratford2020"
+type = "primary"
+first_author = "Stratford"
+year = 2020
+title = "The 10/5 Repeated Jumps Test: Are 10 Repetitions and Three Trials Necessary?"
+venue = "Biomechanics"
+doi = "10.3390/biomechanics1010001"
+verification = { method = "crossref", checked = "2026-11-14" }
+
+[[source]]
+id = "baker2022"
+type = "primary"
+first_author = "Baker"
+year = 2022
+title = "Reliability, Validity, and Performance Characteristics of Elite Adolescent Athletes at Different Stages of Maturity in the 10 to 5 Repeated Jump Test"
+venue = "Pediatric Exercise Science"
+doi = "10.1123/pes.2020-0270"
+verification = { method = "crossref", checked = "2026-11-14" }
+
+# --- Isometric / RFD ----------------------------------------------------------------------
+[[source]]
+id = "comfort2019"
+type = "methods"
+first_author = "Comfort"
+year = 2019
+title = "Standardization and Methodological Considerations for the Isometric Midthigh Pull"
+venue = "Strength & Conditioning Journal"
+doi = "10.1519/SSC.0000000000000433"
+verification = { method = "crossref", checked = "2026-11-14" }
+
+[[source]]
+id = "dossantos2017"
+type = "primary"
+first_author = "Dos'Santos"
+year = 2017
+title = "Effect of Different Onset Thresholds on Isometric Midthigh Pull Force-Time Variables"
+venue = "Journal of Strength and Conditioning Research"
+doi = "10.1519/JSC.0000000000001765"
+verification = { method = "crossref", checked = "2026-11-14" }
+
+[[source]]
+id = "maffiuletti2016"
+type = "methods"
+first_author = "Maffiuletti"
+year = 2016
+title = "Rate of force development: physiological and methodological considerations"
+venue = "European Journal of Applied Physiology"
+doi = "10.1007/s00421-016-3346-6"
+verification = { method = "crossref", checked = "2026-11-14" }
+
+# --- Hamstring / Nordic -------------------------------------------------------------------
+[[source]]
+id = "opar2013"
+type = "primary"
+first_author = "Opar"
+year = 2013
+title = "A Novel Device Using the Nordic Hamstring Exercise to Assess Eccentric Knee Flexor Strength: A Reliability and Retrospective Injury Study"
+venue = "Journal of Orthopaedic & Sports Physical Therapy"
+doi = "10.2519/jospt.2013.4837"
+verification = { method = "crossref", checked = "2026-11-14" }
+
+[[source]]
+id = "opar2015"
+type = "primary"
+first_author = "Opar"
+year = 2015
+title = "Eccentric Hamstring Strength and Hamstring Injury Risk in Australian Footballers"
+venue = "Medicine & Science in Sports & Exercise"
+doi = "10.1249/MSS.0000000000000465"
+verification = { method = "crossref", checked = "2026-11-14" }
+
+[[source]]
+id = "bourne2015"
+type = "primary"
+first_author = "Bourne"
+year = 2015
+title = "Eccentric Knee Flexor Strength and Risk of Hamstring Injuries in Rugby Union"
+venue = "The American Journal of Sports Medicine"
+doi = "10.1177/0363546515599633"
+verification = { method = "crossref", checked = "2026-11-14" }
+
+[[source]]
+id = "vandyk2019"
+type = "systematic-review"
+first_author = "van Dyk"
+year = 2019
+title = "Including the Nordic hamstring exercise in injury prevention programmes halves the rate of hamstring injuries"
+venue = "British Journal of Sports Medicine"
+doi = "10.1136/bjsports-2018-100045"
+verification = { method = "crossref", checked = "2026-11-14" }
+
+[[source]]
+id = "wollin2016"
+type = "primary"
+first_author = "Wollin"
+year = 2016
+title = "The acute effect of match play on hamstring strength and lower limb flexibility in elite youth football players"
+venue = "Scandinavian Journal of Medicine & Science in Sports"
+doi = "10.1111/sms.12655"
+verification = { method = "crossref", checked = "2026-11-14" }
+
+# --- Hip / groin --------------------------------------------------------------------------
+[[source]]
+id = "weir2015"
+type = "consensus"
+first_author = "Weir"
+year = 2015
+title = "Doha agreement meeting on terminology and definitions in groin pain in athletes"
+venue = "British Journal of Sports Medicine"
+doi = "10.1136/bjsports-2015-094869"
+verification = { method = "crossref", checked = "2026-11-14" }
+
+[[source]]
+id = "delahunt2011"
+type = "primary"
+first_author = "Delahunt"
+year = 2011
+title = "The thigh adductor squeeze test: 45 degrees of hip flexion as the optimal test position for eliciting adductor muscle activity and maximum pressure values"
+venue = "Manual Therapy"
+doi = "10.1016/j.math.2011.02.014"
+verification = { method = "crossref", checked = "2026-11-14" }
+
+[[source]]
+id = "thorborg2010"
+type = "primary"
+first_author = "Thorborg"
+year = 2010
+title = "Clinical assessment of hip strength using a hand-held dynamometer is reliable"
+venue = "Scandinavian Journal of Medicine & Science in Sports"
+doi = "10.1111/j.1600-0838.2009.00958.x"
+verification = { method = "crossref", checked = "2026-11-14" }
+
+[[source]]
+id = "light2016"
+type = "primary"
+first_author = "Light"
+year = 2016
+title = "The precision and torque production of common hip adductor squeeze tests used in elite football"
+venue = "Journal of Science and Medicine in Sport"
+doi = "10.1016/j.jsams.2015.12.009"
+verification = { method = "crossref", checked = "2026-11-14" }
+
+[[source]]
+id = "ryan2019"
+type = "primary"
+first_author = "Ryan"
+year = 2019
+title = "Measurement Properties of an Adductor Strength-Assessment System in Professional Australian Footballers"
+venue = "International Journal of Sports Physiology and Performance"
+doi = "10.1123/ijspp.2018-0264"
+verification = { method = "crossref", checked = "2026-11-14" }
+
+[[source]]
+id = "oars_postmatch2025"
+type = "primary"
+first_author = "(not recorded)"
+year = 2025
+title = "Post-match adductor and hamstring isometric strength in professional soccer players"
+venue = "Journal of Strength and Conditioning Research (repository record, University of Suffolk OARS 5035)"
+url = "https://oars.uos.ac.uk/5035/"
+verification = { method = "url", checked = "2026-11-14" }
+
+# --- Asymmetry ----------------------------------------------------------------------------
+[[source]]
+id = "bishop2018"
+type = "methods"
+first_author = "Bishop"
+year = 2018
+title = "Interlimb Asymmetries: Understanding How to Calculate Differences From Bilateral and Unilateral Tests"
+venue = "Strength & Conditioning Journal"
+doi = "10.1519/SSC.0000000000000371"
+verification = { method = "crossref", checked = "2026-11-14" }
+
+[[source]]
+id = "bishop2017"
+type = "systematic-review"
+first_author = "Bishop"
+year = 2017
+title = "Effects of inter-limb asymmetries on physical and sports performance: a systematic review"
+venue = "Journal of Sports Sciences"
+doi = "10.1080/02640414.2017.1361894"
+verification = { method = "crossref", checked = "2026-11-14" }
+
+[[source]]
+id = "zifchock2008"
+type = "methods"
+first_author = "Zifchock"
+year = 2008
+title = "The symmetry angle: A novel, robust method of quantifying asymmetry"
+venue = "Gait & Posture"
+doi = "10.1016/j.gaitpost.2007.08.006"
+verification = { method = "crossref", checked = "2026-11-14" }
+
+[[source]]
+id = "wellsandt2017"
+type = "primary"
+first_author = "Wellsandt"
+year = 2017
+title = "Limb Symmetry Indexes Can Overestimate Knee Function After Anterior Cruciate Ligament Injury"
+venue = "Journal of Orthopaedic & Sports Physical Therapy"
+doi = "10.2519/jospt.2017.7285"
+verification = { method = "crossref", checked = "2026-11-14" }
+
+# --- Sprint / COD / conditioning ----------------------------------------------------------
+[[source]]
+id = "samozino2015"
+type = "methods"
+first_author = "Samozino"
+year = 2015
+title = "A simple method for measuring power, force, velocity properties, and mechanical effectiveness in sprint running"
+venue = "Scandinavian Journal of Medicine & Science in Sports"
+doi = "10.1111/sms.12490"
+verification = { method = "crossref", checked = "2026-11-14" }
+
+[[source]]
+id = "morin2016"
+type = "methods"
+first_author = "Morin"
+year = 2016
+title = "Interpreting Power-Force-Velocity Profiles for Individualized and Specific Training"
+venue = "International Journal of Sports Physiology and Performance"
+doi = "10.1123/ijspp.2015-0638"
+verification = { method = "crossref", checked = "2026-11-14" }
+
+[[source]]
+id = "morin2019"
+type = "methods"
+first_author = "Morin"
+year = 2019
+title = "A simple method for computing sprint acceleration kinetics from running velocity data: Replication study with improved design"
+venue = "Journal of Biomechanics"
+doi = "10.1016/j.jbiomech.2019.07.020"
+verification = { method = "crossref", checked = "2026-11-14" }
+
+[[source]]
+id = "haugen2015"
+type = "methods"
+first_author = "Haugen"
+year = 2015
+title = "Sprint Running Performance Monitoring: Methodological and Practical Considerations"
+venue = "Sports Medicine"
+doi = "10.1007/s40279-015-0446-0"
+verification = { method = "crossref", checked = "2026-11-14" }
+
+[[source]]
+id = "nimphius2016"
+type = "primary"
+first_author = "Nimphius"
+year = 2016
+title = "Change of Direction Deficit: A More Isolated Measure of Change of Direction Performance Than Total 505 Time"
+venue = "Journal of Strength and Conditioning Research"
+doi = "10.1519/JSC.0000000000001421"
+verification = { method = "crossref", checked = "2026-11-14" }
+
+[[source]]
+id = "buchheit2008"
+type = "primary"
+first_author = "Buchheit"
+year = 2008
+title = "The 30-15 Intermittent Fitness Test: Accuracy for Individualizing Interval Training of Young Intermittent Sport Players"
+venue = "Journal of Strength and Conditioning Research"
+doi = "10.1519/JSC.0b013e3181635b2e"
+verification = { method = "crossref", checked = "2026-11-14" }
+
+[[source]]
+id = "girard2011"
+type = "methods"
+first_author = "Girard"
+year = 2011
+title = "Repeated-Sprint Ability - Part I"
+venue = "Sports Medicine"
+doi = "10.2165/11590550-000000000-00000"
+verification = { method = "crossref", checked = "2026-11-14" }
+
+# --- Reliability & change statistics ------------------------------------------------------
+[[source]]
+id = "hopkins2000"
+type = "methods"
+first_author = "Hopkins"
+year = 2000
+title = "Measures of Reliability in Sports Medicine and Science"
+venue = "Sports Medicine"
+doi = "10.2165/00007256-200030010-00001"
+verification = { method = "crossref", checked = "2026-11-14" }
+
+[[source]]
+id = "hopkins2009"
+type = "methods"
+first_author = "Hopkins"
+year = 2009
+title = "Progressive Statistics for Studies in Sports Medicine and Exercise Science"
+venue = "Medicine & Science in Sports & Exercise"
+doi = "10.1249/MSS.0b013e31818cb278"
+verification = { method = "crossref", checked = "2026-11-14" }
+
+[[source]]
+id = "shrout1979"
+type = "methods"
+first_author = "Shrout"
+year = 1979
+title = "Intraclass correlations: Uses in assessing rater reliability"
+venue = "Psychological Bulletin"
+doi = "10.1037/0033-2909.86.2.420"
+verification = { method = "crossref", checked = "2026-11-14" }
+
+[[source]]
+id = "mcgraw1996"
+type = "methods"
+first_author = "McGraw"
+year = 1996
+title = "Forming inferences about some intraclass correlation coefficients"
+venue = "Psychological Methods"
+doi = "10.1037/1082-989X.1.1.30"
+verification = { method = "crossref", checked = "2026-11-14" }
+
+[[source]]
+id = "koo2016"
+type = "methods"
+first_author = "Koo"
+year = 2016
+title = "A Guideline of Selecting and Reporting Intraclass Correlation Coefficients for Reliability Research"
+venue = "Journal of Chiropractic Medicine"
+doi = "10.1016/j.jcm.2016.02.012"
+verification = { method = "crossref", checked = "2026-11-14" }
+
+[[source]]
+id = "weir2005"
+type = "methods"
+first_author = "Weir"
+year = 2005
+title = "Quantifying Test-Retest Reliability Using the Intraclass Correlation Coefficient and the SEM"
+venue = "Journal of Strength and Conditioning Research"
+doi = "10.1519/15184.1"
+verification = { method = "crossref", checked = "2026-11-14" }
+
+[[source]]
+id = "bland1986"
+type = "methods"
+first_author = "Bland"
+year = 1986
+title = "Statistical methods for assessing agreement between two methods of clinical measurement"
+venue = "The Lancet"
+doi = "10.1016/S0140-6736(86)90837-8"
+verification = { method = "crossref", checked = "2026-11-14" }
+
+[[source]]
+id = "swinton2018"
+type = "methods"
+first_author = "Swinton"
+year = 2018
+title = "A Statistical Framework to Interpret Individual Response to Intervention: Paving the Way for Personalized Nutrition and Exercise Prescription"
+venue = "Frontiers in Nutrition"
+doi = "10.3389/fnut.2018.00041"
+verification = { method = "crossref", checked = "2026-11-14" }
+
+# --- Soccer context -----------------------------------------------------------------------
+[[source]]
+id = "asimakidis2025"
+type = "primary"
+first_author = "Asimakidis"
+year = 2025
+title = "Evaluating the Reliability and Seasonal Sensitivity of a Fitness-Testing Battery in Elite Youth Soccer"
+venue = "International Journal of Sports Physiology and Performance"
+doi = "10.1123/ijspp.2025-0055"
+verification = { method = "crossref", checked = "2026-11-14" }
+
+[[source]]
+id = "franceschi2023"
+type = "primary"
+first_author = "Franceschi"
+year = 2023
+title = "Reliability and sensitivity to change of post-match physical performance measures in elite youth soccer players"
+venue = "Frontiers in Sports and Active Living"
+doi = "10.3389/fspor.2023.1173621"
+verification = { method = "crossref", checked = "2026-11-14" }
+
+[[source]]
+id = "silva2017"
+type = "systematic-review"
+first_author = "Silva"
+year = 2017
+title = "Acute and Residual Soccer Match-Related Fatigue: A Systematic Review and Meta-analysis"
+venue = "Sports Medicine"
+doi = "10.1007/s40279-017-0798-8"
+verification = { method = "crossref", checked = "2026-11-14" }
+
+[[source]]
+id = "jssm_u19_2025"
+type = "primary"
+first_author = "(not recorded)"
+year = 2025
+title = "Weekly neuromuscular performance, soreness and fatigue in U19 soccer players"
+venue = "Journal of Sports Science and Medicine 24(4):851"
+url = "https://www.jssm.org/jssm-24-851.xml-Fulltext"
+verification = { method = "url", checked = "2026-11-14" }
+
+[[source]]
+id = "malone2017"
+type = "methods"
+first_author = "Malone"
+year = 2017
+title = "Unpacking the Black Box: Applications and Considerations for Using GPS Devices in Sport"
+venue = "International Journal of Sports Physiology and Performance"
+doi = "10.1123/ijspp.2016-0236"
+verification = { method = "crossref", checked = "2026-11-14" }
+
+[[source]]
+id = "mirwald2002"
+type = "primary"
+first_author = "Mirwald"
+year = 2002
+title = "An assessment of maturity from anthropometric measurements"
+venue = "Medicine & Science in Sports & Exercise"
+doi = "10.1097/00005768-200204000-00020"
+verification = { method = "crossref", checked = "2026-11-14" }
+
+[[source]]
+id = "ekstrand2011"
+type = "primary"
+first_author = "Ekstrand"
+year = 2011
+title = "Epidemiology of Muscle Injuries in Professional Football (Soccer)"
+venue = "The American Journal of Sports Medicine"
+doi = "10.1177/0363546510395879"
+verification = { method = "crossref", checked = "2026-11-14" }
+
+# --- Injury surveillance & return to play -------------------------------------------------
+[[source]]
+id = "fuller2006"
+type = "consensus"
+first_author = "Fuller"
+year = 2006
+title = "Consensus statement on injury definitions and data collection procedures in studies of football (soccer) injuries"
+venue = "British Journal of Sports Medicine"
+doi = "10.1136/bjsm.2005.025270"
+verification = { method = "crossref", checked = "2026-11-14" }
+
+[[source]]
+id = "bahr2020"
+type = "consensus"
+first_author = "Bahr"
+year = 2020
+title = "International Olympic Committee consensus statement: methods for recording and reporting of epidemiological data on injury and illness in sport 2020"
+venue = "British Journal of Sports Medicine"
+doi = "10.1136/bjsports-2019-101969"
+verification = { method = "crossref", checked = "2026-11-14" }
+
+[[source]]
+id = "ardern2016"
+type = "consensus"
+first_author = "Ardern"
+year = 2016
+title = "2016 Consensus statement on return to sport from the First World Congress in Sports Physical Therapy, Bern"
+venue = "British Journal of Sports Medicine"
+doi = "10.1136/bjsports-2016-096278"
+verification = { method = "crossref", checked = "2026-11-14" }
+
+[[source]]
+id = "vanderhorst2017"
+type = "consensus"
+first_author = "van der Horst"
+year = 2017
+title = "Return to play after hamstring injuries in football (soccer): a worldwide Delphi procedure regarding definition, medical criteria and decision-making"
+venue = "British Journal of Sports Medicine"
+doi = "10.1136/bjsports-2016-097206"
+verification = { method = "crossref", checked = "2026-11-14" }
+
+[[source]]
+id = "pecci2026"
+type = "systematic-review"
+first_author = "Pecci"
+year = 2026
+title = "Return-to-Play Criteria Following Lower Limb Muscle Injuries in Soccer: A Systematic Review"
+venue = "Sports Medicine"
+doi = "10.1007/s40279-026-02404-9"
+verification = { method = "crossref", checked = "2026-11-14" }

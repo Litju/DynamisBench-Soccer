@@ -1,0 +1,7 @@
+# Declared registry gaps: v0.1 subjects without a verified source yet.
+# A subject listed here is excluded from core v0.1 tasks until a source is verified.
+
+[[gap]]
+subject = "iso_ham"
+reason = "No isometric hamstring (30/90 deg knee flexion) source could be verified on Crossref during RES-663; candidate references found by search did not match. Marked 'extension' in the coverage matrix until sourced."
+opened = "2026-11-14"

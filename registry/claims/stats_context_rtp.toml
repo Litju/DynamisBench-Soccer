@@ -1,0 +1,187 @@
+# Reliability statistics, soccer context, injury surveillance, maturation, return to play
+
+[[claim]]
+id = "ST-001"
+subjects = ["reliability_stats"]
+metrics = ["typical_error", "cv_percent"]
+kind = "definition"
+statement = "Within-subject variation (typical error), often expressed as a coefficient of variation, is the key reliability measure for monitoring individual change in sport science."
+sources = ["hopkins2000"]
+evidence_grade = "B"
+
+[[claim]]
+id = "ST-002"
+subjects = ["reliability_stats"]
+metrics = ["icc"]
+kind = "method"
+statement = "There are multiple intraclass correlation forms (model, type and definition); the form must be selected for the design and reported, because values differ between forms."
+sources = ["shrout1979", "mcgraw1996", "koo2016"]
+evidence_grade = "B"
+contested = true
+variants = ["icc_2_1", "icc_3_1", "icc_2_k", "icc_3_k"]
+
+[[claim]]
+id = "ST-003"
+subjects = ["reliability_stats"]
+metrics = ["sem", "mdc"]
+kind = "definition"
+statement = "The standard error of measurement can be derived from test-retest data and used to compute a minimal difference (MDC) needed to be considered real at a chosen confidence level."
+sources = ["weir2005"]
+evidence_grade = "B"
+
+[[claim]]
+id = "ST-004"
+subjects = ["reliability_stats"]
+metrics = ["bias", "limits_of_agreement"]
+kind = "definition"
+statement = "Agreement between two measurement methods is assessed with mean difference (bias) and limits of agreement rather than correlation alone."
+sources = ["bland1986"]
+evidence_grade = "B"
+
+[[claim]]
+id = "ST-005"
+subjects = ["reliability_stats"]
+metrics = ["smallest_worthwhile_change"]
+kind = "definition"
+statement = "A standardised smallest important effect of 0.2 of the between-subject standard deviation is a commonly used default for the smallest worthwhile change when no better anchor exists."
+sources = ["hopkins2009"]
+evidence_grade = "B"
+contested = true
+variants = ["0.2_between_subject_sd", "anchor_based_practical_threshold"]
+
+[[claim]]
+id = "ST-006"
+subjects = ["reliability_stats"]
+metrics = ["individual_change"]
+kind = "method"
+statement = "Interpreting an individual's change requires accounting for measurement error, for example by placing confidence limits on observed change using the typical error, rather than treating any change as real."
+sources = ["swinton2018", "hopkins2000"]
+evidence_grade = "B"
+
+[[claim]]
+id = "ST-007"
+subjects = ["reliability_stats", "cmj", "soccer_context"]
+metrics = ["icc"]
+kind = "reliability"
+statement = "Post-match physical performance measures in elite youth soccer players showed moderate to excellent relative reliability."
+sources = ["franceschi2023"]
+population = { sport = "soccer", level = "elite academy", age_group = "youth" }
+statistic = { name = "ICC", value = "0.70-0.98" }
+evidence_grade = "B"
+
+[[claim]]
+id = "ST-008"
+subjects = ["reliability_stats", "cmj", "nhe", "sprint_gates", "cod_505", "soccer_context"]
+metrics = ["signal_to_noise_ratio"]
+kind = "sensitivity"
+statement = "Seasonal sensitivity can be expressed as a signal-to-noise ratio; in elite youth soccer, CMJ, Nordic strength, 10 m sprint, 505 and Bronco tests were sensitive to change."
+sources = ["asimakidis2025"]
+population = { sport = "soccer", level = "elite academy", age_group = "youth" }
+statistic = { name = "SNR", value = "1.14-3.08" }
+evidence_grade = "B"
+
+[[claim]]
+id = "CX-001"
+subjects = ["soccer_context", "cmj"]
+metrics = ["jump_height"]
+kind = "context"
+statement = "A soccer match produces acute and residual fatigue, with neuromuscular performance measures impaired after the match and recovery time courses that can extend over the following days."
+sources = ["silva2017"]
+population = { sport = "soccer" }
+evidence_grade = "A"
+
+[[claim]]
+id = "CX-002"
+subjects = ["soccer_context"]
+metrics = []
+kind = "context"
+statement = "In U19 soccer players, neuromuscular performance deteriorated progressively through the training week, with peak soreness and fatigue on midweek days, so the day of testing relative to match day matters."
+sources = ["jssm_u19_2025"]
+population = { sport = "soccer", age_group = "U19" }
+evidence_grade = "C"
+
+[[claim]]
+id = "CX-003"
+subjects = ["soccer_context"]
+metrics = ["total_distance", "high_speed_running"]
+kind = "method"
+statement = "GNSS/GPS-derived external load metrics depend on device, sampling rate, processing and threshold definitions; they are context inputs and are not directly comparable across systems."
+sources = ["malone2017"]
+evidence_grade = "B"
+
+[[claim]]
+id = "CX-004"
+subjects = ["soccer_context", "nhe", "injury_surveillance"]
+metrics = []
+kind = "context"
+statement = "Muscle injuries are a large share of time-loss injuries in professional soccer, with hamstring injuries the most common single muscle group."
+sources = ["ekstrand2011"]
+population = { sport = "soccer", level = "professional", sex = "male" }
+evidence_grade = "B"
+
+[[claim]]
+id = "MT-001"
+subjects = ["maturation", "soccer_context"]
+metrics = ["maturity_offset"]
+kind = "method"
+statement = "Maturity offset (years from peak height velocity) can be estimated from anthropometric measurements; the estimate has error and should be treated as approximate when interpreting youth performance."
+sources = ["mirwald2002"]
+population = { age_group = "youth" }
+evidence_grade = "B"
+
+[[claim]]
+id = "IS-001"
+subjects = ["injury_surveillance", "soccer_context"]
+metrics = []
+kind = "taxonomy"
+statement = "Football injury studies use consensus definitions of injury, time-loss and recurrence; scenario data must follow declared definitions."
+sources = ["fuller2006"]
+population = { sport = "soccer" }
+evidence_grade = "A"
+
+[[claim]]
+id = "IS-002"
+subjects = ["injury_surveillance"]
+metrics = []
+kind = "taxonomy"
+statement = "The IOC consensus defines methods for recording and reporting injury and illness in sport, including definitions, severity and exposure; benchmark scenarios adopt these definitions."
+sources = ["bahr2020"]
+evidence_grade = "A"
+
+[[claim]]
+id = "RT-001"
+subjects = ["return_to_play"]
+metrics = []
+kind = "taxonomy"
+statement = "Return to sport is a continuum (return to participation, return to sport, return to performance) and the decision is shared, with clinicians holding medical responsibility."
+sources = ["ardern2016"]
+evidence_grade = "A"
+
+[[claim]]
+id = "RT-002"
+subjects = ["return_to_play", "nhe", "sprint_gates"]
+metrics = []
+kind = "criterion"
+statement = "A worldwide Delphi of experts produced consensus on the definition of return to play and medical criteria for return after hamstring injury in football, combining clinical and functional criteria."
+sources = ["vanderhorst2017"]
+population = { sport = "soccer" }
+evidence_grade = "A"
+
+[[claim]]
+id = "RT-003"
+subjects = ["return_to_play"]
+metrics = []
+kind = "criterion"
+statement = "A 2026 systematic review summarised return-to-play criteria used after lower-limb muscle injuries in soccer; criteria are heterogeneous and measurement-based criteria inform rather than replace clinical decision-making."
+sources = ["pecci2026"]
+population = { sport = "soccer" }
+evidence_grade = "A"
+
+[[claim]]
+id = "RT-004"
+subjects = ["return_to_play", "asymmetry"]
+metrics = ["limb_symmetry_index"]
+kind = "criterion"
+statement = "Strength and hop symmetry thresholds used in return-to-sport testing are measurement criteria only; the benchmark treats clearance as a clinician decision outside agent authority."
+sources = ["ardern2016", "wellsandt2017"]
+evidence_grade = "A"
