@@ -167,8 +167,8 @@ def test_missing_raw_channels_and_ambiguous_geometry_reject() -> None:
 
 
 def test_v1_migration_roundtrip_preserves_samples_hash_and_unknowns(tmp_path: Path) -> None:
-    import json
     import hashlib
+    import json
 
     fixture = Path(__file__).parent / "fixtures/signals/v1_meta.json"
     raw = json.loads(fixture.read_text())
@@ -192,3 +192,67 @@ def test_v1_migration_roundtrip_preserves_samples_hash_and_unknowns(tmp_path: Pa
 def test_invalid_versions_rejected(version: object) -> None:
     with pytest.raises(ValueError):
         io.migrate({"schema_version": version})
+
+
+def test_vectors_use_three_unique_axes_in_one_frame() -> None:
+    raw = shape(DeviceClass.IMU).meta.model_dump()
+    raw["acquisition"]["frames"].append(dict(id="field", kind="field", definition="field"))
+    raw["channels"][0]["frame"] = "field"
+    with pytest.raises(ValidationError, match="xyz"):
+        BundleMeta.model_validate(raw)
+    raw["channels"][0]["frame"] = "sensor"
+    raw["channels"][1]["axis"] = "x"
+    with pytest.raises(ValidationError, match="xyz"):
+        BundleMeta.model_validate(raw)
+
+
+def test_mixed_bundle_source_constraints_cannot_be_bypassed() -> None:
+    b = shape(DeviceClass.CONTACT_MAT)
+    raw = b.meta.model_dump()
+    raw["device"]["device_class"] = DeviceClass.TIMING_GATES
+    # The top-level event layout now needs a gate distance, while retaining contact source metadata.
+    raw["channels"].append(dict(name="distance_m", quantity="distance", unit="m"))
+    raw["acquisition"]["sources"][0]["channels"].append("distance_m")
+    meta = BundleMeta.model_validate(raw)
+    with pytest.raises(ValueError, match="binary"):
+        SignalBundle(
+            meta,
+            {
+                "t_s": np.array([0.0, 1.0, 2.0]),
+                "contact": np.array([0.0, 0.5, 1.0]),
+                "distance_m": np.array([0.0, 1.0, 2.0]),
+            },
+        )
+    raw = shape(DeviceClass.FORCE_PLATE).meta.model_dump()
+    raw["device"]["device_class"] = DeviceClass.LPT
+    raw["channels"][0]["plate"] = None
+    with pytest.raises(ValidationError, match="source force"):
+        BundleMeta.model_validate(raw)
+
+
+def test_calibration_and_single_cable_geometry_are_not_inferred() -> None:
+    from dynamisbench_soccer.signals.schema import Calibration
+
+    for parameters in (
+        dict(channel="value", input_unit="banana", output_unit="s", gain=1),
+        dict(channel="value", input_unit="V", output_unit="N", gain=0),
+    ):
+        with pytest.raises(ValidationError):
+            Calibration(date="2026-11-14", method="test", **parameters)
+    raw = shape(DeviceClass.LOAD_CELL).meta.model_dump()
+    raw["acquisition"]["sources"][0]["calibration"] = [
+        dict(
+            date="2026-11-14",
+            method="test",
+            channel="value",
+            input_unit="V",
+            output_unit="s",
+            gain=1,
+        )
+    ]
+    with pytest.raises(ValidationError, match="output unit"):
+        BundleMeta.model_validate(raw)
+    raw = shape(DeviceClass.LPT).meta.acquisition.sources[0].model_dump()  # type: ignore[union-attr]
+    raw["geometry"] = dict(attachment_point="bar", cable_anchors_m=[(0, 0, 0)])
+    with pytest.raises(ValidationError, match="single-cable"):
+        AcquisitionSource.model_validate(raw)

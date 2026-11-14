@@ -189,6 +189,19 @@ class Calibration(_Strict):
     uncertainty: float | None = Field(default=None, ge=0)
     reference: str | None = None
 
+    @model_validator(mode="after")
+    def _parameters(self) -> Calibration:
+        if self.gain == 0 or (self.scale is not None and 0 in self.scale):
+            raise ValueError("calibration gain/scale must be nonzero")
+        if any(v is not None for v in (self.gain, self.offset, self.bias, self.scale)) and (
+            self.channel is None or self.input_unit is None or self.output_unit is None
+        ):
+            raise ValueError("numerical calibration requires channel and input/output units")
+        units = {*CANONICAL_UNIT.values(), "mV", "kgf", "g", "deg/s", "uT", "count"}
+        if any(u is not None and u not in units for u in (self.input_unit, self.output_unit)):
+            raise ValueError("unrecognized calibration units")
+        return self
+
     @field_validator("date")
     @classmethod
     def _date(cls, value: str) -> str:
@@ -316,6 +329,13 @@ class AcquisitionSource(_Strict):
                 raise ValueError(
                     f"{self.device.device_class} geometry needs {field} or explicit unknown"
                 )
+        if (
+            self.device.device_class is DeviceClass.LPT
+            and len(self.geometry.cable_anchors_m) < 2
+            and self.geometry.cable_angle_rad is None
+            and "cable_angle_rad" not in self.geometry.unknown
+        ):
+            raise ValueError("single-cable LPT needs cable_angle_rad or explicit unknown")
         if not self.calibration and not self.calibration_unknown_reason:
             raise ValueError("calibration records or explicit missing-calibration reason required")
         return self
@@ -514,11 +534,30 @@ class BundleMeta(_Strict):
                     else set()
                 ):
                     components = [c for c in channels if c.quantity is quantity]
-                    if {c.axis for c in components} != {"x", "y", "z"} or any(
-                        c.frame is None for c in components
+                    if (
+                        len(components) != 3
+                        or {c.axis for c in components} != {"x", "y", "z"}
+                        or len({c.frame for c in components}) != 1
+                        or any(c.frame is None for c in components)
                     ):
                         raise ValueError(f"{cls}: requires framed xyz {quantity}")
+                if cls is DeviceClass.FORCE_PLATE:
+                    plates = {c.plate for c in channels if c.quantity is Quantity.FORCE}
+                    if None in plates or (
+                        len(plates) > 1 and source.geometry.summed_force_policy is None
+                    ):
+                        raise ValueError(
+                            "source force channels need plates and dual-plate summation policy"
+                        )
                 for record in source.calibration:
+                    if (
+                        record.channel is not None
+                        and record.output_unit is not None
+                        and record.output_unit != self.channel(record.channel).unit
+                    ):
+                        raise ValueError(
+                            "calibration output unit must match channel canonical unit"
+                        )
                     if record.channel is not None and record.channel not in source.channels:
                         raise ValueError("calibration channel not owned by source")
         return self
@@ -553,11 +592,13 @@ class SignalBundle:
                 raise ValueError("longitude outside [-180, 180]")
             if c.quantity is Quantity.COUNT and np.any(values != np.floor(values)):
                 raise ValueError("raw counts must be integers")
-        if (
-            meta.device.device_class is DeviceClass.CONTACT_MAT
-            and "contact" in data
-            and not np.all(np.isin(data["contact"], [0, 1]))
-        ):
+        contact_source = meta.device.device_class is DeviceClass.CONTACT_MAT or (
+            meta.acquisition is not None
+            and any(
+                s.device.device_class is DeviceClass.CONTACT_MAT for s in meta.acquisition.sources
+            )
+        )
+        if contact_source and "contact" in data and not np.all(np.isin(data["contact"], [0, 1])):
             raise ValueError("contact state must be binary")
         self.meta = meta
         self.data = data
