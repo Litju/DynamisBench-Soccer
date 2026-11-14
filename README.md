@@ -3,8 +3,11 @@
 An evaluation benchmark for **AI and LLM agents** doing the scientific work of
 **neuromuscular performance testing in association football (soccer)**:
 
-1. **Signal processing** of raw device data (force plates, Nordic/groin dynamometers,
-   timing gates, radar/laser, linear position transducers).
+1. **Signal processing** of raw device data. Every supported device family is held to
+   the same qualification standard: force plates, LPTs and encoders, load cells and
+   isometric dynamometers, Nordic and hip devices, timing gates and contact systems,
+   radar and laser, GNSS and LPS, and IMUs (see
+   [`docs/m3-architecture.md`](docs/m3-architecture.md)).
 2. **Test calculation** of metrics and variables, with explicit formula variants and
    measurement uncertainty.
 3. **Soccer-specific interpretation**: match-day (MD±x) timing, fixture congestion,
@@ -41,6 +44,7 @@ for the decision record.
 | `registry/` | Source-to-claim evidence registry (TOML) |
 | `ontology/` | Competencies, tests, contexts, coverage matrix, decision boundaries |
 | `qc/` | Machine-readable signal and trial QC rules |
+| `qualification/` | Device-family qualification ledger (dimensions A–O, computed states) |
 | `data/manifests/` | External dataset manifests (hashes only, never data) |
 | `docs/` | Environment, policies, specifications, audits |
 
