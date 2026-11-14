@@ -28,6 +28,10 @@ jobs:
           shopt -s nullglob
           manifests=(data/manifests/*.json)
           if [ ${#manifests[@]} -gt 0 ]; then uv run dbs data validate "${manifests[@]}"; fi
+      - name: Evidence registry
+        run: |
+          uv run dbs registry validate
+          uv run dbs registry contested --check
       - name: Lint
         run: |
           uv run ruff check .

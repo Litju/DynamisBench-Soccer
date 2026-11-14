@@ -1,0 +1,135 @@
+# Sprint, change of direction, conditioning context and inter-limb asymmetry
+
+[[claim]]
+id = "SP-001"
+subjects = ["sprint_fv"]
+metrics = ["f0", "v0", "pmax", "fv_slope", "rf_max", "drf"]
+kind = "definition"
+statement = "Horizontal force-velocity-power profiles in sprinting can be computed from velocity-time data with a macroscopic model including body mass and aerodynamic drag, giving F0, V0, Pmax and ratio-of-force indices."
+sources = ["samozino2015", "morin2019"]
+evidence_grade = "B"
+
+[[claim]]
+id = "SP-002"
+subjects = ["sprint_fv"]
+metrics = ["vmax", "tau"]
+kind = "definition"
+statement = "The simple sprint method models velocity as a mono-exponential rise v(t) = vmax * (1 - exp(-t / tau)), fitted to radar, laser or split-time data."
+sources = ["samozino2015"]
+evidence_grade = "B"
+
+[[claim]]
+id = "SP-003"
+subjects = ["sprint_fv"]
+metrics = ["f0", "v0", "fv_slope"]
+kind = "method"
+statement = "Sprint force-velocity profiles should be interpreted together with their mechanical effectiveness and the athlete's needs; the same Pmax can arise from different F0/V0 combinations."
+sources = ["morin2016"]
+evidence_grade = "B"
+
+[[claim]]
+id = "SP-004"
+subjects = ["sprint_gates"]
+metrics = ["split_time"]
+kind = "method"
+statement = "Sprint times depend on start position, start-trigger method, timing-gate height and system type, so these must be recorded and times from different setups are not directly comparable."
+sources = ["haugen2015"]
+evidence_grade = "B"
+
+[[claim]]
+id = "SP-005"
+subjects = ["sprint_gates", "reliability_stats", "soccer_context"]
+metrics = ["split_time_10m"]
+kind = "sensitivity"
+statement = "In elite youth soccer, 10 m sprint time showed high sensitivity to change across the season."
+sources = ["asimakidis2025"]
+population = { sport = "soccer", level = "elite academy", age_group = "youth" }
+evidence_grade = "B"
+
+[[claim]]
+id = "SP-006"
+subjects = ["sprint_fv", "sprint_gates"]
+metrics = ["f0", "v0"]
+kind = "method"
+statement = "Force-velocity estimates computed from a few split times are lower-fidelity than those from continuous velocity data and must be labelled as such."
+sources = ["morin2019", "haugen2015"]
+evidence_grade = "B"
+contested = true
+variants = ["radar_or_laser_velocity", "split_time_fit"]
+
+[[claim]]
+id = "CD-001"
+subjects = ["cod_505"]
+metrics = ["cod_deficit"]
+kind = "definition"
+statement = "Change-of-direction deficit is 505 time minus linear sprint time over the same distance (commonly 10 m), isolating change-of-direction ability from linear speed better than total 505 time."
+sources = ["nimphius2016"]
+evidence_grade = "B"
+
+[[claim]]
+id = "CD-002"
+subjects = ["cod_505", "reliability_stats", "soccer_context"]
+metrics = ["time_505"]
+kind = "sensitivity"
+statement = "In elite youth soccer, the 505 change-of-direction test showed high sensitivity to change across the season."
+sources = ["asimakidis2025"]
+population = { sport = "soccer", level = "elite academy", age_group = "youth" }
+evidence_grade = "B"
+
+[[claim]]
+id = "IF-001"
+subjects = ["ift_30_15"]
+metrics = ["v_ift"]
+kind = "definition"
+statement = "The 30-15 Intermittent Fitness Test yields a final running velocity (VIFT) used to individualise interval training in intermittent sports; it is a conditioning context measure, not a neuromuscular test."
+sources = ["buchheit2008"]
+evidence_grade = "B"
+
+[[claim]]
+id = "RS-001"
+subjects = ["rsa"]
+metrics = ["best_sprint", "mean_sprint", "percent_decrement"]
+kind = "definition"
+statement = "Repeated-sprint ability is typically summarised by best and mean sprint times and a fatigue or percentage-decrement score; different decrement formulas exist and must be stated."
+sources = ["girard2011"]
+evidence_grade = "B"
+contested = true
+variants = ["percent_decrement_score", "fatigue_index_best_worst"]
+
+[[claim]]
+id = "AS-001"
+subjects = ["asymmetry"]
+metrics = ["asymmetry_index"]
+kind = "method"
+statement = "Inter-limb asymmetry can be computed with several equations that give different numbers for the same data; the equation and the reference limb must always be reported."
+sources = ["bishop2018"]
+evidence_grade = "B"
+contested = true
+variants = ["percent_difference_max_limb", "limb_symmetry_index", "symmetry_angle", "bilateral_asymmetry_index"]
+
+[[claim]]
+id = "AS-002"
+subjects = ["asymmetry"]
+metrics = ["symmetry_angle"]
+kind = "definition"
+statement = "The symmetry angle expresses asymmetry from the angle of the left-right value pair, avoiding dependence on which limb is used as reference."
+sources = ["zifchock2008"]
+evidence_grade = "B"
+
+[[claim]]
+id = "AS-003"
+subjects = ["asymmetry"]
+metrics = ["asymmetry_index"]
+kind = "context"
+statement = "Evidence that inter-limb asymmetries impair physical or sports performance is inconsistent, so an asymmetry value alone does not justify a performance or injury conclusion."
+sources = ["bishop2017"]
+evidence_grade = "A"
+
+[[claim]]
+id = "AS-004"
+subjects = ["asymmetry", "return_to_play"]
+metrics = ["limb_symmetry_index"]
+kind = "method"
+statement = "Limb symmetry indexes can overestimate knee function after ACL injury because the uninvolved limb also loses capacity; comparison with pre-injury baseline is preferred where available."
+sources = ["wellsandt2017"]
+evidence_grade = "B"

@@ -1,0 +1,111 @@
+# Drop jump, 10/5 repeated jumps, isometric mid-thigh pull and RFD
+
+[[claim]]
+id = "DJ-001"
+subjects = ["dj"]
+metrics = ["rsi", "contact_time"]
+kind = "definition"
+statement = "Reactive strength index for the drop jump is jump height (typically from flight time) divided by ground contact time."
+sources = ["flanagan2008"]
+evidence_grade = "B"
+
+[[claim]]
+id = "DJ-002"
+subjects = ["dj", "rj_10_5"]
+metrics = ["contact_time"]
+kind = "definition"
+statement = "Fast stretch-shortening cycle actions are characterised by short ground contact times (below about 250 ms), which is why contact time is reported alongside RSI."
+sources = ["flanagan2008"]
+evidence_grade = "B"
+
+[[claim]]
+id = "DJ-003"
+subjects = ["dj"]
+metrics = ["rsi"]
+kind = "method"
+statement = "Drop-jump RSI depends on drop height and instructions, so drop height and coaching cues must be recorded for results to be comparable."
+sources = ["flanagan2008"]
+evidence_grade = "B"
+
+[[claim]]
+id = "RJ-001"
+subjects = ["rj_10_5"]
+metrics = ["rsi"]
+kind = "reliability"
+statement = "Peak RSI from the 10/5 repeated jumps test measured on a force plate showed high reliability in males, and a single trial was reported sufficient to evaluate peak RSI."
+sources = ["stratford2020"]
+population = { sex = "male" }
+statistic = { name = "ICC", value = "0.916-0.986" }
+evidence_grade = "B"
+
+[[claim]]
+id = "RJ-002"
+subjects = ["rj_10_5", "maturation"]
+metrics = ["rsi"]
+kind = "reliability"
+statement = "In elite adolescent male athletes the 10/5 repeated jump test RSI showed excellent interday reliability and contact mat RSI agreed with force-plate RSI; maturity stage should be considered when interpreting performance."
+sources = ["baker2022"]
+population = { sex = "male", age_group = "11-17" }
+statistic = { name = "ICC", value = "0.91" }
+evidence_grade = "B"
+
+[[claim]]
+id = "RJ-003"
+subjects = ["rj_10_5"]
+metrics = ["rsi"]
+kind = "method"
+statement = "10/5 test scoring uses the best repetitions (commonly the best 5 of 10 RSI values) under a contact-time criterion; the selection rule must be stated."
+sources = ["stratford2020", "flanagan2008"]
+evidence_grade = "B"
+contested = true
+variants = ["best_5_of_10_mean", "peak_single_rsi"]
+
+[[claim]]
+id = "IM-001"
+subjects = ["imtp"]
+metrics = ["peak_force", "rfd", "impulse"]
+kind = "method"
+statement = "IMTP results depend on standardised body position, pre-tension, sampling, onset determination and the analysis windows reported, so these must be specified for results to be comparable."
+sources = ["comfort2019"]
+evidence_grade = "B"
+
+[[claim]]
+id = "IM-002"
+subjects = ["imtp"]
+metrics = ["peak_force.net", "peak_force.gross"]
+kind = "definition"
+statement = "IMTP peak force can be reported as gross (including body weight) or net (body weight subtracted); the two must not be mixed."
+sources = ["comfort2019"]
+evidence_grade = "B"
+contested = true
+variants = ["gross", "net", "net_per_kg"]
+
+[[claim]]
+id = "IM-003"
+subjects = ["imtp", "force_plate_processing"]
+metrics = ["rfd", "impulse", "movement_onset"]
+kind = "method"
+statement = "Different onset thresholds change IMTP time-dependent force-time variables (RFD, early-window force and impulse) while peak force is less affected."
+sources = ["dossantos2017"]
+evidence_grade = "B"
+contested = true
+variants = ["5sd_threshold", "absolute_newton_threshold", "percent_body_weight"]
+
+[[claim]]
+id = "IM-004"
+subjects = ["imtp", "nhe", "hip_add_abd"]
+metrics = ["rfd"]
+kind = "definition"
+statement = "Rate of force development is the change in force over a defined time window from onset (e.g. 0-50, 0-100, 0-200 ms); early windows are highly sensitive to onset detection, sampling rate and signal processing."
+sources = ["maffiuletti2016"]
+evidence_grade = "B"
+
+[[claim]]
+id = "IM-005"
+subjects = ["imtp", "slcmj", "reliability_stats"]
+metrics = ["peak_force", "jump_height"]
+kind = "sensitivity"
+statement = "In elite youth soccer, the single-leg CMJ and the isometric mid-thigh pull showed the lowest reliability and seasonal sensitivity within the tested battery."
+sources = ["asimakidis2025"]
+population = { sport = "soccer", level = "elite academy", age_group = "youth" }
+evidence_grade = "B"
