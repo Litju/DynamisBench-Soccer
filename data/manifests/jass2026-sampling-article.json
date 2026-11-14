@@ -1,0 +1,20 @@
+{
+  "audit_ref": "docs/data-audit.md#jass2026-sampling-article",
+  "data_category": "empirical",
+  "dataset_id": "jass2026-sampling-article",
+  "files": [],
+  "handling_notes": "EXCLUDED: Deposit contains only the article PDF/XML, no data. Cited as a source (registry donahue2026, claim FP-008).",
+  "license": "CC-BY-4.0",
+  "privacy_notes": "",
+  "redistribution_allowed": true,
+  "schema_version": 1,
+  "source": {
+    "citation": null,
+    "doi": "10.37393/JASS.2026.10.01.1",
+    "kind": "url",
+    "location": "https://zenodo.org/records/20352639"
+  },
+  "title": "Sampling frequency impact on CMJ metrics (article deposit)",
+  "usage": "excluded",
+  "version": "zenodo-20352639"
+}

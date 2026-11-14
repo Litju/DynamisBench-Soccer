@@ -1,0 +1,33 @@
+{
+  "audit_ref": "docs/data-audit.md#holik2025-youth-soccer-plyometrics",
+  "data_category": "empirical",
+  "dataset_id": "holik2025-youth-soccer-plyometrics",
+  "files": [
+    {
+      "path": "README.txt",
+      "sha256": "1d4d9b0f628186c5549df2f3682c4986561eba044a0e4babf4ab3152ed729669",
+      "size_bytes": 1757,
+      "url": "https://zenodo.org/records/17881835/files/README.txt?download=1"
+    },
+    {
+      "path": "dataset.xlsx",
+      "sha256": "1c40b486cf9da6b37ecb2e8541e2b406131d5130464ebe5d919e57fe4333ada0",
+      "size_bytes": 25197,
+      "url": "https://zenodo.org/records/17881835/files/dataset.xlsx?download=1"
+    }
+  ],
+  "handling_notes": "Summary metrics only (no time series): CMJ height, DJ contact time/height, 20 m sprint, L-run, maturity offset (Mirwald), with Pre1-3/Post1-3 attempts. Device and jump-height method not stated: never treat as reference for estimand-specific grading.",
+  "license": "CC-BY-4.0",
+  "privacy_notes": "45 male adolescent soccer players aged 10-18 (minors); ethics approval and registration stated. Contains a free-text 'Reason for exclusion' column with health categories (Injury, Illness): this column must be dropped on conversion (no free-text medical notes). Squad-level use only with n >= 10.",
+  "redistribution_allowed": true,
+  "schema_version": 1,
+  "source": {
+    "citation": "Holik, Krejci, Lehnert (2025) Zenodo 17881835; trial NCT06406764",
+    "doi": "10.5281/zenodo.17881835",
+    "kind": "url",
+    "location": "https://zenodo.org/records/17881835"
+  },
+  "title": "Plyometric training in youth soccer players with maturation status (RCT dataset)",
+  "usage": "cross-validation-only",
+  "version": "zenodo-17881835"
+}

@@ -1,0 +1,27 @@
+{
+  "audit_ref": "docs/data-audit.md#braking-rfd-cmj-2025",
+  "data_category": "empirical",
+  "dataset_id": "braking-rfd-cmj-2025",
+  "files": [
+    {
+      "path": "DataSetCMJ_ExploratoryStudy.xlsx",
+      "sha256": "9db1e9cecdc131a6777d8536606ec6469351aafb1c4198324b74fc491561fe81",
+      "size_bytes": 54279,
+      "url": "https://zenodo.org/records/15525532/files/DataSetCMJ_ExploratoryStudy.xlsx?download=1"
+    }
+  ],
+  "handling_notes": "Per-participant software-computed metrics (bilateral and left-leg CMJ): jump height from take-off velocity AND from flight time, impulses, eccentric RFD. Vendor/software-derived values: usable for plausibility ranges and estimand-difference illustrations (FP-003), never as reference truth (DB-07).",
+  "license": "CC-BY-4.0",
+  "privacy_notes": "206 physically active individuals (basketball players and students); age, body mass, sex, dominance only; no names.",
+  "redistribution_allowed": true,
+  "schema_version": 1,
+  "source": {
+    "citation": null,
+    "doi": "10.5281/zenodo.15525532",
+    "kind": "url",
+    "location": "https://zenodo.org/records/15525532"
+  },
+  "title": "Braking RFD and braking impulse vs push-off force distribution and jump performance (exploratory study dataset)",
+  "usage": "cross-validation-only",
+  "version": "zenodo-15525532"
+}

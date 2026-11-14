@@ -1,0 +1,20 @@
+{
+  "audit_ref": "docs/data-audit.md#climbers-slsj-2026",
+  "data_category": "empirical",
+  "dataset_id": "climbers-slsj-2026",
+  "files": [],
+  "handling_notes": "EXCLUDED: vGRF supplied as 101-point time-normalised waveforms (no time base or sampling rate), so it cannot support signal-processing tasks.",
+  "license": "CC-BY-4.0",
+  "privacy_notes": "",
+  "redistribution_allowed": true,
+  "schema_version": 1,
+  "source": {
+    "citation": null,
+    "doi": "10.5281/zenodo.22856905",
+    "kind": "url",
+    "location": "https://zenodo.org/records/22856905"
+  },
+  "title": "Single-leg squat jump co-activation and vGRF in speed climbers",
+  "usage": "excluded",
+  "version": "zenodo-22856905"
+}
