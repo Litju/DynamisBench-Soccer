@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 import tomllib
 from collections import Counter
 from dataclasses import dataclass
@@ -22,6 +23,50 @@ FAMILIES = frozenset(
         "imu",
     }
 )
+SUBFAMILIES = frozenset(
+    {
+        "force_platform.single",
+        "force_platform.dual",
+        "lpt_encoder.lpt",
+        "lpt_encoder.encoder",
+        "load_cell_isometric.load_cell",
+        "load_cell_isometric.isometric_rig",
+        "nordic_hip.nordic",
+        "nordic_hip.hip",
+        "timing_contact.gates",
+        "timing_contact.contact",
+        "radar_laser.radar",
+        "radar_laser.laser",
+        "gnss_lps.gnss",
+        "gnss_lps.lps",
+        "imu.inertial",
+    }
+)
+METHODS = {
+    "continuous_signal": {"filter", "integrate", "differentiate", "calibrate", "start_detection"},
+    "discrete_event": {"count_unwrap", "event_rate", "debounce", "pair_events"},
+    "position_track": {"resample", "smooth"},
+    "inertial": {"orientation_estimation", "gravity_removal"},
+}
+EVIDENCE_KINDS = frozenset(
+    {
+        "schema",
+        "doc",
+        "code",
+        "test",
+        "registry_claim",
+        "registry_gap",
+        "issue",
+        "adapter_import",
+        "vendor_reproduction",
+        "applicability_review",
+        "independent_test",
+        "analytical_reference",
+        "empirical_study",
+        "external_review",
+    }
+)
+ISSUE_PATTERN = re.compile(r"RES-\d+\Z")
 PARADIGMS = frozenset({"continuous_signal", "discrete_event", "position_track", "inertial"})
 CONTINUOUS_FILTERS = frozenset({"butterworth", "fir", "iir", "savgol", "lowpass", "highpass"})
 WEAK_EVIDENCE = frozenset({"adapter_import", "vendor_reproduction"})
@@ -50,6 +95,7 @@ class Evidence:
     issue: str
     rationale: str
     independence_from: str = ""
+    implementation: str = ""
 
 
 @dataclass(frozen=True)
@@ -62,6 +108,7 @@ class Subfamily:
     methods: tuple[str, ...]
     ratings: dict[str, Rating]
     blockers: tuple[str, ...]
+    owners: dict[str, str]
 
 
 @dataclass(frozen=True)
@@ -116,6 +163,7 @@ def load(path: Path) -> Ledger:
                 methods=tuple(row.get("methods", [])),
                 ratings={str(k): Rating(v) for k, v in row["ratings"].items()},
                 blockers=tuple(row.get("blockers", [])),
+                owners=row["owners"],
             )
         )
     evidence = tuple(Evidence(**e) for e in raw.get("evidence", []))
@@ -150,22 +198,67 @@ def validate(model: Ledger, root: Path | None = None) -> list[str]:
     families = {s.family for s in model.subfamilies}
     if families != FAMILIES:
         errors.append("eight required device families must be represented")
+    if set(ids) != SUBFAMILIES:
+        errors.append("all 15 required instrument subfamilies must be represented")
     lookup: dict[tuple[str, str], list[Evidence]] = {}
+    registry = None
+    if root is not None:
+        from dynamisbench_soccer.registry.models import load as load_registry
+
+        registry = load_registry(root / "registry")
     for e in model.evidence:
         if e.subfamily not in ids or e.dimension not in DIMENSIONS:
             errors.append(f"unknown evidence target {e.subfamily}/{e.dimension}")
-        if not e.ref or not e.rationale or not e.issue:
+        if e.kind not in EVIDENCE_KINDS:
+            errors.append(f"unknown evidence kind {e.kind}")
+        if not ISSUE_PATTERN.fullmatch(e.issue):
+            errors.append(f"invalid evidence issue {e.issue}")
+        if not e.ref.strip() or not e.rationale.strip() or not e.issue:
             errors.append(f"evidence metadata incomplete {e.subfamily}/{e.dimension}")
         if root is not None and e.ref.startswith("repo:"):
             path = (root / e.ref[5:]).resolve()
             if not path.is_relative_to(root.resolve()) or not path.is_file():
                 errors.append(f"unresolved repo evidence {e.ref}")
+        if (
+            e.kind == "registry_claim"
+            and registry is not None
+            and e.ref not in {c.id for c in registry.claims}
+        ):
+            errors.append(f"unknown registry claim {e.ref}")
+        if (
+            e.kind == "registry_gap"
+            and registry is not None
+            and e.ref not in {g.subject for g in registry.gaps}
+        ):
+            errors.append(f"unknown registry gap {e.ref}")
+        if e.kind == "issue" and not ISSUE_PATTERN.fullmatch(e.ref):
+            errors.append(f"invalid issue reference {e.ref}")
+        if e.kind in {
+            "schema",
+            "doc",
+            "code",
+            "test",
+            "adapter_import",
+            "independent_test",
+            "analytical_reference",
+            "applicability_review",
+            "external_review",
+        } and not e.ref.startswith("repo:"):
+            errors.append(f"repository evidence requires repo: reference {e.ref}")
         lookup.setdefault((e.subfamily, e.dimension), []).append(e)
     for s in model.subfamilies:
         if not s.id.startswith(s.family + "."):
             errors.append(f"{s.id} has invalid family prefix")
+        if not ISSUE_PATTERN.fullmatch(s.issue) or not s.engine_id.strip():
+            errors.append(f"{s.id} missing engine or invalid owning issue")
+        if set(s.methods) - METHODS.get(s.paradigm, set()):
+            errors.append(f"{s.id} has processing methods invalid for its paradigm")
         if s.paradigm not in PARADIGMS:
             errors.append(f"{s.id} has unrecognized acquisition paradigm")
+        if set(s.owners) != set(DIMENSIONS) or any(
+            not ISSUE_PATTERN.fullmatch(issue) for issue in s.owners.values()
+        ):
+            errors.append(f"{s.id} needs valid owning issues for A-O")
         if set(s.ratings) != set(DIMENSIONS):
             errors.append(f"{s.id} missing or extraneous A-O dimension ratings")
         if s.paradigm == "discrete_event" and CONTINUOUS_FILTERS.intersection(s.methods):
@@ -185,6 +278,8 @@ def validate(model: Ledger, root: Path | None = None) -> list[str]:
                 e.kind == "applicability_review" for e in refs
             ):
                 errors.append(f"{s.id}/{d}: N/A without applicability review")
+            if value not in set(Rating):
+                errors.append(f"{s.id}/{d}: unknown rating {value}")
             if value == Rating.VERIFIED:
                 accepted = {
                     "independent_test",
@@ -195,7 +290,11 @@ def validate(model: Ledger, root: Path | None = None) -> list[str]:
                 if not any(e.kind in accepted for e in refs):
                     errors.append(f"{s.id}/{d}: no independent verification")
                 if d == "J" and not any(
-                    e.independence_from and e.independence_from != s.engine_id for e in refs
+                    e.kind in accepted
+                    and e.independence_from == s.engine_id
+                    and e.implementation.strip()
+                    and e.implementation != s.engine_id
+                    for e in refs
                 ):
                     errors.append(f"{s.id}/J: circular reference engine")
     for c in model.comparisons:
@@ -209,6 +308,11 @@ def validate(model: Ledger, root: Path | None = None) -> list[str]:
             c.evidence_level != "empirical" or c.reviewer_status != "accepted" or not c.refs
         ):
             errors.append(f"{c.left}/{c.right}: analytical-only interchangeability")
+    for s in model.subfamilies:
+        if s.ratings.get("L") == Rating.VERIFIED and any(
+            s.id in (c.left, c.right) and c.verdict == "unknown" for c in model.comparisons
+        ):
+            errors.append(f"{s.id}/L: unresolved non-equivalence")
     for r in model.reviewers:
         if r.family not in families:
             errors.append(f"unknown reviewer family {r.family}")
@@ -222,6 +326,8 @@ def gate(model: Ledger, stage: Stage) -> GateResult:
         for d in required:
             if s.ratings.get(d) not in {Rating.VERIFIED, Rating.NOT_APPLICABLE}:
                 missing.setdefault(s.family, []).append(f"{s.id}/{d}")
+        if s.blockers:
+            missing.setdefault(s.family, []).extend(f"{s.id}: {b}" for b in s.blockers)
         if stage == Stage.M8:
             accepted = {
                 r.identity
@@ -261,25 +367,13 @@ def markdown(model: Ledger) -> str:
     ]
     for family in sorted({s.family for s in model.subfamilies}):
         subs = [s for s in model.subfamilies if s.family == family]
-        statuses: dict[Stage, str] = {}
-        for stage in Stage:
-            required = M3_DIMENSIONS if stage == Stage.M3 else DIMENSIONS
-            complete = all(
-                s.ratings[d] in {Rating.VERIFIED, Rating.NOT_APPLICABLE}
-                for s in subs
-                for d in required
-            )
-            if stage == Stage.M8:
-                reviewer_names = {
-                    r.identity
-                    for r in model.reviewers
-                    if r.family == family
-                    and r.independent
-                    and r.decision == "accepted"
-                    and r.evidence_ref
-                }
-                complete = complete and len(reviewer_names) >= 2
-            statuses[stage] = "VERIFIED" if complete else "IN_PROGRESS"
+        statuses = {
+            stage: "VERIFIED"
+            if family not in gate(model, stage).missing
+            and "__ledger__" not in gate(model, stage).missing
+            else "IN_PROGRESS"
+            for stage in Stage
+        }
         names = ", ".join(s.id.split(".")[-1] for s in subs)
         lines.append(
             f"| {family} | {names} | {statuses[Stage.M3]} | "
@@ -287,7 +381,7 @@ def markdown(model: Ledger) -> str:
         )
     lines += ["", "## Ratings and blockers", ""]
     for s in model.subfamilies:
-        ratings = ", ".join(f"{d}:{s.ratings[d].value}" for d in DIMENSIONS)
+        ratings = ", ".join(f"{d}:{s.ratings[d].value} ({s.owners[d]})" for d in DIMENSIONS)
         lines.append(f"- {s.id} ({s.issue}): {ratings}")
         lines += [f"  - {b}" for b in s.blockers]
     lines += ["", "## Interchangeability studies", ""]

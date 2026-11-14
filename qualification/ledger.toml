@@ -4,26 +4,29 @@ version = "0.1.0"
 [[subfamily]]
 id = "force_platform.single"
 family = "force_platform"
+owners = { A = "RES-670", B = "RES-670", C = "RES-693", D = "RES-670", E = "RES-670", F = "RES-670", G = "RES-671", H = "RES-671", I = "RES-670", J = "RES-669", K = "RES-669", L = "RES-703", M = "RES-675", N = "RES-680", O = "RES-670" }
 paradigm = "continuous_signal"
 issue = "RES-670"
 engine_id = "fp_single"
 methods = ["filter", "integrate"]
-ratings = { A = "specified", B = "partial", C = "partial", D = "partial", E = "absent", F = "absent", G = "absent", H = "absent", I = "absent", J = "absent", K = "absent", L = "absent", M = "absent", N = "absent", O = "specified" }
+ratings = { A = "specified", B = "partial", C = "partial", D = "partial", E = "absent", F = "absent", G = "absent", H = "absent", I = "absent", J = "absent", K = "absent", L = "absent", M = "absent", N = "absent", O = "partial" }
 blockers = ["Reference engine and independent numerical checks absent"]
 
 [[subfamily]]
 id = "force_platform.dual"
 family = "force_platform"
+owners = { A = "RES-670", B = "RES-670", C = "RES-693", D = "RES-670", E = "RES-670", F = "RES-670", G = "RES-671", H = "RES-671", I = "RES-670", J = "RES-669", K = "RES-669", L = "RES-703", M = "RES-675", N = "RES-680", O = "RES-670" }
 paradigm = "continuous_signal"
 issue = "RES-670"
 engine_id = "fp_dual"
 methods = ["filter", "integrate"]
-ratings = { A = "specified", B = "partial", C = "partial", D = "partial", E = "absent", F = "absent", G = "absent", H = "absent", I = "absent", J = "absent", K = "absent", L = "absent", M = "absent", N = "absent", O = "specified" }
+ratings = { A = "specified", B = "partial", C = "partial", D = "partial", E = "absent", F = "absent", G = "absent", H = "absent", I = "absent", J = "absent", K = "absent", L = "absent", M = "absent", N = "absent", O = "partial" }
 blockers = ["Bilateral calibration and timing unqualified"]
 
 [[subfamily]]
 id = "lpt_encoder.lpt"
 family = "lpt_encoder"
+owners = { A = "RES-693", B = "RES-695", C = "RES-693", D = "RES-695", E = "RES-695", F = "RES-695", G = "RES-671", H = "RES-671", I = "RES-695", J = "RES-669", K = "RES-669", L = "RES-703", M = "RES-695", N = "RES-704", O = "RES-695" }
 paradigm = "continuous_signal"
 issue = "RES-695"
 engine_id = "lpt"
@@ -34,6 +37,7 @@ blockers = ["No cable geometry or device validity claims (RES-693/694)"]
 [[subfamily]]
 id = "lpt_encoder.encoder"
 family = "lpt_encoder"
+owners = { A = "RES-693", B = "RES-695", C = "RES-693", D = "RES-695", E = "RES-695", F = "RES-695", G = "RES-671", H = "RES-671", I = "RES-695", J = "RES-669", K = "RES-669", L = "RES-703", M = "RES-695", N = "RES-704", O = "RES-695" }
 paradigm = "discrete_event"
 issue = "RES-695"
 engine_id = "encoder"
@@ -44,6 +48,7 @@ blockers = ["No native encoder counts/timestamp contract (RES-693)"]
 [[subfamily]]
 id = "load_cell_isometric.load_cell"
 family = "load_cell_isometric"
+owners = { A = "RES-693", B = "RES-696", C = "RES-693", D = "RES-696", E = "RES-696", F = "RES-696", G = "RES-672", H = "RES-672", I = "RES-696", J = "RES-669", K = "RES-669", L = "RES-703", M = "RES-696", N = "RES-704", O = "RES-696" }
 paradigm = "continuous_signal"
 issue = "RES-696"
 engine_id = "load_cell"
@@ -54,6 +59,7 @@ blockers = ["No raw voltage/calibration and rig compliance claims (RES-693/694)"
 [[subfamily]]
 id = "load_cell_isometric.isometric_rig"
 family = "load_cell_isometric"
+owners = { A = "RES-693", B = "RES-696", C = "RES-693", D = "RES-696", E = "RES-696", F = "RES-696", G = "RES-672", H = "RES-672", I = "RES-696", J = "RES-669", K = "RES-669", L = "RES-703", M = "RES-696", N = "RES-704", O = "RES-696" }
 paradigm = "continuous_signal"
 issue = "RES-696"
 engine_id = "iso_rig"
@@ -64,6 +70,7 @@ blockers = ["No isometric rig compliance or validity source (RES-694)"]
 [[subfamily]]
 id = "nordic_hip.nordic"
 family = "nordic_hip"
+owners = { A = "RES-697", B = "RES-697", C = "RES-693", D = "RES-697", E = "RES-697", F = "RES-697", G = "RES-672", H = "RES-672", I = "RES-697", J = "RES-669", K = "RES-669", L = "RES-703", M = "RES-697", N = "RES-681", O = "RES-697" }
 paradigm = "continuous_signal"
 issue = "RES-697"
 engine_id = "nordic"
@@ -74,6 +81,7 @@ blockers = ["Isometric hamstring test is a declared evidence gap; no engine"]
 [[subfamily]]
 id = "nordic_hip.hip"
 family = "nordic_hip"
+owners = { A = "RES-697", B = "RES-697", C = "RES-693", D = "RES-697", E = "RES-697", F = "RES-697", G = "RES-672", H = "RES-672", I = "RES-697", J = "RES-669", K = "RES-669", L = "RES-703", M = "RES-697", N = "RES-681", O = "RES-697" }
 paradigm = "continuous_signal"
 issue = "RES-697"
 engine_id = "hip"
@@ -84,6 +92,7 @@ blockers = ["Unqualified geometry and metrology; no engine"]
 [[subfamily]]
 id = "timing_contact.gates"
 family = "timing_contact"
+owners = { A = "RES-693", B = "RES-698", C = "RES-693", D = "RES-698", E = "RES-698", F = "RES-698", G = "RES-671", H = "RES-673", I = "RES-698", J = "RES-669", K = "RES-669", L = "RES-703", M = "RES-698", N = "RES-681", O = "RES-698" }
 paradigm = "discrete_event"
 issue = "RES-698"
 engine_id = "gates"
@@ -94,6 +103,7 @@ blockers = ["No gate trigger-validity source (RES-694)"]
 [[subfamily]]
 id = "timing_contact.contact"
 family = "timing_contact"
+owners = { A = "RES-693", B = "RES-698", C = "RES-693", D = "RES-698", E = "RES-698", F = "RES-698", G = "RES-671", H = "RES-673", I = "RES-698", J = "RES-669", K = "RES-669", L = "RES-703", M = "RES-698", N = "RES-681", O = "RES-698" }
 paradigm = "discrete_event"
 issue = "RES-698"
 engine_id = "contact"
@@ -104,6 +114,7 @@ blockers = ["No contact mat latency/trigger evidence or schema (RES-693/694)"]
 [[subfamily]]
 id = "radar_laser.radar"
 family = "radar_laser"
+owners = { A = "RES-693", B = "RES-699", C = "RES-693", D = "RES-699", E = "RES-699", F = "RES-699", G = "RES-673", H = "RES-673", I = "RES-699", J = "RES-669", K = "RES-669", L = "RES-703", M = "RES-699", N = "RES-681", O = "RES-699" }
 paradigm = "continuous_signal"
 issue = "RES-699"
 engine_id = "radar"
@@ -114,6 +125,7 @@ blockers = ["No raw radar validity study (RES-694)"]
 [[subfamily]]
 id = "radar_laser.laser"
 family = "radar_laser"
+owners = { A = "RES-693", B = "RES-699", C = "RES-693", D = "RES-699", E = "RES-699", F = "RES-699", G = "RES-673", H = "RES-673", I = "RES-699", J = "RES-669", K = "RES-669", L = "RES-703", M = "RES-699", N = "RES-681", O = "RES-699" }
 paradigm = "continuous_signal"
 issue = "RES-699"
 engine_id = "laser"
@@ -124,6 +136,7 @@ blockers = ["No raw laser validity study (RES-694)"]
 [[subfamily]]
 id = "gnss_lps.gnss"
 family = "gnss_lps"
+owners = { A = "RES-693", B = "RES-700", C = "RES-693", D = "RES-700", E = "RES-700", F = "RES-700", G = "RES-673", H = "RES-673", I = "RES-700", J = "RES-669", K = "RES-669", L = "RES-703", M = "RES-700", N = "RES-704", O = "RES-700" }
 paradigm = "position_track"
 issue = "RES-700"
 engine_id = "gnss"
@@ -134,6 +147,7 @@ blockers = ["Only derived GNSS summaries in M2; no raw schema or audited raw dat
 [[subfamily]]
 id = "gnss_lps.lps"
 family = "gnss_lps"
+owners = { A = "RES-693", B = "RES-700", C = "RES-693", D = "RES-700", E = "RES-700", F = "RES-700", G = "RES-673", H = "RES-673", I = "RES-700", J = "RES-669", K = "RES-669", L = "RES-703", M = "RES-700", N = "RES-704", O = "RES-700" }
 paradigm = "position_track"
 issue = "RES-700"
 engine_id = "lps"
@@ -144,6 +158,7 @@ blockers = ["No LPS position/anchor schema or audited raw data"]
 [[subfamily]]
 id = "imu.inertial"
 family = "imu"
+owners = { A = "RES-693", B = "RES-701", C = "RES-693", D = "RES-701", E = "RES-701", F = "RES-701", G = "RES-671", H = "RES-671", I = "RES-701", J = "RES-669", K = "RES-669", L = "RES-703", M = "RES-701", N = "RES-704", O = "RES-701" }
 paradigm = "inertial"
 issue = "RES-701"
 engine_id = "imu"
@@ -342,3 +357,24 @@ evidence_level = "none"
 refs = []
 reviewer_status = "pending"
 
+
+[[comparison]]
+left = "force_platform.single"
+right = "lpt_encoder.lpt"
+quantity = "cable_vs_vertical_displacement"
+verdict = "unknown"
+evidence_level = "none"
+
+[[comparison]]
+left = "force_platform.single"
+right = "lpt_encoder.lpt"
+quantity = "attachment_vs_com_power"
+verdict = "unknown"
+evidence_level = "none"
+
+[[comparison]]
+left = "radar_laser.radar"
+right = "radar_laser.laser"
+quantity = "doppler_vs_differentiated_velocity"
+verdict = "unknown"
+evidence_level = "none"
