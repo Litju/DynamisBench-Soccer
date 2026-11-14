@@ -7,7 +7,7 @@ from dynamisbench_soccer.signals import examples, io
 
 
 def test_json_schema_doc_in_sync(repo_root: Path) -> None:
-    doc = repo_root / "docs" / "schemas" / "signal-bundle-meta.v1.json"
+    doc = repo_root / "docs" / "schemas" / "signal-bundle-meta.v2.json"
     assert doc.read_text(encoding="utf-8") == io.json_schema()
 
 

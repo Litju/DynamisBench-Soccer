@@ -8,7 +8,7 @@ from pathlib import Path
 
 from dynamisbench_soccer.signals import io
 
-SCHEMA_DOC = Path("docs/schemas/signal-bundle-meta.v1.json")
+SCHEMA_DOC = Path("docs/schemas/signal-bundle-meta.v2.json")
 
 
 def _cmd_schema(args: argparse.Namespace) -> int:

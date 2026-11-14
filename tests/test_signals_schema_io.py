@@ -50,7 +50,7 @@ def test_golden_hashes(tmp_path: Path) -> None:
 def test_sidecar_is_sorted_json_with_data_hash(tmp_path: Path) -> None:
     p, j = io.write(examples.cmj_dual_plate(), tmp_path / "cmj")
     raw = json.loads(j.read_text())
-    assert raw["schema_version"] == 1
+    assert raw["schema_version"] == 2
     assert raw["data_sha256"] == _sha(p)
     assert j.read_text() == json.dumps(raw, indent=2, sort_keys=True) + "\n"
 
@@ -76,7 +76,7 @@ def test_iter_batches_streams_bounded_chunks(tmp_path: Path) -> None:
 def test_future_schema_version_is_refused(tmp_path: Path) -> None:
     _, j = io.write(examples.lpt(), tmp_path / "lpt")
     raw = json.loads(j.read_text())
-    raw["schema_version"] = 2
+    raw["schema_version"] = 3
     j.write_text(json.dumps(raw))
     with pytest.raises(ValueError, match="newer"):
         io.read_meta(tmp_path / "lpt")
@@ -119,7 +119,7 @@ def test_unknown_test_and_duplicate_channels() -> None:
 def test_events_bundle_requires_time_and_distance() -> None:
     d = examples.sprint_gates().meta.model_dump(mode="json")
     d["channels"] = [c for c in d["channels"] if c["name"] != "t_s"]
-    with pytest.raises(ValidationError, match="t_s and distance_m"):
+    with pytest.raises(ValidationError, match="distance_m and t_s"):
         BundleMeta.model_validate(d)
 
 
