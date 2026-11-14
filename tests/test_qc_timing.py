@@ -91,3 +91,15 @@ def test_measured_rate_used_without_timestamp_channel() -> None:
     actual = EVALUATORS["QC-R02"](b, RULES.by_id("QC-R02").params, None)
     expected = np.max(np.abs(np.diff(b["velocity"]))) * b.meta.sampling.measured_hz
     assert actual.values["max_accel"] == pytest.approx(expected)
+
+
+@pytest.mark.parametrize(
+    "rule,producer", [("QC-R02", examples.sprint_radar), ("QC-G02", examples.sprint_gates)]
+)
+def test_insufficient_samples_fail_without_empty_reductions(rule, producer) -> None:  # type: ignore[no-untyped-def]
+    original = producer()
+    b = SignalBundle(
+        original.meta.model_copy(update={"n_rows": 1}),
+        {name: values[:1] for name, values in original.data.items()},
+    )
+    assert EVALUATORS[rule](b, RULES.by_id(rule).params, None).status is spec.Status.FAIL

@@ -485,6 +485,8 @@ def gates_split_speed_plausible(b: SignalBundle, p: Params, _: SignalBundle | No
     g = _gates(b)
     if g is None:
         return _na("not a gate event bundle")
+    if b.meta.n_rows < 2:
+        return _fail("split speed requires at least two gate events")
     dd, dt = np.diff(g[0]), np.diff(g[1])
     with np.errstate(divide="ignore", invalid="ignore"):
         speeds = np.where(dt > 0, dd / dt, np.inf)
@@ -515,6 +517,8 @@ def radar_acceleration_spikes(b: SignalBundle, p: Params, _: SignalBundle | None
     fs = _fs(b)
     if fs is None or "velocity" not in b.data:
         return _na("no velocity channel")
+    if b.meta.n_rows < 2:
+        return _fail("acceleration requires at least two velocity samples")
     accel = float(np.max(np.abs(np.diff(b["velocity"])))) * fs
     if accel > p["max_abs_accel_m_s2"]:
         return _fail(f"sample-to-sample acceleration {accel:.1f} m/s^2", max_accel=accel)
