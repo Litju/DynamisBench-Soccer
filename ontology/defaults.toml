@@ -1,0 +1,29 @@
+# Explicit v0.1 defaults for owner questions left open in the research brief (RES-649).
+# The owner may change any of these; changes must update coverage.toml accordingly.
+version = "0.1.0"
+decided = "2026-11-14"
+status = "default-pending-owner-confirmation"
+
+[[question]]
+id = "Q1"
+question = "Women's game and academy maturation: core or extension in v0.1?"
+default = "Academy and maturation (circa/post-PHV) are core; female athletes are extension."
+rationale = "The registry has verified academy/maturation sources (Mirwald 2002, Baker 2022, Asimakidis 2025, Franceschi 2023) but few female-specific soccer sources; core tasks must rest on registry claims."
+
+[[question]]
+id = "Q2"
+question = "Which vendor export formats first?"
+default = "Generic CSV adapters only (force plate, dynamometer, gates, radar/laser, LPT). Vendor-shaped adapters (VALD-type, Hawkin-type) wait for owner confirmation and real sample exports."
+rationale = "No sample vendor exports are available; inventing proprietary layouts would be unverifiable."
+
+[[question]]
+id = "Q3"
+question = "Independent expert reviewers for M8 and minimum count?"
+default = "Minimum 2 (one force-plate/dynamometry sports scientist, one soccer performance or physiotherapy practitioner); names to be supplied by the owner. M8 cannot start until named."
+rationale = "Qualification requires people who did not build the benchmark."
+
+[[question]]
+id = "Q4"
+question = "Fix one convention or score a stated-and-defensible choice?"
+default = "Both, as separate task variants: 'fixed' (task states the method) and 'state_and_defend' (any contested-methods variant accepted if declared and applied consistently)."
+rationale = "Tests both instruction-following computation and methodological judgement; see docs/contested-methods.md."

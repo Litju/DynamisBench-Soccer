@@ -14,6 +14,7 @@ Registrar = Callable[[argparse._SubParsersAction], None]  # type: ignore[type-ar
 
 def registrars() -> list[Registrar]:
     from dynamisbench_soccer.data import cli as data_cli
+    from dynamisbench_soccer.ontology import cli as ontology_cli
     from dynamisbench_soccer.registry import cli as registry_cli
 
-    return [data_cli.register, registry_cli.register]
+    return [data_cli.register, registry_cli.register, ontology_cli.register]
