@@ -1,0 +1,15 @@
+# dbs-generic-csv: 1
+# data_category: synthetic
+# subject: ATH-001
+# body_mass_kg: 75
+# sex: male
+# session_id: S-2026-11-14
+# date: 2026-11-14
+# match_day: MD-3
+# trial: 1
+# test_id: sprint_fv
+# protocol_id: p
+# sampling_rate_hz: 47
+velocity[N]
+0
+1

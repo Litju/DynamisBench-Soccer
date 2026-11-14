@@ -1,0 +1,14 @@
+# dbs-generic-csv: 1
+# data_category: synthetic
+# subject: ATH-001
+# body_mass_kg: 75
+# sex: male
+# session_id: S-2026-11-14
+# date: 2026-11-14
+# match_day: MD
+# trial: 1
+# test_id: cmj
+# protocol_id: match.gnss.summary.v1
+# speed_threshold_m_s: 5.5
+duration[min],total_distance[km],hsr_distance[m],sprint_count[1]
+90,10.85,720,24
