@@ -1,0 +1,210 @@
+# Coverage matrix v0.1: competency x test, plus context values (RES-664).
+# status: core (v0.1 tasks required) | extension (v0.2+ or optional) | out (out of scope)
+#
+# Rules enforced by `dbs ontology validate`:
+#  * a test declared as a registry gap may not have any 'core' cell
+#  * context-only tests (ift_30_15, rsa) may be core only for C3 and C6
+#  * every core test has at least one core cell, and every competency is core somewhere
+version = "0.1.0"
+
+#          C1 signal  C2 events  C3 metric  C4 QC   C5 error  C6 context  C7 longitudinal  C8 RTP
+[[row]]
+test = "cmj"
+C1 = "core"
+C2 = "core"
+C3 = "core"
+C4 = "core"
+C5 = "core"
+C6 = "core"
+C7 = "core"
+C8 = "extension"
+
+[[row]]
+test = "sj"
+C1 = "core"
+C2 = "core"
+C3 = "core"
+C4 = "core"
+C5 = "extension"
+C6 = "extension"
+C7 = "out"
+C8 = "out"
+
+[[row]]
+test = "slcmj"
+C1 = "core"
+C2 = "core"
+C3 = "core"
+C4 = "core"
+C5 = "core"
+C6 = "extension"
+C7 = "extension"
+C8 = "core"
+
+[[row]]
+test = "dj"
+C1 = "core"
+C2 = "core"
+C3 = "core"
+C4 = "core"
+C5 = "extension"
+C6 = "extension"
+C7 = "out"
+C8 = "core"
+
+[[row]]
+test = "rj_10_5"
+C1 = "core"
+C2 = "core"
+C3 = "core"
+C4 = "core"
+C5 = "extension"
+C6 = "extension"
+C7 = "out"
+C8 = "extension"
+
+[[row]]
+test = "imtp"
+C1 = "core"
+C2 = "core"
+C3 = "core"
+C4 = "core"
+C5 = "core"
+C6 = "extension"
+C7 = "extension"
+C8 = "out"
+
+[[row]]
+test = "nhe"
+C1 = "core"
+C2 = "core"
+C3 = "core"
+C4 = "core"
+C5 = "core"
+C6 = "core"
+C7 = "core"
+C8 = "core"
+
+[[row]]
+test = "hip_add_abd"
+C1 = "core"
+C2 = "extension"
+C3 = "core"
+C4 = "core"
+C5 = "core"
+C6 = "core"
+C7 = "extension"
+C8 = "core"
+
+[[row]]
+test = "iso_ham"   # declared registry gap -> no core cells until sourced
+C1 = "extension"
+C2 = "extension"
+C3 = "extension"
+C4 = "extension"
+C5 = "extension"
+C6 = "extension"
+C7 = "extension"
+C8 = "extension"
+
+[[row]]
+test = "sprint_gates"
+C1 = "core"
+C2 = "core"
+C3 = "core"
+C4 = "core"
+C5 = "core"
+C6 = "core"
+C7 = "extension"
+C8 = "core"
+
+[[row]]
+test = "sprint_fv"
+C1 = "core"
+C2 = "core"
+C3 = "core"
+C4 = "core"
+C5 = "extension"
+C6 = "extension"
+C7 = "out"
+C8 = "extension"
+
+[[row]]
+test = "cod_505"
+C1 = "core"
+C2 = "extension"
+C3 = "core"
+C4 = "core"
+C5 = "core"
+C6 = "core"
+C7 = "out"
+C8 = "core"
+
+[[row]]
+test = "ift_30_15"
+C1 = "out"
+C2 = "out"
+C3 = "core"
+C4 = "out"
+C5 = "extension"
+C6 = "core"
+C7 = "out"
+C8 = "out"
+
+[[row]]
+test = "rsa"
+C1 = "out"
+C2 = "out"
+C3 = "core"
+C4 = "out"
+C5 = "extension"
+C6 = "core"
+C7 = "out"
+C8 = "out"
+
+# --- Context values ---------------------------------------------------------------------
+[context.level]
+professional = "core"
+academy = "core"
+
+[context.sex]
+male = "core"
+female = "extension"   # default for open question Q1 (see docs/decision-boundaries.md)
+
+[context.match_day]
+"MD-4" = "core"
+"MD-3" = "core"
+"MD-2" = "core"
+"MD-1" = "core"
+"MD" = "extension"
+"MD+1" = "core"
+"MD+2" = "core"
+"MD+3" = "core"
+
+[context.schedule]
+single_match_week = "core"
+congested = "core"
+
+[context.season_phase]
+preseason = "core"
+in_season = "core"
+international_break = "extension"
+off_season = "out"
+
+[context.maturation]
+pre_phv = "extension"
+circa_phv = "core"
+post_phv = "core"
+adult = "core"
+
+[context.injury_state]
+healthy = "core"
+rehab = "core"
+return_to_training = "core"
+return_to_play = "core"
+return_to_performance = "core"
+
+[context.injury_type]
+hamstring_strain = "core"
+adductor_related_groin_pain = "core"
+acl_late_stage = "core"

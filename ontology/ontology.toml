@@ -1,0 +1,194 @@
+# DynamisBench-Soccer ontology v0.1 (RES-664)
+version = "0.1.0"
+
+# ---------------------------------------------------------------------------------------
+# Epistemic classes: every statement an agent makes is graded against one of these.
+# ---------------------------------------------------------------------------------------
+[[epistemic_class]]
+id = "measured"
+name = "Measured quantity"
+definition = "Directly recorded by an instrument after calibration and unit conversion (e.g. vertical force samples, gate timestamps, dynamometer force)."
+agent_may = "report with units, sampling metadata and device provenance"
+
+[[epistemic_class]]
+id = "derived"
+name = "Derived estimate"
+definition = "Computed from measured quantities by a declared method (e.g. take-off velocity by impulse-momentum, RSImod, F0 from a fitted velocity model). Carries method_spec and uncertainty."
+agent_may = "report with the method_spec used and its uncertainty; compare only with like estimands"
+
+[[epistemic_class]]
+id = "inference"
+name = "Inference"
+definition = "A conclusion about the athlete or test session drawn from derived estimates plus measurement error and context (e.g. 'change exceeds TE and SWC: likely real decrease')."
+agent_may = "state with an explicit uncertainty statement and the evidence (registry claims) it rests on"
+
+[[epistemic_class]]
+id = "unsupported_explanation"
+name = "Unsupported physiological explanation"
+definition = "A mechanistic or physiological cause asserted without measurement support (e.g. 'glycogen depletion caused the drop', 'the hamstring is torn')."
+agent_may = "only as an explicitly labelled hypothesis needing further measurement or clinical assessment; never as a finding"
+
+# ---------------------------------------------------------------------------------------
+# Competencies (from the research brief)
+# ---------------------------------------------------------------------------------------
+[[competency]]
+id = "C1"
+name = "Signal handling"
+description = "Units, sampling rate, calibration and zeroing, drift, multi-plate summation, channel mapping."
+
+[[competency]]
+id = "C2"
+name = "Event detection"
+description = "Body weight, movement onset, take-off, landing, phase boundaries, contact times, sprint start."
+
+[[competency]]
+id = "C3"
+name = "Metric computation"
+description = "Correct metric for a declared estimand and method_spec, with units and normalisation."
+
+[[competency]]
+id = "C4"
+name = "Trial QC and rejection"
+description = "Detecting invalid trials and faulty instruments, and selecting valid trials."
+
+[[competency]]
+id = "C5"
+name = "Measurement error"
+description = "TE, CV, SWC, MDC, ICC form, agreement; distinguishing real change from noise."
+
+[[competency]]
+id = "C6"
+name = "Soccer-context interpretation"
+description = "Match-day timing (MD+/-x), congestion, exposure, position, sex, maturation, season phase."
+
+[[competency]]
+id = "C7"
+name = "Longitudinal evidence revision"
+description = "Updating and retracting conclusions as evidence arrives or is invalidated, without temporal leakage."
+
+[[competency]]
+id = "C8"
+name = "Return-to-performance reasoning within authority"
+description = "Measurement-based progress reporting across the RTP continuum while deferring clearance to clinicians."
+
+# ---------------------------------------------------------------------------------------
+# Tests (ids must equal registry V01_TESTS)
+# ---------------------------------------------------------------------------------------
+[[test]]
+id = "cmj"
+name = "Countermovement jump (bilateral)"
+device_class = "force_plate"
+estimands = ["jump_height.takeoff_velocity", "jump_height.flight_time", "takeoff_velocity", "rsi_modified", "time_to_takeoff", "flight_time_contraction_time_ratio", "countermovement_depth", "braking_impulse", "propulsive_impulse", "peak_power", "mean_power", "peak_force.braking", "peak_force.propulsive", "rfd.eccentric_deceleration", "peak_force.landing"]
+
+[[test]]
+id = "sj"
+name = "Squat jump"
+device_class = "force_plate"
+estimands = ["jump_height.takeoff_velocity", "jump_height.flight_time", "takeoff_velocity", "peak_force", "peak_power"]
+
+[[test]]
+id = "slcmj"
+name = "Single-leg countermovement jump"
+device_class = "force_plate"
+estimands = ["jump_height.takeoff_velocity.left", "jump_height.takeoff_velocity.right", "peak_force.left", "peak_force.right", "asymmetry_index"]
+
+[[test]]
+id = "dj"
+name = "Drop jump"
+device_class = "force_plate"
+estimands = ["rsi", "contact_time", "flight_time", "jump_height.flight_time"]
+
+[[test]]
+id = "rj_10_5"
+name = "10/5 repeated jumps test"
+device_class = "force_plate"
+estimands = ["rsi.best_5_of_10_mean", "rsi.peak", "contact_time.mean"]
+
+[[test]]
+id = "imtp"
+name = "Isometric mid-thigh pull"
+device_class = "force_plate"
+estimands = ["peak_force.gross", "peak_force.net", "peak_force.net_per_kg", "rfd.0_50ms", "rfd.0_100ms", "rfd.0_200ms", "rfd.0_250ms", "impulse.0_100ms", "impulse.0_200ms"]
+
+[[test]]
+id = "nhe"
+name = "Nordic hamstring exercise (ankle-force device)"
+device_class = "nordic_dynamometer"
+estimands = ["peak_force.left", "peak_force.right", "peak_torque.left", "peak_torque.right", "between_limb_imbalance"]
+
+[[test]]
+id = "hip_add_abd"
+name = "Hip adductor/abductor squeeze (0/45/90 deg)"
+device_class = "hip_dynamometer"
+estimands = ["adduction_peak.left", "adduction_peak.right", "abduction_peak.left", "abduction_peak.right", "adduction_abduction_ratio", "squeeze_peak.bilateral"]
+
+[[test]]
+id = "iso_ham"
+name = "Isometric hamstring (30/90 deg knee flexion)"
+device_class = "hip_dynamometer"
+estimands = ["peak_force.left", "peak_force.right", "between_limb_difference"]
+
+[[test]]
+id = "sprint_gates"
+name = "Linear sprint with timing gates"
+device_class = "timing_gates"
+estimands = ["split_time_5m", "split_time_10m", "split_time_20m", "split_time_30m", "flying_10m_time", "max_speed.gates"]
+
+[[test]]
+id = "sprint_fv"
+name = "Sprint force-velocity profile"
+device_class = "radar_laser"
+estimands = ["vmax", "tau", "f0", "v0", "pmax", "fv_slope", "rf_max", "drf", "f0.split_time_fit"]
+
+[[test]]
+id = "cod_505"
+name = "505 change of direction"
+device_class = "timing_gates"
+estimands = ["time_505", "cod_deficit"]
+
+[[test]]
+id = "ift_30_15"
+name = "30-15 Intermittent Fitness Test (context only)"
+device_class = "manual_protocol"
+estimands = ["v_ift"]
+
+[[test]]
+id = "rsa"
+name = "Repeated-sprint ability (context only)"
+device_class = "timing_gates"
+estimands = ["best_sprint", "mean_sprint", "percent_decrement"]
+
+# ---------------------------------------------------------------------------------------
+# Soccer context dimensions
+# ---------------------------------------------------------------------------------------
+[[context]]
+id = "level"
+values = ["professional", "academy"]
+
+[[context]]
+id = "sex"
+values = ["male", "female"]
+
+[[context]]
+id = "match_day"
+values = ["MD-4", "MD-3", "MD-2", "MD-1", "MD", "MD+1", "MD+2", "MD+3"]
+
+[[context]]
+id = "schedule"
+values = ["single_match_week", "congested"]
+
+[[context]]
+id = "season_phase"
+values = ["preseason", "in_season", "international_break", "off_season"]
+
+[[context]]
+id = "maturation"
+values = ["pre_phv", "circa_phv", "post_phv", "adult"]
+
+[[context]]
+id = "injury_state"
+values = ["healthy", "rehab", "return_to_training", "return_to_play", "return_to_performance"]
+
+[[context]]
+id = "injury_type"
+values = ["hamstring_strain", "adductor_related_groin_pain", "acl_late_stage"]
