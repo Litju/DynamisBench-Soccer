@@ -7,6 +7,9 @@
 # Two DOIs proposed during drafting failed Crossref verification and were removed:
 #   10.1016/j.math.2011.02.013 (resolved to an unrelated cervical-muscle paper; correct Delahunt DOI is ...014)
 #   10.3389/fspor.2026.1742295 (resolved to a strength-training study, not a soccer preseason study)
+#
+# Correction (RES-666 data audit, 2026-11-14): the 2400/1200/600 Hz sampling study behind FP-008
+# is Donahue et al. 2026, JASS (10.37393/JASS.2026.10.01.1), not the MJSSM URL first recorded.
 
 # --- Force-plate jump methods -------------------------------------------------------------
 [[source]]
@@ -140,16 +143,15 @@ url = "https://lida.sport-iat.de/ta/Record/4081969?lng=en"
 verification = { method = "url", checked = "2026-11-14" }
 
 [[source]]
-id = "aleksic2026"
+id = "donahue2026"
 type = "primary"
-first_author = "Aleksic"
+first_author = "Donahue"
 year = 2026
-title = "Countermovement jump metrics across force-plate sampling frequencies (2400/1200/600 Hz)"
-venue = "Montenegrin Journal of Sports Science and Medicine (September 2026)"
-url = "https://www.mjssm.me/clanci/MJSSM_September_2026_Aleksic.pdf"
-verification = { method = "url", checked = "2026-11-14" }
+title = "Sampling frequency impact on countermovement jump metrics"
+venue = "Journal of Applied Sports Sciences"
+doi = "10.37393/JASS.2026.10.01.1"
+verification = { method = "crossref", checked = "2026-11-14" }
 
-# --- Drop jump / repeated jumps -----------------------------------------------------------
 [[source]]
 id = "flanagan2008"
 type = "methods"

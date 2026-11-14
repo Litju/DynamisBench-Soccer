@@ -76,6 +76,7 @@ class DatasetManifest(BaseModel):
     source: Source
     files: list[FileEntry] = Field(default_factory=list)
     privacy_notes: str = ""
+    handling_notes: str = Field(default="", description="safe-loading / conversion requirements")
     audit_ref: str | None = Field(default=None, description="e.g. docs/data-audit.md#anchor")
 
     @model_validator(mode="after")
