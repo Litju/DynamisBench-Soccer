@@ -1,18 +1,52 @@
-# RES-669: analytical truth substrate — first implementation slice
+# RES-669 analytical truth substrate
 
-This code establishes independent mathematical reference cases. It is **not** a neuromuscular simulator, a validated representation of human physiology, a device calibration certificate or an AI benchmark.
+Separate mathematical scenarios support independent numerical verification. They do
+not establish physiological validity, manufacturer validity, a calibration certificate,
+empirical interchangeability, or qualified AI grading. PR #5 remains a draft.
 
-## Cases implemented
+| Scenario | Implemented truth | Current observation coverage |
+| -- | -- | -- |
+| Vertical jump | CMJ/SJ/DJ, continuous x/v, exact piecewise acceleration/GRF, impulse, flight and height | Single/dual plate partition, ideal vertical IMU, cable length, contact switching latency |
+| Isometric | External force ramp/hold/release, peak/RFD/impulse | Raw load-cell voltage, declared bilateral Nordic/hip-style force partition |
+| Eccentric | Prescribed force-angle curve with known break point and perpendicular lever torque | Bilateral force partition; no manufacturer corrections |
+| Sprint | Exact exponential x/v/a, bounded numerical gate inverse | Ideal radar cosine velocity, laser range, gate crossing plus latency |
+| Planar/COD | Piecewise constant acceleration, continuous field position and velocity | Local position at declared point with latency |
+| Rigid body | Planar translation, constant yaw, body-fixed offset with angular velocity and centripetal acceleration | Cable length/count quantization; sensor-frame specific force and yaw gyro, bias and saturation |
+| Geodetic | Prescribed WGS84 latitude/longitude/height histories | Coordinate fixes with latency; no unqualified conversion to local metres or Doppler speed |
 
-- **CMJ/SJ/DJ:** physically consistent piecewise-acceleration trajectories with continuous velocity/displacement, zero GRF during ballistic flight, explicit contact events and known take-off velocity, height and impulse.
-- **Isometric force:** exact ramp/hold/release, peak force, time-window mean RFD and integrated external-force impulse.
-- **Sprint:** exact exponential velocity, acceleration, displacement and numerically inverted crossing times; theoretical sprint F0, V0, Pmax and RF metrics are intentionally **not** inferred without a declared mechanical model.
-- **Ideal observation models:** force plate vertical reaction, vertical IMU specific force in an ideal frame, geometric LPT cable length, load-cell voltage, radar radial velocity, laser displacement and timing-gate event latency.
+All eight families and 15 subfamilies have partial analytical J/K evidence. No device
+engine is verified. The functions consume separate appropriate scenarios; geodetic
+coordinate histories are not claimed to coincide physically with the planar tracks.
+The current rigid body has yaw only, not full articulated three-axis orientation.
 
-The observation models test conditional mathematical consistency only. They cannot establish real-vendor agreement, device validity, human landing mechanics or physiological fatigue. They are deliberately isolated from production device/assessment engines. RES-693 raw schema and RES-694 device evidence remain prerequisites for full device-family reference coverage.
+Sprint mechanics explicitly assume zero aerodynamic drag and constant vertical
+support mg: F0=m*Vmax/tau, V0=Vmax, Pmax=F0*Vmax/4. RF=a/sqrt(a²+g²).
+`instantaneous_drf_per_m_s` is the derivative dRF/dv, not a fitted DRF regression;
+these ideal quantities must not be substituted for a fully specified assessment.
 
-## Verification boundary
+Encoder quantization is nearest integer with half ties upward for nonnegative cable
+length. The maximum ideal reconstruction error is half a count. Contact latency has
+separate on/off values; observed flight changes by their difference. IMU specific
+force is R.T*(a_sensor-g), with the offset's centripetal acceleration included.
+No raw manufacturer algorithm or proprietary accumulated-load metric is inferred.
 
-A clean mathematical fixture is not required to look like a noisy human recording. Legacy QC flat-plateau clipping heuristics may flag an exact analytical waveform; do not change the truth solution to fool a QC heuristic. Controlled corruption and sensor-specific noise belong in separately characterized observation and fault models.
+Tests compare closed-form invariants, independent finite differences, explicit known
+coordinate cases and quantization bounds. Default float comparisons use 1e-12 absolute
+where stated; sprint crossing position error is checked within 1e-11 m for tested
+parameter ranges. Seeded Gaussian noise is byte-reproducible under the frozen Linux
+lockfile, and does not mutate clean truth. AST import checks prohibit device/assessment
+engine imports in references and reference imports in engines.
 
-No M3 device-family gate is passed by this initial slice. The work remains RES-669 In Progress pending all approved analytical scenarios, independent verification and subfamily evidence.
+M2 reader/QC findings are tracked and repaired in RES-705. Shape fixtures remain
+physically inconsistent and never verify analytical metric calculations. Exact flat
+plateaus can trigger heuristic QC; truth must not be distorted to satisfy a heuristic.
+
+Remaining RES-669 work before acceptance: schema-v2 bundle exporters with category and
+provenance per subfamily; complete protocol/continuous/event/position/inertial fault
+catalogues; explicit gate beam/body-point geometry; hopping and broader articulated
+scenarios; synchronized overlapping-device fixtures; numerical edge-case/tolerance
+review. Full GNSS WGS84-to-field/Doppler correspondence requires a declared independently
+verified coordinate model. No large datasets or paid model calls were used.
+
+M3 remains 0/8 engineering-verified families. M5 grader qualification and M8 independent
+scientific reviews remain later gates; mathematical consistency earns neither.
