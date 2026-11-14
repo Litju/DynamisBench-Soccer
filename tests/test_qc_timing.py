@@ -66,3 +66,28 @@ def test_zero_force_denominators_are_explicit_failures() -> None:
         assert (
             EVALUATORS["QC-H01"](h, RULES.by_id("QC-H01").params, None).status is spec.Status.FAIL
         )
+
+
+def test_squat_jump_zero_mean_weighing_window_rejects() -> None:
+    from dynamisbench_soccer.signals.schema import Sampling
+
+    b = examples.cmj_dual_plate()
+    n = b.meta.n_rows
+    force = np.full(n, 50.0, dtype=np.float64)
+    force[:1000] = np.tile([100.0, -100.0], 500)
+    force[1400] = 1000
+    force[1600:1900] = 0
+    meta = b.meta.model_copy(update={"test_id": "sj", "sampling": Sampling(nominal_hz=1000)})
+    b = SignalBundle(meta, {"fz_left": force / 2, "fz_right": force / 2})
+    outcome = EVALUATORS["QC-T08"](b, RULES.by_id("QC-T08").params, None)
+    assert outcome.status is spec.Status.FAIL
+    assert "positive" in outcome.detail
+
+
+def test_measured_rate_used_without_timestamp_channel() -> None:
+    b = examples.sprint_radar()
+    assert b.meta.sampling is not None
+    b.meta.sampling.measured_hz = b.meta.sampling.nominal_hz / 2
+    actual = EVALUATORS["QC-R02"](b, RULES.by_id("QC-R02").params, None)
+    expected = np.max(np.abs(np.diff(b["velocity"]))) * b.meta.sampling.measured_hz
+    assert actual.values["max_accel"] == pytest.approx(expected)

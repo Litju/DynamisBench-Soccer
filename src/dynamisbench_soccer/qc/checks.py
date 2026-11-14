@@ -69,7 +69,7 @@ def _fs(b: SignalBundle) -> float | None:
         return float(1 / np.median(dt))
     if b.meta.sampling.irregular:
         raise _TimingError("irregular sampling requires measured timestamps")
-    return b.meta.sampling.nominal_hz
+    return b.meta.sampling.measured_hz or b.meta.sampling.nominal_hz
 
 
 def _limb_forces(b: SignalBundle) -> dict[Side, FloatArray]:
@@ -397,6 +397,8 @@ def squat_jump_countermovement(b: SignalBundle, p: Params, _: SignalBundle | Non
     if not flights:
         return _na("no flight phase")
     bw = float(np.mean(window))
+    if bw <= 0:
+        return _fail("baseline system weight must be positive")
     pre = _total(b)[len(window) : flights[0][0]]
     # ignore the final unloading to take-off: only look before peak propulsive force
     pre = pre[: int(np.argmax(pre))] if len(pre) else pre
