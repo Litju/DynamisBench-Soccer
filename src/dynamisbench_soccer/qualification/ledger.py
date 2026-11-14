@@ -10,16 +10,20 @@ from pathlib import Path
 
 DIMENSIONS = tuple("ABCDEFGHIJKLMNO")
 M3_DIMENSIONS = tuple(d for d in DIMENSIONS if d != "N")
-FAMILIES = frozenset({
-    "force_platform", "lpt_encoder", "load_cell_isometric", "nordic_hip",
-    "timing_contact", "radar_laser", "gnss_lps", "imu",
-})
-PARADIGMS = frozenset({
-    "continuous_signal", "discrete_event", "position_track", "inertial"
-})
-CONTINUOUS_FILTERS = frozenset({
-    "butterworth", "fir", "iir", "savgol", "lowpass", "highpass"
-})
+FAMILIES = frozenset(
+    {
+        "force_platform",
+        "lpt_encoder",
+        "load_cell_isometric",
+        "nordic_hip",
+        "timing_contact",
+        "radar_laser",
+        "gnss_lps",
+        "imu",
+    }
+)
+PARADIGMS = frozenset({"continuous_signal", "discrete_event", "position_track", "inertial"})
+CONTINUOUS_FILTERS = frozenset({"butterworth", "fir", "iir", "savgol", "lowpass", "highpass"})
 WEAK_EVIDENCE = frozenset({"adapter_import", "vendor_reproduction"})
 
 
@@ -102,16 +106,18 @@ def load(path: Path) -> Ledger:
     raw = tomllib.loads(path.read_text(encoding="utf-8"))
     subfamilies = []
     for row in raw.get("subfamily", []):
-        subfamilies.append(Subfamily(
-            id=row["id"],
-            family=row["family"],
-            paradigm=row["paradigm"],
-            issue=row["issue"],
-            engine_id=row["engine_id"],
-            methods=tuple(row.get("methods", [])),
-            ratings={str(k): Rating(v) for k, v in row["ratings"].items()},
-            blockers=tuple(row.get("blockers", [])),
-        ))
+        subfamilies.append(
+            Subfamily(
+                id=row["id"],
+                family=row["family"],
+                paradigm=row["paradigm"],
+                issue=row["issue"],
+                engine_id=row["engine_id"],
+                methods=tuple(row.get("methods", [])),
+                ratings={str(k): Rating(v) for k, v in row["ratings"].items()},
+                blockers=tuple(row.get("blockers", [])),
+            )
+        )
     evidence = tuple(Evidence(**e) for e in raw.get("evidence", []))
     comparisons = tuple(
         Comparison(
@@ -128,7 +134,10 @@ def load(path: Path) -> Ledger:
     reviewers = tuple(Reviewer(**r) for r in raw.get("reviewer", []))
     return Ledger(
         str(raw.get("version", "")),
-        tuple(subfamilies), evidence, comparisons, reviewers,
+        tuple(subfamilies),
+        evidence,
+        comparisons,
+        reviewers,
     )
 
 
@@ -178,29 +187,26 @@ def validate(model: Ledger, root: Path | None = None) -> list[str]:
                 errors.append(f"{s.id}/{d}: N/A without applicability review")
             if value == Rating.VERIFIED:
                 accepted = {
-                    "independent_test", "analytical_reference",
-                    "empirical_study", "external_review",
+                    "independent_test",
+                    "analytical_reference",
+                    "empirical_study",
+                    "external_review",
                 }
                 if not any(e.kind in accepted for e in refs):
                     errors.append(f"{s.id}/{d}: no independent verification")
                 if d == "J" and not any(
-                    e.independence_from and e.independence_from != s.engine_id
-                    for e in refs
+                    e.independence_from and e.independence_from != s.engine_id for e in refs
                 ):
                     errors.append(f"{s.id}/J: circular reference engine")
     for c in model.comparisons:
         if c.left not in ids or c.right not in ids or c.left == c.right:
             errors.append(f"invalid comparison {c.left}/{c.right}")
-        if c.verdict not in {
-            "unknown", "not_interchangeable", "conditionally_interchangeable"
-        }:
+        if c.verdict not in {"unknown", "not_interchangeable", "conditionally_interchangeable"}:
             errors.append(f"invalid comparison verdict {c.left}/{c.right}")
         if c.evidence_level not in {"none", "analytical", "empirical"}:
             errors.append(f"invalid evidence tier {c.left}/{c.right}")
         if c.verdict == "conditionally_interchangeable" and (
-            c.evidence_level != "empirical"
-            or c.reviewer_status != "accepted"
-            or not c.refs
+            c.evidence_level != "empirical" or c.reviewer_status != "accepted" or not c.refs
         ):
             errors.append(f"{c.left}/{c.right}: analytical-only interchangeability")
     for r in model.reviewers:
@@ -233,7 +239,10 @@ def gate(model: Ledger, stage: Stage) -> GateResult:
     if structural:
         missing.setdefault("__ledger__", []).extend(structural)
     return GateResult(
-        stage, ready == len(families) and not structural, ready, len(families),
+        stage,
+        ready == len(families) and not structural,
+        ready,
+        len(families),
         {name: tuple(v) for name, v in sorted(missing.items())},
     )
 
@@ -284,7 +293,6 @@ def markdown(model: Ledger) -> str:
     lines += ["", "## Interchangeability studies", ""]
     for c in model.comparisons:
         lines.append(
-            f"- {c.left} vs {c.right} ({c.quantity}): "
-            f"{c.verdict}; {c.evidence_level} evidence"
+            f"- {c.left} vs {c.right} ({c.quantity}): {c.verdict}; {c.evidence_level} evidence"
         )
     return "\n".join(lines) + "\n"

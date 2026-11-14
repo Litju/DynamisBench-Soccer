@@ -14,8 +14,10 @@ def _validate(args: argparse.Namespace) -> int:
     problems = validate(model, Path("."))
     for problem in problems:
         print(f"FAIL {problem}", file=sys.stderr)
-    print(f"qualification: {len(model.subfamilies)} subfamilies; "
-          f"{'OK' if not problems else 'INVALID'}")
+    print(
+        f"qualification: {len(model.subfamilies)} subfamilies; "
+        f"{'OK' if not problems else 'INVALID'}"
+    )
     return 1 if problems else 0
 
 

@@ -39,8 +39,14 @@ def test_specified_not_verified() -> None:
     states = {d: Rating.ABSENT for d in DIMENSIONS}
     states["A"] = Rating.SPECIFIED
     sub = Subfamily(
-        "force_platform.single", "force_platform", "continuous_signal",
-        "RES-670", "test-engine", (), states, (),
+        "force_platform.single",
+        "force_platform",
+        "continuous_signal",
+        "RES-670",
+        "test-engine",
+        (),
+        states,
+        (),
     )
     assert sub.ratings["A"] != Rating.VERIFIED
     assert replace(sub, ratings={**sub.ratings, "N": Rating.ABSENT})
