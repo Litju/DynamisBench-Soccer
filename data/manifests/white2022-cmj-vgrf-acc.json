@@ -1,0 +1,33 @@
+{
+  "audit_ref": "docs/data-audit.md#white2022-cmj-vgrf-acc",
+  "data_category": "empirical",
+  "dataset_id": "white2022-cmj-vgrf-acc",
+  "files": [
+    {
+      "path": "cmj_dataset_arms.npz",
+      "sha256": "5a66180b6718c87d04e03dcba30f166e800c8cd09665b5c0d04c8d52341f6730",
+      "size_bytes": 9238505,
+      "url": "https://zenodo.org/records/19136480/files/cmj_dataset_arms.npz?download=1"
+    },
+    {
+      "path": "cmj_dataset_noarms.npz",
+      "sha256": "393b2cb8d8fbdaaa9621ae6903310edfb3d4439ad2843d6dd2752596a95c9dee",
+      "size_bytes": 8835952,
+      "url": "https://zenodo.org/records/19136480/files/cmj_dataset_noarms.npz?download=1"
+    }
+  ],
+  "handling_notes": "grf_signals and acc_signals are ragged NumPy object arrays that require allow_pickle=True. NEVER unpickle on a normal host: convert once inside an isolated sandbox (or obtain a non-pickle export) before use. The 'both' file duplicates arms+noarms and is deliberately not listed (no duplicate data). Description says vGRF downsampled to 250 Hz with a 2000 ms window, but the stored grf_sampling_rate is 1000 and trial lengths vary; per-file counts are 334/329 vs documented 331/332. Treat metadata as unverified until conversion.",
+  "license": "CC-BY-4.0",
+  "privacy_notes": "Healthy sports-science students (45 M, 22 F); written consent and Swansea University ethics approval stated by depositors. Integer participant ids only; no names. Low re-identification risk.",
+  "redistribution_allowed": true,
+  "schema_version": 1,
+  "source": {
+    "citation": "White et al. (2022) PLOS ONE accelerometer CMJ dataset; preprocessed Zenodo deposit 19136480 (2026)",
+    "doi": "10.5281/zenodo.19136480",
+    "kind": "url",
+    "location": "https://zenodo.org/records/19136480"
+  },
+  "title": "Preprocessed accelerometer and vertical GRF data from countermovement jumps (derived from White et al. 2022, PLOS ONE)",
+  "usage": "cross-validation-only",
+  "version": "zenodo-19136480"
+}

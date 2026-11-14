@@ -1,0 +1,20 @@
+{
+  "audit_ref": "docs/data-audit.md#rugby-league-hawkin-2023",
+  "data_category": "empirical",
+  "dataset_id": "rugby-league-hawkin-2023",
+  "files": [],
+  "handling_notes": "EXCLUDED: Vendor-software summary metrics only (Hawkin Dynamics), rugby league population; adds no raw signal and no soccer context. Revisit for IMTP plausibility ranges in v0.2.",
+  "license": "CC-BY-4.0",
+  "privacy_notes": "",
+  "redistribution_allowed": true,
+  "schema_version": 1,
+  "source": {
+    "citation": null,
+    "doi": "10.6084/m9.figshare.24830790.v1",
+    "kind": "url",
+    "location": "https://figshare.com/articles/dataset/24830790"
+  },
+  "title": "English Super League rugby league force plate data (CMJ + IMTP)",
+  "usage": "excluded",
+  "version": "figshare-24830790"
+}
