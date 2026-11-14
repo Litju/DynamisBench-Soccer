@@ -8,6 +8,7 @@ row-group size are fixed, and the sidecar is emitted with sorted keys.
 
 from __future__ import annotations
 
+import copy
 import hashlib
 import json
 from collections.abc import Callable, Iterator, Sequence
@@ -32,8 +33,22 @@ _WRITE_OPTIONS: dict[str, Any] = {
 }
 
 Migration = Callable[[dict[str, Any]], dict[str, Any]]
-#: from_version -> function producing version+1. Empty until schema v2 exists.
-MIGRATIONS: dict[int, Migration] = {}
+
+
+def _v1_to_v2(raw: dict[str, Any]) -> dict[str, Any]:
+    migrated = copy.deepcopy(raw)
+    migrated["schema_version"] = 2
+    migrated["acquisition_unknown_reason"] = (
+        "Migrated v1: clocks, synchronization, frames and device geometry not recorded"
+    )
+    migrated["provenance"]["transforms"] = [
+        *migrated["provenance"].get("transforms", []),
+        "schema migration v1->v2; no signal changes",
+    ]
+    return migrated
+
+
+MIGRATIONS: dict[int, Migration] = {1: _v1_to_v2}
 
 
 class BundleIntegrityError(RuntimeError):
@@ -74,15 +89,19 @@ def write(bundle: SignalBundle, stem: Path) -> tuple[Path, Path]:
 def migrate(raw: dict[str, Any]) -> dict[str, Any]:
     """Upgrade a raw sidecar dict to the current schema version."""
     version = raw.get("schema_version")
-    if not isinstance(version, int):
+    if type(version) is not int:
         raise ValueError("sidecar has no integer schema_version")
     if version > SCHEMA_VERSION:
         raise ValueError(
             f"sidecar schema_version {version} is newer than supported {SCHEMA_VERSION}"
         )
     while version < SCHEMA_VERSION:
+        if version not in MIGRATIONS:
+            raise ValueError(f"unsupported sidecar schema_version {version}")
         raw = MIGRATIONS[version](raw)
-        version = raw["schema_version"]
+        if raw.get("schema_version") != version + 1:
+            raise ValueError("migration must advance exactly one schema version")
+        version += 1
     return raw
 
 
