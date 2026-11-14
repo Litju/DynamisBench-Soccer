@@ -131,12 +131,12 @@ def cmj(mass_kg: float = 75.0) -> Trajectory:
         mass_kg,
         0.0,
         (
-            Phase("quiet", 1.00, 0.0, True),
+            Phase("quiet", 1.0, 0.0, True),
             Phase("unweight", 0.25, -2.0, True),
-            Phase("brake", 0.20, 2.5, True),
-            Phase("propel", 0.30, 9.0, True),
-        )
-        + _flight_and_land(2.7),
+            Phase("brake", 0.2, 2.5, True),
+            Phase("propel", 0.3, 9.0, True),
+            *_flight_and_land(2.7),
+        ),
     )
 
 
@@ -145,8 +145,11 @@ def sj(mass_kg: float = 75.0) -> Trajectory:
     return Trajectory(
         mass_kg,
         0.0,
-        (Phase("quiet", 1.0, 0.0, True), Phase("propel", 0.30, 8.0, True))
-        + _flight_and_land(2.4),
+        (
+            Phase("quiet", 1.0, 0.0, True),
+            Phase("propel", 0.3, 8.0, True),
+            *_flight_and_land(2.4),
+        ),
     )
 
 
@@ -161,6 +164,8 @@ def dj(mass_kg: float = 75.0, drop_height_m: float = 0.30) -> Trajectory:
     return Trajectory(
         mass_kg,
         -impact_speed,
-        (Phase("rebound_contact", contact_s, acceleration, True),)
-        + _flight_and_land(rebound_speed),
+        (
+            Phase("rebound_contact", contact_s, acceleration, True),
+            *_flight_and_land(rebound_speed),
+        ),
     )
