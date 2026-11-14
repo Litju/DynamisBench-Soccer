@@ -502,6 +502,19 @@ class BundleMeta(_Strict):
                 channels = [self.channel(n) for n in source.channels]
                 quantities = {c.quantity for c in channels}
                 cls = source.device.device_class
+                semantic_columns = {
+                    DeviceClass.CONTACT_MAT: {
+                        "t_s": Quantity.TIME,
+                        "contact": Quantity.DIMENSIONLESS,
+                    },
+                    DeviceClass.TIMING_GATES: {
+                        "t_s": Quantity.TIME,
+                        "distance_m": Quantity.DISTANCE,
+                    },
+                }
+                for name, quantity in semantic_columns.get(cls, {}).items():
+                    if not any(c.name == name and c.quantity is quantity for c in channels):
+                        raise ValueError(f"{cls}: requires semantic channel {name} ({quantity})")
                 required_quantities = {
                     DeviceClass.GNSS: {Quantity.LATITUDE, Quantity.LONGITUDE, Quantity.POSITION},
                     DeviceClass.LPS: {Quantity.POSITION},

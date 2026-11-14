@@ -256,3 +256,14 @@ def test_calibration_and_single_cable_geometry_are_not_inferred() -> None:
     raw["geometry"] = dict(attachment_point="bar", cable_anchors_m=[(0, 0, 0)])
     with pytest.raises(ValidationError, match="single-cable"):
         AcquisitionSource.model_validate(raw)
+
+
+def test_contact_source_cannot_rename_away_binary_semantics() -> None:
+    raw = shape(DeviceClass.CONTACT_MAT).meta.model_dump()
+    raw["device"]["device_class"] = DeviceClass.LPT
+    raw["kind"] = BundleKind.TIMESERIES
+    raw["sampling"] = {"nominal_hz": 100}
+    raw["channels"][1]["name"] = "contact_state"
+    raw["acquisition"]["sources"][0]["channels"][1] = "contact_state"
+    with pytest.raises(ValidationError, match="semantic channel contact"):
+        BundleMeta.model_validate(raw)
