@@ -18,35 +18,35 @@ Specified is NOT verified. Analytical agreement is NOT empirical equivalence.
 
 ## Ratings and blockers
 
-- force_platform.single (RES-670): A:specified, B:partial, C:partial, D:partial, E:absent, F:absent, G:absent, H:absent, I:absent, J:absent, K:absent, L:absent, M:absent, N:absent, O:specified
+- force_platform.single (RES-670): A:specified (RES-670), B:partial (RES-670), C:partial (RES-693), D:partial (RES-670), E:absent (RES-670), F:absent (RES-670), G:absent (RES-671), H:absent (RES-671), I:absent (RES-670), J:absent (RES-669), K:absent (RES-669), L:absent (RES-703), M:absent (RES-675), N:absent (RES-680), O:partial (RES-670)
   - Reference engine and independent numerical checks absent
-- force_platform.dual (RES-670): A:specified, B:partial, C:partial, D:partial, E:absent, F:absent, G:absent, H:absent, I:absent, J:absent, K:absent, L:absent, M:absent, N:absent, O:specified
+- force_platform.dual (RES-670): A:specified (RES-670), B:partial (RES-670), C:partial (RES-693), D:partial (RES-670), E:absent (RES-670), F:absent (RES-670), G:absent (RES-671), H:absent (RES-671), I:absent (RES-670), J:absent (RES-669), K:absent (RES-669), L:absent (RES-703), M:absent (RES-675), N:absent (RES-680), O:partial (RES-670)
   - Bilateral calibration and timing unqualified
-- lpt_encoder.lpt (RES-695): A:partial, B:absent, C:absent, D:absent, E:absent, F:absent, G:absent, H:absent, I:absent, J:absent, K:absent, L:absent, M:absent, N:absent, O:absent
+- lpt_encoder.lpt (RES-695): A:partial (RES-693), B:absent (RES-695), C:absent (RES-693), D:absent (RES-695), E:absent (RES-695), F:absent (RES-695), G:absent (RES-671), H:absent (RES-671), I:absent (RES-695), J:absent (RES-669), K:absent (RES-669), L:absent (RES-703), M:absent (RES-695), N:absent (RES-704), O:absent (RES-695)
   - No cable geometry or device validity claims (RES-693/694)
-- lpt_encoder.encoder (RES-695): A:absent, B:absent, C:absent, D:absent, E:absent, F:absent, G:absent, H:absent, I:absent, J:absent, K:absent, L:absent, M:absent, N:absent, O:absent
+- lpt_encoder.encoder (RES-695): A:absent (RES-693), B:absent (RES-695), C:absent (RES-693), D:absent (RES-695), E:absent (RES-695), F:absent (RES-695), G:absent (RES-671), H:absent (RES-671), I:absent (RES-695), J:absent (RES-669), K:absent (RES-669), L:absent (RES-703), M:absent (RES-695), N:absent (RES-704), O:absent (RES-695)
   - No native encoder counts/timestamp contract (RES-693)
-- load_cell_isometric.load_cell (RES-696): A:absent, B:absent, C:absent, D:absent, E:absent, F:absent, G:absent, H:absent, I:absent, J:absent, K:absent, L:absent, M:absent, N:absent, O:absent
+- load_cell_isometric.load_cell (RES-696): A:absent (RES-693), B:absent (RES-696), C:absent (RES-693), D:absent (RES-696), E:absent (RES-696), F:absent (RES-696), G:absent (RES-672), H:absent (RES-672), I:absent (RES-696), J:absent (RES-669), K:absent (RES-669), L:absent (RES-703), M:absent (RES-696), N:absent (RES-704), O:absent (RES-696)
   - No raw voltage/calibration and rig compliance claims (RES-693/694)
-- load_cell_isometric.isometric_rig (RES-696): A:absent, B:absent, C:absent, D:absent, E:absent, F:absent, G:absent, H:absent, I:absent, J:absent, K:absent, L:absent, M:absent, N:absent, O:absent
+- load_cell_isometric.isometric_rig (RES-696): A:absent (RES-693), B:absent (RES-696), C:absent (RES-693), D:absent (RES-696), E:absent (RES-696), F:absent (RES-696), G:absent (RES-672), H:absent (RES-672), I:absent (RES-696), J:absent (RES-669), K:absent (RES-669), L:absent (RES-703), M:absent (RES-696), N:absent (RES-704), O:absent (RES-696)
   - No isometric rig compliance or validity source (RES-694)
-- nordic_hip.nordic (RES-697): A:partial, B:absent, C:absent, D:absent, E:absent, F:absent, G:absent, H:absent, I:absent, J:absent, K:absent, L:absent, M:absent, N:absent, O:absent
+- nordic_hip.nordic (RES-697): A:partial (RES-697), B:absent (RES-697), C:absent (RES-693), D:absent (RES-697), E:absent (RES-697), F:absent (RES-697), G:absent (RES-672), H:absent (RES-672), I:absent (RES-697), J:absent (RES-669), K:absent (RES-669), L:absent (RES-703), M:absent (RES-697), N:absent (RES-681), O:absent (RES-697)
   - Isometric hamstring test is a declared evidence gap; no engine
-- nordic_hip.hip (RES-697): A:partial, B:absent, C:absent, D:absent, E:absent, F:absent, G:absent, H:absent, I:absent, J:absent, K:absent, L:absent, M:absent, N:absent, O:absent
+- nordic_hip.hip (RES-697): A:partial (RES-697), B:absent (RES-697), C:absent (RES-693), D:absent (RES-697), E:absent (RES-697), F:absent (RES-697), G:absent (RES-672), H:absent (RES-672), I:absent (RES-697), J:absent (RES-669), K:absent (RES-669), L:absent (RES-703), M:absent (RES-697), N:absent (RES-681), O:absent (RES-697)
   - Unqualified geometry and metrology; no engine
-- timing_contact.gates (RES-698): A:partial, B:absent, C:absent, D:absent, E:absent, F:absent, G:absent, H:absent, I:absent, J:absent, K:absent, L:absent, M:absent, N:absent, O:absent
+- timing_contact.gates (RES-698): A:partial (RES-693), B:absent (RES-698), C:absent (RES-693), D:absent (RES-698), E:absent (RES-698), F:absent (RES-698), G:absent (RES-671), H:absent (RES-673), I:absent (RES-698), J:absent (RES-669), K:absent (RES-669), L:absent (RES-703), M:absent (RES-698), N:absent (RES-681), O:absent (RES-698)
   - No gate trigger-validity source (RES-694)
-- timing_contact.contact (RES-698): A:absent, B:absent, C:absent, D:absent, E:absent, F:absent, G:absent, H:absent, I:absent, J:absent, K:absent, L:absent, M:absent, N:absent, O:absent
+- timing_contact.contact (RES-698): A:absent (RES-693), B:absent (RES-698), C:absent (RES-693), D:absent (RES-698), E:absent (RES-698), F:absent (RES-698), G:absent (RES-671), H:absent (RES-673), I:absent (RES-698), J:absent (RES-669), K:absent (RES-669), L:absent (RES-703), M:absent (RES-698), N:absent (RES-681), O:absent (RES-698)
   - No contact mat latency/trigger evidence or schema (RES-693/694)
-- radar_laser.radar (RES-699): A:partial, B:absent, C:absent, D:absent, E:absent, F:absent, G:absent, H:absent, I:absent, J:absent, K:absent, L:absent, M:absent, N:absent, O:absent
+- radar_laser.radar (RES-699): A:partial (RES-693), B:absent (RES-699), C:absent (RES-693), D:absent (RES-699), E:absent (RES-699), F:absent (RES-699), G:absent (RES-673), H:absent (RES-673), I:absent (RES-699), J:absent (RES-669), K:absent (RES-669), L:absent (RES-703), M:absent (RES-699), N:absent (RES-681), O:absent (RES-699)
   - No raw radar validity study (RES-694)
-- radar_laser.laser (RES-699): A:partial, B:absent, C:absent, D:absent, E:absent, F:absent, G:absent, H:absent, I:absent, J:absent, K:absent, L:absent, M:absent, N:absent, O:absent
+- radar_laser.laser (RES-699): A:partial (RES-693), B:absent (RES-699), C:absent (RES-693), D:absent (RES-699), E:absent (RES-699), F:absent (RES-699), G:absent (RES-673), H:absent (RES-673), I:absent (RES-699), J:absent (RES-669), K:absent (RES-669), L:absent (RES-703), M:absent (RES-699), N:absent (RES-681), O:absent (RES-699)
   - No raw laser validity study (RES-694)
-- gnss_lps.gnss (RES-700): A:absent, B:absent, C:absent, D:absent, E:absent, F:absent, G:absent, H:absent, I:absent, J:absent, K:absent, L:absent, M:absent, N:absent, O:absent
+- gnss_lps.gnss (RES-700): A:absent (RES-693), B:absent (RES-700), C:absent (RES-693), D:absent (RES-700), E:absent (RES-700), F:absent (RES-700), G:absent (RES-673), H:absent (RES-673), I:absent (RES-700), J:absent (RES-669), K:absent (RES-669), L:absent (RES-703), M:absent (RES-700), N:absent (RES-704), O:absent (RES-700)
   - Only derived GNSS summaries in M2; no raw schema or audited raw data
-- gnss_lps.lps (RES-700): A:absent, B:absent, C:absent, D:absent, E:absent, F:absent, G:absent, H:absent, I:absent, J:absent, K:absent, L:absent, M:absent, N:absent, O:absent
+- gnss_lps.lps (RES-700): A:absent (RES-693), B:absent (RES-700), C:absent (RES-693), D:absent (RES-700), E:absent (RES-700), F:absent (RES-700), G:absent (RES-673), H:absent (RES-673), I:absent (RES-700), J:absent (RES-669), K:absent (RES-669), L:absent (RES-703), M:absent (RES-700), N:absent (RES-704), O:absent (RES-700)
   - No LPS position/anchor schema or audited raw data
-- imu.inertial (RES-701): A:absent, B:absent, C:absent, D:absent, E:absent, F:absent, G:absent, H:absent, I:absent, J:absent, K:absent, L:absent, M:absent, N:absent, O:absent
+- imu.inertial (RES-701): A:absent (RES-693), B:absent (RES-701), C:absent (RES-693), D:absent (RES-701), E:absent (RES-701), F:absent (RES-701), G:absent (RES-671), H:absent (RES-671), I:absent (RES-701), J:absent (RES-669), K:absent (RES-669), L:absent (RES-703), M:absent (RES-701), N:absent (RES-704), O:absent (RES-701)
   - No raw specific-force/angular-rate schema or audited raw data
 
 ## Interchangeability studies
@@ -58,3 +58,6 @@ Specified is NOT verified. Analytical agreement is NOT empirical equivalence.
 - radar_laser.radar vs gnss_lps.gnss (running_speed): unknown; none evidence
 - radar_laser.radar vs gnss_lps.lps (running_speed): unknown; none evidence
 - radar_laser.radar vs timing_contact.gates (sprint_velocity): unknown; none evidence
+- force_platform.single vs lpt_encoder.lpt (cable_vs_vertical_displacement): unknown; none evidence
+- force_platform.single vs lpt_encoder.lpt (attachment_vs_com_power): unknown; none evidence
+- radar_laser.radar vs radar_laser.laser (doppler_vs_differentiated_velocity): unknown; none evidence
