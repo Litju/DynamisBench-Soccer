@@ -93,9 +93,7 @@ class MonoExponentialSprint:
 
     def position_m(self, t_s: float) -> float:
         self._time(t_s)
-        return self.vmax_m_s * (
-            t_s + self.tau_s * math.expm1(-t_s / self.tau_s)
-        )
+        return self.vmax_m_s * (t_s + self.tau_s * math.expm1(-t_s / self.tau_s))
 
     def gate_time_s(self, distance_m: float) -> float:
         """Numerical inverse of exact x(t), not sensor-specific event detection."""

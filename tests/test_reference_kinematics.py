@@ -14,12 +14,8 @@ def test_takeoff_flight_impulse_and_landing(factory) -> None:
     land = motion.landing_s()
     assert to < land < motion.total_duration_s
     assert motion.takeoff_velocity_m_s() > 0
-    assert motion.flight_time_s() == pytest.approx(
-        2 * motion.takeoff_velocity_m_s() / G
-    )
-    assert motion.jump_height_m() == pytest.approx(
-        G * motion.flight_time_s() ** 2 / 8
-    )
+    assert motion.flight_time_s() == pytest.approx(2 * motion.takeoff_velocity_m_s() / G)
+    assert motion.jump_height_m() == pytest.approx(G * motion.flight_time_s() ** 2 / 8)
     assert motion.state(to).vertical_grf_n == 0
     assert motion.state(land).vertical_grf_n > 0
     assert motion.state(land).displacement_m == pytest.approx(

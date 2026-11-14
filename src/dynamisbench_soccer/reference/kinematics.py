@@ -22,9 +22,7 @@ class Phase:
             raise ValueError("phase acceleration must be finite")
         if self.in_contact and self.acceleration_m_s2 < -g:
             raise ValueError("normal reaction force cannot be negative")
-        if not self.in_contact and not math.isclose(
-            self.acceleration_m_s2, -g, abs_tol=1e-12
-        ):
+        if not self.in_contact and not math.isclose(self.acceleration_m_s2, -g, abs_tol=1e-12):
             raise ValueError("ballistic flight requires acceleration = -gravity")
 
 
@@ -74,9 +72,7 @@ class Trajectory:
                 x = x0 + v0 * dt + 0.5 * phase.acceleration_m_s2 * dt * dt
                 v = v0 + phase.acceleration_m_s2 * dt
                 if phase.in_contact:
-                    force = self.mass_kg * (
-                        self.gravity_m_s2 + phase.acceleration_m_s2
-                    )
+                    force = self.mass_kg * (self.gravity_m_s2 + phase.acceleration_m_s2)
                 else:
                     force = 0.0
                 return State(t_s, x, v, phase.acceleration_m_s2, force, phase.name)
@@ -110,9 +106,7 @@ class Trajectory:
     def impulse_n_s(self, start_s: float, end_s: float) -> float:
         if end_s < start_s:
             raise ValueError("impulse interval reversed")
-        return self.mass_kg * (
-            self.state(end_s).velocity_m_s - self.state(start_s).velocity_m_s
-        )
+        return self.mass_kg * (self.state(end_s).velocity_m_s - self.state(start_s).velocity_m_s)
 
 
 def _flight_and_land(takeoff_v_m_s: float, g: float = G) -> tuple[Phase, ...]:
