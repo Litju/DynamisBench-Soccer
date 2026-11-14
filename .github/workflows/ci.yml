@@ -36,6 +36,8 @@ jobs:
         run: |
           uv run dbs ontology validate
           uv run dbs ontology matrix --check
+      - name: Signal schema
+        run: uv run dbs signals schema --check
       - name: Lint
         run: |
           uv run ruff check .
