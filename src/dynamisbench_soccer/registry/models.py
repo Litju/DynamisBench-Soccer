@@ -29,6 +29,8 @@ V01_TESTS: tuple[str, ...] = (
 TOPICS: tuple[str, ...] = (
     "force_plate_processing", "asymmetry", "reliability_stats", "soccer_context",
     "injury_surveillance", "return_to_play", "maturation",
+    "force_platform", "lpt_encoder", "load_cell_isometric", "nordic_hip",
+    "timing_contact", "radar_laser", "gnss_lps", "imu",
 )  # fmt: skip
 
 

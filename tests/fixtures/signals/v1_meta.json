@@ -1,0 +1,89 @@
+{
+  "bundle_id": "example-cmj-dual",
+  "calibration": [],
+  "channels": [
+    {
+      "axis": "z",
+      "description": "",
+      "name": "fz_left",
+      "plate": 1,
+      "quantity": "force",
+      "side": "left",
+      "unit": "N"
+    },
+    {
+      "axis": "z",
+      "description": "",
+      "name": "fz_right",
+      "plate": 2,
+      "quantity": "force",
+      "side": "right",
+      "unit": "N"
+    }
+  ],
+  "data_category": "synthetic",
+  "data_sha256": "582ebc7b4ef23f5ed668f8adda01c9a2189ffeec3027dbd0d91bf9a842671ccb",
+  "device": {
+    "device_class": "force_plate",
+    "firmware": null,
+    "manufacturer": null,
+    "model": "generic-dual-plate",
+    "serial_hash": null
+  },
+  "geometry": {
+    "gate_height_m": null,
+    "hip_flexion_deg": null,
+    "knee_angle_deg": null,
+    "lever_arm_m": null,
+    "plate_layout": "dual_side_by_side",
+    "summed_force_policy": "sum_fz_all_plates"
+  },
+  "kind": "timeseries",
+  "n_rows": 3500,
+  "protocol": {
+    "action": null,
+    "arm_swing": "hands_on_hips",
+    "drop_height_m": null,
+    "protocol_id": "cmj.hands_on_hips.v1",
+    "start_mode": "not_applicable"
+  },
+  "provenance": {
+    "created_by": "examples@0.1",
+    "parents": [],
+    "source_sha256": null,
+    "transforms": [
+      "synthetic shape fixture"
+    ]
+  },
+  "sampling": {
+    "measured_hz": null,
+    "nominal_hz": 1000.0,
+    "t0_s": 0.0
+  },
+  "schema_version": 1,
+  "session": {
+    "date": "2026-11-14",
+    "match_day": "MD-3",
+    "session_id": "S-2026-11-14",
+    "trial_index": 1
+  },
+  "subject": {
+    "birth_year": null,
+    "body_mass_kg": 75.0,
+    "pseudonym": "ATH-001",
+    "sex": "male"
+  },
+  "test_id": "cmj",
+  "vendor_reported": {
+    "jump_height": {
+      "definition": "unknown (vendor)",
+      "unit": "m",
+      "value": 0.31
+    }
+  },
+  "zeroing": {
+    "method": "unloaded plate before trial",
+    "offsets": {},
+    "performed": true
+  }
+}
