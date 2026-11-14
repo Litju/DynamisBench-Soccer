@@ -32,6 +32,10 @@ jobs:
         run: |
           uv run dbs registry validate
           uv run dbs registry contested --check
+      - name: Ontology, coverage matrix and decision boundaries
+        run: |
+          uv run dbs ontology validate
+          uv run dbs ontology matrix --check
       - name: Lint
         run: |
           uv run ruff check .
