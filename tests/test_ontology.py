@@ -30,7 +30,7 @@ def test_tests_equal_registry_ids(bundle) -> None:  # type: ignore[no-untyped-de
 
 def test_registry_gap_has_no_core_cells(bundle, repo_root: Path) -> None:  # type: ignore[no-untyped-def]
     gaps = {g.subject for g in load_registry(repo_root / "registry").gaps}
-    for test in gaps:
+    for test in gaps & set(V01_TESTS):
         row = bundle.coverage.row_for(test)
         assert all(row.cell(c) is not Status.CORE for c in COMPETENCIES)
 

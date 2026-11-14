@@ -1,0 +1,74 @@
+{
+  "wadhi2018": {
+    "doi": "10.3390/sports6040177",
+    "title": "Validity and Reliability of the GymAware Linear Position Transducer for Squat Jump and Counter-Movement Jump Height",
+    "first_author": "Wadhi",
+    "year": 2018,
+    "venue": "Sports",
+    "checked": "2026-11-14",
+    "endpoint": "https://api.crossref.org/works?filter=doi%3A10.3390%2Fsports6040177&rows=1"
+  },
+  "tenelsen2019": {
+    "doi": "10.3390/sports7050114",
+    "title": "Validity and Reliability of an Electronic Contact Mat for Drop Jump Assessment in Physically Active Adults",
+    "first_author": "Tenelsen",
+    "year": 2019,
+    "venue": "Sports",
+    "checked": "2026-11-14",
+    "endpoint": "https://api.crossref.org/works?filter=doi%3A10.3390%2Fsports7050114&rows=1"
+  },
+  "haugen2014": {
+    "doi": "10.1519/jsc.0000000000000415",
+    "title": "Sprint Time Differences Between Single- and Dual-Beam Timing Systems",
+    "first_author": "Haugen",
+    "year": 2014,
+    "venue": "Journal of Strength and Conditioning Research",
+    "checked": "2026-11-14",
+    "endpoint": "https://api.crossref.org/works?filter=doi%3A10.1519%2Fjsc.0000000000000415&rows=1"
+  },
+  "linke2018": {
+    "doi": "10.1371/journal.pone.0199519",
+    "title": "Validation of electronic performance and tracking systems EPTS under field conditions",
+    "first_author": "Linke",
+    "year": 2018,
+    "venue": "PLOS ONE",
+    "checked": "2026-11-14",
+    "endpoint": "https://api.crossref.org/works?filter=doi%3A10.1371%2Fjournal.pone.0199519&rows=1"
+  },
+  "duthie2025": {
+    "doi": "10.1007/s12283-025-00509-4",
+    "title": "Validation of a laser device for assessing high-speed running in an outdoor team sport setting",
+    "first_author": "Duthie",
+    "year": 2025,
+    "venue": "Sports Engineering",
+    "checked": "2026-11-14",
+    "endpoint": "https://api.crossref.org/works?filter=doi%3A10.1007%2Fs12283-025-00509-4&rows=1"
+  },
+  "fornasier2022": {
+    "doi": "10.3390/s22228610",
+    "title": "Sprint Acceleration Mechanical Outputs Derived from Position– or Velocity–Time Data: A Multi-System Comparison Study",
+    "first_author": "Fornasier-Santos",
+    "year": 2022,
+    "venue": "Sensors",
+    "checked": "2026-11-14",
+    "endpoint": "https://api.crossref.org/works?filter=doi%3A10.3390%2Fs22228610&rows=1"
+  },
+  "nielsen2019": {
+    "doi": "10.1016/j.asmart.2018.09.002",
+    "title": "Validation of an inertial measurement unit to determine countermovement jump height",
+    "first_author": "Toft Nielsen",
+    "year": 2019,
+    "venue": "Asia-Pacific Journal of Sports Medicine, Arthroscopy, Rehabilitation and Technology",
+    "checked": "2026-11-14",
+    "endpoint": "https://api.crossref.org/works?filter=doi%3A10.1016%2Fj.asmart.2018.09.002&rows=1"
+  },
+  "montorobombu2023": {
+    "doi": "10.3390/s23135832",
+    "title": "Validity and Reliability of a Load Cell Sensor-Based Device for Assessment of the Isometric Mid-Thigh Pull Test",
+    "first_author": "Montoro-Bombú",
+    "year": 2023,
+    "venue": "Sensors",
+    "checked": "2026-11-14",
+    "endpoint": "https://api.crossref.org/works?filter=doi%3A10.3390%2Fs23135832&rows=1"
+  }
+}
