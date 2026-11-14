@@ -1,0 +1,73 @@
+# RES-694 device-specific primary evidence. All claims await scientific review.
+
+[[claim]]
+id = "DEV-001"
+subjects = ["lpt_encoder", "cmj", "sj"]
+kind = "validity"
+statement = "GymAware jump-height estimates exceeded concurrent force-plate estimates in the tested 28 adults; repeatability did not establish agreement. This displacement-based implementation and its tether geometry cannot qualify other encoders or COM estimands."
+sources = ["wadhi2018"]
+evidence_grade = "B"
+reviewer_status = "unreviewed"
+
+[[claim]]
+id = "DEV-002"
+subjects = ["imu", "cmj"]
+kind = "validity"
+statement = "In 15 students, the tested wearable IMU numerical double integration, take-off-velocity and flight-time methods had different bias and agreement against motion capture and force plate; sensor position displacement and COM displacement were separate criteria. This does not validate other placements or proprietary accumulated-load algorithms."
+sources = ["nielsen2019"]
+evidence_grade = "B"
+reviewer_status = "unreviewed"
+
+[[claim]]
+id = "DEV-003"
+subjects = ["timing_contact", "dj"]
+kind = "validity"
+statement = "The tested Conrad contact mat had condition-dependent ground-contact-time bias against a Kistler plate in physically active adults; test-retest error varied by jump condition. These results concern drop-jump ground contact, not universal flight-time or jump-height validity."
+sources = ["tenelsen2019"]
+evidence_grade = "B"
+reviewer_status = "unreviewed"
+
+[[claim]]
+id = "DEV-004"
+subjects = ["timing_contact", "sprint_gates"]
+kind = "validity"
+statement = "Haugen and colleagues directly compared single- and dual-beam sprint timing systems in track-and-field athletes. Beam configurations are separate measurement methods; this source does not supply a universal correction for gate height or start triggers."
+sources = ["haugen2014"]
+evidence_grade = "B"
+reviewer_status = "unreviewed"
+
+[[claim]]
+id = "DEV-005"
+subjects = ["gnss_lps", "soccer_context"]
+kind = "validity"
+statement = "In 14 male U19 soccer players, the tested GPS, radar-based LPS and video systems differed in position, speed and acceleration accuracy against Vicon. Results depend on the tested systems and movement conditions; positional differentiation and GPS Doppler speed must not be treated as identical observations."
+sources = ["linke2018"]
+evidence_grade = "B"
+reviewer_status = "unreviewed"
+
+[[claim]]
+id = "DEV-006"
+subjects = ["load_cell_isometric", "imtp"]
+kind = "validity"
+statement = "Smart Traction load-cell IMTP peak-force and RFD estimates were compared simultaneously with a Kistler plate in 42 sport-science students. Reported validity is specific to this device and rig; sampling-rate variation was noted, and generic rig compliance or absolute calibration is not established."
+sources = ["montorobombu2023"]
+evidence_grade = "B"
+reviewer_status = "unreviewed"
+
+[[claim]]
+id = "DEV-007"
+subjects = ["radar_laser", "sprint_fv"]
+kind = "validity"
+statement = "MuscleLAB Laser Speed instantaneous velocity was compared with Vicon during straight high-speed outdoor runs in 29 participants. Observed agreement is specific to this processed laser output, setup and speed range; it does not validate every raw range trace or radar algorithm."
+sources = ["duthie2025"]
+evidence_grade = "B"
+reviewer_status = "unreviewed"
+
+[[claim]]
+id = "DEV-008"
+subjects = ["radar_laser", "lpt_encoder", "gnss_lps", "timing_contact", "sprint_fv"]
+kind = "validity"
+statement = "In 18 participants completing sprint acceleration trials, five tested encoder, laser, radar, GPS and gate systems gave closer maximal-velocity estimates than early-acceleration outputs. This is inter-system agreement and inter-trial reliability under exponential fitting, not an external absolute criterion or proof of universal interchangeability."
+sources = ["fornasier2022"]
+evidence_grade = "B"
+reviewer_status = "unreviewed"
