@@ -297,7 +297,21 @@ def validate(model: Ledger, root: Path | None = None) -> list[str]:
                     for e in refs
                 ):
                     errors.append(f"{s.id}/J: circular reference engine")
+
+    def study_exists(ref: str) -> bool:
+        if root is None:
+            return bool(ref.strip())
+        if ref.startswith("repo:"):
+            path = (root / ref[5:]).resolve()
+            return path.is_relative_to(root.resolve()) and path.is_file()
+        return registry is not None and ref in {c.id for c in registry.claims}
+
+    for e in model.evidence:
+        if e.kind == "empirical_study" and not study_exists(e.ref):
+            errors.append(f"unresolved empirical study {e.ref}")
     for c in model.comparisons:
+        if any(not study_exists(ref) for ref in c.refs):
+            errors.append(f"unresolved comparison evidence {c.left}/{c.right}")
         if c.left not in ids or c.right not in ids or c.left == c.right:
             errors.append(f"invalid comparison {c.left}/{c.right}")
         if c.verdict not in {"unknown", "not_interchangeable", "conditionally_interchangeable"}:
@@ -314,12 +328,14 @@ def validate(model: Ledger, root: Path | None = None) -> list[str]:
         ):
             errors.append(f"{s.id}/L: unresolved non-equivalence")
     for r in model.reviewers:
+        if not r.identity.strip() or not study_exists(r.evidence_ref):
+            errors.append(f"unresolved reviewer evidence {r.family}")
         if r.family not in families:
             errors.append(f"unknown reviewer family {r.family}")
     return errors
 
 
-def gate(model: Ledger, stage: Stage) -> GateResult:
+def gate(model: Ledger, stage: Stage, root: Path = Path(".")) -> GateResult:
     required = M3_DIMENSIONS if stage == Stage.M3 else DIMENSIONS
     missing: dict[str, list[str]] = {}
     for s in model.subfamilies:
@@ -341,7 +357,7 @@ def gate(model: Ledger, stage: Stage) -> GateResult:
                 missing.setdefault(s.family, []).append("two independent reviewers")
     families = {s.family for s in model.subfamilies}
     ready = len(families - set(missing))
-    structural = validate(model)
+    structural = validate(model, root)
     if structural:
         missing.setdefault("__ledger__", []).extend(structural)
     return GateResult(

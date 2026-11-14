@@ -85,7 +85,7 @@ def test_stages_and_specified_are_separate(ledger: Ledger) -> None:
 def test_m8_requires_two_distinct_reviewers_per_family(ledger: Ledger) -> None:
     obj = verified(ledger)
     reviewers = tuple(
-        Reviewer(f, who, True, "accepted", "recorded-review")
+        Reviewer(f, who, True, "accepted", "repo:tests/test_qualification.py")
         for f in {s.family for s in obj.subfamilies}
         for who in ("A", "B")
     )
@@ -183,3 +183,35 @@ def test_cli_validation_and_blocked_gate() -> None:
     assert main(["qualification", "validate"]) == 0
     assert main(["qualification", "ledger", "--check"]) == 0
     assert main(["qualification", "gate"]) == 1
+
+
+def test_gate_resolves_evidence_not_only_structure(ledger: Ledger) -> None:
+    obj = verified(ledger)
+    obj = replace(obj, evidence=tuple(replace(e, ref="repo:missing") for e in obj.evidence))
+    assert not gate(obj, Stage.M3, ROOT).passed
+
+
+def test_study_and_review_references_resolve(ledger: Ledger) -> None:
+    obj = verified(ledger)
+    assert validate(
+        replace(
+            obj,
+            evidence=(
+                replace(obj.evidence[0], kind="empirical_study", ref="fabricated"),
+                *obj.evidence[1:],
+            ),
+        ),
+        ROOT,
+    )
+    comparisons = (
+        replace(
+            obj.comparisons[0],
+            verdict="conditionally_interchangeable",
+            evidence_level="empirical",
+            reviewer_status="accepted",
+            refs=("fabricated",),
+        ),
+        *obj.comparisons[1:],
+    )
+    assert validate(replace(obj, comparisons=comparisons), ROOT)
+    assert validate(replace(obj, reviewers=(Reviewer("imu", "A", True, "accepted", "fake"),)), ROOT)
