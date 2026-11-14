@@ -5,3 +5,78 @@
 subject = "iso_ham"
 reason = "No isometric hamstring (30/90 deg knee flexion) source could be verified on Crossref during RES-663; candidate references found by search did not match. Marked 'extension' in the coverage matrix until sourced."
 opened = "2026-11-14"
+
+[[gap]]
+subject = "metrology.force_platform.single"
+reason = "No reviewed calibration/uncertainty budget for the implemented instrument; source equations do not calibrate hardware."
+opened = "2026-11-14"
+
+[[gap]]
+subject = "metrology.force_platform.dual"
+reason = "No reviewed bilateral calibration, cross-talk or inter-plate clock uncertainty budget."
+opened = "2026-11-14"
+
+[[gap]]
+subject = "metrology.lpt_encoder.lpt"
+reason = "No verified universal cable-angle error model or single-versus-dual-cable calibration study registered; attachment displacement is not COM motion."
+opened = "2026-11-14"
+
+[[gap]]
+subject = "metrology.lpt_encoder.encoder"
+reason = "Sprint motorized encoder evidence does not establish raw count quantization, missed counts, resolution calibration or jump-encoder validity."
+opened = "2026-11-14"
+
+[[gap]]
+subject = "metrology.load_cell_isometric.load_cell"
+reason = "Specific Smart Traction agreement does not calibrate arbitrary load cells; gain/offset drift and rig compliance remain unqualified."
+opened = "2026-11-14"
+
+[[gap]]
+subject = "metrology.load_cell_isometric.isometric_rig"
+reason = "No general rig-compliance uncertainty budget or transferable IMTP plate-versus-load-cell correction registered."
+opened = "2026-11-14"
+
+[[gap]]
+subject = "metrology.nordic_hip.nordic"
+reason = "Protocol reliability is not raw device calibration; manufacturer corrections, break-point algorithms and raw-versus-vendor agreement remain unverified."
+opened = "2026-11-14"
+
+[[gap]]
+subject = "metrology.nordic_hip.hip"
+reason = "Protocol/hand-held reliability does not qualify fixed hip rigs; lever, calibration and vendor algorithm uncertainty remain unresolved."
+opened = "2026-11-14"
+
+[[gap]]
+subject = "metrology.timing_contact.gates"
+reason = "No transferable height/start-trigger/beam latency correction registered; single-versus-dual comparison is device/protocol-specific."
+opened = "2026-11-14"
+
+[[gap]]
+subject = "metrology.timing_contact.contact"
+reason = "Drop-jump ground-contact study does not establish flight-time/jump-height validity or switching-latency calibration for arbitrary contact systems."
+opened = "2026-11-14"
+
+[[gap]]
+subject = "metrology.radar_laser.radar"
+reason = "Multi-system processed sprint agreement does not establish raw Doppler calibration, tracking-point error or trace reliability for arbitrary radar firmware."
+opened = "2026-11-14"
+
+[[gap]]
+subject = "metrology.radar_laser.laser"
+reason = "One processed laser-speed criterion study does not establish raw-range calibration or error at all sampling rates and body tracking points."
+opened = "2026-11-14"
+
+[[gap]]
+subject = "metrology.gnss_lps.gnss"
+reason = "Device-specific tracking evidence does not identify proprietary Doppler/position fusion, effective sampling rate or a universal acceleration uncertainty model."
+opened = "2026-11-14"
+
+[[gap]]
+subject = "metrology.gnss_lps.lps"
+reason = "Tested radar-based LPS evidence does not transfer to every UWB/anchor layout; installation calibration and acceleration uncertainty remain unqualified."
+opened = "2026-11-14"
+
+[[gap]]
+subject = "metrology.imu.inertial"
+reason = "One IMU jump study does not qualify other placements, bias/scale calibration or proprietary accumulated-load metrics; no manufacturer algorithm inferred."
+opened = "2026-11-14"

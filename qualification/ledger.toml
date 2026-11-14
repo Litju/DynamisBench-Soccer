@@ -738,3 +738,1091 @@ kind = "schema"
 ref = "repo:src/dynamisbench_soccer/signals/schema.py"
 issue = "RES-693"
 rationale = "V2 contract specified, including explicit unknowns; shape/migration tests are engineering checks, not device validation."
+
+[[evidence]]
+subfamily = "force_platform.single"
+dimension = "I"
+kind = "registry_claim"
+ref = "FP-001"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "force_platform.single"
+dimension = "I"
+kind = "registry_gap"
+ref = "metrology.force_platform.single"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "force_platform.single"
+dimension = "J"
+kind = "registry_claim"
+ref = "FP-001"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "force_platform.single"
+dimension = "J"
+kind = "registry_gap"
+ref = "metrology.force_platform.single"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "force_platform.single"
+dimension = "L"
+kind = "registry_claim"
+ref = "FP-001"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "force_platform.single"
+dimension = "L"
+kind = "registry_gap"
+ref = "metrology.force_platform.single"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "force_platform.single"
+dimension = "O"
+kind = "registry_claim"
+ref = "FP-001"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "force_platform.single"
+dimension = "O"
+kind = "registry_gap"
+ref = "metrology.force_platform.single"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "force_platform.dual"
+dimension = "I"
+kind = "registry_claim"
+ref = "FP-001"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "force_platform.dual"
+dimension = "I"
+kind = "registry_gap"
+ref = "metrology.force_platform.dual"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "force_platform.dual"
+dimension = "J"
+kind = "registry_claim"
+ref = "FP-001"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "force_platform.dual"
+dimension = "J"
+kind = "registry_gap"
+ref = "metrology.force_platform.dual"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "force_platform.dual"
+dimension = "L"
+kind = "registry_claim"
+ref = "FP-001"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "force_platform.dual"
+dimension = "L"
+kind = "registry_gap"
+ref = "metrology.force_platform.dual"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "force_platform.dual"
+dimension = "O"
+kind = "registry_claim"
+ref = "FP-001"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "force_platform.dual"
+dimension = "O"
+kind = "registry_gap"
+ref = "metrology.force_platform.dual"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "lpt_encoder.lpt"
+dimension = "I"
+kind = "registry_claim"
+ref = "DEV-001"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "lpt_encoder.lpt"
+dimension = "I"
+kind = "registry_claim"
+ref = "DEV-008"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "lpt_encoder.lpt"
+dimension = "I"
+kind = "registry_gap"
+ref = "metrology.lpt_encoder.lpt"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "lpt_encoder.lpt"
+dimension = "J"
+kind = "registry_claim"
+ref = "DEV-001"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "lpt_encoder.lpt"
+dimension = "J"
+kind = "registry_claim"
+ref = "DEV-008"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "lpt_encoder.lpt"
+dimension = "J"
+kind = "registry_gap"
+ref = "metrology.lpt_encoder.lpt"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "lpt_encoder.lpt"
+dimension = "L"
+kind = "registry_claim"
+ref = "DEV-001"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "lpt_encoder.lpt"
+dimension = "L"
+kind = "registry_claim"
+ref = "DEV-008"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "lpt_encoder.lpt"
+dimension = "L"
+kind = "registry_gap"
+ref = "metrology.lpt_encoder.lpt"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "lpt_encoder.lpt"
+dimension = "O"
+kind = "registry_claim"
+ref = "DEV-001"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "lpt_encoder.lpt"
+dimension = "O"
+kind = "registry_claim"
+ref = "DEV-008"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "lpt_encoder.lpt"
+dimension = "O"
+kind = "registry_gap"
+ref = "metrology.lpt_encoder.lpt"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "lpt_encoder.encoder"
+dimension = "I"
+kind = "registry_claim"
+ref = "DEV-008"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "lpt_encoder.encoder"
+dimension = "I"
+kind = "registry_gap"
+ref = "metrology.lpt_encoder.encoder"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "lpt_encoder.encoder"
+dimension = "J"
+kind = "registry_claim"
+ref = "DEV-008"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "lpt_encoder.encoder"
+dimension = "J"
+kind = "registry_gap"
+ref = "metrology.lpt_encoder.encoder"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "lpt_encoder.encoder"
+dimension = "L"
+kind = "registry_claim"
+ref = "DEV-008"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "lpt_encoder.encoder"
+dimension = "L"
+kind = "registry_gap"
+ref = "metrology.lpt_encoder.encoder"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "lpt_encoder.encoder"
+dimension = "O"
+kind = "registry_claim"
+ref = "DEV-008"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "lpt_encoder.encoder"
+dimension = "O"
+kind = "registry_gap"
+ref = "metrology.lpt_encoder.encoder"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "load_cell_isometric.load_cell"
+dimension = "I"
+kind = "registry_claim"
+ref = "DEV-006"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "load_cell_isometric.load_cell"
+dimension = "I"
+kind = "registry_gap"
+ref = "metrology.load_cell_isometric.load_cell"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "load_cell_isometric.load_cell"
+dimension = "J"
+kind = "registry_claim"
+ref = "DEV-006"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "load_cell_isometric.load_cell"
+dimension = "J"
+kind = "registry_gap"
+ref = "metrology.load_cell_isometric.load_cell"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "load_cell_isometric.load_cell"
+dimension = "L"
+kind = "registry_claim"
+ref = "DEV-006"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "load_cell_isometric.load_cell"
+dimension = "L"
+kind = "registry_gap"
+ref = "metrology.load_cell_isometric.load_cell"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "load_cell_isometric.load_cell"
+dimension = "O"
+kind = "registry_claim"
+ref = "DEV-006"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "load_cell_isometric.load_cell"
+dimension = "O"
+kind = "registry_gap"
+ref = "metrology.load_cell_isometric.load_cell"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "load_cell_isometric.isometric_rig"
+dimension = "I"
+kind = "registry_claim"
+ref = "DEV-006"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "load_cell_isometric.isometric_rig"
+dimension = "I"
+kind = "registry_gap"
+ref = "metrology.load_cell_isometric.isometric_rig"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "load_cell_isometric.isometric_rig"
+dimension = "J"
+kind = "registry_claim"
+ref = "DEV-006"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "load_cell_isometric.isometric_rig"
+dimension = "J"
+kind = "registry_gap"
+ref = "metrology.load_cell_isometric.isometric_rig"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "load_cell_isometric.isometric_rig"
+dimension = "L"
+kind = "registry_claim"
+ref = "DEV-006"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "load_cell_isometric.isometric_rig"
+dimension = "L"
+kind = "registry_gap"
+ref = "metrology.load_cell_isometric.isometric_rig"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "load_cell_isometric.isometric_rig"
+dimension = "O"
+kind = "registry_claim"
+ref = "DEV-006"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "load_cell_isometric.isometric_rig"
+dimension = "O"
+kind = "registry_gap"
+ref = "metrology.load_cell_isometric.isometric_rig"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "nordic_hip.nordic"
+dimension = "I"
+kind = "registry_claim"
+ref = "NH-001"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "nordic_hip.nordic"
+dimension = "I"
+kind = "registry_gap"
+ref = "metrology.nordic_hip.nordic"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "nordic_hip.nordic"
+dimension = "J"
+kind = "registry_claim"
+ref = "NH-001"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "nordic_hip.nordic"
+dimension = "J"
+kind = "registry_gap"
+ref = "metrology.nordic_hip.nordic"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "nordic_hip.nordic"
+dimension = "L"
+kind = "registry_claim"
+ref = "NH-001"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "nordic_hip.nordic"
+dimension = "L"
+kind = "registry_gap"
+ref = "metrology.nordic_hip.nordic"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "nordic_hip.nordic"
+dimension = "O"
+kind = "registry_claim"
+ref = "NH-001"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "nordic_hip.nordic"
+dimension = "O"
+kind = "registry_gap"
+ref = "metrology.nordic_hip.nordic"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "nordic_hip.hip"
+dimension = "I"
+kind = "registry_claim"
+ref = "HG-001"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "nordic_hip.hip"
+dimension = "I"
+kind = "registry_gap"
+ref = "metrology.nordic_hip.hip"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "nordic_hip.hip"
+dimension = "J"
+kind = "registry_claim"
+ref = "HG-001"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "nordic_hip.hip"
+dimension = "J"
+kind = "registry_gap"
+ref = "metrology.nordic_hip.hip"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "nordic_hip.hip"
+dimension = "L"
+kind = "registry_claim"
+ref = "HG-001"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "nordic_hip.hip"
+dimension = "L"
+kind = "registry_gap"
+ref = "metrology.nordic_hip.hip"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "nordic_hip.hip"
+dimension = "O"
+kind = "registry_claim"
+ref = "HG-001"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "nordic_hip.hip"
+dimension = "O"
+kind = "registry_gap"
+ref = "metrology.nordic_hip.hip"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "timing_contact.gates"
+dimension = "I"
+kind = "registry_claim"
+ref = "DEV-004"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "timing_contact.gates"
+dimension = "I"
+kind = "registry_claim"
+ref = "DEV-008"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "timing_contact.gates"
+dimension = "I"
+kind = "registry_gap"
+ref = "metrology.timing_contact.gates"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "timing_contact.gates"
+dimension = "J"
+kind = "registry_claim"
+ref = "DEV-004"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "timing_contact.gates"
+dimension = "J"
+kind = "registry_claim"
+ref = "DEV-008"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "timing_contact.gates"
+dimension = "J"
+kind = "registry_gap"
+ref = "metrology.timing_contact.gates"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "timing_contact.gates"
+dimension = "L"
+kind = "registry_claim"
+ref = "DEV-004"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "timing_contact.gates"
+dimension = "L"
+kind = "registry_claim"
+ref = "DEV-008"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "timing_contact.gates"
+dimension = "L"
+kind = "registry_gap"
+ref = "metrology.timing_contact.gates"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "timing_contact.gates"
+dimension = "O"
+kind = "registry_claim"
+ref = "DEV-004"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "timing_contact.gates"
+dimension = "O"
+kind = "registry_claim"
+ref = "DEV-008"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "timing_contact.gates"
+dimension = "O"
+kind = "registry_gap"
+ref = "metrology.timing_contact.gates"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "timing_contact.contact"
+dimension = "I"
+kind = "registry_claim"
+ref = "DEV-003"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "timing_contact.contact"
+dimension = "I"
+kind = "registry_gap"
+ref = "metrology.timing_contact.contact"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "timing_contact.contact"
+dimension = "J"
+kind = "registry_claim"
+ref = "DEV-003"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "timing_contact.contact"
+dimension = "J"
+kind = "registry_gap"
+ref = "metrology.timing_contact.contact"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "timing_contact.contact"
+dimension = "L"
+kind = "registry_claim"
+ref = "DEV-003"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "timing_contact.contact"
+dimension = "L"
+kind = "registry_gap"
+ref = "metrology.timing_contact.contact"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "timing_contact.contact"
+dimension = "O"
+kind = "registry_claim"
+ref = "DEV-003"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "timing_contact.contact"
+dimension = "O"
+kind = "registry_gap"
+ref = "metrology.timing_contact.contact"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "radar_laser.radar"
+dimension = "I"
+kind = "registry_claim"
+ref = "DEV-008"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "radar_laser.radar"
+dimension = "I"
+kind = "registry_gap"
+ref = "metrology.radar_laser.radar"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "radar_laser.radar"
+dimension = "J"
+kind = "registry_claim"
+ref = "DEV-008"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "radar_laser.radar"
+dimension = "J"
+kind = "registry_gap"
+ref = "metrology.radar_laser.radar"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "radar_laser.radar"
+dimension = "L"
+kind = "registry_claim"
+ref = "DEV-008"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "radar_laser.radar"
+dimension = "L"
+kind = "registry_gap"
+ref = "metrology.radar_laser.radar"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "radar_laser.radar"
+dimension = "O"
+kind = "registry_claim"
+ref = "DEV-008"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "radar_laser.radar"
+dimension = "O"
+kind = "registry_gap"
+ref = "metrology.radar_laser.radar"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "radar_laser.laser"
+dimension = "I"
+kind = "registry_claim"
+ref = "DEV-007"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "radar_laser.laser"
+dimension = "I"
+kind = "registry_claim"
+ref = "DEV-008"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "radar_laser.laser"
+dimension = "I"
+kind = "registry_gap"
+ref = "metrology.radar_laser.laser"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "radar_laser.laser"
+dimension = "J"
+kind = "registry_claim"
+ref = "DEV-007"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "radar_laser.laser"
+dimension = "J"
+kind = "registry_claim"
+ref = "DEV-008"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "radar_laser.laser"
+dimension = "J"
+kind = "registry_gap"
+ref = "metrology.radar_laser.laser"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "radar_laser.laser"
+dimension = "L"
+kind = "registry_claim"
+ref = "DEV-007"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "radar_laser.laser"
+dimension = "L"
+kind = "registry_claim"
+ref = "DEV-008"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "radar_laser.laser"
+dimension = "L"
+kind = "registry_gap"
+ref = "metrology.radar_laser.laser"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "radar_laser.laser"
+dimension = "O"
+kind = "registry_claim"
+ref = "DEV-007"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "radar_laser.laser"
+dimension = "O"
+kind = "registry_claim"
+ref = "DEV-008"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "radar_laser.laser"
+dimension = "O"
+kind = "registry_gap"
+ref = "metrology.radar_laser.laser"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "gnss_lps.gnss"
+dimension = "I"
+kind = "registry_claim"
+ref = "DEV-005"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "gnss_lps.gnss"
+dimension = "I"
+kind = "registry_claim"
+ref = "DEV-008"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "gnss_lps.gnss"
+dimension = "I"
+kind = "registry_gap"
+ref = "metrology.gnss_lps.gnss"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "gnss_lps.gnss"
+dimension = "J"
+kind = "registry_claim"
+ref = "DEV-005"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "gnss_lps.gnss"
+dimension = "J"
+kind = "registry_claim"
+ref = "DEV-008"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "gnss_lps.gnss"
+dimension = "J"
+kind = "registry_gap"
+ref = "metrology.gnss_lps.gnss"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "gnss_lps.gnss"
+dimension = "L"
+kind = "registry_claim"
+ref = "DEV-005"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "gnss_lps.gnss"
+dimension = "L"
+kind = "registry_claim"
+ref = "DEV-008"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "gnss_lps.gnss"
+dimension = "L"
+kind = "registry_gap"
+ref = "metrology.gnss_lps.gnss"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "gnss_lps.gnss"
+dimension = "O"
+kind = "registry_claim"
+ref = "DEV-005"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "gnss_lps.gnss"
+dimension = "O"
+kind = "registry_claim"
+ref = "DEV-008"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "gnss_lps.gnss"
+dimension = "O"
+kind = "registry_gap"
+ref = "metrology.gnss_lps.gnss"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "gnss_lps.lps"
+dimension = "I"
+kind = "registry_claim"
+ref = "DEV-005"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "gnss_lps.lps"
+dimension = "I"
+kind = "registry_gap"
+ref = "metrology.gnss_lps.lps"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "gnss_lps.lps"
+dimension = "J"
+kind = "registry_claim"
+ref = "DEV-005"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "gnss_lps.lps"
+dimension = "J"
+kind = "registry_gap"
+ref = "metrology.gnss_lps.lps"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "gnss_lps.lps"
+dimension = "L"
+kind = "registry_claim"
+ref = "DEV-005"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "gnss_lps.lps"
+dimension = "L"
+kind = "registry_gap"
+ref = "metrology.gnss_lps.lps"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "gnss_lps.lps"
+dimension = "O"
+kind = "registry_claim"
+ref = "DEV-005"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "gnss_lps.lps"
+dimension = "O"
+kind = "registry_gap"
+ref = "metrology.gnss_lps.lps"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "imu.inertial"
+dimension = "I"
+kind = "registry_claim"
+ref = "DEV-002"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "imu.inertial"
+dimension = "I"
+kind = "registry_gap"
+ref = "metrology.imu.inertial"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "imu.inertial"
+dimension = "J"
+kind = "registry_claim"
+ref = "DEV-002"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "imu.inertial"
+dimension = "J"
+kind = "registry_gap"
+ref = "metrology.imu.inertial"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "imu.inertial"
+dimension = "L"
+kind = "registry_claim"
+ref = "DEV-002"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "imu.inertial"
+dimension = "L"
+kind = "registry_gap"
+ref = "metrology.imu.inertial"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "imu.inertial"
+dimension = "O"
+kind = "registry_claim"
+ref = "DEV-002"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "imu.inertial"
+dimension = "O"
+kind = "registry_gap"
+ref = "metrology.imu.inertial"
+issue = "RES-694"
+rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
