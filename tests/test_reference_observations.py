@@ -68,3 +68,8 @@ def test_invalid_observation_parameters_rejected() -> None:
         load_cell_voltage(IsometricRamp(), 1, volts_per_n=0, offset_v=0)
     with pytest.raises(ValueError):
         gate_trigger_s(MonoExponentialSprint(), -1)
+
+
+def test_negative_gate_latency_cannot_create_pretrial_event() -> None:
+    with pytest.raises(ValueError, match="nonnegative"):
+        gate_trigger_s(MonoExponentialSprint(), 0, latency_s=-1)

@@ -49,3 +49,11 @@ def test_bad_physics_and_times_fail_closed() -> None:
         cmj().state(-1)
     with pytest.raises(ValueError, match="positive"):
         dj(drop_height_m=-0.1)
+
+
+def test_downward_takeoff_cannot_be_reported_as_positive_jump_height() -> None:
+    from dynamisbench_soccer.reference.kinematics import Trajectory
+
+    motion = Trajectory(75, -1, (Phase("contact", 1, 0, True), Phase("flight", 1, -G, False)))
+    with pytest.raises(ValueError, match="upward"):
+        motion.jump_height_m()

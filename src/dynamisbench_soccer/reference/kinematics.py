@@ -101,6 +101,8 @@ class Trajectory:
 
     def jump_height_m(self) -> float:
         velocity = self.takeoff_velocity_m_s()
+        if velocity <= 0:
+            raise ValueError("jump height requires upward take-off velocity")
         return velocity**2 / (2 * self.gravity_m_s2)
 
     def impulse_n_s(self, start_s: float, end_s: float) -> float:

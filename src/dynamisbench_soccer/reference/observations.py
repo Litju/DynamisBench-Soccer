@@ -77,6 +77,6 @@ def gate_trigger_s(
     *,
     latency_s: float = 0.0,
 ) -> float:
-    if not math.isfinite(latency_s):
-        raise ValueError("trigger latency must be finite")
+    if not math.isfinite(latency_s) or latency_s < 0:
+        raise ValueError("trigger latency must be finite and nonnegative")
     return sprint.gate_time_s(distance_m) + latency_s
