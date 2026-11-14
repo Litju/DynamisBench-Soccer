@@ -111,3 +111,26 @@ class MonoExponentialSprint:
             else:
                 upper = midpoint
         return (lower + upper) / 2
+
+    def f0_n(self, mass_kg: float) -> float:
+        """Zero-speed NET horizontal force, under an explicit zero-drag model."""
+        if not math.isfinite(mass_kg) or mass_kg <= 0:
+            raise ValueError("mass must be finite and positive")
+        return mass_kg * self.vmax_m_s / self.tau_s
+
+    def pmax_w(self, mass_kg: float) -> float:
+        """Maximum net horizontal power for F(v)=F0*(1-v/Vmax), no air drag."""
+        return self.f0_n(mass_kg) * self.vmax_m_s / 4
+
+    def force_ratio(self, t_s: float, gravity_m_s2: float = 9.80665) -> float:
+        """Ideal ratio with constant vertical support mg; not a gait-cycle model."""
+        if not math.isfinite(gravity_m_s2) or gravity_m_s2 <= 0:
+            raise ValueError("gravity must be finite and positive")
+        a = self.acceleration_m_s2(t_s)
+        return a / math.hypot(a, gravity_m_s2)
+
+    def instantaneous_drf_per_m_s(self, t_s: float, gravity_m_s2: float = 9.80665) -> float:
+        """dRF/dv under the ideal model; distinct from a fitted regression slope."""
+        self.force_ratio(t_s, gravity_m_s2)
+        a = self.acceleration_m_s2(t_s)
+        return -(gravity_m_s2**2) / (self.tau_s * math.hypot(a, gravity_m_s2) ** 3)
