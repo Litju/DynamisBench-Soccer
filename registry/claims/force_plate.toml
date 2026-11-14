@@ -75,9 +75,9 @@ subjects = ["cmj", "force_plate_processing"]
 metrics = ["sampling_rate"]
 kind = "method"
 statement = "In one 2026 study, CMJ metrics computed from 2400 Hz recordings resampled to 1200 Hz and 600 Hz showed no statistically significant differences; time-critical variables (contact times, early RFD windows) remain more sensitive to low sampling rates."
-sources = ["aleksic2026", "maffiuletti2016"]
+sources = ["donahue2026", "maffiuletti2016"]
 population = { level = "recreationally trained" }
-evidence_grade = "C"
+evidence_grade = "B"
 
 [[claim]]
 id = "FP-009"
