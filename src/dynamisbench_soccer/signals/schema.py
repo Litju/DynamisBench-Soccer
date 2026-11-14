@@ -550,6 +550,8 @@ class BundleMeta(_Strict):
                             "source force channels need plates and dual-plate summation policy"
                         )
                 for record in source.calibration:
+                    if record.channel is not None and record.channel not in source.channels:
+                        raise ValueError("calibration channel not owned by source")
                     if (
                         record.channel is not None
                         and record.output_unit is not None
@@ -558,8 +560,6 @@ class BundleMeta(_Strict):
                         raise ValueError(
                             "calibration output unit must match channel canonical unit"
                         )
-                    if record.channel is not None and record.channel not in source.channels:
-                        raise ValueError("calibration channel not owned by source")
         return self
 
     def channel(self, name: str) -> ChannelSpec:
