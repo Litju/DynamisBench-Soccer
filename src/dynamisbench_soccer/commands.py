@@ -16,6 +16,7 @@ def registrars() -> list[Registrar]:
     from dynamisbench_soccer.adapters import cli as adapters_cli
     from dynamisbench_soccer.data import cli as data_cli
     from dynamisbench_soccer.ontology import cli as ontology_cli
+    from dynamisbench_soccer.qc import cli as qc_cli
     from dynamisbench_soccer.registry import cli as registry_cli
     from dynamisbench_soccer.signals import cli as signals_cli
 
@@ -25,4 +26,5 @@ def registrars() -> list[Registrar]:
         ontology_cli.register,
         signals_cli.register,
         adapters_cli.register,
+        qc_cli.register,
     ]
