@@ -1,0 +1,489 @@
+# Device-family qualification ledger (RES-692).
+#
+# One record per in-scope measurement-device family, and one record per qualification
+# dimension A-O. Family states are COMPUTED from these records by
+# `dbs qualification validate`; they are never declared by hand.
+#
+# Dimension states: absent < partial < specified < verified.
+# Evidence kinds `adapter_import` and `vendor_reproduction` are recorded for
+# transparency but never count towards any dimension.
+# Blocker kinds: `dependency` (engineering work owned by another issue) and
+# `scientific` (missing source, data or evidence; may not be resolvable).
+#
+# Rendered as docs/qualification-ledger.md by `dbs qualification ledger --write`.
+
+version = "0.1.0"
+
+[admission]
+issue = "RES-702"
+rule = "A new device class enters only through a versioned scientific evidence contract covering dimensions A-O. It starts with scope 'proposed', has no task cells and no grading, and cannot exceed SPECIFIED until it is approved into scope."
+
+# --------------------------------------------------------------------------------------
+# Quality-parity principles
+
+[[principle]]
+id = "QP-01"
+text = "Every in-scope device family is held to the same qualification dimensions A-O. Parity is in qualification quality, not in identical algorithms."
+enforced_by = "Every family must list all fifteen dimensions (schema)."
+
+[[principle]]
+id = "QP-02"
+text = "Family qualification states are computed from dimension evidence, never declared. A hand-set label that disagrees with the computed state fails."
+enforced_by = "compute_state(); declared_state check in validate()."
+
+[[principle]]
+id = "QP-03"
+text = "Importing a CSV correctly or reproducing vendor-reported numbers never qualifies any dimension."
+enforced_by = "adapter_import and vendor_reproduction evidence are non-counting."
+
+[[principle]]
+id = "QP-04"
+text = "No reference may validate itself. A reference produced by the same implementation as the engine it verifies is rejected; vendor output is never a reference (DB-07)."
+enforced_by = "Reference.implementation != Reference.verifies; vendor_output rejected. RES-669 adds an import-boundary test between generators and engines."
+
+[[principle]]
+id = "QP-05"
+text = "Processing methods must suit the family's paradigm. Continuous-signal filtering is not applied to discrete timing or contact events."
+enforced_by = "processing_method.paradigms check."
+
+[[principle]]
+id = "QP-06"
+text = "Measurements from different devices are different estimands until an agreement study rules otherwise. Examples: GNSS-derived speed is not a radar velocity trace; LPT cable displacement is not vertical displacement without geometry; commercial force, torque, velocity, power and RFD definitions are not interchangeable between vendors."
+enforced_by = "non_equivalence entries need a study; an interchangeable or convertible verdict needs evidence and a basis."
+
+[[principle]]
+id = "QP-07"
+text = "Three engines are kept separate: the device processing engine (how an instrument produces observations), the assessment science engine (how a protocol produces scientific quantities) and the AI benchmark engine (how an AI system is evaluated on that work)."
+enforced_by = "Families own dimensions A-F and I-M; assessment engines own G-H; M4/M5 own N."
+
+[[principle]]
+id = "QP-08"
+text = "M3 is complete only when every in-scope family computes ENGINEERING_VERIFIED. Families that cannot are reported as blocked, never silently removed from scope. SCIENTIFICALLY_QUALIFIED needs independent review (M8) and qualified grading (N)."
+enforced_by = "dbs qualification gate."
+
+[[principle]]
+id = "QP-09"
+text = "Project constraints: at least two atomic commits per issue, independent verification, explicit scientific assumptions, qualified data provenance, no paid model evaluations, and no modifications to DynamisSimBench."
+enforced_by = "Review policy (not machine-checked)."
+
+# --------------------------------------------------------------------------------------
+# Processing-method catalogue (dimension E). Families may only use methods valid for
+# their paradigm.
+
+[[processing_method]]
+id = "raw_passthrough"
+paradigms = ["continuous_signal", "position_track", "inertial"]
+description = "No filtering; the documented default for impulse-based force metrics."
+
+[[processing_method]]
+id = "butterworth_zero_lag"
+paradigms = ["continuous_signal", "position_track", "inertial"]
+description = "Low-pass Butterworth, forward-backward, order and cutoff declared."
+
+[[processing_method]]
+id = "chebyshev_zero_lag"
+paradigms = ["continuous_signal"]
+description = "Low-pass Chebyshev type I, forward-backward."
+
+[[processing_method]]
+id = "moving_average"
+paradigms = ["continuous_signal", "position_track", "inertial"]
+description = "Centred moving average, window declared."
+
+[[processing_method]]
+id = "trapezoid_integration"
+paradigms = ["continuous_signal", "inertial"]
+description = "Trapezoidal numerical integration."
+
+[[processing_method]]
+id = "simpson_integration"
+paradigms = ["continuous_signal", "inertial"]
+description = "Composite Simpson integration."
+
+[[processing_method]]
+id = "finite_difference"
+paradigms = ["continuous_signal", "position_track"]
+description = "Central finite-difference differentiation."
+
+[[processing_method]]
+id = "spline_differentiation"
+paradigms = ["continuous_signal", "position_track"]
+description = "Smoothing-spline fit, then analytic derivative."
+
+[[processing_method]]
+id = "cosine_correction"
+paradigms = ["continuous_signal"]
+description = "Correct line-of-sight radar or laser measurements for mounting geometry."
+
+[[processing_method]]
+id = "event_debounce_refractory"
+paradigms = ["discrete_event"]
+description = "Suppress repeated triggers inside a declared refractory window."
+
+[[processing_method]]
+id = "multi_beam_voting"
+paradigms = ["discrete_event"]
+description = "Accept a gate event only when the declared beams agree."
+
+[[processing_method]]
+id = "contact_pairing"
+paradigms = ["discrete_event"]
+description = "Pair contact on/off events into contact and flight phases."
+
+[[processing_method]]
+id = "trigger_latency_correction"
+paradigms = ["discrete_event"]
+description = "Apply a declared start-trigger or switching-latency offset."
+
+[[processing_method]]
+id = "position_projection_local"
+paradigms = ["position_track"]
+description = "Project WGS-84 positions to a declared local tangent-plane or pitch frame."
+
+[[processing_method]]
+id = "doppler_speed_passthrough"
+paradigms = ["position_track"]
+description = "Keep device-reported Doppler speed as its own estimand."
+
+[[processing_method]]
+id = "orientation_complementary"
+paradigms = ["inertial"]
+description = "Complementary-filter orientation estimate."
+
+[[processing_method]]
+id = "orientation_kalman"
+paradigms = ["inertial"]
+description = "Kalman-filter orientation estimate."
+
+[[processing_method]]
+id = "gravity_removal"
+paradigms = ["inertial"]
+description = "Remove gravity from specific force using the estimated orientation."
+
+# --------------------------------------------------------------------------------------
+# Families. Evidence states below are the honest state on 2026-11-14 (before M3 engines).
+
+[[family]]
+id = "force_platform"
+number = 1
+name = "Force platforms and dual force plates"
+scope = "in_scope"
+paradigm = "continuous_signal"
+engine = "dbs.engines.device.force_platform"
+engine_issue = "RES-670"
+device_classes = ["force_plate"]
+processing_methods = ["raw_passthrough", "butterworth_zero_lag", "chebyshev_zero_lag", "trapezoid_integration", "simpson_integration"]
+
+[family.dims]
+A = { state = "specified", owner = "RES-670", evidence = [{ kind = "doc", ref = "docs/signal-schema.md" }, { kind = "test", ref = "tests/test_signals_schema_io.py" }, { kind = "issue", ref = "RES-665" }, { kind = "adapter_import", ref = "src/dynamisbench_soccer/adapters/generic.py" }] }
+B = { state = "partial", owner = "RES-670", evidence = [{ kind = "doc", ref = "docs/signal-schema.md", note = "canonical units, plate number, axis and zeroing; no calibration matrix or COP geometry yet" }] }
+C = { state = "partial", owner = "RES-693", evidence = [{ kind = "doc", ref = "docs/signal-schema.md", note = "nominal and measured rate; no clock or dual-plate sync model" }, { kind = "registry_claim", ref = "FP-008" }] }
+D = { state = "specified", owner = "RES-670", evidence = [{ kind = "doc", ref = "docs/qc-spec.md" }, { kind = "test", ref = "tests/test_qc.py" }, { kind = "issue", ref = "RES-668" }] }
+E = { state = "partial", owner = "RES-670", evidence = [{ kind = "registry_claim", ref = "FP-007" }], note = "filter policy is sourced; no implementation" }
+F = { state = "partial", owner = "RES-670", evidence = [{ kind = "registry_claim", ref = "FP-009" }, { kind = "registry_claim", ref = "FP-017" }, { kind = "registry_claim", ref = "FP-011" }] }
+G = { state = "partial", owner = "RES-671", evidence = [{ kind = "registry_claim", ref = "FP-005" }, { kind = "registry_claim", ref = "FP-010" }, { kind = "registry_claim", ref = "FP-018" }, { kind = "doc", ref = "docs/contested-methods.md" }] }
+H = { state = "partial", owner = "RES-671", evidence = [{ kind = "registry_claim", ref = "FP-001" }, { kind = "registry_claim", ref = "FP-002" }, { kind = "registry_claim", ref = "FP-003" }, { kind = "registry_claim", ref = "FP-012" }, { kind = "doc", ref = "docs/ontology.md" }] }
+I = { state = "partial", owner = "RES-670", evidence = [{ kind = "registry_claim", ref = "FP-015" }, { kind = "registry_claim", ref = "FP-006" }], note = "reliability is sourced; no sensitivity tables" }
+J = { state = "absent", owner = "RES-669" }
+K = { state = "partial", owner = "RES-669", evidence = [{ kind = "test", ref = "tests/test_qc.py", note = "QC fault fixtures only; no analytical-truth fixtures" }] }
+L = { state = "partial", owner = "RES-703", evidence = [{ kind = "registry_claim", ref = "FP-016" }, { kind = "registry_claim", ref = "RJ-002" }] }
+M = { state = "partial", owner = "RES-675", evidence = [{ kind = "doc", ref = "docs/signal-schema.md", note = "hash-chained provenance" }, { kind = "doc", ref = "docs/data-policy.md" }] }
+N = { state = "absent", owner = "RES-680" }
+O = { state = "partial", owner = "RES-670", evidence = [{ kind = "doc", ref = "docs/contested-methods.md" }, { kind = "registry_claim", ref = "FP-003" }] }
+
+[[family]]
+id = "lpt_encoder"
+number = 2
+name = "Linear position transducers and encoders"
+scope = "in_scope"
+paradigm = "continuous_signal"
+engine = "dbs.engines.device.lpt_encoder"
+engine_issue = "RES-695"
+device_classes = ["lpt"]
+planned_device_classes = ["encoder"]
+processing_methods = ["raw_passthrough", "butterworth_zero_lag", "finite_difference", "spline_differentiation"]
+
+[family.dims]
+A = { state = "partial", owner = "RES-693", evidence = [{ kind = "doc", ref = "docs/signal-schema.md", note = "displacement channel only" }, { kind = "adapter_import", ref = "src/dynamisbench_soccer/adapters/generic.py" }], blockers = [{ kind = "dependency", issue = "RES-693", text = "No encoder class, count channel, or LPT attachment and cable-angle geometry in schema v1." }] }
+B = { state = "absent", owner = "RES-695", blockers = [{ kind = "dependency", issue = "RES-693", text = "Cable-to-vertical geometry cannot be recorded until schema v2." }] }
+C = { state = "partial", owner = "RES-693", evidence = [{ kind = "doc", ref = "docs/signal-schema.md" }] }
+D = { state = "absent", owner = "RES-695", note = "no QC rules apply to LPT data" }
+E = { state = "absent", owner = "RES-695" }
+F = { state = "absent", owner = "RES-695" }
+G = { state = "absent", owner = "RES-671" }
+H = { state = "absent", owner = "RES-671" }
+I = { state = "absent", owner = "RES-695", blockers = [{ kind = "scientific", issue = "RES-694", text = "No registry claim on LPT or encoder validity, cable-angle error or measurement error." }] }
+J = { state = "absent", owner = "RES-669" }
+K = { state = "absent", owner = "RES-669" }
+L = { state = "absent", owner = "RES-703" }
+M = { state = "partial", owner = "RES-695", evidence = [{ kind = "doc", ref = "docs/signal-schema.md" }] }
+N = { state = "absent", owner = "RES-704" }
+O = { state = "absent", owner = "RES-695", blockers = [{ kind = "scientific", issue = "RES-694", text = "Limitations need sourced claims (attachment point vs centre of mass, single vs dual cable)." }] }
+
+[[family]]
+id = "load_cell_isometric"
+number = 3
+name = "Load cells and isometric dynamometers"
+scope = "in_scope"
+paradigm = "continuous_signal"
+engine = "dbs.engines.device.load_cell_isometric"
+engine_issue = "RES-696"
+planned_device_classes = ["load_cell", "isometric_dynamometer"]
+processing_methods = ["raw_passthrough", "butterworth_zero_lag", "moving_average"]
+
+[family.dims]
+A = { state = "absent", owner = "RES-693", blockers = [{ kind = "dependency", issue = "RES-693", text = "No load_cell or isometric_dynamometer device class, and no raw count or voltage channel." }] }
+B = { state = "absent", owner = "RES-696" }
+C = { state = "partial", owner = "RES-693", evidence = [{ kind = "doc", ref = "docs/signal-schema.md" }] }
+D = { state = "partial", owner = "RES-696", evidence = [{ kind = "doc", ref = "docs/qc-spec.md", note = "generic signal rules QC-S03/S04/S07/S08 only" }] }
+E = { state = "absent", owner = "RES-696" }
+F = { state = "absent", owner = "RES-696" }
+G = { state = "partial", owner = "RES-672", evidence = [{ kind = "registry_claim", ref = "IM-003" }, { kind = "registry_claim", ref = "IM-004" }] }
+H = { state = "partial", owner = "RES-672", evidence = [{ kind = "registry_claim", ref = "IM-002" }, { kind = "registry_claim", ref = "IM-004" }] }
+I = { state = "partial", owner = "RES-696", evidence = [{ kind = "registry_claim", ref = "HG-003" }], blockers = [{ kind = "scientific", issue = "RES-694", text = "No source on load-cell calibration error, creep or rig compliance." }] }
+J = { state = "absent", owner = "RES-669" }
+K = { state = "absent", owner = "RES-669" }
+L = { state = "absent", owner = "RES-703" }
+M = { state = "partial", owner = "RES-696", evidence = [{ kind = "doc", ref = "docs/signal-schema.md" }] }
+N = { state = "absent", owner = "RES-704" }
+O = { state = "partial", owner = "RES-696", evidence = [{ kind = "registry_claim", ref = "IM-001" }], blockers = [{ kind = "scientific", issue = "RES-694", text = "No source comparing IMTP on a load-cell rig with IMTP on a force plate." }] }
+
+[[family]]
+id = "nordic_hip"
+number = 4
+name = "Nordic hamstring and hip-strength devices"
+scope = "in_scope"
+paradigm = "continuous_signal"
+engine = "dbs.engines.device.nordic_hip"
+engine_issue = "RES-697"
+device_classes = ["nordic_dynamometer", "hip_dynamometer"]
+processing_methods = ["raw_passthrough", "butterworth_zero_lag", "moving_average"]
+
+[family.dims]
+A = { state = "specified", owner = "RES-697", evidence = [{ kind = "doc", ref = "docs/signal-schema.md" }, { kind = "test", ref = "tests/test_signals_schema_io.py" }, { kind = "issue", ref = "RES-665" }, { kind = "adapter_import", ref = "src/dynamisbench_soccer/adapters/generic.py" }] }
+B = { state = "partial", owner = "RES-697", evidence = [{ kind = "doc", ref = "docs/signal-schema.md", note = "lever_arm_m, knee_angle_deg, hip_flexion_deg" }, { kind = "registry_claim", ref = "NH-002" }] }
+C = { state = "partial", owner = "RES-693", evidence = [{ kind = "doc", ref = "docs/signal-schema.md" }] }
+D = { state = "specified", owner = "RES-697", evidence = [{ kind = "doc", ref = "docs/qc-spec.md", note = "QC-N01/N02, QC-H01-H03" }, { kind = "test", ref = "tests/test_qc.py" }, { kind = "issue", ref = "RES-668" }] }
+E = { state = "absent", owner = "RES-697" }
+F = { state = "partial", owner = "RES-697", evidence = [{ kind = "registry_claim", ref = "NH-002" }] }
+G = { state = "absent", owner = "RES-672" }
+H = { state = "partial", owner = "RES-672", evidence = [{ kind = "registry_claim", ref = "NH-002" }, { kind = "registry_claim", ref = "HG-002" }, { kind = "registry_claim", ref = "HG-004" }, { kind = "registry_gap", ref = "iso_ham" }], blockers = [{ kind = "scientific", issue = "RES-694", text = "Isometric hamstring (30/90 deg) has a declared registry gap; its metric definitions cannot be sourced yet." }] }
+I = { state = "partial", owner = "RES-697", evidence = [{ kind = "registry_claim", ref = "NH-001" }, { kind = "registry_claim", ref = "HG-003" }, { kind = "registry_claim", ref = "HG-005" }] }
+J = { state = "absent", owner = "RES-669" }
+K = { state = "partial", owner = "RES-669", evidence = [{ kind = "test", ref = "tests/test_qc.py", note = "QC fault fixtures only" }] }
+L = { state = "absent", owner = "RES-703" }
+M = { state = "partial", owner = "RES-697", evidence = [{ kind = "doc", ref = "docs/signal-schema.md" }] }
+N = { state = "absent", owner = "RES-681" }
+O = { state = "partial", owner = "RES-697", evidence = [{ kind = "registry_claim", ref = "NH-002" }, { kind = "registry_claim", ref = "HG-004" }] }
+
+[[family]]
+id = "timing_contact"
+number = 5
+name = "Timing gates and contact systems"
+scope = "in_scope"
+paradigm = "discrete_event"
+engine = "dbs.engines.device.timing_contact"
+engine_issue = "RES-698"
+device_classes = ["timing_gates"]
+planned_device_classes = ["contact_mat"]
+processing_methods = ["event_debounce_refractory", "multi_beam_voting", "contact_pairing", "trigger_latency_correction"]
+
+[family.dims]
+A = { state = "partial", owner = "RES-693", evidence = [{ kind = "doc", ref = "docs/signal-schema.md", note = "events bundle with t_s and distance_m" }, { kind = "test", ref = "tests/test_signals_schema_io.py" }, { kind = "adapter_import", ref = "src/dynamisbench_soccer/adapters/generic.py" }], blockers = [{ kind = "dependency", issue = "RES-693", text = "No contact_mat class, beam type or start-trigger fields in schema v1." }] }
+B = { state = "partial", owner = "RES-698", evidence = [{ kind = "doc", ref = "docs/signal-schema.md", note = "gate_height_m" }, { kind = "registry_claim", ref = "SP-004" }] }
+C = { state = "partial", owner = "RES-693", evidence = [{ kind = "doc", ref = "docs/signal-schema.md" }], blockers = [{ kind = "dependency", issue = "RES-693", text = "No inter-gate clock or start-trigger latency model." }] }
+D = { state = "partial", owner = "RES-698", evidence = [{ kind = "doc", ref = "docs/qc-spec.md", note = "QC-G01/G02 for gates; nothing for contact systems" }, { kind = "test", ref = "tests/test_qc.py" }] }
+E = { state = "absent", owner = "RES-698" }
+F = { state = "partial", owner = "RES-698", evidence = [{ kind = "registry_claim", ref = "FP-002" }, { kind = "registry_claim", ref = "DJ-001" }] }
+G = { state = "partial", owner = "RES-671", evidence = [{ kind = "registry_claim", ref = "RJ-003" }, { kind = "registry_claim", ref = "DJ-002" }] }
+H = { state = "partial", owner = "RES-673", evidence = [{ kind = "registry_claim", ref = "CD-001" }, { kind = "registry_claim", ref = "SP-004" }] }
+I = { state = "partial", owner = "RES-698", evidence = [{ kind = "registry_claim", ref = "SP-004" }], blockers = [{ kind = "scientific", issue = "RES-694", text = "No source quantifying contact-mat switching latency or gate beam-type and trigger-height error." }] }
+J = { state = "absent", owner = "RES-669" }
+K = { state = "partial", owner = "RES-669", evidence = [{ kind = "test", ref = "tests/test_qc.py", note = "gate QC fault fixtures only" }] }
+L = { state = "partial", owner = "RES-703", evidence = [{ kind = "registry_claim", ref = "RJ-002", note = "contact-mat vs force-plate RSI agreement in one adolescent cohort" }] }
+M = { state = "partial", owner = "RES-698", evidence = [{ kind = "doc", ref = "docs/signal-schema.md" }] }
+N = { state = "absent", owner = "RES-681" }
+O = { state = "partial", owner = "RES-698", evidence = [{ kind = "registry_claim", ref = "SP-004" }, { kind = "registry_claim", ref = "FP-002" }] }
+
+[[family]]
+id = "radar_laser"
+number = 6
+name = "Radar and laser velocity systems"
+scope = "in_scope"
+paradigm = "continuous_signal"
+engine = "dbs.engines.device.radar_laser"
+engine_issue = "RES-699"
+device_classes = ["radar_laser"]
+processing_methods = ["raw_passthrough", "butterworth_zero_lag", "moving_average", "finite_difference", "cosine_correction"]
+
+[family.dims]
+A = { state = "partial", owner = "RES-693", evidence = [{ kind = "doc", ref = "docs/signal-schema.md" }, { kind = "test", ref = "tests/test_signals_schema_io.py" }, { kind = "adapter_import", ref = "src/dynamisbench_soccer/adapters/generic.py" }], blockers = [{ kind = "dependency", issue = "RES-693", text = "Radar velocity and laser distance share one class; no mounting or aiming geometry." }] }
+B = { state = "absent", owner = "RES-699" }
+C = { state = "partial", owner = "RES-693", evidence = [{ kind = "doc", ref = "docs/signal-schema.md" }] }
+D = { state = "partial", owner = "RES-699", evidence = [{ kind = "doc", ref = "docs/qc-spec.md", note = "QC-R01/R02" }, { kind = "test", ref = "tests/test_qc.py" }] }
+E = { state = "absent", owner = "RES-699" }
+F = { state = "partial", owner = "RES-699", evidence = [{ kind = "registry_claim", ref = "SP-002" }] }
+G = { state = "absent", owner = "RES-673" }
+H = { state = "partial", owner = "RES-673", evidence = [{ kind = "registry_claim", ref = "SP-001" }, { kind = "registry_claim", ref = "SP-002" }, { kind = "registry_claim", ref = "SP-006" }] }
+I = { state = "absent", owner = "RES-699", blockers = [{ kind = "scientific", issue = "RES-694", text = "No device-level radar or laser validity, sampling or body-point source." }] }
+J = { state = "absent", owner = "RES-669" }
+K = { state = "partial", owner = "RES-669", evidence = [{ kind = "test", ref = "tests/test_qc.py", note = "radar QC fault fixtures only" }] }
+L = { state = "absent", owner = "RES-703" }
+M = { state = "partial", owner = "RES-699", evidence = [{ kind = "doc", ref = "docs/signal-schema.md" }] }
+N = { state = "absent", owner = "RES-681" }
+O = { state = "partial", owner = "RES-699", evidence = [{ kind = "registry_claim", ref = "SP-006" }] }
+
+[[family]]
+id = "gnss_lps"
+number = 7
+name = "GNSS and local-positioning systems"
+scope = "in_scope"
+paradigm = "position_track"
+engine = "dbs.engines.device.gnss_lps"
+engine_issue = "RES-700"
+device_classes = ["gnss_imu"]
+planned_device_classes = ["gnss", "lps"]
+processing_methods = ["raw_passthrough", "position_projection_local", "doppler_speed_passthrough", "butterworth_zero_lag", "moving_average", "finite_difference", "spline_differentiation"]
+
+[family.dims]
+A = { state = "absent", owner = "RES-693", blockers = [{ kind = "dependency", issue = "RES-693", text = "Schema v1 has only session summaries in a merged gnss_imu class; no raw position or speed channels." }] }
+B = { state = "absent", owner = "RES-700" }
+C = { state = "absent", owner = "RES-693" }
+D = { state = "absent", owner = "RES-700" }
+E = { state = "absent", owner = "RES-700" }
+F = { state = "absent", owner = "RES-700" }
+G = { state = "absent", owner = "RES-673" }
+H = { state = "absent", owner = "RES-673" }
+I = { state = "absent", owner = "RES-700", blockers = [{ kind = "scientific", issue = "RES-694", text = "No registry claim on GNSS or LPS validity, sampling rate or speed and acceleration error." }] }
+J = { state = "absent", owner = "RES-669" }
+K = { state = "absent", owner = "RES-669" }
+L = { state = "absent", owner = "RES-703", blockers = [{ kind = "scientific", issue = "RES-703", text = "No audited raw GNSS or LPS dataset exists for empirical agreement (RES-666 covered summaries only)." }] }
+M = { state = "partial", owner = "RES-700", evidence = [{ kind = "doc", ref = "docs/signal-schema.md" }, { kind = "doc", ref = "docs/data-policy.md" }] }
+N = { state = "absent", owner = "RES-704" }
+O = { state = "absent", owner = "RES-700", blockers = [{ kind = "scientific", issue = "RES-694", text = "Limitations need sourced claims (Doppler vs positional speed, interpolated rates)." }] }
+
+[[family]]
+id = "imu"
+number = 8
+name = "Inertial measurement units"
+scope = "in_scope"
+paradigm = "inertial"
+engine = "dbs.engines.device.imu"
+engine_issue = "RES-701"
+device_classes = ["gnss_imu"]
+planned_device_classes = ["imu"]
+processing_methods = ["raw_passthrough", "butterworth_zero_lag", "orientation_complementary", "orientation_kalman", "gravity_removal", "trapezoid_integration"]
+
+[family.dims]
+A = { state = "absent", owner = "RES-693", blockers = [{ kind = "dependency", issue = "RES-693", text = "Schema v1 has no tri-axial specific-force, angular-rate or magnetic channels." }] }
+B = { state = "absent", owner = "RES-701" }
+C = { state = "absent", owner = "RES-693" }
+D = { state = "absent", owner = "RES-701" }
+E = { state = "absent", owner = "RES-701" }
+F = { state = "absent", owner = "RES-701" }
+G = { state = "absent", owner = "RES-671" }
+H = { state = "absent", owner = "RES-671" }
+I = { state = "absent", owner = "RES-701", blockers = [{ kind = "scientific", issue = "RES-694", text = "No registry claim on IMU flight-time validity, placement or accumulated-load metrics." }] }
+J = { state = "absent", owner = "RES-669" }
+K = { state = "absent", owner = "RES-669" }
+L = { state = "absent", owner = "RES-703", blockers = [{ kind = "scientific", issue = "RES-703", text = "No audited raw IMU dataset exists for empirical agreement." }] }
+M = { state = "partial", owner = "RES-701", evidence = [{ kind = "doc", ref = "docs/signal-schema.md" }, { kind = "doc", ref = "docs/data-policy.md" }] }
+N = { state = "absent", owner = "RES-704" }
+O = { state = "absent", owner = "RES-701", blockers = [{ kind = "scientific", issue = "RES-694", text = "Limitations need sourced claims (vendor-specific load indices, mounting site)." }] }
+
+# --------------------------------------------------------------------------------------
+# Assessment science engines (dimensions G and H): protocol -> scientific quantities.
+
+[[assessment]]
+id = "jumps"
+name = "Jumps: CMJ, SJ, single-leg CMJ, drop jump, 10/5"
+issue = "RES-671"
+tests = ["cmj", "sj", "slcmj", "dj", "rj_10_5"]
+device_families = ["force_platform", "lpt_encoder", "timing_contact", "imu"]
+
+[[assessment]]
+id = "isometric_dynamometry"
+name = "Isometric and dynamometry: IMTP, Nordic, hip squeeze, isometric hamstring"
+issue = "RES-672"
+tests = ["imtp", "nhe", "hip_add_abd", "iso_ham"]
+device_families = ["force_platform", "load_cell_isometric", "nordic_hip"]
+
+[[assessment]]
+id = "sprint_cod"
+name = "Sprint, sprint F-V profile and change of direction"
+issue = "RES-673"
+tests = ["sprint_gates", "sprint_fv", "cod_505", "ift_30_15", "rsa"]
+device_families = ["timing_contact", "radar_laser", "gnss_lps"]
+
+# --------------------------------------------------------------------------------------
+# Declared non-equivalences (dimension L). No interchangeability is assumed.
+
+[[non_equivalence]]
+id = "NE-001"
+a = "gnss_lps:speed.gnss"
+b = "radar_laser:velocity.radar"
+statement = "GNSS-derived speed is not equivalent to a radar velocity trace: rates, smoothing, latency and the body point all differ."
+study = "RES-703"
+
+[[non_equivalence]]
+id = "NE-002"
+a = "lpt_encoder:displacement.cable"
+b = "force_platform:displacement.com_vertical"
+statement = "LPT cable displacement is not vertical centre-of-mass or barbell displacement unless the cable geometry is declared and the attachment point's motion relative to the body is accounted for."
+study = "RES-703"
+
+[[non_equivalence]]
+id = "NE-003"
+a = "lpt_encoder:power.lpt"
+b = "force_platform:power.force_plate"
+statement = "LPT power (mass x acceleration x velocity at the attachment point) and force-plate power (GRF x COM velocity) are different estimands."
+study = "RES-703"
+
+[[non_equivalence]]
+id = "NE-004"
+a = "timing_contact:flight_time.contact_mat"
+b = "force_platform:flight_time.force_plate"
+statement = "Contact-mat flight time includes switching latency and threshold differences, so it is not force-plate flight time without an agreement study."
+study = "RES-703"
+
+[[non_equivalence]]
+id = "NE-005"
+a = "imu:flight_time.imu"
+b = "force_platform:flight_time.force_plate"
+statement = "IMU flight time depends on mounting site and event thresholds, so it is not force-plate flight time without an agreement study."
+study = "RES-703"
+
+[[non_equivalence]]
+id = "NE-006"
+a = "load_cell_isometric:peak_force.imtp_rig"
+b = "force_platform:peak_force.imtp_plate"
+statement = "IMTP peak force on a load-cell rig and on a force plate differ in rig compliance, body-weight handling and onset detection."
+study = "RES-703"
+
+[[non_equivalence]]
+id = "NE-007"
+a = "timing_contact:split_time.gates"
+b = "radar_laser:split_time.derived"
+statement = "Gate splits are triggered by the first body part to break the beam; radar- or laser-derived splits track a body point. They are not interchangeable."
+study = "RES-703"
+
+[[non_equivalence]]
+id = "NE-008"
+a = "radar_laser:velocity.radar_doppler"
+b = "radar_laser:velocity.laser_differentiated"
+statement = "Radar Doppler velocity and velocity differentiated from laser distance have different noise models and processing."
+study = "RES-703"
+
+[[non_equivalence]]
+id = "NE-009"
+a = "gnss_lps:speed.doppler"
+b = "gnss_lps:speed.positional"
+statement = "Device Doppler speed and speed differentiated from positions are separate estimands, and both depend on vendor filtering."
+study = "RES-703"
+
+[[non_equivalence]]
+id = "NE-010"
+a = "nordic_hip:force.vendor_corrected"
+b = "nordic_hip:force.raw_cell"
+statement = "Vendor-corrected Nordic or squeeze force is not raw cell force; commercial force and torque definitions are not interchangeable between vendors."
+study = "RES-703"
