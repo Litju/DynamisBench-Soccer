@@ -1,0 +1,344 @@
+# RES-692 — provisional evidence ratings. A schema is not scientific truth.
+version = "0.1.0"
+
+[[subfamily]]
+id = "force_platform.single"
+family = "force_platform"
+paradigm = "continuous_signal"
+issue = "RES-670"
+engine_id = "fp_single"
+methods = ["filter", "integrate"]
+ratings = { A = "specified", B = "partial", C = "partial", D = "partial", E = "absent", F = "absent", G = "absent", H = "absent", I = "absent", J = "absent", K = "absent", L = "absent", M = "absent", N = "absent", O = "specified" }
+blockers = ["Reference engine and independent numerical checks absent"]
+
+[[subfamily]]
+id = "force_platform.dual"
+family = "force_platform"
+paradigm = "continuous_signal"
+issue = "RES-670"
+engine_id = "fp_dual"
+methods = ["filter", "integrate"]
+ratings = { A = "specified", B = "partial", C = "partial", D = "partial", E = "absent", F = "absent", G = "absent", H = "absent", I = "absent", J = "absent", K = "absent", L = "absent", M = "absent", N = "absent", O = "specified" }
+blockers = ["Bilateral calibration and timing unqualified"]
+
+[[subfamily]]
+id = "lpt_encoder.lpt"
+family = "lpt_encoder"
+paradigm = "continuous_signal"
+issue = "RES-695"
+engine_id = "lpt"
+methods = ["differentiate"]
+ratings = { A = "partial", B = "absent", C = "absent", D = "absent", E = "absent", F = "absent", G = "absent", H = "absent", I = "absent", J = "absent", K = "absent", L = "absent", M = "absent", N = "absent", O = "absent" }
+blockers = ["No cable geometry or device validity claims (RES-693/694)"]
+
+[[subfamily]]
+id = "lpt_encoder.encoder"
+family = "lpt_encoder"
+paradigm = "discrete_event"
+issue = "RES-695"
+engine_id = "encoder"
+methods = ["count_unwrap", "event_rate"]
+ratings = { A = "absent", B = "absent", C = "absent", D = "absent", E = "absent", F = "absent", G = "absent", H = "absent", I = "absent", J = "absent", K = "absent", L = "absent", M = "absent", N = "absent", O = "absent" }
+blockers = ["No native encoder counts/timestamp contract (RES-693)"]
+
+[[subfamily]]
+id = "load_cell_isometric.load_cell"
+family = "load_cell_isometric"
+paradigm = "continuous_signal"
+issue = "RES-696"
+engine_id = "load_cell"
+methods = ["calibrate"]
+ratings = { A = "absent", B = "absent", C = "absent", D = "absent", E = "absent", F = "absent", G = "absent", H = "absent", I = "absent", J = "absent", K = "absent", L = "absent", M = "absent", N = "absent", O = "absent" }
+blockers = ["No raw voltage/calibration and rig compliance claims (RES-693/694)"]
+
+[[subfamily]]
+id = "load_cell_isometric.isometric_rig"
+family = "load_cell_isometric"
+paradigm = "continuous_signal"
+issue = "RES-696"
+engine_id = "iso_rig"
+methods = ["calibrate"]
+ratings = { A = "absent", B = "absent", C = "absent", D = "absent", E = "absent", F = "absent", G = "absent", H = "absent", I = "absent", J = "absent", K = "absent", L = "absent", M = "absent", N = "absent", O = "absent" }
+blockers = ["No isometric rig compliance or validity source (RES-694)"]
+
+[[subfamily]]
+id = "nordic_hip.nordic"
+family = "nordic_hip"
+paradigm = "continuous_signal"
+issue = "RES-697"
+engine_id = "nordic"
+methods = ["filter"]
+ratings = { A = "partial", B = "absent", C = "absent", D = "absent", E = "absent", F = "absent", G = "absent", H = "absent", I = "absent", J = "absent", K = "absent", L = "absent", M = "absent", N = "absent", O = "absent" }
+blockers = ["Isometric hamstring test is a declared evidence gap; no engine"]
+
+[[subfamily]]
+id = "nordic_hip.hip"
+family = "nordic_hip"
+paradigm = "continuous_signal"
+issue = "RES-697"
+engine_id = "hip"
+methods = ["filter"]
+ratings = { A = "partial", B = "absent", C = "absent", D = "absent", E = "absent", F = "absent", G = "absent", H = "absent", I = "absent", J = "absent", K = "absent", L = "absent", M = "absent", N = "absent", O = "absent" }
+blockers = ["Unqualified geometry and metrology; no engine"]
+
+[[subfamily]]
+id = "timing_contact.gates"
+family = "timing_contact"
+paradigm = "discrete_event"
+issue = "RES-698"
+engine_id = "gates"
+methods = ["debounce", "pair_events"]
+ratings = { A = "partial", B = "absent", C = "absent", D = "absent", E = "absent", F = "absent", G = "absent", H = "absent", I = "absent", J = "absent", K = "absent", L = "absent", M = "absent", N = "absent", O = "absent" }
+blockers = ["No gate trigger-validity source (RES-694)"]
+
+[[subfamily]]
+id = "timing_contact.contact"
+family = "timing_contact"
+paradigm = "discrete_event"
+issue = "RES-698"
+engine_id = "contact"
+methods = ["debounce", "pair_events"]
+ratings = { A = "absent", B = "absent", C = "absent", D = "absent", E = "absent", F = "absent", G = "absent", H = "absent", I = "absent", J = "absent", K = "absent", L = "absent", M = "absent", N = "absent", O = "absent" }
+blockers = ["No contact mat latency/trigger evidence or schema (RES-693/694)"]
+
+[[subfamily]]
+id = "radar_laser.radar"
+family = "radar_laser"
+paradigm = "continuous_signal"
+issue = "RES-699"
+engine_id = "radar"
+methods = ["filter", "start_detection"]
+ratings = { A = "partial", B = "absent", C = "absent", D = "absent", E = "absent", F = "absent", G = "absent", H = "absent", I = "absent", J = "absent", K = "absent", L = "absent", M = "absent", N = "absent", O = "absent" }
+blockers = ["No raw radar validity study (RES-694)"]
+
+[[subfamily]]
+id = "radar_laser.laser"
+family = "radar_laser"
+paradigm = "continuous_signal"
+issue = "RES-699"
+engine_id = "laser"
+methods = ["differentiate", "filter"]
+ratings = { A = "partial", B = "absent", C = "absent", D = "absent", E = "absent", F = "absent", G = "absent", H = "absent", I = "absent", J = "absent", K = "absent", L = "absent", M = "absent", N = "absent", O = "absent" }
+blockers = ["No raw laser validity study (RES-694)"]
+
+[[subfamily]]
+id = "gnss_lps.gnss"
+family = "gnss_lps"
+paradigm = "position_track"
+issue = "RES-700"
+engine_id = "gnss"
+methods = ["resample", "smooth"]
+ratings = { A = "absent", B = "absent", C = "absent", D = "absent", E = "absent", F = "absent", G = "absent", H = "absent", I = "absent", J = "absent", K = "absent", L = "absent", M = "absent", N = "absent", O = "absent" }
+blockers = ["Only derived GNSS summaries in M2; no raw schema or audited raw data"]
+
+[[subfamily]]
+id = "gnss_lps.lps"
+family = "gnss_lps"
+paradigm = "position_track"
+issue = "RES-700"
+engine_id = "lps"
+methods = ["resample", "smooth"]
+ratings = { A = "absent", B = "absent", C = "absent", D = "absent", E = "absent", F = "absent", G = "absent", H = "absent", I = "absent", J = "absent", K = "absent", L = "absent", M = "absent", N = "absent", O = "absent" }
+blockers = ["No LPS position/anchor schema or audited raw data"]
+
+[[subfamily]]
+id = "imu.inertial"
+family = "imu"
+paradigm = "inertial"
+issue = "RES-701"
+engine_id = "imu"
+methods = ["orientation_estimation", "gravity_removal"]
+ratings = { A = "absent", B = "absent", C = "absent", D = "absent", E = "absent", F = "absent", G = "absent", H = "absent", I = "absent", J = "absent", K = "absent", L = "absent", M = "absent", N = "absent", O = "absent" }
+blockers = ["No raw specific-force/angular-rate schema or audited raw data"]
+
+[[evidence]]
+subfamily = "force_platform.single"
+dimension = "A"
+kind = "schema"
+ref = "repo:src/dynamisbench_soccer/signals/schema.py"
+issue = "RES-665"
+rationale = "Existing engineering contract or adapter only; no scientific verification is claimed."
+
+[[evidence]]
+subfamily = "force_platform.single"
+dimension = "B"
+kind = "schema"
+ref = "repo:src/dynamisbench_soccer/signals/schema.py"
+issue = "RES-665"
+rationale = "Existing engineering contract or adapter only; no scientific verification is claimed."
+
+[[evidence]]
+subfamily = "force_platform.single"
+dimension = "C"
+kind = "schema"
+ref = "repo:src/dynamisbench_soccer/signals/schema.py"
+issue = "RES-665"
+rationale = "Existing engineering contract or adapter only; no scientific verification is claimed."
+
+[[evidence]]
+subfamily = "force_platform.single"
+dimension = "D"
+kind = "schema"
+ref = "repo:docs/qc-spec.md"
+issue = "RES-668"
+rationale = "Existing engineering contract or adapter only; no scientific verification is claimed."
+
+[[evidence]]
+subfamily = "force_platform.single"
+dimension = "O"
+kind = "schema"
+ref = "repo:docs/qc-spec.md"
+issue = "RES-668"
+rationale = "Existing engineering contract or adapter only; no scientific verification is claimed."
+
+[[evidence]]
+subfamily = "force_platform.dual"
+dimension = "A"
+kind = "schema"
+ref = "repo:src/dynamisbench_soccer/signals/schema.py"
+issue = "RES-665"
+rationale = "Existing engineering contract or adapter only; no scientific verification is claimed."
+
+[[evidence]]
+subfamily = "force_platform.dual"
+dimension = "B"
+kind = "schema"
+ref = "repo:src/dynamisbench_soccer/signals/schema.py"
+issue = "RES-665"
+rationale = "Existing engineering contract or adapter only; no scientific verification is claimed."
+
+[[evidence]]
+subfamily = "force_platform.dual"
+dimension = "C"
+kind = "schema"
+ref = "repo:src/dynamisbench_soccer/signals/schema.py"
+issue = "RES-665"
+rationale = "Existing engineering contract or adapter only; no scientific verification is claimed."
+
+[[evidence]]
+subfamily = "force_platform.dual"
+dimension = "D"
+kind = "schema"
+ref = "repo:docs/qc-spec.md"
+issue = "RES-668"
+rationale = "Existing engineering contract or adapter only; no scientific verification is claimed."
+
+[[evidence]]
+subfamily = "force_platform.dual"
+dimension = "O"
+kind = "schema"
+ref = "repo:docs/qc-spec.md"
+issue = "RES-668"
+rationale = "Existing engineering contract or adapter only; no scientific verification is claimed."
+
+[[evidence]]
+subfamily = "lpt_encoder.lpt"
+dimension = "A"
+kind = "adapter_import"
+ref = "repo:src/dynamisbench_soccer/adapters/generic.py"
+issue = "RES-667"
+rationale = "Existing engineering contract or adapter only; no scientific verification is claimed."
+
+[[evidence]]
+subfamily = "nordic_hip.nordic"
+dimension = "A"
+kind = "adapter_import"
+ref = "repo:src/dynamisbench_soccer/adapters/generic.py"
+issue = "RES-667"
+rationale = "Existing engineering contract or adapter only; no scientific verification is claimed."
+
+[[evidence]]
+subfamily = "nordic_hip.hip"
+dimension = "A"
+kind = "adapter_import"
+ref = "repo:src/dynamisbench_soccer/adapters/generic.py"
+issue = "RES-667"
+rationale = "Existing engineering contract or adapter only; no scientific verification is claimed."
+
+[[evidence]]
+subfamily = "timing_contact.gates"
+dimension = "A"
+kind = "adapter_import"
+ref = "repo:src/dynamisbench_soccer/adapters/generic.py"
+issue = "RES-667"
+rationale = "Existing engineering contract or adapter only; no scientific verification is claimed."
+
+[[evidence]]
+subfamily = "radar_laser.radar"
+dimension = "A"
+kind = "adapter_import"
+ref = "repo:src/dynamisbench_soccer/adapters/generic.py"
+issue = "RES-667"
+rationale = "Existing engineering contract or adapter only; no scientific verification is claimed."
+
+[[evidence]]
+subfamily = "radar_laser.laser"
+dimension = "A"
+kind = "adapter_import"
+ref = "repo:src/dynamisbench_soccer/adapters/generic.py"
+issue = "RES-667"
+rationale = "Existing engineering contract or adapter only; no scientific verification is claimed."
+
+[[comparison]]
+left = "force_platform.single"
+right = "lpt_encoder.lpt"
+quantity = "jump_height"
+verdict = "unknown"
+evidence_level = "none"
+refs = []
+reviewer_status = "pending"
+
+[[comparison]]
+left = "force_platform.single"
+right = "timing_contact.contact"
+quantity = "flight_time"
+verdict = "unknown"
+evidence_level = "none"
+refs = []
+reviewer_status = "pending"
+
+[[comparison]]
+left = "force_platform.single"
+right = "imu.inertial"
+quantity = "flight_time"
+verdict = "unknown"
+evidence_level = "none"
+refs = []
+reviewer_status = "pending"
+
+[[comparison]]
+left = "force_platform.single"
+right = "load_cell_isometric.load_cell"
+quantity = "isometric_force"
+verdict = "unknown"
+evidence_level = "none"
+refs = []
+reviewer_status = "pending"
+
+[[comparison]]
+left = "radar_laser.radar"
+right = "gnss_lps.gnss"
+quantity = "running_speed"
+verdict = "unknown"
+evidence_level = "none"
+refs = []
+reviewer_status = "pending"
+
+[[comparison]]
+left = "radar_laser.radar"
+right = "gnss_lps.lps"
+quantity = "running_speed"
+verdict = "unknown"
+evidence_level = "none"
+refs = []
+reviewer_status = "pending"
+
+[[comparison]]
+left = "radar_laser.radar"
+right = "timing_contact.gates"
+quantity = "sprint_velocity"
+verdict = "unknown"
+evidence_level = "none"
+refs = []
+reviewer_status = "pending"
+
