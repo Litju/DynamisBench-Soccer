@@ -1,0 +1,294 @@
+# Signal-quality and trial-acceptance (QC) rules v0.1 (RES-668)
+#
+# severity: reject (trial/signal unusable) | flag (usable with caution; report it) | note
+# basis:    evidence (claims must cite registry claim ids) | metadata (consistency of
+#           declared metadata; claims optional)
+# params are DEFAULTS, not universal truths. Tasks may override them, and must state so.
+version = "0.1.0"
+
+# ---------------------------------------------------------------------------------------
+# Signal level
+# ---------------------------------------------------------------------------------------
+[[rule]]
+id = "QC-S01"
+name = "zero_offset"
+level = "signal"
+applies_to = ["cmj", "sj", "slcmj", "dj", "rj_10_5"]
+severity = "flag"
+basis = "evidence"
+claims = ["FP-004", "FP-017"]
+rationale = "A non-zero unloaded reading means the plate was not zeroed; the offset biases body weight, net force and every integrated quantity."
+params = { airborne_fraction_bw = 0.2, edge_trim_s = 0.02, max_offset_n = 10.0 }
+
+[[rule]]
+id = "QC-S02"
+name = "baseline_drift"
+level = "signal"
+applies_to = ["cmj", "sj", "slcmj"]
+severity = "flag"
+basis = "evidence"
+claims = ["FP-004"]
+rationale = "Trials that start and end in quiet stance should show the same system weight; a difference indicates drift that corrupts integration."
+params = { window_s = 0.5, max_relative_difference = 0.03 }
+
+[[rule]]
+id = "QC-S03"
+name = "clipping"
+level = "signal"
+applies_to = ["cmj", "sj", "slcmj", "dj", "rj_10_5", "imtp", "nhe", "hip_add_abd", "iso_ham", "sprint_fv"]
+severity = "reject"
+basis = "evidence"
+claims = ["FP-016", "IM-004"]
+rationale = "A run of identical samples at the channel maximum indicates amplifier or ADC saturation; peaks, impulse and RFD are then unknown."
+params = { min_run = 5 }
+
+[[rule]]
+id = "QC-S04"
+name = "timestamp_integrity"
+level = "signal"
+applies_to = ["cmj", "sj", "slcmj", "dj", "rj_10_5", "imtp", "nhe", "hip_add_abd", "iso_ham", "sprint_fv"]
+severity = "reject"
+basis = "evidence"
+claims = ["FP-008"]
+rationale = "Duplicated or missing samples (gaps) break the uniform-sampling assumption used by integration and time windows."
+params = { max_gap_factor = 1.5 }
+
+[[rule]]
+id = "QC-S05"
+name = "sampling_rate_adequacy"
+level = "signal"
+applies_to = ["cmj", "sj", "slcmj", "dj", "rj_10_5", "imtp"]
+severity = "reject"
+basis = "evidence"
+claims = ["FP-008", "IM-004"]
+rationale = "Force-plate jump analysis needs an adequate rate; early RFD windows and contact times are most rate-sensitive. A measured rate that deviates from the declared rate is also reported."
+params = { min_hz = 500.0, rfd_min_hz = 1000.0, max_rate_mismatch = 0.01 }
+
+[[rule]]
+id = "QC-S06"
+name = "mains_interference"
+level = "signal"
+applies_to = ["cmj", "sj", "slcmj", "imtp"]
+severity = "flag"
+basis = "evidence"
+claims = ["FP-007"]
+rationale = "Power-line interference at 50/60 Hz in the quiet-stance window inflates the SD used by onset thresholds and corrupts derivative-based detection."
+params = { window_s = 1.0, max_fraction = 0.5, min_amplitude_n = 2.0 }
+
+[[rule]]
+id = "QC-S07"
+name = "dead_or_unmapped_channel"
+level = "signal"
+applies_to = ["cmj", "sj", "imtp", "nhe", "hip_add_abd", "iso_ham"]
+severity = "flag"
+basis = "evidence"
+claims = ["FP-020", "AS-001"]
+rationale = "In a bilateral test, one limb channel carrying almost no load suggests a disconnected, unmapped or mis-assigned channel rather than a true asymmetry."
+params = { min_share = 0.1 }
+
+[[rule]]
+id = "QC-S08"
+name = "left_right_swap_vs_reference"
+level = "signal"
+applies_to = ["cmj", "sj", "imtp", "nhe", "hip_add_abd", "iso_ham"]
+severity = "flag"
+basis = "evidence"
+claims = ["AS-001"]
+rationale = "If the left-limb share mirrors the athlete's reference session (share close to 1 - reference), the channels were probably swapped."
+params = { min_share_change = 0.08 }
+
+# ---------------------------------------------------------------------------------------
+# Trial level: force-plate jumps
+# ---------------------------------------------------------------------------------------
+[[rule]]
+id = "QC-T01"
+name = "quiet_stance_stability"
+level = "trial"
+applies_to = ["cmj", "sj", "slcmj", "imtp"]
+severity = "reject"
+basis = "evidence"
+claims = ["FP-004", "FP-005"]
+rationale = "Body weight and the onset threshold come from the weighing window; sway or movement in it makes both unreliable."
+params = { weigh_s = 1.0, max_sd_n = 10.0 }
+
+[[rule]]
+id = "QC-T02"
+name = "insufficient_weighing_before_onset"
+level = "trial"
+applies_to = ["cmj", "sj", "slcmj", "imtp"]
+severity = "reject"
+basis = "evidence"
+claims = ["FP-004", "FP-005"]
+rationale = "Movement must start after at least the weighing duration of quiet stance; otherwise body weight is estimated from a moving athlete."
+params = { weigh_s = 1.0, onset_sd_multiple = 5.0, min_onset_threshold_n = 20.0 }
+
+[[rule]]
+id = "QC-T03"
+name = "no_flight_phase"
+level = "trial"
+applies_to = ["cmj", "sj", "slcmj"]
+severity = "reject"
+basis = "evidence"
+claims = ["FP-002", "FP-018"]
+rationale = "A jump trial without an airborne phase (force below the take-off threshold) cannot yield flight time or a take-off instant."
+params = { flight_threshold_n = 30.0, min_flight_s = 0.1 }
+
+[[rule]]
+id = "QC-T04"
+name = "multiple_flight_phases"
+level = "trial"
+applies_to = ["cmj", "sj", "slcmj"]
+severity = "reject"
+basis = "evidence"
+claims = ["FP-002", "FP-018"]
+rationale = "More than one airborne phase indicates a double contact, a hop on landing or stepping off the plate."
+params = { flight_threshold_n = 30.0, min_segment_s = 0.03 }
+
+[[rule]]
+id = "QC-T05"
+name = "arm_swing_protocol"
+level = "trial"
+applies_to = ["cmj", "sj", "slcmj"]
+severity = "reject"
+basis = "metadata"
+claims = []
+rationale = "Arm swing changes jump height and strategy; the declared arm condition must match the protocol, and must be declared."
+params = {}
+
+[[rule]]
+id = "QC-T06"
+name = "incomplete_landing"
+level = "trial"
+applies_to = ["cmj", "sj", "slcmj"]
+severity = "flag"
+basis = "evidence"
+claims = ["FP-002", "FP-010"]
+rationale = "Recordings must continue after landing; truncation removes landing metrics and can hide a second flight."
+params = { flight_threshold_n = 30.0, min_post_landing_s = 0.5 }
+
+[[rule]]
+id = "QC-T07"
+name = "flight_time_plausibility"
+level = "trial"
+applies_to = ["cmj", "sj", "slcmj"]
+severity = "reject"
+basis = "evidence"
+claims = ["FP-002"]
+rationale = "Flight times outside a physiologically plausible range indicate detection errors or protocol violations."
+params = { flight_threshold_n = 30.0, min_flight_s = 0.2, max_flight_s = 1.0 }
+
+[[rule]]
+id = "QC-T08"
+name = "squat_jump_countermovement"
+level = "trial"
+applies_to = ["sj"]
+severity = "reject"
+basis = "evidence"
+claims = ["FP-019"]
+rationale = "A squat jump must not contain a countermovement; force falling below system weight before propulsion invalidates it."
+params = { weigh_s = 1.0, max_dip_fraction_bw = 0.05 }
+
+# ---------------------------------------------------------------------------------------
+# Trial level: dynamometry
+# ---------------------------------------------------------------------------------------
+[[rule]]
+id = "QC-N01"
+name = "nhe_no_break_point"
+level = "trial"
+applies_to = ["nhe"]
+severity = "flag"
+basis = "evidence"
+claims = ["NH-001"]
+rationale = "NHE peak eccentric force is defined by the break point; if force is still rising at the end of the recording, the peak was not captured."
+params = { end_fraction = 0.05 }
+
+[[rule]]
+id = "QC-N02"
+name = "nhe_lever_arm_missing"
+level = "trial"
+applies_to = ["nhe"]
+severity = "flag"
+basis = "evidence"
+claims = ["NH-002"]
+rationale = "Without the knee-to-sensor lever arm only force, not torque, can be reported."
+params = {}
+
+[[rule]]
+id = "QC-H01"
+name = "squeeze_pre_tension"
+level = "trial"
+applies_to = ["hip_add_abd", "iso_ham"]
+severity = "flag"
+basis = "evidence"
+claims = ["HG-003"]
+rationale = "Large force before the effort indicates pre-tension or a poorly zeroed device, biasing the peak."
+params = { baseline_s = 0.5, max_fraction_of_peak = 0.1 }
+
+[[rule]]
+id = "QC-H02"
+name = "squeeze_hold_duration"
+level = "trial"
+applies_to = ["hip_add_abd", "iso_ham"]
+severity = "flag"
+basis = "evidence"
+claims = ["HG-004"]
+rationale = "Maximal isometric efforts need a sustained hold; a very short effort may not represent maximal force."
+params = { near_peak_fraction = 0.9, min_hold_s = 1.0 }
+
+[[rule]]
+id = "QC-H03"
+name = "squeeze_position_missing"
+level = "trial"
+applies_to = ["hip_add_abd"]
+severity = "reject"
+basis = "evidence"
+claims = ["HG-002", "HG-004"]
+rationale = "Hip position changes squeeze output, so results without the hip angle are not interpretable or comparable."
+params = {}
+
+# ---------------------------------------------------------------------------------------
+# Trial level: sprint
+# ---------------------------------------------------------------------------------------
+[[rule]]
+id = "QC-G01"
+name = "gates_monotonic"
+level = "trial"
+applies_to = ["sprint_gates", "cod_505", "rsa"]
+severity = "reject"
+basis = "evidence"
+claims = ["SP-004"]
+rationale = "Gate distances and times must both increase strictly; otherwise gates were mis-ordered or mis-triggered."
+params = {}
+
+[[rule]]
+id = "QC-G02"
+name = "gates_split_speed_plausible"
+level = "trial"
+applies_to = ["sprint_gates"]
+severity = "reject"
+basis = "evidence"
+claims = ["SP-004"]
+rationale = "Segment speeds outside a plausible human range indicate a premature beam break (e.g. by an arm) or a missed gate."
+params = { min_speed_m_s = 1.0, max_speed_m_s = 12.5 }
+
+[[rule]]
+id = "QC-R01"
+name = "radar_start_captured"
+level = "trial"
+applies_to = ["sprint_fv"]
+severity = "flag"
+basis = "evidence"
+claims = ["SP-002", "SP-006"]
+rationale = "The mono-exponential model assumes the sprint starts from rest at t0; movement at the start of the record biases tau and F0."
+params = { start_window_s = 0.1, max_start_speed_m_s = 0.5 }
+
+[[rule]]
+id = "QC-R02"
+name = "radar_acceleration_spikes"
+level = "trial"
+applies_to = ["sprint_fv"]
+severity = "flag"
+basis = "evidence"
+claims = ["SP-001"]
+rationale = "Sample-to-sample accelerations beyond human capability indicate tracking noise (e.g. limb reflections) that must be filtered or excluded."
+params = { max_abs_accel_m_s2 = 20.0 }

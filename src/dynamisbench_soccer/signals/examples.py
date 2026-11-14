@@ -65,6 +65,25 @@ def cmj_total_force(fs: float = 1000.0, mass: float = 75.0) -> FloatArray:
     return np.concatenate(parts).astype(np.float64)
 
 
+def sj_total_force(fs: float = 1000.0, mass: float = 75.0) -> FloatArray:
+    """Piecewise squat-jump-like force (N): static squat, push (no dip), flight, land."""
+    bw = mass * G
+
+    def n(sec: float) -> int:
+        return round(sec * fs)
+
+    parts = [
+        np.full(n(1.5), bw),
+        _halfcos(n(0.25), bw, 2.10 * bw),
+        _halfcos(n(0.15), 2.10 * bw, 0.0),
+        np.zeros(n(0.45)),
+        _halfcos(n(0.05), 0.0, 3.20 * bw),
+        _halfcos(n(0.25), 3.20 * bw, bw),
+        np.full(n(0.50), bw),
+    ]
+    return np.concatenate(parts).astype(np.float64)
+
+
 def cmj_dual_plate(fs: float = 1000.0, left_share: float = 0.52) -> SignalBundle:
     total = cmj_total_force(fs)
     left = total * left_share
@@ -138,8 +157,9 @@ def hip_squeeze(fs: float = 100.0, action: str = "adduction") -> SignalBundle:
     t = np.arange(n) / fs
     effort = np.where((t > 0.8) & (t < 4.0), 1.0, 0.0)
     smooth = np.convolve(effort, np.ones(20) / 20, mode="same")
-    left = (5 + 290 * smooth).astype(np.float64)
-    right = (5 + 270 * smooth).astype(np.float64)
+    rng = np.random.default_rng(7)  # sensor noise so the plateau is not flat (cf. QC-S03)
+    left = (5 + 290 * smooth + rng.normal(0, 0.5, n)).astype(np.float64)
+    right = (5 + 270 * smooth + rng.normal(0, 0.5, n)).astype(np.float64)
     meta = BundleMeta(
         bundle_id=f"example-hip-{action}",
         kind=BundleKind.TIMESERIES,
