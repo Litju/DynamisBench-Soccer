@@ -1,0 +1,19 @@
+# dbs-generic-csv: 1
+# data_category: synthetic
+# subject: ATH-001
+# body_mass_kg: 75
+# sex: male
+# session_id: S-2026-11-14
+# date: 2026-11-14
+# match_day: MD-4
+# trial: 1
+# test_id: sprint_gates
+# protocol_id: sprint.30m.v1
+# start_mode: standing
+# gate_height_m: 1.0
+distance[m],time[ms]
+0.0,0.0
+5.0,1050.0
+10.0,1800.0
+20.0,3050.0
+30.0,4220.0

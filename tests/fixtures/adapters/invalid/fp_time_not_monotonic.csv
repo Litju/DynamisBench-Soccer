@@ -1,0 +1,15 @@
+# dbs-generic-csv: 1
+# data_category: synthetic
+# subject: ATH-001
+# body_mass_kg: 75
+# sex: male
+# session_id: S-2026-11-14
+# date: 2026-11-14
+# match_day: MD-3
+# trial: 1
+# test_id: cmj
+# protocol_id: p
+time[s],fz[N]
+0.000,735
+0.002,736
+0.001,735
