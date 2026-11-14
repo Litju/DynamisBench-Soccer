@@ -1,7 +1,7 @@
-"""Registry of optional CLI subcommand registrars.
+"""Registry of CLI subcommand registrars.
 
 Each registrar receives the ``argparse`` subparsers object and adds its commands.
-Keeping this list in one place avoids import cycles between ``cli`` and features.
+Feature modules are imported here, in one place, to avoid import cycles with ``cli``.
 """
 
 from __future__ import annotations
@@ -9,6 +9,10 @@ from __future__ import annotations
 import argparse
 from collections.abc import Callable
 
-Registrar = Callable[["argparse._SubParsersAction[argparse.ArgumentParser]"], None]
+Registrar = Callable[[argparse._SubParsersAction], None]  # type: ignore[type-arg]
 
-REGISTRARS: list[Registrar] = []
+
+def registrars() -> list[Registrar]:
+    from dynamisbench_soccer.data import cli as data_cli
+
+    return [data_cli.register]

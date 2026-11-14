@@ -42,7 +42,7 @@ def _register_optional(sub: argparse._SubParsersAction[argparse.ArgumentParser])
     """Register subcommands contributed by other modules."""
     from dynamisbench_soccer import commands
 
-    for register in commands.REGISTRARS:
+    for register in commands.registrars():
         register(sub)
 
 

@@ -21,6 +21,13 @@ jobs:
         run: uv sync --frozen
       - name: Environment guard
         run: uv run dbs env-check
+      - name: No data or oversized files in Git
+        run: uv run dbs repo-check
+      - name: Dataset manifests are valid
+        run: |
+          shopt -s nullglob
+          manifests=(data/manifests/*.json)
+          if [ ${#manifests[@]} -gt 0 ]; then uv run dbs data validate "${manifests[@]}"; fi
       - name: Lint
         run: |
           uv run ruff check .
