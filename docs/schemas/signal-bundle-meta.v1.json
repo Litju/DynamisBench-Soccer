@@ -1,0 +1,727 @@
+{
+  "$defs": {
+    "BundleKind": {
+      "enum": [
+        "timeseries",
+        "events",
+        "summary"
+      ],
+      "title": "BundleKind",
+      "type": "string"
+    },
+    "Calibration": {
+      "additionalProperties": false,
+      "properties": {
+        "date": {
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "title": "Date",
+          "type": "string"
+        },
+        "method": {
+          "title": "Method",
+          "type": "string"
+        },
+        "notes": {
+          "default": "",
+          "title": "Notes",
+          "type": "string"
+        }
+      },
+      "required": [
+        "date",
+        "method"
+      ],
+      "title": "Calibration",
+      "type": "object"
+    },
+    "ChannelSpec": {
+      "additionalProperties": false,
+      "properties": {
+        "axis": {
+          "anyOf": [
+            {
+              "enum": [
+                "x",
+                "y",
+                "z"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Axis"
+        },
+        "description": {
+          "default": "",
+          "title": "Description",
+          "type": "string"
+        },
+        "name": {
+          "description": "column name, snake_case, unique within the bundle",
+          "title": "Name",
+          "type": "string"
+        },
+        "plate": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "force plate number",
+          "title": "Plate"
+        },
+        "quantity": {
+          "$ref": "#/$defs/Quantity"
+        },
+        "side": {
+          "$ref": "#/$defs/Side",
+          "default": "none"
+        },
+        "unit": {
+          "title": "Unit",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "quantity",
+        "unit"
+      ],
+      "title": "ChannelSpec",
+      "type": "object"
+    },
+    "DataCategory": {
+      "description": "Data categories are kept separate everywhere (project governance).",
+      "enum": [
+        "empirical",
+        "analytical",
+        "synthetic",
+        "expert-adjudicated"
+      ],
+      "title": "DataCategory",
+      "type": "string"
+    },
+    "Device": {
+      "additionalProperties": false,
+      "properties": {
+        "device_class": {
+          "$ref": "#/$defs/DeviceClass"
+        },
+        "firmware": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Firmware"
+        },
+        "manufacturer": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Manufacturer"
+        },
+        "model": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Model"
+        },
+        "serial_hash": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "hash, never the raw serial",
+          "title": "Serial Hash"
+        }
+      },
+      "required": [
+        "device_class"
+      ],
+      "title": "Device",
+      "type": "object"
+    },
+    "DeviceClass": {
+      "enum": [
+        "force_plate",
+        "nordic_dynamometer",
+        "hip_dynamometer",
+        "timing_gates",
+        "radar_laser",
+        "lpt",
+        "gnss_imu",
+        "manual_protocol"
+      ],
+      "title": "DeviceClass",
+      "type": "string"
+    },
+    "Geometry": {
+      "additionalProperties": false,
+      "properties": {
+        "gate_height_m": {
+          "anyOf": [
+            {
+              "exclusiveMaximum": 2.0,
+              "exclusiveMinimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Gate Height M"
+        },
+        "hip_flexion_deg": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Hip Flexion Deg"
+        },
+        "knee_angle_deg": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Knee Angle Deg"
+        },
+        "lever_arm_m": {
+          "anyOf": [
+            {
+              "exclusiveMaximum": 1.0,
+              "exclusiveMinimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Lever Arm M"
+        },
+        "plate_layout": {
+          "anyOf": [
+            {
+              "enum": [
+                "single",
+                "dual_side_by_side",
+                "dual_in_line"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Plate Layout"
+        },
+        "summed_force_policy": {
+          "anyOf": [
+            {
+              "const": "sum_fz_all_plates",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Summed Force Policy"
+        }
+      },
+      "title": "Geometry",
+      "type": "object"
+    },
+    "Parent": {
+      "additionalProperties": false,
+      "properties": {
+        "bundle_id": {
+          "title": "Bundle Id",
+          "type": "string"
+        },
+        "sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Sha256",
+          "type": "string"
+        }
+      },
+      "required": [
+        "bundle_id",
+        "sha256"
+      ],
+      "title": "Parent",
+      "type": "object"
+    },
+    "Protocol": {
+      "additionalProperties": false,
+      "properties": {
+        "action": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "e.g. adduction, abduction",
+          "title": "Action"
+        },
+        "arm_swing": {
+          "default": "not_applicable",
+          "enum": [
+            "hands_on_hips",
+            "free_arms",
+            "not_applicable"
+          ],
+          "title": "Arm Swing",
+          "type": "string"
+        },
+        "drop_height_m": {
+          "anyOf": [
+            {
+              "exclusiveMaximum": 1.5,
+              "exclusiveMinimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Drop Height M"
+        },
+        "protocol_id": {
+          "minLength": 1,
+          "title": "Protocol Id",
+          "type": "string"
+        },
+        "start_mode": {
+          "default": "not_applicable",
+          "enum": [
+            "standing",
+            "crouched",
+            "flying",
+            "not_applicable"
+          ],
+          "title": "Start Mode",
+          "type": "string"
+        }
+      },
+      "required": [
+        "protocol_id"
+      ],
+      "title": "Protocol",
+      "type": "object"
+    },
+    "Provenance": {
+      "additionalProperties": false,
+      "properties": {
+        "created_by": {
+          "description": "tool@version, e.g. adapter:generic_forceplate_csv@0.1",
+          "title": "Created By",
+          "type": "string"
+        },
+        "parents": {
+          "items": {
+            "$ref": "#/$defs/Parent"
+          },
+          "title": "Parents",
+          "type": "array"
+        },
+        "source_sha256": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Sha256"
+        },
+        "transforms": {
+          "description": "ordered, human-readable",
+          "items": {
+            "type": "string"
+          },
+          "title": "Transforms",
+          "type": "array"
+        }
+      },
+      "required": [
+        "created_by"
+      ],
+      "title": "Provenance",
+      "type": "object"
+    },
+    "Quantity": {
+      "enum": [
+        "force",
+        "torque",
+        "velocity",
+        "distance",
+        "displacement",
+        "time",
+        "position",
+        "angle",
+        "count",
+        "dimensionless"
+      ],
+      "title": "Quantity",
+      "type": "string"
+    },
+    "Sampling": {
+      "additionalProperties": false,
+      "properties": {
+        "measured_hz": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Measured Hz"
+        },
+        "nominal_hz": {
+          "exclusiveMinimum": 0,
+          "title": "Nominal Hz",
+          "type": "number"
+        },
+        "t0_s": {
+          "default": 0.0,
+          "title": "T0 S",
+          "type": "number"
+        }
+      },
+      "required": [
+        "nominal_hz"
+      ],
+      "title": "Sampling",
+      "type": "object"
+    },
+    "Session": {
+      "additionalProperties": false,
+      "properties": {
+        "date": {
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "title": "Date",
+          "type": "string"
+        },
+        "match_day": {
+          "anyOf": [
+            {
+              "pattern": "^MD([+-][0-9])?$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Match Day"
+        },
+        "session_id": {
+          "minLength": 1,
+          "title": "Session Id",
+          "type": "string"
+        },
+        "trial_index": {
+          "default": 1,
+          "minimum": 1,
+          "title": "Trial Index",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "session_id",
+        "date"
+      ],
+      "title": "Session",
+      "type": "object"
+    },
+    "Side": {
+      "enum": [
+        "left",
+        "right",
+        "bilateral",
+        "none"
+      ],
+      "title": "Side",
+      "type": "string"
+    },
+    "Subject": {
+      "additionalProperties": false,
+      "properties": {
+        "birth_year": {
+          "anyOf": [
+            {
+              "maximum": 2030,
+              "minimum": 1950,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Birth Year"
+        },
+        "body_mass_kg": {
+          "anyOf": [
+            {
+              "exclusiveMaximum": 200,
+              "exclusiveMinimum": 20,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Body Mass Kg"
+        },
+        "pseudonym": {
+          "pattern": "^[A-Za-z0-9_-]{3,64}$",
+          "title": "Pseudonym",
+          "type": "string"
+        },
+        "sex": {
+          "default": "not_recorded",
+          "enum": [
+            "male",
+            "female",
+            "not_recorded"
+          ],
+          "title": "Sex",
+          "type": "string"
+        }
+      },
+      "required": [
+        "pseudonym"
+      ],
+      "title": "Subject",
+      "type": "object"
+    },
+    "VendorValue": {
+      "additionalProperties": false,
+      "properties": {
+        "definition": {
+          "default": "unknown",
+          "title": "Definition",
+          "type": "string"
+        },
+        "unit": {
+          "title": "Unit",
+          "type": "string"
+        },
+        "value": {
+          "title": "Value",
+          "type": "number"
+        }
+      },
+      "required": [
+        "value",
+        "unit"
+      ],
+      "title": "VendorValue",
+      "type": "object"
+    },
+    "Zeroing": {
+      "additionalProperties": false,
+      "properties": {
+        "method": {
+          "default": "",
+          "title": "Method",
+          "type": "string"
+        },
+        "offsets": {
+          "additionalProperties": {
+            "type": "number"
+          },
+          "description": "per channel, N",
+          "title": "Offsets",
+          "type": "object"
+        },
+        "performed": {
+          "title": "Performed",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "performed"
+      ],
+      "title": "Zeroing",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "bundle_id": {
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{2,127}$",
+      "title": "Bundle Id",
+      "type": "string"
+    },
+    "calibration": {
+      "items": {
+        "$ref": "#/$defs/Calibration"
+      },
+      "title": "Calibration",
+      "type": "array"
+    },
+    "channels": {
+      "items": {
+        "$ref": "#/$defs/ChannelSpec"
+      },
+      "minItems": 1,
+      "title": "Channels",
+      "type": "array"
+    },
+    "data_category": {
+      "$ref": "#/$defs/DataCategory"
+    },
+    "data_sha256": {
+      "anyOf": [
+        {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Data Sha256"
+    },
+    "device": {
+      "$ref": "#/$defs/Device"
+    },
+    "geometry": {
+      "$ref": "#/$defs/Geometry"
+    },
+    "kind": {
+      "$ref": "#/$defs/BundleKind"
+    },
+    "n_rows": {
+      "minimum": 1,
+      "title": "N Rows",
+      "type": "integer"
+    },
+    "protocol": {
+      "$ref": "#/$defs/Protocol"
+    },
+    "provenance": {
+      "$ref": "#/$defs/Provenance"
+    },
+    "sampling": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Sampling"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "schema_version": {
+      "const": 1,
+      "default": 1,
+      "title": "Schema Version",
+      "type": "integer"
+    },
+    "session": {
+      "$ref": "#/$defs/Session"
+    },
+    "subject": {
+      "$ref": "#/$defs/Subject"
+    },
+    "test_id": {
+      "title": "Test Id",
+      "type": "string"
+    },
+    "vendor_reported": {
+      "additionalProperties": {
+        "$ref": "#/$defs/VendorValue"
+      },
+      "description": "vendor-computed metrics, kept apart; never used as reference (DB-07)",
+      "title": "Vendor Reported",
+      "type": "object"
+    },
+    "zeroing": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Zeroing"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    }
+  },
+  "required": [
+    "bundle_id",
+    "kind",
+    "test_id",
+    "data_category",
+    "subject",
+    "session",
+    "device",
+    "protocol",
+    "channels",
+    "n_rows",
+    "provenance"
+  ],
+  "title": "BundleMeta",
+  "type": "object"
+}
