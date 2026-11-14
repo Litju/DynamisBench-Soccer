@@ -165,9 +165,13 @@ def validate(model: Ledger, root: Path | None = None) -> list[str]:
             refs = lookup.get((s.id, d), [])
             if value != Rating.ABSENT and not refs:
                 errors.append(f"{s.id}/{d}: rated without evidence")
-            if d != "A" and value != Rating.ABSENT and refs:
-                if all(e.kind in WEAK_EVIDENCE for e in refs):
-                    errors.append(f"{s.id}/{d}: adapter/vendor-only evidence")
+            if (
+                d != "A"
+                and value != Rating.ABSENT
+                and refs
+                and all(e.kind in WEAK_EVIDENCE for e in refs)
+            ):
+                errors.append(f"{s.id}/{d}: adapter/vendor-only evidence")
             if value == Rating.NOT_APPLICABLE and not any(
                 e.kind == "applicability_review" for e in refs
             ):
@@ -245,14 +249,26 @@ def markdown(model: Ledger) -> str:
     ]
     for family in sorted({s.family for s in model.subfamilies}):
         subs = [s for s in model.subfamilies if s.family == family]
-        def status(stage: Stage) -> str:
+        statuses: dict[Stage, str] = {}
+        for stage in Stage:
             required = M3_DIMENSIONS if stage == Stage.M3 else DIMENSIONS
             complete = all(
                 s.ratings[d] in {Rating.VERIFIED, Rating.NOT_APPLICABLE}
-                for s in subs for d in required
+                for s in subs
+                for d in required
             )
             if stage == Stage.M8:
-                names = {
+                reviewer_names = {
+                    r.identity
+                    for r in model.reviewers
+                    if r.family == family
+                    and r.independent
+                    and r.decision == "accepted"
+                    and r.evidence_ref
+                }
+                complete = complete and len(reviewer_names) >= 2
+            statuses[stage] = "VERIFIED" if complete else "IN_PROGRESS"
+        names = {
                     r.identity for r in model.reviewers
                     if r.family == family and r.independent
                     and r.decision == "accepted" and r.evidence_ref
@@ -261,8 +277,8 @@ def markdown(model: Ledger) -> str:
             return "VERIFIED" if complete else "IN_PROGRESS"
         names = ", ".join(s.id.split(".")[-1] for s in subs)
         lines.append(
-            f"| {family} | {names} | {status(Stage.M3)} | "
-            f"{status(Stage.M5)} | {status(Stage.M8)} |"
+            f"| {family} | {names} | {statuses[Stage.M3]} | "
+            f"{statuses[Stage.M5]} | {statuses[Stage.M8]} |"
         )
     lines += ["", "## Ratings and blockers", ""]
     for s in model.subfamilies:

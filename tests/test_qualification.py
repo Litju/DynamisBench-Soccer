@@ -4,7 +4,13 @@ from dataclasses import replace
 from pathlib import Path
 
 from dynamisbench_soccer.qualification.ledger import (
-    DIMENSIONS, Rating, Stage, gate, load, markdown, validate,
+    DIMENSIONS,
+    Rating,
+    Stage,
+    gate,
+    load,
+    markdown,
+    validate,
 )
 
 
