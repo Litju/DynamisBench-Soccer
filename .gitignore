@@ -1,0 +1,32 @@
+# Python / tooling
+__pycache__/
+*.py[cod]
+.venv/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+dist/
+build/
+*.egg-info/
+
+# Benchmark artifacts and staged data never live in Git (see docs/data-policy.md)
+/var/
+/runs/
+/staging/
+*.parquet
+*.feather
+*.arrow
+*.h5
+*.hdf5
+*.c3d
+*.zip
+*.tar.gz
+
+# Committed small fixtures are re-allowed explicitly
+!tests/fixtures/**
+
+# Editors
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+.idea/
