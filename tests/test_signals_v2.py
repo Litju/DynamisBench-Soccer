@@ -164,3 +164,31 @@ def test_missing_raw_channels_and_ambiguous_geometry_reject() -> None:
     raw["geometry"] = {}
     with pytest.raises(ValidationError, match="encoder_counts_per_m"):
         AcquisitionSource.model_validate(raw)
+
+
+def test_v1_migration_roundtrip_preserves_samples_hash_and_unknowns(tmp_path: Path) -> None:
+    import json
+    import hashlib
+
+    fixture = Path(__file__).parent / "fixtures/signals/v1_meta.json"
+    raw = json.loads(fixture.read_text())
+    original = json.loads(fixture.read_text())
+    p, sidecar = io.write(examples.cmj_dual_plate(), tmp_path / "v1")
+    assert raw["data_sha256"] == hashlib.sha256(p.read_bytes()).hexdigest()
+    sidecar.write_text(json.dumps(raw))
+    migrated = io.read(tmp_path / "v1")
+    assert migrated.meta.schema_version == 2
+    assert migrated.meta.acquisition is None
+    assert "Migrated v1" in migrated.meta.acquisition_unknown_reason
+    assert io.migrate(raw) == io.migrate(io.migrate(raw))
+    assert raw == original
+    p2, j2 = io.write(migrated, tmp_path / "v2")
+    assert p.read_bytes() == p2.read_bytes()
+    assert io.read(tmp_path / "v2").meta == migrated.meta
+    assert j2.read_text() == io.meta_json(migrated.meta)
+
+
+@pytest.mark.parametrize("version", [True, 0, -1, 3, "1"])
+def test_invalid_versions_rejected(version: object) -> None:
+    with pytest.raises(ValueError):
+        io.migrate({"schema_version": version})

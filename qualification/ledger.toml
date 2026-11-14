@@ -9,7 +9,7 @@ paradigm = "continuous_signal"
 issue = "RES-670"
 engine_id = "fp_single"
 methods = ["filter", "integrate"]
-ratings = { A = "specified", B = "partial", C = "partial", D = "partial", E = "absent", F = "absent", G = "absent", H = "absent", I = "absent", J = "absent", K = "absent", L = "absent", M = "absent", N = "absent", O = "partial" }
+ratings = { A = "specified", B = "specified", C = "specified", D = "partial", E = "absent", F = "absent", G = "absent", H = "absent", I = "absent", J = "absent", K = "absent", L = "absent", M = "absent", N = "absent", O = "partial" }
 blockers = ["Reference engine and independent numerical checks absent"]
 
 [[subfamily]]
@@ -20,7 +20,7 @@ paradigm = "continuous_signal"
 issue = "RES-670"
 engine_id = "fp_dual"
 methods = ["filter", "integrate"]
-ratings = { A = "specified", B = "partial", C = "partial", D = "partial", E = "absent", F = "absent", G = "absent", H = "absent", I = "absent", J = "absent", K = "absent", L = "absent", M = "absent", N = "absent", O = "partial" }
+ratings = { A = "specified", B = "specified", C = "specified", D = "partial", E = "absent", F = "absent", G = "absent", H = "absent", I = "absent", J = "absent", K = "absent", L = "absent", M = "absent", N = "absent", O = "partial" }
 blockers = ["Bilateral calibration and timing unqualified"]
 
 [[subfamily]]
@@ -31,8 +31,8 @@ paradigm = "continuous_signal"
 issue = "RES-695"
 engine_id = "lpt"
 methods = ["differentiate"]
-ratings = { A = "partial", B = "absent", C = "absent", D = "absent", E = "absent", F = "absent", G = "absent", H = "absent", I = "absent", J = "absent", K = "absent", L = "absent", M = "absent", N = "absent", O = "absent" }
-blockers = ["No cable geometry or device validity claims (RES-693/694)"]
+ratings = { A = "specified", B = "specified", C = "specified", D = "absent", E = "absent", F = "absent", G = "absent", H = "absent", I = "absent", J = "absent", K = "absent", L = "absent", M = "absent", N = "absent", O = "absent" }
+blockers = ["Acquisition specified; geometry/calibration measurements and validity claims unverified (RES-694/695)"]
 
 [[subfamily]]
 id = "lpt_encoder.encoder"
@@ -42,8 +42,8 @@ paradigm = "discrete_event"
 issue = "RES-695"
 engine_id = "encoder"
 methods = ["count_unwrap", "event_rate"]
-ratings = { A = "absent", B = "absent", C = "absent", D = "absent", E = "absent", F = "absent", G = "absent", H = "absent", I = "absent", J = "absent", K = "absent", L = "absent", M = "absent", N = "absent", O = "absent" }
-blockers = ["No native encoder counts/timestamp contract (RES-693)"]
+ratings = { A = "specified", B = "specified", C = "specified", D = "absent", E = "absent", F = "absent", G = "absent", H = "absent", I = "absent", J = "absent", K = "absent", L = "absent", M = "absent", N = "absent", O = "absent" }
+blockers = ["Counts/timestamp contract specified; reconstruction not verified (RES-695)"]
 
 [[subfamily]]
 id = "load_cell_isometric.load_cell"
@@ -53,8 +53,8 @@ paradigm = "continuous_signal"
 issue = "RES-696"
 engine_id = "load_cell"
 methods = ["calibrate"]
-ratings = { A = "absent", B = "absent", C = "absent", D = "absent", E = "absent", F = "absent", G = "absent", H = "absent", I = "absent", J = "absent", K = "absent", L = "absent", M = "absent", N = "absent", O = "absent" }
-blockers = ["No raw voltage/calibration and rig compliance claims (RES-693/694)"]
+ratings = { A = "specified", B = "specified", C = "specified", D = "absent", E = "absent", F = "absent", G = "absent", H = "absent", I = "absent", J = "absent", K = "absent", L = "absent", M = "absent", N = "absent", O = "absent" }
+blockers = ["Raw voltage/calibration contract specified; rig compliance unverified (RES-694/696)"]
 
 [[subfamily]]
 id = "load_cell_isometric.isometric_rig"
@@ -64,7 +64,7 @@ paradigm = "continuous_signal"
 issue = "RES-696"
 engine_id = "iso_rig"
 methods = ["calibrate"]
-ratings = { A = "absent", B = "absent", C = "absent", D = "absent", E = "absent", F = "absent", G = "absent", H = "absent", I = "absent", J = "absent", K = "absent", L = "absent", M = "absent", N = "absent", O = "absent" }
+ratings = { A = "specified", B = "specified", C = "specified", D = "absent", E = "absent", F = "absent", G = "absent", H = "absent", I = "absent", J = "absent", K = "absent", L = "absent", M = "absent", N = "absent", O = "absent" }
 blockers = ["No isometric rig compliance or validity source (RES-694)"]
 
 [[subfamily]]
@@ -75,7 +75,7 @@ paradigm = "continuous_signal"
 issue = "RES-697"
 engine_id = "nordic"
 methods = ["filter"]
-ratings = { A = "partial", B = "absent", C = "absent", D = "absent", E = "absent", F = "absent", G = "absent", H = "absent", I = "absent", J = "absent", K = "absent", L = "absent", M = "absent", N = "absent", O = "absent" }
+ratings = { A = "specified", B = "specified", C = "specified", D = "absent", E = "absent", F = "absent", G = "absent", H = "absent", I = "absent", J = "absent", K = "absent", L = "absent", M = "absent", N = "absent", O = "absent" }
 blockers = ["Isometric hamstring test is a declared evidence gap; no engine"]
 
 [[subfamily]]
@@ -86,7 +86,7 @@ paradigm = "continuous_signal"
 issue = "RES-697"
 engine_id = "hip"
 methods = ["filter"]
-ratings = { A = "partial", B = "absent", C = "absent", D = "absent", E = "absent", F = "absent", G = "absent", H = "absent", I = "absent", J = "absent", K = "absent", L = "absent", M = "absent", N = "absent", O = "absent" }
+ratings = { A = "specified", B = "specified", C = "specified", D = "absent", E = "absent", F = "absent", G = "absent", H = "absent", I = "absent", J = "absent", K = "absent", L = "absent", M = "absent", N = "absent", O = "absent" }
 blockers = ["Unqualified geometry and metrology; no engine"]
 
 [[subfamily]]
@@ -97,7 +97,7 @@ paradigm = "discrete_event"
 issue = "RES-698"
 engine_id = "gates"
 methods = ["debounce", "pair_events"]
-ratings = { A = "partial", B = "absent", C = "absent", D = "absent", E = "absent", F = "absent", G = "absent", H = "absent", I = "absent", J = "absent", K = "absent", L = "absent", M = "absent", N = "absent", O = "absent" }
+ratings = { A = "specified", B = "specified", C = "specified", D = "absent", E = "absent", F = "absent", G = "absent", H = "absent", I = "absent", J = "absent", K = "absent", L = "absent", M = "absent", N = "absent", O = "absent" }
 blockers = ["No gate trigger-validity source (RES-694)"]
 
 [[subfamily]]
@@ -108,8 +108,8 @@ paradigm = "discrete_event"
 issue = "RES-698"
 engine_id = "contact"
 methods = ["debounce", "pair_events"]
-ratings = { A = "absent", B = "absent", C = "absent", D = "absent", E = "absent", F = "absent", G = "absent", H = "absent", I = "absent", J = "absent", K = "absent", L = "absent", M = "absent", N = "absent", O = "absent" }
-blockers = ["No contact mat latency/trigger evidence or schema (RES-693/694)"]
+ratings = { A = "specified", B = "specified", C = "specified", D = "absent", E = "absent", F = "absent", G = "absent", H = "absent", I = "absent", J = "absent", K = "absent", L = "absent", M = "absent", N = "absent", O = "absent" }
+blockers = ["Contact contract specified; latency/trigger evidence missing (RES-694)"]
 
 [[subfamily]]
 id = "radar_laser.radar"
@@ -119,7 +119,7 @@ paradigm = "continuous_signal"
 issue = "RES-699"
 engine_id = "radar"
 methods = ["filter", "start_detection"]
-ratings = { A = "partial", B = "absent", C = "absent", D = "absent", E = "absent", F = "absent", G = "absent", H = "absent", I = "absent", J = "absent", K = "absent", L = "absent", M = "absent", N = "absent", O = "absent" }
+ratings = { A = "specified", B = "specified", C = "specified", D = "absent", E = "absent", F = "absent", G = "absent", H = "absent", I = "absent", J = "absent", K = "absent", L = "absent", M = "absent", N = "absent", O = "absent" }
 blockers = ["No raw radar validity study (RES-694)"]
 
 [[subfamily]]
@@ -130,7 +130,7 @@ paradigm = "continuous_signal"
 issue = "RES-699"
 engine_id = "laser"
 methods = ["differentiate", "filter"]
-ratings = { A = "partial", B = "absent", C = "absent", D = "absent", E = "absent", F = "absent", G = "absent", H = "absent", I = "absent", J = "absent", K = "absent", L = "absent", M = "absent", N = "absent", O = "absent" }
+ratings = { A = "specified", B = "specified", C = "specified", D = "absent", E = "absent", F = "absent", G = "absent", H = "absent", I = "absent", J = "absent", K = "absent", L = "absent", M = "absent", N = "absent", O = "absent" }
 blockers = ["No raw laser validity study (RES-694)"]
 
 [[subfamily]]
@@ -141,8 +141,8 @@ paradigm = "position_track"
 issue = "RES-700"
 engine_id = "gnss"
 methods = ["resample", "smooth"]
-ratings = { A = "absent", B = "absent", C = "absent", D = "absent", E = "absent", F = "absent", G = "absent", H = "absent", I = "absent", J = "absent", K = "absent", L = "absent", M = "absent", N = "absent", O = "absent" }
-blockers = ["Only derived GNSS summaries in M2; no raw schema or audited raw data"]
+ratings = { A = "specified", B = "specified", C = "specified", D = "absent", E = "absent", F = "absent", G = "absent", H = "absent", I = "absent", J = "absent", K = "absent", L = "absent", M = "absent", N = "absent", O = "absent" }
+blockers = ["Raw GNSS contract specified; no audited raw data or verified reconstruction"]
 
 [[subfamily]]
 id = "gnss_lps.lps"
@@ -152,8 +152,8 @@ paradigm = "position_track"
 issue = "RES-700"
 engine_id = "lps"
 methods = ["resample", "smooth"]
-ratings = { A = "absent", B = "absent", C = "absent", D = "absent", E = "absent", F = "absent", G = "absent", H = "absent", I = "absent", J = "absent", K = "absent", L = "absent", M = "absent", N = "absent", O = "absent" }
-blockers = ["No LPS position/anchor schema or audited raw data"]
+ratings = { A = "specified", B = "specified", C = "specified", D = "absent", E = "absent", F = "absent", G = "absent", H = "absent", I = "absent", J = "absent", K = "absent", L = "absent", M = "absent", N = "absent", O = "absent" }
+blockers = ["LPS position/anchor contract specified; no audited raw data"]
 
 [[subfamily]]
 id = "imu.inertial"
@@ -163,8 +163,8 @@ paradigm = "inertial"
 issue = "RES-701"
 engine_id = "imu"
 methods = ["orientation_estimation", "gravity_removal"]
-ratings = { A = "absent", B = "absent", C = "absent", D = "absent", E = "absent", F = "absent", G = "absent", H = "absent", I = "absent", J = "absent", K = "absent", L = "absent", M = "absent", N = "absent", O = "absent" }
-blockers = ["No raw specific-force/angular-rate schema or audited raw data"]
+ratings = { A = "specified", B = "specified", C = "specified", D = "absent", E = "absent", F = "absent", G = "absent", H = "absent", I = "absent", J = "absent", K = "absent", L = "absent", M = "absent", N = "absent", O = "absent" }
+blockers = ["Raw inertial contract specified; no audited raw data"]
 
 [[evidence]]
 subfamily = "force_platform.single"
@@ -378,3 +378,363 @@ right = "radar_laser.laser"
 quantity = "doppler_vs_differentiated_velocity"
 verdict = "unknown"
 evidence_level = "none"
+
+[[evidence]]
+subfamily = "force_platform.single"
+dimension = "A"
+kind = "schema"
+ref = "repo:src/dynamisbench_soccer/signals/schema.py"
+issue = "RES-693"
+rationale = "V2 contract specified, including explicit unknowns; shape/migration tests are engineering checks, not device validation."
+
+[[evidence]]
+subfamily = "force_platform.single"
+dimension = "B"
+kind = "schema"
+ref = "repo:src/dynamisbench_soccer/signals/schema.py"
+issue = "RES-693"
+rationale = "V2 contract specified, including explicit unknowns; shape/migration tests are engineering checks, not device validation."
+
+[[evidence]]
+subfamily = "force_platform.single"
+dimension = "C"
+kind = "schema"
+ref = "repo:src/dynamisbench_soccer/signals/schema.py"
+issue = "RES-693"
+rationale = "V2 contract specified, including explicit unknowns; shape/migration tests are engineering checks, not device validation."
+
+[[evidence]]
+subfamily = "force_platform.dual"
+dimension = "A"
+kind = "schema"
+ref = "repo:src/dynamisbench_soccer/signals/schema.py"
+issue = "RES-693"
+rationale = "V2 contract specified, including explicit unknowns; shape/migration tests are engineering checks, not device validation."
+
+[[evidence]]
+subfamily = "force_platform.dual"
+dimension = "B"
+kind = "schema"
+ref = "repo:src/dynamisbench_soccer/signals/schema.py"
+issue = "RES-693"
+rationale = "V2 contract specified, including explicit unknowns; shape/migration tests are engineering checks, not device validation."
+
+[[evidence]]
+subfamily = "force_platform.dual"
+dimension = "C"
+kind = "schema"
+ref = "repo:src/dynamisbench_soccer/signals/schema.py"
+issue = "RES-693"
+rationale = "V2 contract specified, including explicit unknowns; shape/migration tests are engineering checks, not device validation."
+
+[[evidence]]
+subfamily = "lpt_encoder.lpt"
+dimension = "A"
+kind = "schema"
+ref = "repo:src/dynamisbench_soccer/signals/schema.py"
+issue = "RES-693"
+rationale = "V2 contract specified, including explicit unknowns; shape/migration tests are engineering checks, not device validation."
+
+[[evidence]]
+subfamily = "lpt_encoder.lpt"
+dimension = "B"
+kind = "schema"
+ref = "repo:src/dynamisbench_soccer/signals/schema.py"
+issue = "RES-693"
+rationale = "V2 contract specified, including explicit unknowns; shape/migration tests are engineering checks, not device validation."
+
+[[evidence]]
+subfamily = "lpt_encoder.lpt"
+dimension = "C"
+kind = "schema"
+ref = "repo:src/dynamisbench_soccer/signals/schema.py"
+issue = "RES-693"
+rationale = "V2 contract specified, including explicit unknowns; shape/migration tests are engineering checks, not device validation."
+
+[[evidence]]
+subfamily = "lpt_encoder.encoder"
+dimension = "A"
+kind = "schema"
+ref = "repo:src/dynamisbench_soccer/signals/schema.py"
+issue = "RES-693"
+rationale = "V2 contract specified, including explicit unknowns; shape/migration tests are engineering checks, not device validation."
+
+[[evidence]]
+subfamily = "lpt_encoder.encoder"
+dimension = "B"
+kind = "schema"
+ref = "repo:src/dynamisbench_soccer/signals/schema.py"
+issue = "RES-693"
+rationale = "V2 contract specified, including explicit unknowns; shape/migration tests are engineering checks, not device validation."
+
+[[evidence]]
+subfamily = "lpt_encoder.encoder"
+dimension = "C"
+kind = "schema"
+ref = "repo:src/dynamisbench_soccer/signals/schema.py"
+issue = "RES-693"
+rationale = "V2 contract specified, including explicit unknowns; shape/migration tests are engineering checks, not device validation."
+
+[[evidence]]
+subfamily = "load_cell_isometric.load_cell"
+dimension = "A"
+kind = "schema"
+ref = "repo:src/dynamisbench_soccer/signals/schema.py"
+issue = "RES-693"
+rationale = "V2 contract specified, including explicit unknowns; shape/migration tests are engineering checks, not device validation."
+
+[[evidence]]
+subfamily = "load_cell_isometric.load_cell"
+dimension = "B"
+kind = "schema"
+ref = "repo:src/dynamisbench_soccer/signals/schema.py"
+issue = "RES-693"
+rationale = "V2 contract specified, including explicit unknowns; shape/migration tests are engineering checks, not device validation."
+
+[[evidence]]
+subfamily = "load_cell_isometric.load_cell"
+dimension = "C"
+kind = "schema"
+ref = "repo:src/dynamisbench_soccer/signals/schema.py"
+issue = "RES-693"
+rationale = "V2 contract specified, including explicit unknowns; shape/migration tests are engineering checks, not device validation."
+
+[[evidence]]
+subfamily = "load_cell_isometric.isometric_rig"
+dimension = "A"
+kind = "schema"
+ref = "repo:src/dynamisbench_soccer/signals/schema.py"
+issue = "RES-693"
+rationale = "V2 contract specified, including explicit unknowns; shape/migration tests are engineering checks, not device validation."
+
+[[evidence]]
+subfamily = "load_cell_isometric.isometric_rig"
+dimension = "B"
+kind = "schema"
+ref = "repo:src/dynamisbench_soccer/signals/schema.py"
+issue = "RES-693"
+rationale = "V2 contract specified, including explicit unknowns; shape/migration tests are engineering checks, not device validation."
+
+[[evidence]]
+subfamily = "load_cell_isometric.isometric_rig"
+dimension = "C"
+kind = "schema"
+ref = "repo:src/dynamisbench_soccer/signals/schema.py"
+issue = "RES-693"
+rationale = "V2 contract specified, including explicit unknowns; shape/migration tests are engineering checks, not device validation."
+
+[[evidence]]
+subfamily = "nordic_hip.nordic"
+dimension = "A"
+kind = "schema"
+ref = "repo:src/dynamisbench_soccer/signals/schema.py"
+issue = "RES-693"
+rationale = "V2 contract specified, including explicit unknowns; shape/migration tests are engineering checks, not device validation."
+
+[[evidence]]
+subfamily = "nordic_hip.nordic"
+dimension = "B"
+kind = "schema"
+ref = "repo:src/dynamisbench_soccer/signals/schema.py"
+issue = "RES-693"
+rationale = "V2 contract specified, including explicit unknowns; shape/migration tests are engineering checks, not device validation."
+
+[[evidence]]
+subfamily = "nordic_hip.nordic"
+dimension = "C"
+kind = "schema"
+ref = "repo:src/dynamisbench_soccer/signals/schema.py"
+issue = "RES-693"
+rationale = "V2 contract specified, including explicit unknowns; shape/migration tests are engineering checks, not device validation."
+
+[[evidence]]
+subfamily = "nordic_hip.hip"
+dimension = "A"
+kind = "schema"
+ref = "repo:src/dynamisbench_soccer/signals/schema.py"
+issue = "RES-693"
+rationale = "V2 contract specified, including explicit unknowns; shape/migration tests are engineering checks, not device validation."
+
+[[evidence]]
+subfamily = "nordic_hip.hip"
+dimension = "B"
+kind = "schema"
+ref = "repo:src/dynamisbench_soccer/signals/schema.py"
+issue = "RES-693"
+rationale = "V2 contract specified, including explicit unknowns; shape/migration tests are engineering checks, not device validation."
+
+[[evidence]]
+subfamily = "nordic_hip.hip"
+dimension = "C"
+kind = "schema"
+ref = "repo:src/dynamisbench_soccer/signals/schema.py"
+issue = "RES-693"
+rationale = "V2 contract specified, including explicit unknowns; shape/migration tests are engineering checks, not device validation."
+
+[[evidence]]
+subfamily = "timing_contact.gates"
+dimension = "A"
+kind = "schema"
+ref = "repo:src/dynamisbench_soccer/signals/schema.py"
+issue = "RES-693"
+rationale = "V2 contract specified, including explicit unknowns; shape/migration tests are engineering checks, not device validation."
+
+[[evidence]]
+subfamily = "timing_contact.gates"
+dimension = "B"
+kind = "schema"
+ref = "repo:src/dynamisbench_soccer/signals/schema.py"
+issue = "RES-693"
+rationale = "V2 contract specified, including explicit unknowns; shape/migration tests are engineering checks, not device validation."
+
+[[evidence]]
+subfamily = "timing_contact.gates"
+dimension = "C"
+kind = "schema"
+ref = "repo:src/dynamisbench_soccer/signals/schema.py"
+issue = "RES-693"
+rationale = "V2 contract specified, including explicit unknowns; shape/migration tests are engineering checks, not device validation."
+
+[[evidence]]
+subfamily = "timing_contact.contact"
+dimension = "A"
+kind = "schema"
+ref = "repo:src/dynamisbench_soccer/signals/schema.py"
+issue = "RES-693"
+rationale = "V2 contract specified, including explicit unknowns; shape/migration tests are engineering checks, not device validation."
+
+[[evidence]]
+subfamily = "timing_contact.contact"
+dimension = "B"
+kind = "schema"
+ref = "repo:src/dynamisbench_soccer/signals/schema.py"
+issue = "RES-693"
+rationale = "V2 contract specified, including explicit unknowns; shape/migration tests are engineering checks, not device validation."
+
+[[evidence]]
+subfamily = "timing_contact.contact"
+dimension = "C"
+kind = "schema"
+ref = "repo:src/dynamisbench_soccer/signals/schema.py"
+issue = "RES-693"
+rationale = "V2 contract specified, including explicit unknowns; shape/migration tests are engineering checks, not device validation."
+
+[[evidence]]
+subfamily = "radar_laser.radar"
+dimension = "A"
+kind = "schema"
+ref = "repo:src/dynamisbench_soccer/signals/schema.py"
+issue = "RES-693"
+rationale = "V2 contract specified, including explicit unknowns; shape/migration tests are engineering checks, not device validation."
+
+[[evidence]]
+subfamily = "radar_laser.radar"
+dimension = "B"
+kind = "schema"
+ref = "repo:src/dynamisbench_soccer/signals/schema.py"
+issue = "RES-693"
+rationale = "V2 contract specified, including explicit unknowns; shape/migration tests are engineering checks, not device validation."
+
+[[evidence]]
+subfamily = "radar_laser.radar"
+dimension = "C"
+kind = "schema"
+ref = "repo:src/dynamisbench_soccer/signals/schema.py"
+issue = "RES-693"
+rationale = "V2 contract specified, including explicit unknowns; shape/migration tests are engineering checks, not device validation."
+
+[[evidence]]
+subfamily = "radar_laser.laser"
+dimension = "A"
+kind = "schema"
+ref = "repo:src/dynamisbench_soccer/signals/schema.py"
+issue = "RES-693"
+rationale = "V2 contract specified, including explicit unknowns; shape/migration tests are engineering checks, not device validation."
+
+[[evidence]]
+subfamily = "radar_laser.laser"
+dimension = "B"
+kind = "schema"
+ref = "repo:src/dynamisbench_soccer/signals/schema.py"
+issue = "RES-693"
+rationale = "V2 contract specified, including explicit unknowns; shape/migration tests are engineering checks, not device validation."
+
+[[evidence]]
+subfamily = "radar_laser.laser"
+dimension = "C"
+kind = "schema"
+ref = "repo:src/dynamisbench_soccer/signals/schema.py"
+issue = "RES-693"
+rationale = "V2 contract specified, including explicit unknowns; shape/migration tests are engineering checks, not device validation."
+
+[[evidence]]
+subfamily = "gnss_lps.gnss"
+dimension = "A"
+kind = "schema"
+ref = "repo:src/dynamisbench_soccer/signals/schema.py"
+issue = "RES-693"
+rationale = "V2 contract specified, including explicit unknowns; shape/migration tests are engineering checks, not device validation."
+
+[[evidence]]
+subfamily = "gnss_lps.gnss"
+dimension = "B"
+kind = "schema"
+ref = "repo:src/dynamisbench_soccer/signals/schema.py"
+issue = "RES-693"
+rationale = "V2 contract specified, including explicit unknowns; shape/migration tests are engineering checks, not device validation."
+
+[[evidence]]
+subfamily = "gnss_lps.gnss"
+dimension = "C"
+kind = "schema"
+ref = "repo:src/dynamisbench_soccer/signals/schema.py"
+issue = "RES-693"
+rationale = "V2 contract specified, including explicit unknowns; shape/migration tests are engineering checks, not device validation."
+
+[[evidence]]
+subfamily = "gnss_lps.lps"
+dimension = "A"
+kind = "schema"
+ref = "repo:src/dynamisbench_soccer/signals/schema.py"
+issue = "RES-693"
+rationale = "V2 contract specified, including explicit unknowns; shape/migration tests are engineering checks, not device validation."
+
+[[evidence]]
+subfamily = "gnss_lps.lps"
+dimension = "B"
+kind = "schema"
+ref = "repo:src/dynamisbench_soccer/signals/schema.py"
+issue = "RES-693"
+rationale = "V2 contract specified, including explicit unknowns; shape/migration tests are engineering checks, not device validation."
+
+[[evidence]]
+subfamily = "gnss_lps.lps"
+dimension = "C"
+kind = "schema"
+ref = "repo:src/dynamisbench_soccer/signals/schema.py"
+issue = "RES-693"
+rationale = "V2 contract specified, including explicit unknowns; shape/migration tests are engineering checks, not device validation."
+
+[[evidence]]
+subfamily = "imu.inertial"
+dimension = "A"
+kind = "schema"
+ref = "repo:src/dynamisbench_soccer/signals/schema.py"
+issue = "RES-693"
+rationale = "V2 contract specified, including explicit unknowns; shape/migration tests are engineering checks, not device validation."
+
+[[evidence]]
+subfamily = "imu.inertial"
+dimension = "B"
+kind = "schema"
+ref = "repo:src/dynamisbench_soccer/signals/schema.py"
+issue = "RES-693"
+rationale = "V2 contract specified, including explicit unknowns; shape/migration tests are engineering checks, not device validation."
+
+[[evidence]]
+subfamily = "imu.inertial"
+dimension = "C"
+kind = "schema"
+ref = "repo:src/dynamisbench_soccer/signals/schema.py"
+issue = "RES-693"
+rationale = "V2 contract specified, including explicit unknowns; shape/migration tests are engineering checks, not device validation."
