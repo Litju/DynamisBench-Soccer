@@ -330,3 +330,35 @@ def test_proposed_family_cannot_have_task_cells_or_exceed_specified(
     problems = _problems(ledger, registry, repo_root)
     assert any("proposed family 'imu' has no task cells" in p for p in problems)
     assert any("imu: a proposed family cannot exceed SPECIFIED" in p for p in problems)
+
+
+# --- CLI and generated doc -------------------------------------------------------------
+
+
+def _common(repo_root: Path) -> list[str]:
+    return [
+        "--root",
+        str(repo_root / "qualification"),
+        "--registry",
+        str(repo_root / "registry"),
+        "--repo-root",
+        str(repo_root),
+    ]
+
+
+def test_cli_validate_and_gate(repo_root: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    from dynamisbench_soccer.cli import main
+
+    assert main(["qualification", "validate", *_common(repo_root)]) == 0
+    assert main(["qualification", "gate", *_common(repo_root)]) == 1
+    out = capsys.readouterr().out
+    assert "8 families: OK" in out
+    assert "M3 gate (ENGINEERING_VERIFIED): NOT MET" in out
+
+
+def test_ledger_doc_in_sync(repo_root: Path, ledger: Ledger) -> None:
+    from dynamisbench_soccer.qualification.cli import ledger_markdown
+
+    doc = (repo_root / "docs" / "qualification-ledger.md").read_text(encoding="utf-8")
+    assert doc == ledger_markdown(ledger)
+    assert "NOT MET**, with 0 of 8 families passing" in doc
