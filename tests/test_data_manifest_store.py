@@ -5,6 +5,7 @@ from pathlib import Path
 import pytest
 from pydantic import ValidationError
 
+from dynamisbench_soccer.cli import main
 from dynamisbench_soccer.data import paths, store
 from dynamisbench_soccer.data.manifest import (
     DataCategory,
@@ -131,6 +132,25 @@ def test_fetch_from_file_url(tmp_path: Path) -> None:
     m = _manifest(src, files=files)
     store.fetch(m)
     assert store.verify(m) == []
+
+
+def test_cli_manifest_create_validate_verify(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    src = _make_dataset(tmp_path)
+    out = tmp_path / "toy.json"
+    rc = main([
+        "data", "manifest-create", str(src), "--output", str(out),
+        "--dataset-id", "toy-cmj", "--version", "1", "--title", "Toy",
+        "--category", "synthetic", "--usage", "task-input", "--license", "CC-BY-4.0",
+        "--source-location", str(src),
+    ])  # fmt: skip
+    assert rc == 0
+    assert main(["data", "validate", str(out)]) == 0
+    assert main(["data", "verify", str(out)]) == 1  # not ingested yet
+    assert main(["data", "ingest", str(out), str(src)]) == 0
+    assert main(["data", "verify", str(out)]) == 0
+    capsys.readouterr()
 
 
 def test_committed_manifests_are_valid(repo_root: Path) -> None:
