@@ -348,3 +348,12 @@ def test_contact_step_off_requires_loaded_start() -> None:
     clean = export_case("timing_contact.contact").observation
     with pytest.raises(ValueError, match="loaded contact"):
         inject(clean, ProtocolFault(ProtocolKind.STEP_OFF, index=1))
+
+
+def test_corrupted_metadata_is_isolated_from_clean_artifacts() -> None:
+    pair = export_case("imu.inertial")
+    before = (content_hash(pair.truth), content_hash(pair.observation))
+    bad = inject(pair.observation, InertialFault(InertialKind.BIAS, bias=(1, 0, 0)))
+    bad.meta.protocol.protocol_id = "changed-corrupted-protocol"
+    bad.meta.acquisition.frames[0].definition = "changed-corrupted-frame"
+    assert (content_hash(pair.truth), content_hash(pair.observation)) == before

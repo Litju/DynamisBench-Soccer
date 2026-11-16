@@ -270,3 +270,23 @@ def test_mass_scaling_is_a_force_metamorphism_not_a_jump_height_change() -> None
     np.testing.assert_allclose(high.observation["fz"], 2 * low.observation["fz"], atol=1e-12)
     np.testing.assert_array_equal(high.truth["height"], low.truth["height"])
     np.testing.assert_array_equal(high.truth["velocity"], low.truth["velocity"])
+
+
+def test_mutable_metadata_is_never_shared_between_truth_and_observation() -> None:
+    pair = export_case("imu.inertial")
+    before = content_hash(pair.truth)
+    assert pair.truth.meta.protocol is not pair.observation.meta.protocol
+    assert pair.truth.meta.acquisition.frames[0] is not pair.observation.meta.acquisition.frames[0]
+    pair.observation.meta.protocol.protocol_id = "intentionally-modified-observation"
+    pair.observation.meta.acquisition.frames[0].definition = "intentionally-modified-frame"
+    pair.observation.meta.acquisition.clocks[0].epoch = "changed observation epoch"
+    assert content_hash(pair.truth) == before
+    assert pair.observation.meta.provenance.parents[0].sha256 == before
+
+
+def test_custom_moving_rigid_body_is_not_labelled_standing_start() -> None:
+    from dynamisbench_soccer.reference.spatial import PlanarPhase, PlanarTrajectory
+
+    body = RigidBody(PlanarTrajectory((PlanarPhase(2, (0, 0)),), initial_velocity_m_s=(2, 0)))
+    pair = export_case("gnss_lps.lps", body)
+    assert pair.observation.meta.protocol.start_mode == "flying"

@@ -292,7 +292,7 @@ def _bundle(
             ],
         ),
     )
-    return SignalBundle(meta, data)
+    return SignalBundle(BundleMeta.model_validate(meta.model_dump()), data)
 
 
 def export_case(
@@ -618,8 +618,10 @@ def export_case(
         if isinstance(scenario, Trajectory)
         else None,
         action="adduction" if device is DeviceClass.HIP_DYNAMOMETER else None,
-        start_mode="standing"
-        if isinstance(scenario, (RigidBody, MonoExponentialSprint))
+        start_mode=("flying" if any(scenario.translation.initial_velocity_m_s) else "standing")
+        if isinstance(scenario, RigidBody)
+        else "standing"
+        if isinstance(scenario, MonoExponentialSprint)
         else "not_applicable",
     )
     truth_data = _truth(scenario, reference)
