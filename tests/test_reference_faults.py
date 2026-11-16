@@ -319,3 +319,32 @@ def test_seeded_position_noise_uses_metres_not_degrees(subfamily: str) -> None:
             ]
         )
     np.testing.assert_allclose(actual, shifts, atol=3e-9)
+
+
+@pytest.mark.parametrize(
+    "subfamily,fault",
+    [
+        ("radar_laser.radar", ContinuousFault(ContinuousKind.OFFSET, ("velocity",), magnitude=0)),
+        (
+            "radar_laser.radar",
+            ContinuousFault(ContinuousKind.CLIPPING, ("velocity",), magnitude=1000),
+        ),
+        ("timing_contact.gates", EventFault(EventKind.LATENCY, latency_s=0)),
+        ("gnss_lps.lps", PositionFault(PositionKind.JUMP, shift_m=(0, 0, 0))),
+        ("imu.inertial", InertialFault(InertialKind.BIAS)),
+        ("imu.inertial", InertialFault(InertialKind.MISALIGNMENT)),
+        ("force_platform.single", ProtocolFault(ProtocolKind.QUIET_MOTION, window_s=0.0001)),
+    ],
+)
+def test_no_effect_requests_cannot_become_corrupted_observations(subfamily: str, fault) -> None:  # type: ignore[no-untyped-def]
+    clean = export_case(subfamily).observation
+    before = content_hash(clean)
+    with pytest.raises(ValueError, match="no sample effect"):
+        inject(clean, fault)
+    assert content_hash(clean) == before
+
+
+def test_contact_step_off_requires_loaded_start() -> None:
+    clean = export_case("timing_contact.contact").observation
+    with pytest.raises(ValueError, match="loaded contact"):
+        inject(clean, ProtocolFault(ProtocolKind.STEP_OFF, index=1))

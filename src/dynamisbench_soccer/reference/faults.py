@@ -324,6 +324,8 @@ def _protocol(
         if fault.kind is ProtocolKind.QUIET_MOTION:
             raise ValueError("quiet stance motion requires force observations")
         if fault.kind is ProtocolKind.STEP_OFF:
+            if data["contact"][fault.index] != 1:
+                raise ValueError("step-off must start from loaded contact")
             data["contact"][fault.index :] = 0
             return data
         i = fault.index
@@ -401,6 +403,8 @@ def inject(bundle: SignalBundle, fault: Fault) -> SignalBundle:
         raise ValueError("unsupported fault type")
     if not data or not len(next(iter(data.values()))):
         raise ValueError("fault removed every sample")
+    if all(np.array_equal(values, bundle[name]) for name, values in data.items()):
+        raise ValueError("fault has no sample effect; unchanged data cannot be labelled corrupted")
     parameters = json.dumps(
         dict(type=type(fault).__name__, parameters=asdict(fault)), sort_keys=True, allow_nan=False
     )
