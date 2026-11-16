@@ -6,6 +6,7 @@ Named methods are conditional processing alternatives, never scientific qualific
 
 from __future__ import annotations
 
+import hashlib
 import json
 from dataclasses import asdict, dataclass
 from importlib import metadata, resources
@@ -178,7 +179,10 @@ def filter_force(
     # Preserve the calibration/BW DC level, including even-order Chebyshev passband ripple.
     dc = abs(signal.sosfreqz(sos, worN=[0], fs=hz)[1][0])
     sos[0, :3] /= dc
-    return np.asarray(signal.sosfiltfilt(sos, force, padtype="odd"), dtype=np.float64)
+    filtered = np.asarray(signal.sosfiltfilt(sos, force, padtype="odd"), dtype=np.float64)
+    if not np.isfinite(filtered).all():
+        raise ValueError("filter produced nonfinite values")
+    return filtered
 
 
 def cumulative(
@@ -258,6 +262,25 @@ def _default_rules() -> qc.RuleSet:
 
         return qc.RuleSet.model_validate(tomllib.loads(resource.read_text(encoding="utf-8")))
     return qc.load(Path(__file__).resolve().parents[3] / "qc/rules.toml")
+
+
+def _validated_rules(rules: qc.RuleSet | None) -> qc.RuleSet:
+    baseline = _default_rules()
+    active = baseline if rules is None else qc.RuleSet.model_validate(rules.model_dump())
+    problems = qc.validate(active)
+    if problems:
+        raise ValueError("invalid QC rules: " + "; ".join(problems))
+    for rule in active.rule:
+        required = set(baseline.by_id(rule.id).params)
+        if set(rule.params) != required:
+            raise ValueError(f"{rule.id}: QC parameter names must match {sorted(required)}")
+        if any(not np.isfinite(v) or v < 0 for v in rule.params.values()):
+            raise ValueError(f"{rule.id}: finite nonnegative QC parameters required")
+        if "min_run" in rule.params and (
+            rule.params["min_run"] < 1 or not rule.params["min_run"].is_integer()
+        ):
+            raise ValueError(f"{rule.id}: integer min_run >=1 required")
+    return active
 
 
 def _qc_bundle(acquired: Acquired) -> SignalBundle:
@@ -370,6 +393,11 @@ def process(
     isolated_loads: dict[int, SignalBundle] | None = None,
 ) -> Processed:
     method = MethodSpec() if method is None else MethodSpec.model_validate(method.model_dump())
+    active_rules = _validated_rules(rules)
+    if assignment_reference is not None and any(
+        not isinstance(v, Side) for v in assignment_reference.values()
+    ):
+        raise ValueError("assignment_reference values must be explicit Side values")
     selected = tuple(PlateSpec.model_validate(p.model_dump()) for p in plates)
     acquired = acquire(
         bundles,
@@ -392,6 +420,14 @@ def process(
             raise ValueError("unloaded zeroing cannot overlap loaded weighing")
     weight_data = acquired
     if weighing is not None:
+        weighing_context = acquired.plates[0].source.meta
+        if (
+            weighing.meta.subject != weighing_context.subject
+            or weighing.meta.data_category != weighing_context.data_category
+            or weighing.meta.session.session_id != weighing_context.session.session_id
+            or weighing.meta.session.date != weighing_context.session.date
+        ):
+            raise ValueError("weighing record must match subject/session/date/category")
         if method.integration_start == "quiet_start":
             raise ValueError(
                 "separate weighing requires record_start/onset and explicit initial velocity"
@@ -496,7 +532,7 @@ def process(
             )
         )
     calibrated = _qc_bundle(acquired)
-    checks = list(qc.run(calibrated, _default_rules() if rules is None else rules))
+    checks = list(qc.run(calibrated, active_rules))
     checks.append(
         _finding(
             "FP-BW",
@@ -529,6 +565,16 @@ def process(
             else "declared clocks aligned; no interpolation"
             if not acquired.resampled
             else "explicit linear overlap interpolation",
+        )
+    )
+    checks.append(
+        _finding(
+            "FP-AXES",
+            qc.Severity.FLAG,
+            qc.Status.FAIL if any(p.assumed_axes for p in acquired.plates) else qc.Status.PASS,
+            "explicit field-axis assumption used"
+            if any(p.assumed_axes for p in acquired.plates)
+            else "declared static frames resolved or explicit rotation applied",
         )
     )
     if assignment_reference is None:
@@ -566,6 +612,12 @@ def process(
             )
         )
     for loaded, trial in (isolated_loads or {}).items():
+        primary_device = acquired.plates[0].source.meta.device
+        for name in ("serial_hash", "manufacturer", "model", "firmware"):
+            known = getattr(primary_device, name)
+            observed = getattr(trial.meta.device, name)
+            if known is not None and observed is not None and known != observed:
+                raise ValueError("isolated-load record refers to a different instrument")
         if len(acquired.plates) != 2 or loaded not in {p.plate for p in acquired.plates}:
             raise ValueError("cross-talk trial needs two plates and a known loaded plate")
         isolated = acquire(
@@ -623,7 +675,7 @@ def process(
         "displacement_input_error_envelope_m": None,
         "scope": "conditional fixed-grid sensitivity only; incomplete measurement uncertainty",
     }
-    if force_bound is not None and weight_bound is not None:
+    if force_bound is not None and weight_bound is not None and method.filter == "raw":
         if weight_bound >= bw:
             raise ValueError("bodyweight error bound must be smaller than bodyweight")
         acceleration_bound = (
@@ -636,6 +688,10 @@ def process(
         uncertainty.update(
             velocity_input_error_envelope_m_s=velocity_bound,
             displacement_input_error_envelope_m=factor * duration * velocity_bound,
+        )
+    if method.filter != "raw":
+        uncertainty["input_envelope_unavailable"] = (
+            "filtered envelope unavailable without filter-operator propagation"
         )
     primary = acquired.plates[0].source
     resolved: dict[str, object] = {
@@ -658,6 +714,29 @@ def process(
         else input_digest(primary),
         "input_hash_scheme": "sorted metadata JSON (no data_sha256) + little-endian samples",
         "source_file_sha256": [p.source.meta.data_sha256 for p in acquired.plates],
+        "qc_rules": active_rules.model_dump(mode="json"),
+        "qc_rules_sha256": hashlib.sha256(
+            json.dumps(
+                active_rules.model_dump(mode="json"), sort_keys=True, separators=(",", ":")
+            ).encode()
+        ).hexdigest(),
+        "weighing_context": weighing.meta.model_dump(mode="json") if weighing is not None else None,
+        "upstream_calibration": [
+            [c.model_dump(mode="json") for c in p.source.meta.calibration] for p in acquired.plates
+        ],
+        "upstream_zeroing": [
+            p.source.meta.zeroing.model_dump(mode="json")
+            if p.source.meta.zeroing is not None
+            else None
+            for p in acquired.plates
+        ],
+        "input_identity": {
+            "subject": primary.meta.subject.pseudonym,
+            "session": primary.meta.session.model_dump(mode="json"),
+            "test_id": primary.meta.test_id,
+            "protocol": primary.meta.protocol.model_dump(mode="json"),
+            "category": primary.meta.data_category.value,
+        },
         "source_acquisition": [
             p.source.meta.acquisition.model_dump(mode="json")
             if p.source.meta.acquisition is not None

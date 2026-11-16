@@ -150,8 +150,18 @@ def test_legacy_dual_requires_an_explicit_shared_clock_assumption() -> None:
     raw["acquisition_unknown_reason"] = "legacy CSV"
     b = SignalBundle(BundleMeta.model_validate(raw), original.data)
     with pytest.raises(ValueError, match="declared synchronization"):
-        acquire(b)
-    assert acquire(b, assume_shared_clock=True).assumed_clock
+        acquire(
+            b,
+            (
+                PlateSpec(plate=1, assume_field_axes=True),
+                PlateSpec(plate=2, assume_field_axes=True),
+            ),
+        )
+    assert acquire(
+        b,
+        (PlateSpec(plate=1, assume_field_axes=True), PlateSpec(plate=2, assume_field_axes=True)),
+        assume_shared_clock=True,
+    ).assumed_clock
 
 
 @pytest.mark.parametrize("kind", ["duplicates", "gap", "rate", "unknown_epoch"])
@@ -212,3 +222,54 @@ def test_unknown_reference_clock_cannot_certify_dual_synchronization() -> None:
     with pytest.raises(ValueError, match="declared synchronization"):
         acquire(unknown)
     assert acquire(unknown, assume_shared_clock=True).assumed_clock
+
+
+def test_metadata_coordinate_frames_resolve_and_unknown_or_mixed_frames_reject() -> None:
+    b = full_wrench(np.tile([0.0, 0.0, 100.0, 0.0, 0.0, 0.0], (100, 1)))
+    raw = b.meta.model_dump()
+    for channel in raw["channels"][1:]:
+        channel["frame"] = "sensor"
+    raw["acquisition"]["frames"] = [f for f in raw["acquisition"]["frames"] if f["id"] != "sensor"]
+    raw["acquisition"]["frames"].append(
+        dict(
+            id="sensor",
+            kind="sensor",
+            definition="sensor axes",
+            parent="field",
+            rotation_to_parent=((0, 0, 1), (0, 1, 0), (-1, 0, 0)),
+        )
+    )
+    mapped = SignalBundle(BundleMeta.model_validate(raw), b.data)
+    result = acquire(mapped)
+    np.testing.assert_allclose(
+        result.plates[0].wrench[:, :3], np.tile([100, 0, 0], (100, 1)), atol=1e-12
+    )
+    raw["acquisition"]["frames"][-1]["rotation_to_parent"] = None
+    with pytest.raises(ValueError, match="rotation is not known"):
+        acquire(SignalBundle(BundleMeta.model_validate(raw), b.data))
+    raw["channels"][1]["frame"] = "field"
+    with pytest.raises(ValueError, match="inconsistent"):
+        acquire(
+            SignalBundle(BundleMeta.model_validate(raw), b.data),
+            (PlateSpec(plate=1, rotation=((1, 0, 0), (0, 1, 0), (0, 0, 1))),),
+        )
+
+
+@pytest.mark.parametrize("field", ["subject", "session", "test", "protocol", "category"])
+def test_unrelated_acquisitions_cannot_be_summed(field: str) -> None:
+    one = export_case("force_platform.single", hz=1000).observation
+    raw = one.meta.model_dump()
+    raw["channels"][1]["plate"] = 2
+    if field == "subject":
+        raw["subject"]["pseudonym"] = "DIFFERENT"
+    elif field == "session":
+        raw["session"]["session_id"] = "DIFFERENT"
+    elif field == "test":
+        raw["test_id"] = "sj"
+    elif field == "protocol":
+        raw["protocol"]["protocol_id"] = "different.protocol"
+    else:
+        raw["data_category"] = "empirical"
+    other = SignalBundle(BundleMeta.model_validate(raw), one.data)
+    with pytest.raises(ValueError, match="must match"):
+        acquire((one, other))

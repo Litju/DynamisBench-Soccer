@@ -67,6 +67,7 @@ jobs:
           wheel = next(Path("dist").glob("*.whl")).resolve()
           sys.path.insert(0, str(wheel))
           from dynamisbench_soccer.engines.force_platform import process
+          from dynamisbench_soccer.engines.force_platform_acquisition import PlateSpec
           from dynamisbench_soccer.signals.schema import BundleMeta, ChannelSpec, Device, Geometry
           from dynamisbench_soccer.signals.schema import Protocol, Provenance, Sampling, Session
           from dynamisbench_soccer.signals.schema import SignalBundle, Subject
@@ -81,7 +82,8 @@ jobs:
               geometry=Geometry(plate_layout="single"), provenance=Provenance(created_by="wheel-check"))
           with tempfile.TemporaryDirectory() as directory:
               os.chdir(directory)
-              result = process(SignalBundle(meta, {"fz": np.full(1501, 75*9.80665)}))
+              result = process(SignalBundle(meta, {"fz": np.full(1501, 75*9.80665)}),
+                  plates=(PlateSpec(plate=1, assume_field_axes=True),))
               assert abs(result.mass_kg-75)<1e-10
               assert len(result.qc)>0
               assert result.onset.index is None

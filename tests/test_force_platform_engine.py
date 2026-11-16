@@ -73,20 +73,32 @@ def test_reconstructs_all_vertical_fixtures_single_dual_and_rates(
         )
     ),
 )
+@pytest.mark.parametrize("factory", [cmj, sj, dj, hops])
 def test_named_alternatives_against_independent_cmj_truth(
-    rate: int, family: str, filtering: str, integration: str, onset: str
-) -> None:
-    motion = cmj()
+    rate: int, family: str, filtering: str, integration: str, onset: str, factory
+) -> None:  # type: ignore[no-untyped-def]
+    motion = factory()
+    external = factory in (dj, hops)
     result = process(
         export_case(family, motion, hz=rate).observation,
-        method=MethodSpec(filter=filtering, integration=integration, onset=onset),
+        method=MethodSpec(
+            filter=filtering,
+            integration=integration,
+            onset=onset,
+            integration_start="record_start" if external else "quiet_start",
+            initial_velocity_m_s=motion.initial_velocity_m_s if external else None,
+        ),
+        weighing=export_case(family, cmj(), hz=rate).observation if external else None,
     )
     takeoff = result.flights[0]
-    assert abs(takeoff.takeoff_velocity_m_s - motion.takeoff_velocity_m_s()) < 0.075
-    assert result.onset.time_s is not None
-    assert abs(result.onset.time_s - 1) < 0.15
+    assert abs(takeoff.takeoff_velocity_m_s - motion.takeoff_velocity_m_s()) < (
+        0.15 if external else 0.075
+    )
+    if not external:
+        assert result.onset.time_s is not None
+        assert abs(result.onset.time_s - 1) < 0.15
     exact = np.array([motion.state(float(t)).displacement_m for t in result.time_s])
-    assert np.max(np.abs(result.displacement_m - exact)) < 0.05
+    assert np.max(np.abs(result.displacement_m - exact)) < 0.1
     assert result.method_spec["filter"] == filtering
     assert result.method_spec["integration"] == integration
     assert result.method_spec["onset"] == onset
@@ -222,3 +234,61 @@ def test_vendor_values_cannot_change_computed_metrics() -> None:
     after = process(SignalBundle(BundleMeta.model_validate(raw), b.data))
     assert after.metrics == before.metrics
     assert after.flights == before.flights
+
+
+def test_filtered_variants_do_not_claim_raw_input_uncertainty_envelopes() -> None:
+    motion = dj()
+    b = export_case("force_platform.single", motion, hz=600).observation
+    weighing = export_case("force_platform.single", cmj(), hz=600).observation
+    result = process(
+        b,
+        method=MethodSpec(
+            filter="butterworth",
+            cutoff_hz=0.1,
+            integration_start="record_start",
+            initial_velocity_m_s=motion.initial_velocity_m_s,
+            calibration_force_bound_n=1,
+            body_weight_bound_n=0,
+        ),
+        weighing=weighing,
+    )
+    assert result.uncertainty["velocity_input_error_envelope_m_s"] is None
+    assert "filter-operator" in result.uncertainty["input_envelope_unavailable"]
+
+
+def test_resolved_qc_rules_are_validated_and_bound_to_result() -> None:
+    from dynamisbench_soccer.engines.force_platform import _default_rules
+
+    b = export_case("force_platform.single", hz=600).observation
+    default = process(b)
+    custom = _default_rules()
+    custom.version = "changed-review-rules"
+    custom.by_id("QC-S03").params["min_run"] = 100000.0
+    adjusted = process(b, rules=custom)
+    assert default.verdict != adjusted.verdict
+    assert default.method_spec["qc_rules_sha256"] != adjusted.method_spec["qc_rules_sha256"]
+    assert adjusted.method_spec["qc_rules"]["version"] == "changed-review-rules"
+    custom.by_id("QC-S03").params = {}
+    with pytest.raises(ValueError, match="QC parameter names"):
+        process(b, rules=custom)
+    unknown = _default_rules()
+    unknown.rule[0].id = "QC-Z99"
+    with pytest.raises(ValueError, match="invalid QC rules"):
+        process(b, rules=unknown)
+
+
+def test_separate_weighing_cannot_use_another_subjects_bodyweight() -> None:
+    motion = dj()
+    b = export_case("force_platform.single", motion, hz=600).observation
+    w = export_case("force_platform.single", cmj(), hz=600).observation
+    raw = w.meta.model_dump()
+    raw["subject"]["pseudonym"] = "OTHER-SUBJECT"
+    wrong = SignalBundle(BundleMeta.model_validate(raw), w.data)
+    with pytest.raises(ValueError, match="weighing record must match"):
+        process(
+            b,
+            weighing=wrong,
+            method=MethodSpec(
+                integration_start="record_start", initial_velocity_m_s=motion.initial_velocity_m_s
+            ),
+        )

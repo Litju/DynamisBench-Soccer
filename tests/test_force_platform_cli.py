@@ -49,7 +49,16 @@ def test_generic_csv_to_actual_metric_and_trace_files(tmp_path: Path, dual: bool
     source = tmp_path / "acquisition.csv"
     csv_record(source, dual)
     config = tmp_path / "config.json"
-    config.write_text(json.dumps({"method": {"assume_shared_clock": dual}}))
+    config.write_text(
+        json.dumps(
+            {
+                "method": {"assume_shared_clock": dual},
+                "plates": [
+                    {"plate": p, "assume_field_axes": True} for p in ((1, 2) if dual else (1,))
+                ],
+            }
+        )
+    )
     out = tmp_path / "metrics.json"
     traces = tmp_path / "traces.csv"
     assert (

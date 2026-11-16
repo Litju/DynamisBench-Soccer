@@ -40,10 +40,12 @@ class PlateSpec(BaseModel):
     raw_offsets: tuple[float, ...] = ()
     zero_offsets: dict[Component, float] = Field(default_factory=dict)
     zero_window_s: tuple[float, float] | None = None
-    rotation: tuple[
-        tuple[float, float, float], tuple[float, float, float], tuple[float, float, float]
-    ] = ((1, 0, 0), (0, 1, 0), (0, 0, 1))
-    origin_m: tuple[float, float, float] = (0, 0, 0)
+    rotation: (
+        tuple[tuple[float, float, float], tuple[float, float, float], tuple[float, float, float]]
+        | None
+    ) = None
+    assume_field_axes: bool = False
+    origin_m: tuple[float, float, float] | None = None
     latency_s: float = Field(default=0, ge=0)
     saturation_limits: dict[Component, tuple[float, float]] = Field(default_factory=dict)
     raw_limits: dict[str, tuple[float, float]] = Field(default_factory=dict)
@@ -51,7 +53,7 @@ class PlateSpec(BaseModel):
 
     @model_validator(mode="after")
     def valid_matrix(self) -> PlateSpec:
-        r = np.array(self.rotation)
+        r = np.array(self.rotation if self.rotation is not None else np.eye(3))
         if not np.allclose(r.T @ r, np.eye(3), atol=1e-12, rtol=0) or not np.isclose(
             np.linalg.det(r), 1, atol=1e-12, rtol=0
         ):
@@ -104,6 +106,7 @@ class PlateTrace:
     offset_sd: FloatArray
     sync_uncertainty_s: float
     saturated: bool
+    assumed_axes: bool
     source: SignalBundle
 
 
@@ -187,6 +190,38 @@ def _time(
     return time - latency_s, alignment.uncertainty_s, identity
 
 
+def _rotation(
+    bundle: SignalBundle, names: tuple[str, ...], spec: PlateSpec
+) -> tuple[FloatArray, bool]:
+    frames = {bundle.meta.channel(name).frame for name in names}
+    if len(frames) != 1:
+        raise ValueError("plate measurement channels have inconsistent coordinate frames")
+    if spec.rotation is not None:
+        return np.array(spec.rotation, dtype=np.float64), False
+    frame_id = next(iter(frames))
+    acquisition = bundle.meta.acquisition
+    if frame_id is None or acquisition is None:
+        if not spec.assume_field_axes:
+            raise ValueError(
+                "undeclared plate axes need explicit rotation or field-axis assumption"
+            )
+        return np.eye(3, dtype=np.float64), True
+    lookup = {frame.id: frame for frame in acquisition.frames}
+    r = np.eye(3, dtype=np.float64)
+    while True:
+        frame = lookup.get(frame_id)
+        if frame is None:
+            raise ValueError("unresolved plate coordinate frame")
+        if frame.parent is None:
+            if frame.kind != "field":
+                raise ValueError("plate axes are not rooted in a declared field frame")
+            return r, False
+        if frame.rotation_to_parent is None:
+            raise ValueError("plate frame rotation is not known; supply an explicit rotation")
+        r = np.array(frame.rotation_to_parent) @ r
+        frame_id = frame.parent
+
+
 def _plate(bundle: SignalBundle, spec: PlateSpec) -> tuple[PlateTrace, str | None]:
     if (
         bundle.meta.kind is not BundleKind.TIMESERIES
@@ -260,7 +295,8 @@ def _plate(bundle: SignalBundle, spec: PlateSpec) -> tuple[PlateTrace, str | Non
         for c, (lo, hi) in spec.saturation_limits.items()
     )
     wrench -= offset
-    rotation = np.array(spec.rotation)
+    rotation, assumed_axes = _rotation(bundle, names, spec)
+    origin = spec.origin_m if spec.origin_m is not None else (0.0, 0.0, 0.0)
     force_complete = set(("fx", "fy", "fz")) <= set(outputs)
     moment_complete = set(("mx", "my", "mz")) <= set(outputs)
     if not np.allclose(rotation, np.eye(3), atol=1e-12, rtol=0) and not force_complete:
@@ -272,7 +308,9 @@ def _plate(bundle: SignalBundle, spec: PlateSpec) -> tuple[PlateTrace, str | Non
         wrench[:, 3:] = wrench[:, 3:] @ rotation.T
     # Transport measured moments to the common field origin; missing moments stay missing.
     if moment_complete:
-        wrench[:, 3:] += np.cross(np.array(spec.origin_m), wrench[:, :3])
+        wrench[:, 3:] += np.cross(np.array(origin), wrench[:, :3])
+    if not np.isfinite(wrench).all():
+        raise ValueError("calibrated plate wrench is not finite")
     sides = {c.side for c in specs if c.quantity is Quantity.FORCE and c.axis == "z"}
     side = (
         spec.side if spec.side is not None else next(iter(sides)) if len(sides) == 1 else Side.NONE
@@ -284,12 +322,13 @@ def _plate(bundle: SignalBundle, spec: PlateSpec) -> tuple[PlateTrace, str | Non
         tuple(outputs),
         moment_complete,
         (float(rotation[0, 2]), float(rotation[1, 2]), float(rotation[2, 2])),
-        spec.origin_m,
+        origin,
         side,
         offset,
         sd,
         sync,
         saturated,
+        assumed_axes,
         bundle,
     )
     return trace, identity
@@ -305,6 +344,19 @@ def acquire(
     inputs = (bundles,) if isinstance(bundles, SignalBundle) else bundles
     if not inputs or len(inputs) > 2:
         raise ValueError("one or two acquisition bundles required")
+    primary = inputs[0].meta
+    for other_bundle in inputs[1:]:
+        m = other_bundle.meta
+        if (
+            m.subject != primary.subject
+            or m.session != primary.session
+            or m.test_id != primary.test_id
+            or m.protocol != primary.protocol
+            or m.data_category != primary.data_category
+        ):
+            raise ValueError(
+                "dual acquisitions must match subject/session/trial/test/protocol/category"
+            )
     if alignment not in {"strict", "linear_overlap"}:
         raise ValueError("unsupported alignment method")
     ids = sorted(
@@ -333,6 +385,12 @@ def acquire(
         trace, identity = _plate(candidates[0], spec)
         traces.append(trace)
         identities.append(identity)
+    if (
+        len(traces) == 2
+        and any(p.moments_measured for p in traces)
+        and any(s.origin_m is None for s in selected)
+    ):
+        raise ValueError("dual-plate COP requires explicit surface origins")
     assumed = len(traces) == 2 and any(i is None for i in identities)
     if assumed and not assume_shared_clock:
         raise ValueError(
@@ -378,6 +436,7 @@ def acquire(
                 p.offset_sd.copy(),
                 p.sync_uncertainty_s,
                 p.saturated,
+                p.assumed_axes,
                 p.source,
             )
         )
