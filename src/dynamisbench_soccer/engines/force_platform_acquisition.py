@@ -46,6 +46,8 @@ class PlateSpec(BaseModel):
     origin_m: tuple[float, float, float] = (0, 0, 0)
     latency_s: float = Field(default=0, ge=0)
     saturation_limits: dict[Component, tuple[float, float]] = Field(default_factory=dict)
+    raw_limits: dict[str, tuple[float, float]] = Field(default_factory=dict)
+    side: Side | None = None
 
     @model_validator(mode="after")
     def valid_matrix(self) -> PlateSpec:
@@ -81,7 +83,9 @@ class PlateSpec(BaseModel):
             raise ValueError("zero window must have positive duration")
         if self.zero_window_s is not None and self.zero_offsets:
             raise ValueError("choose an unloaded zero window or explicit offsets, not both")
-        if any(lo >= hi for lo, hi in self.saturation_limits.values()):
+        if any(
+            lo >= hi for lo, hi in (*self.saturation_limits.values(), *self.raw_limits.values())
+        ):
             raise ValueError("saturation limits must increase")
         return self
 
@@ -245,7 +249,13 @@ def _plate(bundle: SignalBundle, spec: PlateSpec) -> tuple[PlateTrace, str | Non
             sd[j] = float(np.std(wrench[mask, j], ddof=1))
     if set(spec.saturation_limits) - set(outputs):
         raise ValueError("saturation limit names an unavailable component")
-    saturated = any(
+    if set(spec.raw_limits) - set(names):
+        raise ValueError("raw rail names an unavailable input channel")
+    raw_saturated = any(
+        np.any((raw[:, names.index(c)] <= lo) | (raw[:, names.index(c)] >= hi))
+        for c, (lo, hi) in spec.raw_limits.items()
+    )
+    saturated = raw_saturated or any(
         np.any((wrench[:, COMPONENTS.index(c)] <= lo) | (wrench[:, COMPONENTS.index(c)] >= hi))
         for c, (lo, hi) in spec.saturation_limits.items()
     )
@@ -264,7 +274,9 @@ def _plate(bundle: SignalBundle, spec: PlateSpec) -> tuple[PlateTrace, str | Non
     if moment_complete:
         wrench[:, 3:] += np.cross(np.array(spec.origin_m), wrench[:, :3])
     sides = {c.side for c in specs if c.quantity is Quantity.FORCE and c.axis == "z"}
-    side = next(iter(sides)) if len(sides) == 1 else Side.NONE
+    side = (
+        spec.side if spec.side is not None else next(iter(sides)) if len(sides) == 1 else Side.NONE
+    )
     trace = PlateTrace(
         spec.plate,
         time,
