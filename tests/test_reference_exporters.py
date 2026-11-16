@@ -191,3 +191,27 @@ def test_prescribed_geodetic_track_exports_without_invented_velocity() -> None:
 def test_invalid_export_requests_reject(kwargs: dict) -> None:  # type: ignore[type-arg]
     with pytest.raises(ValueError):
         export_case(**kwargs)
+
+
+@pytest.mark.parametrize(
+    "motion,assessment", [(cmj(), "cmj"), (sj(), "sj"), (dj(), "dj"), (hops(5), "rj_10_5")]
+)
+def test_export_metadata_preserves_named_assessment(motion, assessment: str) -> None:  # type: ignore[no-untyped-def]
+    pair = export_case("force_platform.single", motion)
+    assert pair.truth.meta.test_id == assessment
+    assert pair.observation.meta.test_id == assessment
+    assert assessment in pair.observation.meta.protocol.protocol_id
+
+
+def test_tracking_context_and_custom_assessments_are_explicit() -> None:
+    assert export_case("gnss_lps.gnss").observation.meta.test_id == "sprint_fv"
+    with pytest.raises(ValueError, match="contradicts"):
+        export_case("force_platform.single", sj(), test_id="cmj")
+
+
+def test_contact_without_switches_is_explicit_negative_control() -> None:
+    from dynamisbench_soccer.reference.kinematics import Phase, Trajectory
+
+    static = Trajectory(75, 0, (Phase("contact", 1, 0, True),), assessment_id="cmj")
+    with pytest.raises(ValueError, match="at least two"):
+        export_case("timing_contact.contact", static)

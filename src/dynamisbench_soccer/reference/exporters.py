@@ -129,7 +129,7 @@ def default_scenario(subfamily: str) -> Scenario:
     if subfamily.startswith("radar_laser") or subfamily == "timing_contact.gates":
         return MonoExponentialSprint()
     return RigidBody(
-        PlanarTrajectory((PlanarPhase(2, (2, 0)), PlanarPhase(2, (-2, 2)))),
+        PlanarTrajectory((PlanarPhase(4, (2, 0)),)),
         sensor_offset_m=(0.1, 0, 0.2),
         angular_velocity_rad_s=(0.2, 0.1, 0.3),
     )
@@ -266,7 +266,7 @@ def _bundle(
         session=Session(session_id="RES-669", date="2000-01-01"),
         device=device,
         protocol=Protocol(
-            protocol_id="res669.ideal.v1",
+            protocol_id=f"res669.ideal.{test_id}.v1",
             arm_swing="hands_on_hips" if test_id == "cmj" else "not_applicable",
         ),
         sampling=sampling,
@@ -303,6 +303,7 @@ def export_case(
     hz: float = 100,
     clock: DeviceClock | None = None,
     latency_s: float = 0,
+    test_id: str | None = None,
 ) -> ExportedCase:
     """Export one native-rate observation with separate independently defined truth.
 
@@ -374,7 +375,27 @@ def export_case(
     observation: dict[str, tuple[Quantity, FloatArray]] = {}
     geometry = Geometry()
     calibration: list[Calibration] = []
-    test_id = "cmj"
+    requested_test = test_id
+    if isinstance(scenario, Trajectory):
+        if (
+            requested_test is not None
+            and scenario.assessment_id is not None
+            and requested_test != scenario.assessment_id
+        ):
+            raise ValueError("assessment contradicts the named analytical scenario")
+        test_id = requested_test or scenario.assessment_id
+        if test_id is None:
+            raise ValueError("unnamed trajectory requires an explicit test_id")
+    elif isinstance(scenario, IsometricRamp):
+        test_id = "hip_add_abd" if device is DeviceClass.HIP_DYNAMOMETER else "imtp"
+    elif isinstance(scenario, NordicMechanics):
+        test_id = "nhe"
+    else:
+        test_id = "sprint_gates" if device is DeviceClass.TIMING_GATES else "sprint_fv"
+    if requested_test is not None and requested_test != test_id:
+        if not isinstance(scenario, (RigidBody, GeodeticTrack)):
+            raise ValueError("assessment contradicts the analytical scenario")
+        test_id = requested_test
     if isinstance(scenario, Trajectory) and device in {
         DeviceClass.FORCE_PLATE,
         DeviceClass.CONTACT_MAT,
@@ -429,7 +450,6 @@ def export_case(
         else:
             observation["cable_length"] = (Quantity.DISTANCE, lengths)
     elif isinstance(scenario, IsometricRamp):
-        test_id = "hip_add_abd" if device is DeviceClass.HIP_DYNAMOMETER else "imtp"
         geometry = Geometry(
             rig_description="prescribed rigid zero-compliance rig",
             rig_compliance_m_per_n=0,
@@ -463,7 +483,6 @@ def export_case(
             )
         ]
     elif isinstance(scenario, NordicMechanics):
-        test_id = "nhe"
         forces = np.array(
             [bilateral_force_n(scenario.curve.force_n(float(t)), 0.4) for t in reference]
         )
@@ -477,7 +496,6 @@ def export_case(
             rig_description="actuator-balanced prescribed eccentric descent",
         )
     elif isinstance(scenario, MonoExponentialSprint):
-        test_id = "sprint_gates" if event else "sprint_fv"
         if event:
             distances = np.array([5.0, 10.0, 20.0, 30.0])
             reference = np.array(
@@ -581,6 +599,9 @@ def export_case(
             )
     else:
         raise AssertionError("all supported devices covered")
+    if event and len(reference) < 2:
+        raise ValueError("event export requires at least two switching/crossing events")
+    spec = json.dumps({**json.loads(spec), "test_id": test_id}, sort_keys=True, allow_nan=False)
     truth_data = _truth(scenario, reference)
     truth_time = reference.copy()
     observed_time = clock.device_time(reference + latency_s)

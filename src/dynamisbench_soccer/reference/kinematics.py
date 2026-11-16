@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import math
 from dataclasses import dataclass
+from typing import Literal
 
 G = 9.80665
 
@@ -42,6 +43,7 @@ class Trajectory:
     initial_velocity_m_s: float
     phases: tuple[Phase, ...]
     gravity_m_s2: float = G
+    assessment_id: Literal["cmj", "sj", "dj", "rj_10_5"] | None = None
 
     def __post_init__(self) -> None:
         if not math.isfinite(self.mass_kg) or self.mass_kg <= 0:
@@ -155,6 +157,7 @@ def cmj(mass_kg: float = 75.0) -> Trajectory:
             Phase("propel", 0.3, 9.0, True),
             *_flight_and_land(2.7),
         ),
+        assessment_id="cmj",
     )
 
 
@@ -168,6 +171,7 @@ def sj(mass_kg: float = 75.0) -> Trajectory:
             Phase("propel", 0.3, 8.0, True),
             *_flight_and_land(2.4),
         ),
+        assessment_id="sj",
     )
 
 
@@ -186,6 +190,7 @@ def dj(mass_kg: float = 75.0, drop_height_m: float = 0.30) -> Trajectory:
             Phase("rebound_contact", contact_s, acceleration, True),
             *_flight_and_land(rebound_speed),
         ),
+        assessment_id="dj",
     )
 
 
@@ -200,4 +205,4 @@ def hops(count: int = 5, mass_kg: float = 75.0) -> Trajectory:
         if i < count - 1:
             phases.append(Phase(f"rebound_{i}", contact_s, 2 * v / contact_s, True))
     phases += [Phase("final_brake", contact_s, v / contact_s, True)]
-    return Trajectory(mass_kg, 0, tuple(phases))
+    return Trajectory(mass_kg, 0, tuple(phases), assessment_id="rj_10_5")
