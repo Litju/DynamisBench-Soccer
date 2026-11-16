@@ -95,7 +95,7 @@ def imu_body_observation(
     specific = body.rotation(t_s).T @ (acceleration - np.array([0, 0, -G])) + np.array(bias_m_s2)
     if saturation_m_s2 is not None:
         specific = np.clip(specific, -saturation_m_s2, saturation_m_s2)
-    return specific, np.array([0, 0, body.yaw_rate_rad_s], dtype=np.float64)
+    return specific, np.array(body.omega_body(), dtype=np.float64)
 
 
 def additive_noise(values: FloatArray, sd: float, seed: int) -> FloatArray:

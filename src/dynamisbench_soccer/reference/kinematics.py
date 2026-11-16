@@ -87,11 +87,33 @@ class Trajectory:
                 return sum(p.duration_s for p in self.phases[: idx + 1])
         raise ValueError("trajectory has no take-off event")
 
+    def flight_intervals(self) -> tuple[tuple[float, float], ...]:
+        """Paired complete flights; an initial fall is not a rebound jump."""
+        elapsed = 0.0
+        takeoff = None
+        intervals = []
+        for previous, current in zip(self.phases, self.phases[1:], strict=False):
+            elapsed += previous.duration_s
+            if previous.in_contact and not current.in_contact:
+                takeoff = elapsed
+            elif not previous.in_contact and current.in_contact and takeoff is not None:
+                intervals.append((takeoff, elapsed))
+                takeoff = None
+        return tuple(intervals)
+
     def landing_s(self) -> float:
-        for idx in range(1, len(self.phases)):
-            if not self.phases[idx - 1].in_contact and self.phases[idx].in_contact:
-                return sum(p.duration_s for p in self.phases[:idx])
-        raise ValueError("trajectory has no landing event")
+        intervals = self.flight_intervals()
+        if not intervals:
+            raise ValueError("trajectory has no complete jump flight")
+        return intervals[0][1]
+
+    def grf_power_w(self, t_s: float) -> float:
+        state = self.state(t_s)
+        return state.vertical_grf_n * state.velocity_m_s
+
+    def net_power_w(self, t_s: float) -> float:
+        state = self.state(t_s)
+        return self.mass_kg * state.acceleration_m_s2 * state.velocity_m_s
 
     def takeoff_velocity_m_s(self) -> float:
         return self.state(self.takeoff_s()).velocity_m_s
@@ -165,3 +187,17 @@ def dj(mass_kg: float = 75.0, drop_height_m: float = 0.30) -> Trajectory:
             *_flight_and_land(rebound_speed),
         ),
     )
+
+
+def hops(count: int = 5, mass_kg: float = 75.0) -> Trajectory:
+    """Repeated ideal rebounds; each contact reverses incoming velocity to +2 m/s."""
+    if isinstance(count, bool) or not isinstance(count, int) or not 1 <= count <= 100:
+        raise ValueError("hop count must be an integer in [1,100]")
+    v, contact_s = 2.0, 0.2
+    phases = [Phase("initial_propulsion", contact_s, v / contact_s, True)]
+    for i in range(count):
+        phases.append(Phase(f"flight_{i}", 2 * v / G, -G, False))
+        if i < count - 1:
+            phases.append(Phase(f"rebound_{i}", contact_s, 2 * v / contact_s, True))
+    phases += [Phase("final_brake", contact_s, v / contact_s, True)]
+    return Trajectory(mass_kg, 0, tuple(phases))

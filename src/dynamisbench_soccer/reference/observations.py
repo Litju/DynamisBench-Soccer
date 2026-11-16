@@ -80,3 +80,26 @@ def gate_trigger_s(
     if not math.isfinite(latency_s) or latency_s < 0:
         raise ValueError("trigger latency must be finite and nonnegative")
     return sprint.gate_time_s(distance_m) + latency_s
+
+
+def spherical_gate_trigger_s(
+    sprint: MonoExponentialSprint,
+    distance_m: float,
+    *,
+    beam_height_m: float,
+    center_height_m: float,
+    radius_m: float,
+    forward_offset_m: float = 0,
+    latency_s: float = 0,
+) -> float:
+    """First break by an explicitly ideal spherical marker, not an athlete algorithm."""
+    values = (distance_m, beam_height_m, center_height_m, radius_m, forward_offset_m, latency_s)
+    if not all(math.isfinite(v) for v in values) or radius_m <= 0 or beam_height_m <= 0:
+        raise ValueError("finite gate geometry and positive radius/height required")
+    vertical = beam_height_m - center_height_m
+    if abs(vertical) >= radius_m:
+        raise ValueError("beam does not intersect marker interior")
+    leading_offset = forward_offset_m + math.sqrt(radius_m**2 - vertical**2)
+    if distance_m <= leading_offset:
+        raise ValueError("gate must be ahead of the marker at start")
+    return gate_trigger_s(sprint, distance_m - leading_offset, latency_s=latency_s)
