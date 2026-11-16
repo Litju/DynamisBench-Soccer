@@ -93,6 +93,8 @@ class PlateTrace:
     wrench: FloatArray
     components: tuple[str, ...]
     moments_measured: bool
+    normal: tuple[float, float, float]
+    origin: tuple[float, float, float]
     side: Side
     offset: FloatArray
     offset_sd: FloatArray
@@ -166,7 +168,12 @@ def _time(
         raise ValueError("plate channels do not share one declared clock")
     clock = next(iter(clocks))
     reference = next(c for c in acquisition.clocks if c.id == acquisition.reference_clock)
-    identity = reference.id + ":" + reference.epoch
+    identity = (
+        (reference.id + ":" + reference.epoch)
+        if reference.source != "unknown"
+        and reference.epoch.strip().lower() not in {"unknown", "unrecorded", "not recorded"}
+        else None
+    )
     if clock == acquisition.reference_clock:
         return native - latency_s, 0, identity
     alignment = next((a for a in acquisition.alignments if a.clock == clock), None)
@@ -264,6 +271,8 @@ def _plate(bundle: SignalBundle, spec: PlateSpec) -> tuple[PlateTrace, str | Non
         wrench,
         tuple(outputs),
         moment_complete,
+        (float(rotation[0, 2]), float(rotation[1, 2]), float(rotation[2, 2])),
+        spec.origin_m,
         side,
         offset,
         sd,
@@ -350,6 +359,8 @@ def acquire(
                 values,
                 p.components,
                 p.moments_measured,
+                p.normal,
+                p.origin,
                 p.side,
                 p.offset.copy(),
                 p.offset_sd.copy(),
@@ -367,19 +378,31 @@ def cop(
     if not np.isfinite(threshold_n) or threshold_n <= 0:
         raise ValueError("positive finite COP load threshold required")
 
-    def from_wrench(wrench: FloatArray) -> FloatArray:
-        output = np.full((len(wrench), 2), np.nan, dtype=np.float64)
-        valid = wrench[:, 2] > threshold_n
-        output[valid, 0] = -wrench[valid, 4] / wrench[valid, 2]
-        output[valid, 1] = wrench[valid, 3] / wrench[valid, 2]
+    def from_wrench(
+        wrench: FloatArray, normal: tuple[float, float, float], origin: tuple[float, float, float]
+    ) -> FloatArray:
+        n = np.array(normal)
+        denominator = wrench[:, :3] @ n
+        output = np.full((len(wrench), 3), np.nan, dtype=np.float64)
+        valid = denominator > threshold_n
+        output[valid] = (
+            np.cross(n, wrench[valid, 3:]) + np.dot(n, origin) * wrench[valid, :3]
+        ) / denominator[valid, None]
         return output
 
     per_plate = {
-        p.plate: from_wrench(p.wrench) if p.moments_measured else None for p in acquired.plates
+        p.plate: from_wrench(p.wrench, p.normal, p.origin) if p.moments_measured else None
+        for p in acquired.plates
     }
+    first = acquired.plates[0]
+    coplanar = all(
+        np.allclose(p.normal, first.normal, rtol=0, atol=1e-10)
+        and abs(np.dot(first.normal, np.array(p.origin) - np.array(first.origin))) < 1e-9
+        for p in acquired.plates
+    )
     combined = (
-        from_wrench(np.sum([p.wrench for p in acquired.plates], axis=0))
-        if all(p.moments_measured for p in acquired.plates)
+        from_wrench(np.sum([p.wrench for p in acquired.plates], axis=0), first.normal, first.origin)
+        if coplanar and all(p.moments_measured for p in acquired.plates)
         else None
     )
     return combined, per_plate

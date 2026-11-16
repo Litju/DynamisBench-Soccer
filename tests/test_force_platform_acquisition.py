@@ -81,7 +81,7 @@ def test_matrix_zero_rotation_and_moment_origin_transport() -> None:
     )
     combined, _ = cop(result)
     np.testing.assert_allclose(
-        combined, np.tile([-expected_moment[1] / 100, expected_moment[0] / 100], (100, 1))
+        combined, np.tile([-expected_moment[1] / 100, expected_moment[0] / 100, 0], (100, 1))
     )
 
 
@@ -114,7 +114,7 @@ def test_cop_is_missing_without_moments_and_masked_at_low_load() -> None:
         np.array([[0.0, 0.0, 100.0, 20.0, -10.0, 0.0], [0, 0, 1, 0, 0, 0], [0, 0, 0, 0, 0, 0]])
     )
     combined, per_plate = cop(acquire(b))
-    np.testing.assert_allclose(combined[0], [0.1, 0.2])
+    np.testing.assert_allclose(combined[0], [0.1, 0.2, 0])
     assert np.isnan(combined[1:]).all()
     assert np.isnan(per_plate[1][1:]).all()
     assert cop(acquire(export_case("force_platform.single").observation))[0] is None
@@ -186,3 +186,29 @@ def test_invalid_calibration_rejects(kwargs: dict) -> None:  # type: ignore[type
     with pytest.raises((ValueError, ValidationError)):
         spec = PlateSpec(plate=1, **kwargs)
         acquire(export_case("force_platform.single").observation, (spec,))
+
+
+def test_cop_uses_elevated_and_tilted_plate_surface_not_global_ground() -> None:
+    b = full_wrench(np.tile([10.0, 20.0, 100.0, 0.0, 0.0, 0.0], (100, 1)))
+    point, _ = cop(acquire(b, (PlateSpec(plate=1, origin_m=(0, 0, 0.5)),)))
+    np.testing.assert_allclose(point, np.tile([0, 0, 0.5], (100, 1)), atol=1e-12)
+    rotation = ((1, 0, 0), (0, 0.8, -0.6), (0, 0.6, 0.8))
+    force = np.array([10.0, 20.0, 100.0])
+    local = np.array([0.1, 0.2, 0.0])
+    wrench = np.r_[force, np.cross(local, force)]
+    b = full_wrench(np.tile(wrench, (100, 1)))
+    origin = np.array([1.0, 2.0, 0.5])
+    point, _ = cop(acquire(b, (PlateSpec(plate=1, rotation=rotation, origin_m=tuple(origin)),)))
+    np.testing.assert_allclose(
+        point, np.tile(origin + np.array(rotation) @ local, (100, 1)), atol=1e-12
+    )
+
+
+def test_unknown_reference_clock_cannot_certify_dual_synchronization() -> None:
+    b = export_case("force_platform.dual", hz=1000).observation
+    raw = b.meta.model_dump()
+    raw["acquisition"]["clocks"][0].update(source="unknown", epoch="unknown")
+    unknown = SignalBundle(BundleMeta.model_validate(raw), b.data)
+    with pytest.raises(ValueError, match="declared synchronization"):
+        acquire(unknown)
+    assert acquire(unknown, assume_shared_clock=True).assumed_clock
