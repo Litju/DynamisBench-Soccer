@@ -225,6 +225,7 @@ def _bundle(
     test_id: str,
     calibration: list[Calibration],
     frames: list[Frame],
+    protocol: Protocol,
 ) -> SignalBundle:
     is_truth = stage == "truth"
     device = Device(
@@ -265,10 +266,7 @@ def _bundle(
         subject=Subject(pseudonym="ANALYTICAL-NOT-ATHLETE"),
         session=Session(session_id="RES-669", date="2000-01-01"),
         device=device,
-        protocol=Protocol(
-            protocol_id=f"res669.ideal.{test_id}.v1",
-            arm_swing="hands_on_hips" if test_id == "cmj" else "not_applicable",
-        ),
+        protocol=protocol,
         sampling=sampling,
         channels=channels,
         n_rows=len(times),
@@ -289,6 +287,7 @@ def _bundle(
             transforms=[
                 TRUTH_STAGE if is_truth else OBSERVATION_STAGE,
                 "spec=" + spec,
+                "scenario_sha256=" + str(json.loads(spec)["scenario_sha256"]),
                 "parent hashes use canonical content_hash, not Parquet-only SHA256",
             ],
         ),
@@ -602,6 +601,27 @@ def export_case(
     if event and len(reference) < 2:
         raise ValueError("event export requires at least two switching/crossing events")
     spec = json.dumps({**json.loads(spec), "test_id": test_id}, sort_keys=True, allow_nan=False)
+    scenario_payload = {"scenario_type": type(scenario).__name__, "scenario": asdict(scenario)}
+    scenario_digest = hashlib.sha256(
+        json.dumps(scenario_payload, sort_keys=True, allow_nan=False).encode()
+    ).hexdigest()
+    spec = json.dumps(
+        {**json.loads(spec), "scenario_sha256": scenario_digest}, sort_keys=True, allow_nan=False
+    )
+    protocol_suffix = ""
+    if isinstance(scenario, Trajectory) and scenario.assessment_id == "rj_10_5":
+        protocol_suffix = f".prescribed_hops_{len(scenario.flight_intervals())}"
+    protocol = Protocol(
+        protocol_id=f"res669.ideal.{test_id}{protocol_suffix}.v1",
+        arm_swing="hands_on_hips" if isinstance(scenario, Trajectory) else "not_applicable",
+        drop_height_m=scenario.prescribed_drop_height_m
+        if isinstance(scenario, Trajectory)
+        else None,
+        action="adduction" if device is DeviceClass.HIP_DYNAMOMETER else None,
+        start_mode="standing"
+        if isinstance(scenario, (RigidBody, MonoExponentialSprint))
+        else "not_applicable",
+    )
     truth_data = _truth(scenario, reference)
     truth_time = reference.copy()
     observed_time = clock.device_time(reference + latency_s)
@@ -675,6 +695,7 @@ def export_case(
         test_id,
         [],
         frames,
+        protocol,
     )
     if event:
         raw = truth.meta.model_dump()
@@ -709,6 +730,7 @@ def export_case(
         test_id,
         calibration,
         frames,
+        protocol,
     )
     observation_bundle.meta.provenance.parents = [
         Parent(bundle_id=truth.meta.bundle_id, sha256=content_hash(truth))

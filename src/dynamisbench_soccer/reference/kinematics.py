@@ -44,6 +44,7 @@ class Trajectory:
     phases: tuple[Phase, ...]
     gravity_m_s2: float = G
     assessment_id: Literal["cmj", "sj", "dj", "rj_10_5"] | None = None
+    prescribed_drop_height_m: float | None = None
 
     def __post_init__(self) -> None:
         if not math.isfinite(self.mass_kg) or self.mass_kg <= 0:
@@ -191,6 +192,7 @@ def dj(mass_kg: float = 75.0, drop_height_m: float = 0.30) -> Trajectory:
             *_flight_and_land(rebound_speed),
         ),
         assessment_id="dj",
+        prescribed_drop_height_m=drop_height_m,
     )
 
 

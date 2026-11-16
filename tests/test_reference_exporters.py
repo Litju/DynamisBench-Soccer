@@ -215,3 +215,58 @@ def test_contact_without_switches_is_explicit_negative_control() -> None:
     static = Trajectory(75, 0, (Phase("contact", 1, 0, True),), assessment_id="cmj")
     with pytest.raises(ValueError, match="at least two"):
         export_case("timing_contact.contact", static)
+
+
+def test_prescribed_jump_and_hip_protocol_conditions_are_exported() -> None:
+    for motion in (cmj(), sj(), dj(drop_height_m=0.42), hops(10), hops(5)):
+        pair = export_case("force_platform.single", motion)
+        assert pair.observation.meta.protocol.arm_swing == "hands_on_hips"
+        if motion.assessment_id == "dj":
+            assert pair.observation.meta.protocol.drop_height_m == 0.42
+        if motion.assessment_id == "rj_10_5":
+            assert (
+                f"prescribed_hops_{len(motion.flight_intervals())}"
+                in pair.observation.meta.protocol.protocol_id
+            )
+    assert export_case("nordic_hip.hip").observation.meta.protocol.action == "adduction"
+
+
+def test_common_scenario_digest_excludes_device_sampling_and_clock_configuration() -> None:
+    pairs = [
+        export_case(name, hz=hz, clock=DeviceClock(offset, drift))
+        for name, hz, offset, drift in (
+            ("gnss_lps.gnss", 10, 0.1, 20),
+            ("gnss_lps.lps", 25, -0.2, -30),
+            ("imu.inertial", 100, 0.03, 50),
+        )
+    ]
+    digests = [
+        next(
+            tag
+            for tag in pair.observation.meta.provenance.transforms
+            if tag.startswith("scenario_sha256=")
+        )
+        for pair in pairs
+    ]
+    assert len(set(digests)) == 1
+    assert len({pair.observation.meta.bundle_id for pair in pairs}) == 3
+
+
+@pytest.mark.parametrize("subfamily", sorted(DEVICES))
+def test_sampling_refinement_preserves_coincident_observations(subfamily: str) -> None:
+    low = export_case(subfamily, hz=25).observation
+    high = export_case(subfamily, hz=50).observation
+    step = 1 if low.meta.kind.value == "events" else 2
+    for name in low.data:
+        if name == "counts":
+            np.testing.assert_array_equal(low[name], high[name][::step])
+        else:
+            np.testing.assert_allclose(low[name], high[name][::step], rtol=1e-12, atol=1e-12)
+
+
+def test_mass_scaling_is_a_force_metamorphism_not_a_jump_height_change() -> None:
+    low = export_case("force_platform.single", cmj(50))
+    high = export_case("force_platform.single", cmj(100))
+    np.testing.assert_allclose(high.observation["fz"], 2 * low.observation["fz"], atol=1e-12)
+    np.testing.assert_array_equal(high.truth["height"], low.truth["height"])
+    np.testing.assert_array_equal(high.truth["velocity"], low.truth["velocity"])
