@@ -1831,238 +1831,598 @@ rationale = "Device/protocol-scoped literature or unresolved metrology gap; not 
 subfamily = "force_platform.single"
 dimension = "J"
 kind = "code"
-ref = "repo:src/dynamisbench_soccer/reference/spatial_observations.py"
+ref = "repo:src/dynamisbench_soccer/reference/exporters.py"
 issue = "RES-669"
-rationale = "Partial ideal mathematical observation coverage only; complete artifacts, schema exports and independent device-engine verification remain open."
+rationale = "Complete analytical substrate and schema-v2 observation exports; device-engine comparisons remain open. See docs/reference-verification.md for independent references, tolerances and boundaries."
 
 [[evidence]]
 subfamily = "force_platform.single"
 dimension = "K"
 kind = "test"
-ref = "repo:tests/test_reference_spatial_observations.py"
+ref = "repo:tests/test_reference_exporters.py"
 issue = "RES-669"
-rationale = "Partial ideal mathematical observation coverage only; complete artifacts, schema exports and independent device-engine verification remain open."
+rationale = "Complete analytical substrate and schema-v2 observation exports; device-engine comparisons remain open. See docs/reference-verification.md for independent references, tolerances and boundaries."
 
 [[evidence]]
 subfamily = "force_platform.dual"
 dimension = "J"
 kind = "code"
-ref = "repo:src/dynamisbench_soccer/reference/spatial_observations.py"
+ref = "repo:src/dynamisbench_soccer/reference/exporters.py"
 issue = "RES-669"
-rationale = "Partial ideal mathematical observation coverage only; complete artifacts, schema exports and independent device-engine verification remain open."
+rationale = "Complete analytical substrate and schema-v2 observation exports; device-engine comparisons remain open. See docs/reference-verification.md for independent references, tolerances and boundaries."
 
 [[evidence]]
 subfamily = "force_platform.dual"
 dimension = "K"
 kind = "test"
-ref = "repo:tests/test_reference_spatial_observations.py"
+ref = "repo:tests/test_reference_exporters.py"
 issue = "RES-669"
-rationale = "Partial ideal mathematical observation coverage only; complete artifacts, schema exports and independent device-engine verification remain open."
+rationale = "Complete analytical substrate and schema-v2 observation exports; device-engine comparisons remain open. See docs/reference-verification.md for independent references, tolerances and boundaries."
 
 [[evidence]]
 subfamily = "lpt_encoder.lpt"
 dimension = "J"
 kind = "code"
-ref = "repo:src/dynamisbench_soccer/reference/spatial_observations.py"
+ref = "repo:src/dynamisbench_soccer/reference/exporters.py"
 issue = "RES-669"
-rationale = "Partial ideal mathematical observation coverage only; complete artifacts, schema exports and independent device-engine verification remain open."
+rationale = "Complete analytical substrate and schema-v2 observation exports; device-engine comparisons remain open. See docs/reference-verification.md for independent references, tolerances and boundaries."
 
 [[evidence]]
 subfamily = "lpt_encoder.lpt"
 dimension = "K"
 kind = "test"
-ref = "repo:tests/test_reference_spatial_observations.py"
+ref = "repo:tests/test_reference_exporters.py"
 issue = "RES-669"
-rationale = "Partial ideal mathematical observation coverage only; complete artifacts, schema exports and independent device-engine verification remain open."
+rationale = "Complete analytical substrate and schema-v2 observation exports; device-engine comparisons remain open. See docs/reference-verification.md for independent references, tolerances and boundaries."
 
 [[evidence]]
 subfamily = "lpt_encoder.encoder"
 dimension = "J"
 kind = "code"
-ref = "repo:src/dynamisbench_soccer/reference/spatial_observations.py"
+ref = "repo:src/dynamisbench_soccer/reference/exporters.py"
 issue = "RES-669"
-rationale = "Partial ideal mathematical observation coverage only; complete artifacts, schema exports and independent device-engine verification remain open."
+rationale = "Complete analytical substrate and schema-v2 observation exports; device-engine comparisons remain open. See docs/reference-verification.md for independent references, tolerances and boundaries."
 
 [[evidence]]
 subfamily = "lpt_encoder.encoder"
 dimension = "K"
 kind = "test"
-ref = "repo:tests/test_reference_spatial_observations.py"
+ref = "repo:tests/test_reference_exporters.py"
 issue = "RES-669"
-rationale = "Partial ideal mathematical observation coverage only; complete artifacts, schema exports and independent device-engine verification remain open."
+rationale = "Complete analytical substrate and schema-v2 observation exports; device-engine comparisons remain open. See docs/reference-verification.md for independent references, tolerances and boundaries."
 
 [[evidence]]
 subfamily = "load_cell_isometric.load_cell"
 dimension = "J"
 kind = "code"
-ref = "repo:src/dynamisbench_soccer/reference/spatial_observations.py"
+ref = "repo:src/dynamisbench_soccer/reference/exporters.py"
 issue = "RES-669"
-rationale = "Partial ideal mathematical observation coverage only; complete artifacts, schema exports and independent device-engine verification remain open."
+rationale = "Complete analytical substrate and schema-v2 observation exports; device-engine comparisons remain open. See docs/reference-verification.md for independent references, tolerances and boundaries."
 
 [[evidence]]
 subfamily = "load_cell_isometric.load_cell"
 dimension = "K"
 kind = "test"
-ref = "repo:tests/test_reference_spatial_observations.py"
+ref = "repo:tests/test_reference_exporters.py"
 issue = "RES-669"
-rationale = "Partial ideal mathematical observation coverage only; complete artifacts, schema exports and independent device-engine verification remain open."
+rationale = "Complete analytical substrate and schema-v2 observation exports; device-engine comparisons remain open. See docs/reference-verification.md for independent references, tolerances and boundaries."
 
 [[evidence]]
 subfamily = "load_cell_isometric.isometric_rig"
 dimension = "J"
 kind = "code"
-ref = "repo:src/dynamisbench_soccer/reference/spatial_observations.py"
+ref = "repo:src/dynamisbench_soccer/reference/exporters.py"
 issue = "RES-669"
-rationale = "Partial ideal mathematical observation coverage only; complete artifacts, schema exports and independent device-engine verification remain open."
+rationale = "Complete analytical substrate and schema-v2 observation exports; device-engine comparisons remain open. See docs/reference-verification.md for independent references, tolerances and boundaries."
 
 [[evidence]]
 subfamily = "load_cell_isometric.isometric_rig"
 dimension = "K"
 kind = "test"
-ref = "repo:tests/test_reference_spatial_observations.py"
+ref = "repo:tests/test_reference_exporters.py"
 issue = "RES-669"
-rationale = "Partial ideal mathematical observation coverage only; complete artifacts, schema exports and independent device-engine verification remain open."
+rationale = "Complete analytical substrate and schema-v2 observation exports; device-engine comparisons remain open. See docs/reference-verification.md for independent references, tolerances and boundaries."
 
 [[evidence]]
 subfamily = "nordic_hip.nordic"
 dimension = "J"
 kind = "code"
-ref = "repo:src/dynamisbench_soccer/reference/spatial_observations.py"
+ref = "repo:src/dynamisbench_soccer/reference/exporters.py"
 issue = "RES-669"
-rationale = "Partial ideal mathematical observation coverage only; complete artifacts, schema exports and independent device-engine verification remain open."
+rationale = "Complete analytical substrate and schema-v2 observation exports; device-engine comparisons remain open. See docs/reference-verification.md for independent references, tolerances and boundaries."
 
 [[evidence]]
 subfamily = "nordic_hip.nordic"
 dimension = "K"
 kind = "test"
-ref = "repo:tests/test_reference_spatial_observations.py"
+ref = "repo:tests/test_reference_exporters.py"
 issue = "RES-669"
-rationale = "Partial ideal mathematical observation coverage only; complete artifacts, schema exports and independent device-engine verification remain open."
+rationale = "Complete analytical substrate and schema-v2 observation exports; device-engine comparisons remain open. See docs/reference-verification.md for independent references, tolerances and boundaries."
 
 [[evidence]]
 subfamily = "nordic_hip.hip"
 dimension = "J"
 kind = "code"
-ref = "repo:src/dynamisbench_soccer/reference/spatial_observations.py"
+ref = "repo:src/dynamisbench_soccer/reference/exporters.py"
 issue = "RES-669"
-rationale = "Partial ideal mathematical observation coverage only; complete artifacts, schema exports and independent device-engine verification remain open."
+rationale = "Complete analytical substrate and schema-v2 observation exports; device-engine comparisons remain open. See docs/reference-verification.md for independent references, tolerances and boundaries."
 
 [[evidence]]
 subfamily = "nordic_hip.hip"
 dimension = "K"
 kind = "test"
-ref = "repo:tests/test_reference_spatial_observations.py"
+ref = "repo:tests/test_reference_exporters.py"
 issue = "RES-669"
-rationale = "Partial ideal mathematical observation coverage only; complete artifacts, schema exports and independent device-engine verification remain open."
+rationale = "Complete analytical substrate and schema-v2 observation exports; device-engine comparisons remain open. See docs/reference-verification.md for independent references, tolerances and boundaries."
 
 [[evidence]]
 subfamily = "timing_contact.gates"
 dimension = "J"
 kind = "code"
-ref = "repo:src/dynamisbench_soccer/reference/spatial_observations.py"
+ref = "repo:src/dynamisbench_soccer/reference/exporters.py"
 issue = "RES-669"
-rationale = "Partial ideal mathematical observation coverage only; complete artifacts, schema exports and independent device-engine verification remain open."
+rationale = "Complete analytical substrate and schema-v2 observation exports; device-engine comparisons remain open. See docs/reference-verification.md for independent references, tolerances and boundaries."
 
 [[evidence]]
 subfamily = "timing_contact.gates"
 dimension = "K"
 kind = "test"
-ref = "repo:tests/test_reference_spatial_observations.py"
+ref = "repo:tests/test_reference_exporters.py"
 issue = "RES-669"
-rationale = "Partial ideal mathematical observation coverage only; complete artifacts, schema exports and independent device-engine verification remain open."
+rationale = "Complete analytical substrate and schema-v2 observation exports; device-engine comparisons remain open. See docs/reference-verification.md for independent references, tolerances and boundaries."
 
 [[evidence]]
 subfamily = "timing_contact.contact"
 dimension = "J"
 kind = "code"
-ref = "repo:src/dynamisbench_soccer/reference/spatial_observations.py"
+ref = "repo:src/dynamisbench_soccer/reference/exporters.py"
 issue = "RES-669"
-rationale = "Partial ideal mathematical observation coverage only; complete artifacts, schema exports and independent device-engine verification remain open."
+rationale = "Complete analytical substrate and schema-v2 observation exports; device-engine comparisons remain open. See docs/reference-verification.md for independent references, tolerances and boundaries."
 
 [[evidence]]
 subfamily = "timing_contact.contact"
 dimension = "K"
 kind = "test"
-ref = "repo:tests/test_reference_spatial_observations.py"
+ref = "repo:tests/test_reference_exporters.py"
 issue = "RES-669"
-rationale = "Partial ideal mathematical observation coverage only; complete artifacts, schema exports and independent device-engine verification remain open."
+rationale = "Complete analytical substrate and schema-v2 observation exports; device-engine comparisons remain open. See docs/reference-verification.md for independent references, tolerances and boundaries."
 
 [[evidence]]
 subfamily = "radar_laser.radar"
 dimension = "J"
 kind = "code"
-ref = "repo:src/dynamisbench_soccer/reference/spatial_observations.py"
+ref = "repo:src/dynamisbench_soccer/reference/exporters.py"
 issue = "RES-669"
-rationale = "Partial ideal mathematical observation coverage only; complete artifacts, schema exports and independent device-engine verification remain open."
+rationale = "Complete analytical substrate and schema-v2 observation exports; device-engine comparisons remain open. See docs/reference-verification.md for independent references, tolerances and boundaries."
 
 [[evidence]]
 subfamily = "radar_laser.radar"
 dimension = "K"
 kind = "test"
-ref = "repo:tests/test_reference_spatial_observations.py"
+ref = "repo:tests/test_reference_exporters.py"
 issue = "RES-669"
-rationale = "Partial ideal mathematical observation coverage only; complete artifacts, schema exports and independent device-engine verification remain open."
+rationale = "Complete analytical substrate and schema-v2 observation exports; device-engine comparisons remain open. See docs/reference-verification.md for independent references, tolerances and boundaries."
 
 [[evidence]]
 subfamily = "radar_laser.laser"
 dimension = "J"
 kind = "code"
-ref = "repo:src/dynamisbench_soccer/reference/spatial_observations.py"
+ref = "repo:src/dynamisbench_soccer/reference/exporters.py"
 issue = "RES-669"
-rationale = "Partial ideal mathematical observation coverage only; complete artifacts, schema exports and independent device-engine verification remain open."
+rationale = "Complete analytical substrate and schema-v2 observation exports; device-engine comparisons remain open. See docs/reference-verification.md for independent references, tolerances and boundaries."
 
 [[evidence]]
 subfamily = "radar_laser.laser"
 dimension = "K"
 kind = "test"
-ref = "repo:tests/test_reference_spatial_observations.py"
+ref = "repo:tests/test_reference_exporters.py"
 issue = "RES-669"
-rationale = "Partial ideal mathematical observation coverage only; complete artifacts, schema exports and independent device-engine verification remain open."
+rationale = "Complete analytical substrate and schema-v2 observation exports; device-engine comparisons remain open. See docs/reference-verification.md for independent references, tolerances and boundaries."
 
 [[evidence]]
 subfamily = "gnss_lps.gnss"
 dimension = "J"
 kind = "code"
-ref = "repo:src/dynamisbench_soccer/reference/spatial_observations.py"
+ref = "repo:src/dynamisbench_soccer/reference/exporters.py"
 issue = "RES-669"
-rationale = "Partial ideal mathematical observation coverage only; complete artifacts, schema exports and independent device-engine verification remain open."
+rationale = "Complete analytical substrate and schema-v2 observation exports; device-engine comparisons remain open. See docs/reference-verification.md for independent references, tolerances and boundaries."
 
 [[evidence]]
 subfamily = "gnss_lps.gnss"
 dimension = "K"
 kind = "test"
-ref = "repo:tests/test_reference_spatial_observations.py"
+ref = "repo:tests/test_reference_exporters.py"
 issue = "RES-669"
-rationale = "Partial ideal mathematical observation coverage only; complete artifacts, schema exports and independent device-engine verification remain open."
+rationale = "Complete analytical substrate and schema-v2 observation exports; device-engine comparisons remain open. See docs/reference-verification.md for independent references, tolerances and boundaries."
 
 [[evidence]]
 subfamily = "gnss_lps.lps"
 dimension = "J"
 kind = "code"
-ref = "repo:src/dynamisbench_soccer/reference/spatial_observations.py"
+ref = "repo:src/dynamisbench_soccer/reference/exporters.py"
 issue = "RES-669"
-rationale = "Partial ideal mathematical observation coverage only; complete artifacts, schema exports and independent device-engine verification remain open."
+rationale = "Complete analytical substrate and schema-v2 observation exports; device-engine comparisons remain open. See docs/reference-verification.md for independent references, tolerances and boundaries."
 
 [[evidence]]
 subfamily = "gnss_lps.lps"
 dimension = "K"
 kind = "test"
-ref = "repo:tests/test_reference_spatial_observations.py"
+ref = "repo:tests/test_reference_exporters.py"
 issue = "RES-669"
-rationale = "Partial ideal mathematical observation coverage only; complete artifacts, schema exports and independent device-engine verification remain open."
+rationale = "Complete analytical substrate and schema-v2 observation exports; device-engine comparisons remain open. See docs/reference-verification.md for independent references, tolerances and boundaries."
 
 [[evidence]]
 subfamily = "imu.inertial"
 dimension = "J"
 kind = "code"
-ref = "repo:src/dynamisbench_soccer/reference/spatial_observations.py"
+ref = "repo:src/dynamisbench_soccer/reference/exporters.py"
 issue = "RES-669"
-rationale = "Partial ideal mathematical observation coverage only; complete artifacts, schema exports and independent device-engine verification remain open."
+rationale = "Complete analytical substrate and schema-v2 observation exports; device-engine comparisons remain open. See docs/reference-verification.md for independent references, tolerances and boundaries."
 
 [[evidence]]
 subfamily = "imu.inertial"
 dimension = "K"
 kind = "test"
-ref = "repo:tests/test_reference_spatial_observations.py"
+ref = "repo:tests/test_reference_exporters.py"
 issue = "RES-669"
-rationale = "Partial ideal mathematical observation coverage only; complete artifacts, schema exports and independent device-engine verification remain open."
+rationale = "Complete analytical substrate and schema-v2 observation exports; device-engine comparisons remain open. See docs/reference-verification.md for independent references, tolerances and boundaries."
+
+[[evidence]]
+subfamily = "force_platform.single"
+dimension = "J"
+kind = "doc"
+ref = "repo:docs/reference-verification.md"
+issue = "RES-669"
+rationale = "Analytical equations, serialized observations and typed deterministic fault/negative controls are available; this does not verify the future device engine or establish empirical validity."
+
+[[evidence]]
+subfamily = "force_platform.single"
+dimension = "K"
+kind = "test"
+ref = "repo:tests/test_reference_faults.py"
+issue = "RES-669"
+rationale = "Analytical equations, serialized observations and typed deterministic fault/negative controls are available; this does not verify the future device engine or establish empirical validity."
+
+[[evidence]]
+subfamily = "force_platform.single"
+dimension = "K"
+kind = "test"
+ref = "repo:tests/test_reference_acceptance.py"
+issue = "RES-669"
+rationale = "Analytical equations, serialized observations and typed deterministic fault/negative controls are available; this does not verify the future device engine or establish empirical validity."
+
+[[evidence]]
+subfamily = "force_platform.dual"
+dimension = "J"
+kind = "doc"
+ref = "repo:docs/reference-verification.md"
+issue = "RES-669"
+rationale = "Analytical equations, serialized observations and typed deterministic fault/negative controls are available; this does not verify the future device engine or establish empirical validity."
+
+[[evidence]]
+subfamily = "force_platform.dual"
+dimension = "K"
+kind = "test"
+ref = "repo:tests/test_reference_faults.py"
+issue = "RES-669"
+rationale = "Analytical equations, serialized observations and typed deterministic fault/negative controls are available; this does not verify the future device engine or establish empirical validity."
+
+[[evidence]]
+subfamily = "force_platform.dual"
+dimension = "K"
+kind = "test"
+ref = "repo:tests/test_reference_acceptance.py"
+issue = "RES-669"
+rationale = "Analytical equations, serialized observations and typed deterministic fault/negative controls are available; this does not verify the future device engine or establish empirical validity."
+
+[[evidence]]
+subfamily = "lpt_encoder.lpt"
+dimension = "J"
+kind = "doc"
+ref = "repo:docs/reference-verification.md"
+issue = "RES-669"
+rationale = "Analytical equations, serialized observations and typed deterministic fault/negative controls are available; this does not verify the future device engine or establish empirical validity."
+
+[[evidence]]
+subfamily = "lpt_encoder.lpt"
+dimension = "K"
+kind = "test"
+ref = "repo:tests/test_reference_faults.py"
+issue = "RES-669"
+rationale = "Analytical equations, serialized observations and typed deterministic fault/negative controls are available; this does not verify the future device engine or establish empirical validity."
+
+[[evidence]]
+subfamily = "lpt_encoder.lpt"
+dimension = "K"
+kind = "test"
+ref = "repo:tests/test_reference_acceptance.py"
+issue = "RES-669"
+rationale = "Analytical equations, serialized observations and typed deterministic fault/negative controls are available; this does not verify the future device engine or establish empirical validity."
+
+[[evidence]]
+subfamily = "lpt_encoder.encoder"
+dimension = "J"
+kind = "doc"
+ref = "repo:docs/reference-verification.md"
+issue = "RES-669"
+rationale = "Analytical equations, serialized observations and typed deterministic fault/negative controls are available; this does not verify the future device engine or establish empirical validity."
+
+[[evidence]]
+subfamily = "lpt_encoder.encoder"
+dimension = "K"
+kind = "test"
+ref = "repo:tests/test_reference_faults.py"
+issue = "RES-669"
+rationale = "Analytical equations, serialized observations and typed deterministic fault/negative controls are available; this does not verify the future device engine or establish empirical validity."
+
+[[evidence]]
+subfamily = "lpt_encoder.encoder"
+dimension = "K"
+kind = "test"
+ref = "repo:tests/test_reference_acceptance.py"
+issue = "RES-669"
+rationale = "Analytical equations, serialized observations and typed deterministic fault/negative controls are available; this does not verify the future device engine or establish empirical validity."
+
+[[evidence]]
+subfamily = "load_cell_isometric.load_cell"
+dimension = "J"
+kind = "doc"
+ref = "repo:docs/reference-verification.md"
+issue = "RES-669"
+rationale = "Analytical equations, serialized observations and typed deterministic fault/negative controls are available; this does not verify the future device engine or establish empirical validity."
+
+[[evidence]]
+subfamily = "load_cell_isometric.load_cell"
+dimension = "K"
+kind = "test"
+ref = "repo:tests/test_reference_faults.py"
+issue = "RES-669"
+rationale = "Analytical equations, serialized observations and typed deterministic fault/negative controls are available; this does not verify the future device engine or establish empirical validity."
+
+[[evidence]]
+subfamily = "load_cell_isometric.load_cell"
+dimension = "K"
+kind = "test"
+ref = "repo:tests/test_reference_acceptance.py"
+issue = "RES-669"
+rationale = "Analytical equations, serialized observations and typed deterministic fault/negative controls are available; this does not verify the future device engine or establish empirical validity."
+
+[[evidence]]
+subfamily = "load_cell_isometric.isometric_rig"
+dimension = "J"
+kind = "doc"
+ref = "repo:docs/reference-verification.md"
+issue = "RES-669"
+rationale = "Analytical equations, serialized observations and typed deterministic fault/negative controls are available; this does not verify the future device engine or establish empirical validity."
+
+[[evidence]]
+subfamily = "load_cell_isometric.isometric_rig"
+dimension = "K"
+kind = "test"
+ref = "repo:tests/test_reference_faults.py"
+issue = "RES-669"
+rationale = "Analytical equations, serialized observations and typed deterministic fault/negative controls are available; this does not verify the future device engine or establish empirical validity."
+
+[[evidence]]
+subfamily = "load_cell_isometric.isometric_rig"
+dimension = "K"
+kind = "test"
+ref = "repo:tests/test_reference_acceptance.py"
+issue = "RES-669"
+rationale = "Analytical equations, serialized observations and typed deterministic fault/negative controls are available; this does not verify the future device engine or establish empirical validity."
+
+[[evidence]]
+subfamily = "nordic_hip.nordic"
+dimension = "J"
+kind = "doc"
+ref = "repo:docs/reference-verification.md"
+issue = "RES-669"
+rationale = "Analytical equations, serialized observations and typed deterministic fault/negative controls are available; this does not verify the future device engine or establish empirical validity."
+
+[[evidence]]
+subfamily = "nordic_hip.nordic"
+dimension = "K"
+kind = "test"
+ref = "repo:tests/test_reference_faults.py"
+issue = "RES-669"
+rationale = "Analytical equations, serialized observations and typed deterministic fault/negative controls are available; this does not verify the future device engine or establish empirical validity."
+
+[[evidence]]
+subfamily = "nordic_hip.nordic"
+dimension = "K"
+kind = "test"
+ref = "repo:tests/test_reference_acceptance.py"
+issue = "RES-669"
+rationale = "Analytical equations, serialized observations and typed deterministic fault/negative controls are available; this does not verify the future device engine or establish empirical validity."
+
+[[evidence]]
+subfamily = "nordic_hip.hip"
+dimension = "J"
+kind = "doc"
+ref = "repo:docs/reference-verification.md"
+issue = "RES-669"
+rationale = "Analytical equations, serialized observations and typed deterministic fault/negative controls are available; this does not verify the future device engine or establish empirical validity."
+
+[[evidence]]
+subfamily = "nordic_hip.hip"
+dimension = "K"
+kind = "test"
+ref = "repo:tests/test_reference_faults.py"
+issue = "RES-669"
+rationale = "Analytical equations, serialized observations and typed deterministic fault/negative controls are available; this does not verify the future device engine or establish empirical validity."
+
+[[evidence]]
+subfamily = "nordic_hip.hip"
+dimension = "K"
+kind = "test"
+ref = "repo:tests/test_reference_acceptance.py"
+issue = "RES-669"
+rationale = "Analytical equations, serialized observations and typed deterministic fault/negative controls are available; this does not verify the future device engine or establish empirical validity."
+
+[[evidence]]
+subfamily = "timing_contact.gates"
+dimension = "J"
+kind = "doc"
+ref = "repo:docs/reference-verification.md"
+issue = "RES-669"
+rationale = "Analytical equations, serialized observations and typed deterministic fault/negative controls are available; this does not verify the future device engine or establish empirical validity."
+
+[[evidence]]
+subfamily = "timing_contact.gates"
+dimension = "K"
+kind = "test"
+ref = "repo:tests/test_reference_faults.py"
+issue = "RES-669"
+rationale = "Analytical equations, serialized observations and typed deterministic fault/negative controls are available; this does not verify the future device engine or establish empirical validity."
+
+[[evidence]]
+subfamily = "timing_contact.gates"
+dimension = "K"
+kind = "test"
+ref = "repo:tests/test_reference_acceptance.py"
+issue = "RES-669"
+rationale = "Analytical equations, serialized observations and typed deterministic fault/negative controls are available; this does not verify the future device engine or establish empirical validity."
+
+[[evidence]]
+subfamily = "timing_contact.contact"
+dimension = "J"
+kind = "doc"
+ref = "repo:docs/reference-verification.md"
+issue = "RES-669"
+rationale = "Analytical equations, serialized observations and typed deterministic fault/negative controls are available; this does not verify the future device engine or establish empirical validity."
+
+[[evidence]]
+subfamily = "timing_contact.contact"
+dimension = "K"
+kind = "test"
+ref = "repo:tests/test_reference_faults.py"
+issue = "RES-669"
+rationale = "Analytical equations, serialized observations and typed deterministic fault/negative controls are available; this does not verify the future device engine or establish empirical validity."
+
+[[evidence]]
+subfamily = "timing_contact.contact"
+dimension = "K"
+kind = "test"
+ref = "repo:tests/test_reference_acceptance.py"
+issue = "RES-669"
+rationale = "Analytical equations, serialized observations and typed deterministic fault/negative controls are available; this does not verify the future device engine or establish empirical validity."
+
+[[evidence]]
+subfamily = "radar_laser.radar"
+dimension = "J"
+kind = "doc"
+ref = "repo:docs/reference-verification.md"
+issue = "RES-669"
+rationale = "Analytical equations, serialized observations and typed deterministic fault/negative controls are available; this does not verify the future device engine or establish empirical validity."
+
+[[evidence]]
+subfamily = "radar_laser.radar"
+dimension = "K"
+kind = "test"
+ref = "repo:tests/test_reference_faults.py"
+issue = "RES-669"
+rationale = "Analytical equations, serialized observations and typed deterministic fault/negative controls are available; this does not verify the future device engine or establish empirical validity."
+
+[[evidence]]
+subfamily = "radar_laser.radar"
+dimension = "K"
+kind = "test"
+ref = "repo:tests/test_reference_acceptance.py"
+issue = "RES-669"
+rationale = "Analytical equations, serialized observations and typed deterministic fault/negative controls are available; this does not verify the future device engine or establish empirical validity."
+
+[[evidence]]
+subfamily = "radar_laser.laser"
+dimension = "J"
+kind = "doc"
+ref = "repo:docs/reference-verification.md"
+issue = "RES-669"
+rationale = "Analytical equations, serialized observations and typed deterministic fault/negative controls are available; this does not verify the future device engine or establish empirical validity."
+
+[[evidence]]
+subfamily = "radar_laser.laser"
+dimension = "K"
+kind = "test"
+ref = "repo:tests/test_reference_faults.py"
+issue = "RES-669"
+rationale = "Analytical equations, serialized observations and typed deterministic fault/negative controls are available; this does not verify the future device engine or establish empirical validity."
+
+[[evidence]]
+subfamily = "radar_laser.laser"
+dimension = "K"
+kind = "test"
+ref = "repo:tests/test_reference_acceptance.py"
+issue = "RES-669"
+rationale = "Analytical equations, serialized observations and typed deterministic fault/negative controls are available; this does not verify the future device engine or establish empirical validity."
+
+[[evidence]]
+subfamily = "gnss_lps.gnss"
+dimension = "J"
+kind = "doc"
+ref = "repo:docs/reference-verification.md"
+issue = "RES-669"
+rationale = "Analytical equations, serialized observations and typed deterministic fault/negative controls are available; this does not verify the future device engine or establish empirical validity."
+
+[[evidence]]
+subfamily = "gnss_lps.gnss"
+dimension = "K"
+kind = "test"
+ref = "repo:tests/test_reference_faults.py"
+issue = "RES-669"
+rationale = "Analytical equations, serialized observations and typed deterministic fault/negative controls are available; this does not verify the future device engine or establish empirical validity."
+
+[[evidence]]
+subfamily = "gnss_lps.gnss"
+dimension = "K"
+kind = "test"
+ref = "repo:tests/test_reference_acceptance.py"
+issue = "RES-669"
+rationale = "Analytical equations, serialized observations and typed deterministic fault/negative controls are available; this does not verify the future device engine or establish empirical validity."
+
+[[evidence]]
+subfamily = "gnss_lps.lps"
+dimension = "J"
+kind = "doc"
+ref = "repo:docs/reference-verification.md"
+issue = "RES-669"
+rationale = "Analytical equations, serialized observations and typed deterministic fault/negative controls are available; this does not verify the future device engine or establish empirical validity."
+
+[[evidence]]
+subfamily = "gnss_lps.lps"
+dimension = "K"
+kind = "test"
+ref = "repo:tests/test_reference_faults.py"
+issue = "RES-669"
+rationale = "Analytical equations, serialized observations and typed deterministic fault/negative controls are available; this does not verify the future device engine or establish empirical validity."
+
+[[evidence]]
+subfamily = "gnss_lps.lps"
+dimension = "K"
+kind = "test"
+ref = "repo:tests/test_reference_acceptance.py"
+issue = "RES-669"
+rationale = "Analytical equations, serialized observations and typed deterministic fault/negative controls are available; this does not verify the future device engine or establish empirical validity."
+
+[[evidence]]
+subfamily = "imu.inertial"
+dimension = "J"
+kind = "doc"
+ref = "repo:docs/reference-verification.md"
+issue = "RES-669"
+rationale = "Analytical equations, serialized observations and typed deterministic fault/negative controls are available; this does not verify the future device engine or establish empirical validity."
+
+[[evidence]]
+subfamily = "imu.inertial"
+dimension = "K"
+kind = "test"
+ref = "repo:tests/test_reference_faults.py"
+issue = "RES-669"
+rationale = "Analytical equations, serialized observations and typed deterministic fault/negative controls are available; this does not verify the future device engine or establish empirical validity."
+
+[[evidence]]
+subfamily = "imu.inertial"
+dimension = "K"
+kind = "test"
+ref = "repo:tests/test_reference_acceptance.py"
+issue = "RES-669"
+rationale = "Analytical equations, serialized observations and typed deterministic fault/negative controls are available; this does not verify the future device engine or establish empirical validity."
