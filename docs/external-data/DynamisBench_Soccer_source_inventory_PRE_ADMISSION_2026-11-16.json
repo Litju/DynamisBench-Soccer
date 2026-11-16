@@ -1,0 +1,98 @@
+{
+  "kind": "PRE_ADMISSION_PLANNING_INVENTORY_NOT_DBS_DATASET_MANIFEST",
+  "generated_date": "2026-11-16",
+  "imported": false,
+  "scientific_qualification_promoted": false,
+  "verified_sha256": false,
+  "sources": [
+    {
+      "id": "shorts-laser",
+      "repo": "mladenjovanovic/shorts",
+      "pinned_ref": "5f8ce5554b5aca0e857199e0eb50bf66d7089130",
+      "paths": [
+        "data-raw/laser-gun-data.csv",
+        "data/laser_gun_data.rda"
+      ],
+      "verified_source_bytes": {
+        "data-raw/laser-gun-data.csv": 160957
+      },
+      "stage": "manufacturer_processed_plus_derived",
+      "rights_status": "package_MIT_underlying_dataset_rights_unconfirmed",
+      "admission": "RIGHTS_REVIEW"
+    },
+    {
+      "id": "shorts-lps",
+      "repo": "mladenjovanovic/shorts",
+      "pinned_ref": "5f8ce5554b5aca0e857199e0eb50bf66d7089130",
+      "paths": [
+        "data-raw/LPS-session.csv",
+        "data/LPS_session.rda"
+      ],
+      "verified_source_bytes": {
+        "data-raw/LPS-session.csv": 4677409
+      },
+      "stage": "measured_2D_positions_plus_device_derived_kinematics",
+      "rights_status": "package_MIT_underlying_dataset_rights_unconfirmed",
+      "admission": "RIGHTS_AND_SCHEMA_HOLD"
+    },
+    {
+      "id": "shorts-vescovi",
+      "repo": "mladenjovanovic/shorts",
+      "pinned_ref": "5f8ce5554b5aca0e857199e0eb50bf66d7089130",
+      "paths": [
+        "data-raw/vescovi-data.csv",
+        "data/vescovi.rda"
+      ],
+      "verified_source_bytes": {
+        "data-raw/vescovi-data.csv": 4119
+      },
+      "stage": "athlete_split_summaries_plus_derived_splits",
+      "rights_status": "package_MIT_original_cohort_rights_unconfirmed",
+      "admission": "RIGHTS_REVIEW"
+    },
+    {
+      "id": "hanyang-imu",
+      "record": "https://zenodo.org/records/21712401",
+      "paths": [
+        "Raw_Data.zip",
+        "Labeled_Data.zip"
+      ],
+      "published_md5": {
+        "Raw_Data.zip": "02cf77f92e408a9f7f7f0c01c52f95b2",
+        "Labeled_Data.zip": "af9987e3df7f1d64e09c3ac752d0ca82"
+      },
+      "stage": "deidentified_raw_channels_with_replaced_relative_clocks_and_separate_labeled_sequences",
+      "rights_status": "record_rights_identifier_not_verified",
+      "admission": "LICENSE_AND_SCHEMA_HOLD"
+    },
+    {
+      "id": "soccer-gnss-u18",
+      "repo": "kehanabcd/GNSS-positional-data-to-Tactical-analysis",
+      "pinned_ref": "22a63ad72427f63a7b65baa173ab3a6563f0d19f",
+      "paths": [
+        "Positional data/U18_6v6_32x24/*.csv",
+        "Match Info/SSGINFO_6v6_32x24.xlsx",
+        "Pitch Info/Pitch coordinates.xlsx"
+      ],
+      "stage": "positional_fix_exports_not_raw_pseudorange",
+      "rights_status": "NO_LICENSE_U18_PERSON_IDENTIFIERS",
+      "admission": "EXCLUDED_NO_DOWNLOAD"
+    },
+    {
+      "id": "uwb-optitrack",
+      "record": "https://zenodo.org/records/3452007",
+      "paths": [
+        "USMAN_Raza-Dataset_Indoor_Localization_with_Narrowband_Ultra-Wideband_and_Motion_Capture_Systems.zip",
+        "USMAN_Raza-Dataset_Indoor_Localization_with_Narrowband_Ultra-Wideband_and_Motion_Capture_Systems-Sample.zip"
+      ],
+      "published_md5": {
+        "USMAN_Raza-Dataset_Indoor_Localization_with_Narrowband_Ultra-Wideband_and_Motion_Capture_Systems.zip": "d5221f12a5f093eacc21db797c0ac13a",
+        "USMAN_Raza-Dataset_Indoor_Localization_with_Narrowband_Ultra-Wideband_and_Motion_Capture_Systems-Sample.zip": "da8ad411da3707c52ad45201035733e7"
+      },
+      "stage": "measured_UWB_and_estimated_2D_positions_plus_optitrack_reference",
+      "rights_status": "record_rights_identifier_not_verified",
+      "admission": "LICENSE_AND_SCHEMA_HOLD"
+    }
+  ],
+  "policy": "No ingestion before exact file SHA256, license, rights, privacy and schema gates pass"
+}
