@@ -89,6 +89,11 @@ def _process(args: argparse.Namespace) -> int:
                 columns.update(
                     {f"cop_{axis}_m": result.cop_m[:, i] for i, axis in enumerate("xyz")}
                 )
+            for plate, point in sorted(result.plate_cop_m.items()):
+                if point is not None:
+                    columns.update(
+                        {f"cop_plate{plate}_{axis}_m": point[:, i] for i, axis in enumerate("xyz")}
+                    )
             args.traces.parent.mkdir(parents=True, exist_ok=True)
             np.savetxt(
                 args.traces,

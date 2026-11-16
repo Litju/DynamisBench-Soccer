@@ -156,6 +156,7 @@ class Processed:
             "qc": [asdict(r) for r in self.qc],
             "method_spec": self.method_spec,
             "cop_available": self.cop_m is not None,
+            "plate_cop_available": {str(k): v is not None for k, v in self.plate_cop_m.items()},
             "qualification": "engineering calculations only; no scientific qualification",
         }
 
@@ -324,7 +325,7 @@ def _qc_bundle(acquired: Acquired) -> SignalBundle:
         channels=[c.model_dump(mode="json") for c in channels],
         n_rows=len(acquired.time_s),
         sampling=Sampling(
-            nominal_hz=hz, measured_hz=hz, t0_s=float(acquired.time_s[0])
+            nominal_hz=round(hz, 9), measured_hz=hz, t0_s=float(acquired.time_s[0])
         ).model_dump(),
         geometry=geometry.model_dump(),
         calibration=[],
@@ -698,6 +699,11 @@ def process(
         **method.model_dump(mode="json"),
         "plates": [p.model_dump(mode="json") for p in selected],
         "resolved_plate_ids": [p.plate for p in acquired.plates],
+        "resolved_components": {str(p.plate): p.components for p in acquired.plates},
+        "cop_signal": "calibrated unfiltered wrench; actual surface plane, field XYZ",
+        "surface_planes": {
+            str(p.plate): {"normal": p.normal, "origin_m": p.origin} for p in acquired.plates
+        },
         "zero_offsets_output_units": {str(p.plate): p.offset.tolist() for p in acquired.plates},
         "actual_reference_hz": 1 / dt,
         "resolved_start_s": float(time[start]),

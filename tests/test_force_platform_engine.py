@@ -74,7 +74,7 @@ def test_reconstructs_all_vertical_fixtures_single_dual_and_rates(
     ),
 )
 @pytest.mark.parametrize("factory", [cmj, sj, dj, hops])
-def test_named_alternatives_against_independent_cmj_truth(
+def test_named_alternatives_against_independent_vertical_truth(
     rate: int, family: str, filtering: str, integration: str, onset: str, factory
 ) -> None:  # type: ignore[no-untyped-def]
     motion = factory()
@@ -292,3 +292,21 @@ def test_separate_weighing_cannot_use_another_subjects_bodyweight() -> None:
                 integration_start="record_start", initial_velocity_m_s=motion.initial_velocity_m_s
             ),
         )
+
+
+def test_production_single_dual_equivalence_and_mass_scaling_are_metamorphic() -> None:
+    one = process(export_case("force_platform.single", cmj(75), hz=1000).observation)
+    two = process(export_case("force_platform.dual", cmj(75), hz=1000).observation)
+    heavier = process(export_case("force_platform.single", cmj(150), hz=1000).observation)
+    np.testing.assert_allclose(one.velocity_m_s, two.velocity_m_s, atol=1e-12)
+    np.testing.assert_allclose(one.velocity_m_s, heavier.velocity_m_s, atol=1e-12)
+    np.testing.assert_allclose(heavier.force_n, 2 * one.force_n, atol=1e-12)
+    assert heavier.mass_kg == pytest.approx(2 * one.mass_kg)
+
+
+def test_exact_1000_hz_imtp_is_not_rejected_by_floating_point_roundoff() -> None:
+    b = export_case("force_platform.single", hz=1000).observation
+    raw = b.meta.model_dump()
+    raw["test_id"] = "imtp"
+    result = process(SignalBundle(BundleMeta.model_validate(raw), b.data))
+    assert next(r for r in result.qc if r.rule_id == "QC-S05").status.value == "pass"

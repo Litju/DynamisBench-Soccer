@@ -126,3 +126,29 @@ def test_cli_preserves_acquisition_and_configuration_files(tmp_path: Path) -> No
     before = source.read_bytes()
     assert main(["force-platform", "process", str(source), "--csv", "--out", str(source)]) == 2
     assert source.read_bytes() == before
+
+
+def test_cli_malformed_qc_rules_return_controlled_json_rejection(tmp_path: Path) -> None:
+    source = export_case("force_platform.single", hz=1000).observation
+    io.write(source, tmp_path / "trial")
+    rules = Path(__file__).resolve().parents[1] / "qc/rules.toml"
+    bad = tmp_path / "bad-rules.toml"
+    bad.write_text(rules.read_text().replace("params = { min_run = 5 }", "params = {}"))
+    out = tmp_path / "failure.json"
+    assert (
+        main(
+            [
+                "force-platform",
+                "process",
+                str(tmp_path / "trial"),
+                "--qc-rules",
+                str(bad),
+                "--out",
+                str(out),
+            ]
+        )
+        == 2
+    )
+    report = json.loads(out.read_text())
+    assert report["verdict"] == "reject"
+    assert "QC parameter names" in report["error"]

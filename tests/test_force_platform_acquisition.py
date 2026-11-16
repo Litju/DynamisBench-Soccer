@@ -273,3 +273,19 @@ def test_unrelated_acquisitions_cannot_be_summed(field: str) -> None:
     other = SignalBundle(BundleMeta.model_validate(raw), one.data)
     with pytest.raises(ValueError, match="must match"):
         acquire((one, other))
+
+
+def test_noncoplanar_dual_surface_cop_retains_individual_points_without_combining() -> None:
+    one = full_wrench(np.tile([0.0, 0.0, 100.0, 20.0, -10.0, 0.0], (100, 1)))
+    raw = one.meta.model_dump()
+    for channel in raw["channels"][1:]:
+        channel["plate"] = 2
+    two = SignalBundle(BundleMeta.model_validate(raw), one.data)
+    result = acquire(
+        (one, two),
+        (PlateSpec(plate=1, origin_m=(0, 0, 0)), PlateSpec(plate=2, origin_m=(0, 0, 0.1))),
+    )
+    combined, individual = cop(result)
+    assert combined is None
+    np.testing.assert_allclose(individual[1], np.tile([0.1, 0.2, 0], (100, 1)))
+    np.testing.assert_allclose(individual[2], np.tile([0.1, 0.2, 0.1], (100, 1)))
