@@ -3,17 +3,26 @@
 from __future__ import annotations
 
 import argparse
+import json
 import sys
 from pathlib import Path
 
 from dynamisbench_soccer.data import paths
 from dynamisbench_soccer.data.store import IntegrityError
-from dynamisbench_soccer.external import acquire, pipeline, rights, shorts_laser
+from dynamisbench_soccer.external import acquire, pipeline, rights, shorts_laser, zenodo
 from dynamisbench_soccer.external.models import (
     EXTERNAL_ROOT,
+    RightsRecord,
+    SourceLock,
     load_lock,
     load_rights,
     source_ids,
+)
+from dynamisbench_soccer.external.zenodo_models import (
+    ZenodoLock,
+    load_zenodo_lock,
+    load_zenodo_rights,
+    lock_kind,
 )
 
 
@@ -23,10 +32,10 @@ def _cmd_validate(args: argparse.Namespace) -> int:
     ids = source_ids(root)
     for sid in ids:
         try:
-            lock, record = load_lock(sid, root), load_rights(sid, root)
+            lock, record = _load(sid, root)
             if record.pinned_ref != lock.pinned_ref:
-                raise ValueError("rights record and lock pin different commits")
-            print(f"OK   {sid} @ {lock.pinned_ref[:12]} admission={record.canonical_admission}")
+                raise ValueError("rights record and lock pin different sources")
+            print(f"OK   {sid} @ {lock.pinned_ref[:14]} admission={record.canonical_admission}")
         except Exception as exc:  # report every invalid source
             failed += 1
             print(f"FAIL {sid}: {exc}", file=sys.stderr)
@@ -35,7 +44,7 @@ def _cmd_validate(args: argparse.Namespace) -> int:
 
 
 def _cmd_rights(args: argparse.Namespace) -> int:
-    record = load_rights(args.source_id, Path(args.root))
+    _, record = _load(args.source_id, Path(args.root))
     redistribution = "allowed" if record.redistribution_allowed else "NOT allowed"
     print(
         f"{record.source_id}: license {record.license_id}; "
@@ -47,8 +56,46 @@ def _cmd_rights(args: argparse.Namespace) -> int:
     return 0
 
 
+def _load(sid: str, root: Path) -> tuple[SourceLock | ZenodoLock, RightsRecord]:
+    """Dispatch on the committed lock kind (GitHub commit or Zenodo record)."""
+    if lock_kind(sid, root) == "dbs-zenodo-source-lock":
+        return load_zenodo_lock(sid, root), load_zenodo_rights(sid, root)
+    return load_lock(sid, root), load_rights(sid, root)
+
+
+def _acquire_zenodo(args: argparse.Namespace, root: Path) -> int:
+    lock, record = load_zenodo_lock(args.source_id, root), load_zenodo_rights(args.source_id, root)
+    source_dir = Path(args.source_dir) if args.source_dir else None
+    try:
+        # Rights evidence (public record metadata) first; archive bytes only afterwards.
+        if args.metadata:
+            metadata = json.loads(Path(args.metadata).read_text(encoding="utf-8"))
+        else:
+            metadata = zenodo.fetch_metadata(lock)
+        check = rights.verify_zenodo(record, lock, metadata)
+        archives = [
+            zenodo.acquire_archive(lock, a.key, check, source_dir=source_dir) for a in lock.archives
+        ]
+        problems = [
+            p
+            for a, path in zip(lock.archives, archives, strict=True)
+            for p in zenodo.audit_archive(a, path)
+        ]
+    except (IntegrityError, rights.RightsBlocked) as exc:
+        print(f"FAIL {exc}", file=sys.stderr)
+        return 1
+    for p in problems:
+        print(f"FAIL archive audit: {p}", file=sys.stderr)
+    for a, path in zip(lock.archives, archives, strict=True):
+        print(f"verified md5 {a.md5} sha256 {a.sha256} {a.size_bytes:>8} {path}")
+    print(f"canonical admission {check.canonical_admission}")
+    return 1 if problems else 0
+
+
 def _cmd_acquire(args: argparse.Namespace) -> int:
     root = Path(args.root)
+    if lock_kind(args.source_id, root) == "dbs-zenodo-source-lock":
+        return _acquire_zenodo(args, root)
     lock, record = load_lock(args.source_id, root), load_rights(args.source_id, root)
     source_dir = Path(args.source_dir) if args.source_dir else None
     try:
@@ -107,6 +154,7 @@ def register(sub: argparse._SubParsersAction) -> None:  # type: ignore[type-arg]
     a = esub.add_parser("acquire", help="fetch pinned bytes into verified quarantine")
     a.add_argument("source_id")
     a.add_argument("--source-dir", default=None, help="local copy laid out like upstream")
+    a.add_argument("--metadata", default=None, help="Zenodo only: saved record metadata JSON")
     a.add_argument("--root", default=str(EXTERNAL_ROOT))
     a.set_defaults(handler=_cmd_acquire)
     run = esub.add_parser("run", help="run the full source pipeline and write a report")

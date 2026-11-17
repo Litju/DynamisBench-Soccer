@@ -35,6 +35,7 @@ scoring.
 | [white2022-cmj-vgrf-acc](#white2022-cmj-vgrf-acc) | cross-validation-only | Real CMJ vGRF and accelerometer signals, but stored as pickle-only object arrays and with metadata that contradicts the files |
 | [holik2025-youth-soccer-plyometrics](#holik2025-youth-soccer-plyometrics) | cross-validation-only | Youth soccer, maturation and repeated attempts; summary metrics only, methods unstated |
 | [braking-rfd-cmj-2025](#braking-rfd-cmj-2025) | cross-validation-only | Both jump-height estimands for 206 participants; software-derived values |
+| [uwb-optitrack](#uwb-optitrack) | cross-validation-only | CC BY 4.0 UWB/OptiTrack testbed (RES-721, 2026-11-17); UWB vs OptiTrack comparability not established, so no error metrics |
 | [jass2026-sampling-article](#jass2026-sampling-article) | excluded | Article deposit, no data |
 | [rugby-league-hawkin-2023](#rugby-league-hawkin-2023) | excluded | Vendor summaries, rugby league |
 | [badminton-eccentric-2025](#badminton-eccentric-2025) | excluded | Derived analysis tables |
@@ -98,6 +99,31 @@ from **take-off velocity and from flight time**, push-off impulses, and eccentri
 * **Use.** A real-data illustration that the two jump-height estimands differ
   (registry FP-003), and plausibility ranges. The values are software-derived, so
   they are never reference truth (DB-07).
+
+### uwb-optitrack
+
+Zenodo 3452007 (RES-721, assessed 2026-11-17).
+[Rights disposition](external-data/uwb-optitrack-disposition.md),
+[source lock](../data/external/uwb-optitrack/source-lock.json).
+
+* **License:** `cc-by-4.0` in the record metadata, verified live through the Zenodo
+  API and pinned by a metadata digest, so a later relicense fails closed. The
+  depositors are the seven creators, all at Toshiba Research Europe.
+* **Bytes:** a 570,029 B archive. The published MD5 matches, SHA-256 is computed
+  locally, and every member is pinned by SHA-256. Six `__MACOSX` entries are
+  excluded. Members are read in memory only, never extracted.
+* **Content:** UWB/OptiTrack tables (Walk 2,796 rows, Trolley 3,201) and BLE/UWB
+  tables. README counts include the header row.
+* **Metadata gaps:** no timestamps, sampling rate, units, coordinate frames, anchor
+  geometry, or tag/marker reference points.
+* **Usage:** cross-validation-only, and only as a comparability study. UWB and
+  OptiTrack positions are **not** shown to be comparable: the best row lag is
+  non-zero, the frame fit differs by scenario (Walk offset ≈ 0.27, Trolley scale
+  ≈ 0.97), there is a −49.13 range sentinel, and the fitted anchor geometry is
+  inconsistent. No UWB accuracy metric is reported, and OptiTrack is never treated
+  as ground truth.
+* **Population:** not human-subject data (anonymous tag positions). Not soccer, so
+  no `test_id` applies.
 
 ## Excluded
 

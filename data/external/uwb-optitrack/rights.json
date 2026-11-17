@@ -1,0 +1,32 @@
+{
+  "assessed_by": "RES-721 implementation (Claude Code); requires human review in the RES-721 PR",
+  "assessed_on": "2026-11-17",
+  "blockers": [],
+  "canonical_admission": "verified",
+  "copyright_holder": "Toshiba Research Europe Limited",
+  "dataset_specific_terms": "The record states license id 'cc-by-4.0' in its metadata (Zenodo API, record 3452007; rights-relevant metadata pinned by digest in source-lock.json). The archive contains no separate license file and no conflicting terms. CC BY 4.0 requires attribution: Raza, Khan, Kou, Farnham, Premalal, Stanoev, Thompson (Toshiba Research Europe Limited), doi:10.5281/zenodo.3452007, and the GLOBECOM 2019 paper cited in the README.",
+  "evidence_urls": [
+    "https://zenodo.org/records/3452007",
+    "https://zenodo.org/api/records/3452007",
+    "https://creativecommons.org/licenses/by/4.0/legalcode"
+  ],
+  "kind": "dbs-zenodo-rights-record",
+  "license_evidence": "zenodo_record_metadata",
+  "license_grant_phrase": "cc-by-4.0",
+  "license_id": "CC-BY-4.0",
+  "license_scope": "Record-level CC BY 4.0, deposited by the seven creators, all affiliated with Toshiba Research Europe Limited, who collected the testbed measurements. It covers both archives of the record, including the UWB/OptiTrack and BLE/UWB tables.",
+  "local_inspection_basis": "CC BY 4.0 permits copying, adapting and sharing, with attribution. The pipeline reads pinned archive members in memory, and publishes only aggregate comparability diagnostics, with attribution.",
+  "local_inspection_permitted": true,
+  "measurement_data_rights": "verified",
+  "minors_possible": false,
+  "participant_consent": "not_applicable",
+  "permitted_outputs": [
+    "hash-verified read-only archive in quarantine and the canonical content-addressed store (cross-validation-only; never Git)",
+    "aggregate comparability diagnostics with attribution"
+  ],
+  "personal_identifiers_in_source": "none",
+  "pinned_ref": "zenodo-3452007",
+  "redistribution_allowed": false,
+  "schema_version": 1,
+  "source_id": "uwb-optitrack"
+}

@@ -1,0 +1,76 @@
+{
+  "archives": [
+    {
+      "excluded": [
+        {
+          "name": "__MACOSX/._USMAN_Raza-Dataset_Indoor_Localization_with_Narrowband_Ultra-Wideband_and_Motion_Capture_Systems",
+          "reason": "macOS AppleDouble resource fork; not data"
+        },
+        {
+          "name": "__MACOSX/USMAN_Raza-Dataset_Indoor_Localization_with_Narrowband_Ultra-Wideband_and_Motion_Capture_Systems/._BLE_Trolley_dataset.csv",
+          "reason": "macOS AppleDouble resource fork; not data"
+        },
+        {
+          "name": "__MACOSX/USMAN_Raza-Dataset_Indoor_Localization_with_Narrowband_Ultra-Wideband_and_Motion_Capture_Systems/._BLE_Walk_dataset.csv",
+          "reason": "macOS AppleDouble resource fork; not data"
+        },
+        {
+          "name": "__MACOSX/USMAN_Raza-Dataset_Indoor_Localization_with_Narrowband_Ultra-Wideband_and_Motion_Capture_Systems/._README_data.md",
+          "reason": "macOS AppleDouble resource fork; not data"
+        },
+        {
+          "name": "__MACOSX/USMAN_Raza-Dataset_Indoor_Localization_with_Narrowband_Ultra-Wideband_and_Motion_Capture_Systems/._UWB_Trolley_dataset.csv",
+          "reason": "macOS AppleDouble resource fork; not data"
+        },
+        {
+          "name": "__MACOSX/USMAN_Raza-Dataset_Indoor_Localization_with_Narrowband_Ultra-Wideband_and_Motion_Capture_Systems/._UWB_Walk_dataset.csv",
+          "reason": "macOS AppleDouble resource fork; not data"
+        }
+      ],
+      "key": "USMAN_Raza-Dataset_Indoor_Localization_with_Narrowband_Ultra-Wideband_and_Motion_Capture_Systems.zip",
+      "md5": "d5221f12a5f093eacc21db797c0ac13a",
+      "members": [
+        {
+          "name": "USMAN_Raza-Dataset_Indoor_Localization_with_Narrowband_Ultra-Wideband_and_Motion_Capture_Systems/BLE_Trolley_dataset.csv",
+          "role": "data",
+          "sha256": "6de5197246a1792813d4b144acf7fed357cbb0b4fb073f3a009306bdb517a520",
+          "size_bytes": 636906
+        },
+        {
+          "name": "USMAN_Raza-Dataset_Indoor_Localization_with_Narrowband_Ultra-Wideband_and_Motion_Capture_Systems/BLE_Walk_dataset.csv",
+          "role": "data",
+          "sha256": "a1dc5a3f108627823399017cb2a96016d2c3a64f852444245fdbc893b41fbe5b",
+          "size_bytes": 646897
+        },
+        {
+          "name": "USMAN_Raza-Dataset_Indoor_Localization_with_Narrowband_Ultra-Wideband_and_Motion_Capture_Systems/README_data.md",
+          "role": "documentation",
+          "sha256": "f7a7eb6480672fcbbc022680a0da08265862b2a03826b0ba3d971a1b474f1747",
+          "size_bytes": 1603
+        },
+        {
+          "name": "USMAN_Raza-Dataset_Indoor_Localization_with_Narrowband_Ultra-Wideband_and_Motion_Capture_Systems/UWB_Trolley_dataset.csv",
+          "role": "data",
+          "sha256": "66b32f3e5976564e0e6585d96797bd3887c7794ba6d72905a71b5be175d2e3e3",
+          "size_bytes": 403829
+        },
+        {
+          "name": "USMAN_Raza-Dataset_Indoor_Localization_with_Narrowband_Ultra-Wideband_and_Motion_Capture_Systems/UWB_Walk_dataset.csv",
+          "role": "data",
+          "sha256": "0cc3cfde0f842d45622ccd7ff6ead377237a22c38ffa381321133b5e31ee2014",
+          "size_bytes": 356467
+        }
+      ],
+      "sha256": "0e26251bff1ddd1f868205c481c63137c4729d480444e60769c3240ba3fc4f38",
+      "size_bytes": 570029,
+      "url": "https://zenodo.org/api/records/3452007/files/USMAN_Raza-Dataset_Indoor_Localization_with_Narrowband_Ultra-Wideband_and_Motion_Capture_Systems.zip/content"
+    }
+  ],
+  "doi": "10.5281/zenodo.3452007",
+  "kind": "dbs-zenodo-source-lock",
+  "license_id": "cc-by-4.0",
+  "metadata_digest": "167818ab76432ca4cbe77ff3657dbb27e249ba43a8d6f5f629daa92cf90a12b5",
+  "record_id": 3452007,
+  "schema_version": 1,
+  "source_id": "uwb-optitrack"
+}

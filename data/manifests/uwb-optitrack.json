@@ -1,0 +1,27 @@
+{
+  "audit_ref": "docs/data-audit.md#uwb-optitrack",
+  "data_category": "empirical",
+  "dataset_id": "uwb-optitrack",
+  "files": [
+    {
+      "path": "USMAN_Raza-Dataset_Indoor_Localization_with_Narrowband_Ultra-Wideband_and_Motion_Capture_Systems.zip",
+      "sha256": "0e26251bff1ddd1f868205c481c63137c4729d480444e60769c3240ba3fc4f38",
+      "size_bytes": 570029,
+      "url": "https://zenodo.org/api/records/3452007/files/USMAN_Raza-Dataset_Indoor_Localization_with_Narrowband_Ultra-Wideband_and_Motion_Capture_Systems.zip/content"
+    }
+  ],
+  "handling_notes": "ZIP archive: read pinned members in memory only (dbs external zenodo); never extract. 6 __MACOSX AppleDouble entries are excluded. No timestamps (rows paired by index within SessionID 1-5); units, coordinate frames, anchor geometry and tag/marker reference points are undeclared; README sample counts include the header row. Comparability of UWB and OptiTrack is NOT established (non-zero row lag, scenario-specific frame offset/scale/rotation, negative range sentinel, inconsistent anchor geometry): no UWB error metrics may be reported (RES-721).",
+  "license": "CC-BY-4.0",
+  "privacy_notes": "Testbed radio-localisation data from Toshiba Research Europe: anonymous tag positions, ranges and radio features (CIR, PSA, AoA, RSSI) for 'walking' (tag carried by an unidentified person) and 'trolley' scenarios. No names, IDs, demographics, biometrics, dates or images. Not human-subject research data.",
+  "redistribution_allowed": false,
+  "schema_version": 1,
+  "source": {
+    "citation": "Raza U, Khan A, Kou R, Farnham T, Premalal T, Stanoev A, Thompson W (2019). Dataset: Indoor Localization with Narrow-band, Ultra-Wideband, and Motion Capture Systems. Zenodo. doi:10.5281/zenodo.3452007",
+    "doi": "10.5281/zenodo.3452007",
+    "kind": "url",
+    "location": "https://zenodo.org/records/3452007"
+  },
+  "title": "Indoor localization with narrow-band, ultra-wideband and motion capture systems (UWB/OptiTrack and BLE/UWB tables)",
+  "usage": "cross-validation-only",
+  "version": "zenodo-3452007"
+}
