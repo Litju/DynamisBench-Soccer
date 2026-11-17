@@ -8,6 +8,7 @@
           "anchor": 1.0,
           "geometrically_consistent": false,
           "h2": -0.45422563090574336,
+          "impossibly_short_ranges": 0.0,
           "range_residual_median_abs": 0.1300975573609724,
           "rows_used": 3201.0,
           "x": -0.09034750777097349,
@@ -17,6 +18,7 @@
           "anchor": 2.0,
           "geometrically_consistent": false,
           "h2": -0.6231381081823589,
+          "impossibly_short_ranges": 0.0,
           "range_residual_median_abs": 0.11925289999513344,
           "rows_used": 3201.0,
           "x": 4.662783380291698,
@@ -26,6 +28,7 @@
           "anchor": 3.0,
           "geometrically_consistent": false,
           "h2": -0.7946364107813704,
+          "impossibly_short_ranges": 0.0,
           "range_residual_median_abs": 0.1591786776166293,
           "rows_used": 3201.0,
           "x": 4.587809046820679,
@@ -35,6 +38,7 @@
           "anchor": 4.0,
           "geometrically_consistent": false,
           "h2": -0.29325939758087305,
+          "impossibly_short_ranges": 0.0,
           "range_residual_median_abs": 0.0786877785579645,
           "rows_used": 3201.0,
           "x": 0.25182142340461255,
@@ -44,8 +48,9 @@
       "walk": [
         {
           "anchor": 1.0,
-          "geometrically_consistent": true,
+          "geometrically_consistent": false,
           "h2": 0.890021968608458,
+          "impossibly_short_ranges": 122.0,
           "range_residual_median_abs": 0.07018436611782564,
           "rows_used": 2795.0,
           "x": -0.11991523013396353,
@@ -55,6 +60,7 @@
           "anchor": 2.0,
           "geometrically_consistent": true,
           "h2": 0.9557435762092789,
+          "impossibly_short_ranges": 0.0,
           "range_residual_median_abs": 0.07327104016544927,
           "rows_used": 2796.0,
           "x": 4.596205730639464,
@@ -62,8 +68,9 @@
         },
         {
           "anchor": 3.0,
-          "geometrically_consistent": true,
+          "geometrically_consistent": false,
           "h2": 1.7235459886369435,
+          "impossibly_short_ranges": 65.0,
           "range_residual_median_abs": 0.07680516124598213,
           "rows_used": 2796.0,
           "x": 4.484514362654104,
@@ -73,6 +80,7 @@
           "anchor": 4.0,
           "geometrically_consistent": true,
           "h2": 1.5349461620186808,
+          "impossibly_short_ranges": 18.0,
           "range_residual_median_abs": 0.08736362502079587,
           "rows_used": 2793.0,
           "x": -0.15299823967921222,
@@ -88,23 +96,27 @@
     },
     "sessions": [
       {
+        "along_track_bias": -0.03665548980513635,
         "best_row_lag": 1,
         "comparable": false,
+        "cross_track_bias": -0.02432331262912003,
         "frame_ok": false,
         "median_offset_at_best_lag": 0.3279929870458147,
         "median_offset_at_zero_lag": 0.3224969665352977,
+        "motion_ok": false,
         "n_rows": 463,
         "range_sentinels": 0,
         "reasons": [
-          "best row lag 1 != 0: same-row samples are not simultaneous",
+          "best integer row lag 1 != 0: simultaneity of same-row samples not established (a delay or an along-track mounting offset)",
           "scale 0.9842 differs from 1 by > 0.01",
-          "translation |t| 0.269 exceeds 0.05"
+          "translation |t| 0.269 exceeds 0.05",
+          "residual depends on direction of motion (along -0.037, cross -0.024; tolerance 0.02): fractional lag or mounting offset, not separable without timestamps and mounting geometry"
         ],
         "rotation_deg": -0.7606941807304173,
         "scale": 0.9842342003140632,
         "scenario": "walk",
         "session_id": 1,
-        "similarity_residual_median": 0.12019972577154726,
+        "similarity_residual_rms": 0.1488834338856357,
         "temporal_ok": false,
         "translation": [
           0.006404902928928813,
@@ -112,45 +124,52 @@
         ]
       },
       {
-        "best_row_lag": 1,
+        "along_track_bias": -0.02859987193490012,
+        "best_row_lag": 0,
         "comparable": false,
+        "cross_track_bias": -0.021654503138945926,
         "frame_ok": false,
-        "median_offset_at_best_lag": 0.3140209562135926,
+        "median_offset_at_best_lag": 0.3068526468289892,
         "median_offset_at_zero_lag": 0.3068526468289892,
+        "motion_ok": false,
         "n_rows": 541,
         "range_sentinels": 3,
         "reasons": [
-          "best row lag 1 != 0: same-row samples are not simultaneous",
-          "translation |t| 0.286 exceeds 0.05"
+          "translation |t| 0.284 exceeds 0.05",
+          "residual depends on direction of motion (along -0.029, cross -0.022; tolerance 0.02): fractional lag or mounting offset, not separable without timestamps and mounting geometry"
         ],
-        "rotation_deg": -0.759963588655782,
-        "scale": 1.0084001865901273,
+        "rotation_deg": -0.8495423881640369,
+        "scale": 1.0085054691603315,
         "scenario": "walk",
         "session_id": 2,
-        "similarity_residual_median": 0.11922074806751026,
-        "temporal_ok": false,
+        "similarity_residual_rms": 0.1458599120369384,
+        "temporal_ok": true,
         "translation": [
-          -0.06244809819855024,
-          -0.2793404536938715
+          -0.06446362286930407,
+          -0.27622817586073123
         ]
       },
       {
+        "along_track_bias": -0.02972410131463767,
         "best_row_lag": 0,
         "comparable": false,
+        "cross_track_bias": 0.014594592025489857,
         "frame_ok": false,
         "median_offset_at_best_lag": 0.30581578706372237,
         "median_offset_at_zero_lag": 0.30581578706372237,
+        "motion_ok": false,
         "n_rows": 586,
         "range_sentinels": 1,
         "reasons": [
           "rotation -1.06 deg exceeds 1 deg",
-          "translation |t| 0.271 exceeds 0.05"
+          "translation |t| 0.271 exceeds 0.05",
+          "residual depends on direction of motion (along -0.030, cross +0.015; tolerance 0.02): fractional lag or mounting offset, not separable without timestamps and mounting geometry"
         ],
         "rotation_deg": -1.0631019107166837,
         "scale": 1.005426278159497,
         "scenario": "walk",
         "session_id": 3,
-        "similarity_residual_median": 0.10697980719686792,
+        "similarity_residual_rms": 0.13780257639909774,
         "temporal_ok": true,
         "translation": [
           -0.06775683482599071,
@@ -158,34 +177,42 @@
         ]
       },
       {
-        "best_row_lag": 0,
+        "along_track_bias": -0.028418961102993592,
+        "best_row_lag": 1,
         "comparable": false,
+        "cross_track_bias": -0.012488468219438838,
         "frame_ok": false,
-        "median_offset_at_best_lag": 0.32036651592580306,
+        "median_offset_at_best_lag": 0.33661655637177657,
         "median_offset_at_zero_lag": 0.32036651592580306,
+        "motion_ok": false,
         "n_rows": 630,
         "range_sentinels": 0,
         "reasons": [
-          "rotation -1.62 deg exceeds 1 deg",
-          "translation |t| 0.277 exceeds 0.05"
+          "best integer row lag 1 != 0: simultaneity of same-row samples not established (a delay or an along-track mounting offset)",
+          "rotation -1.46 deg exceeds 1 deg",
+          "translation |t| 0.282 exceeds 0.05",
+          "residual depends on direction of motion (along -0.028, cross -0.012; tolerance 0.02): fractional lag or mounting offset, not separable without timestamps and mounting geometry"
         ],
-        "rotation_deg": -1.6185239365736315,
-        "scale": 1.0002558359641582,
+        "rotation_deg": -1.464727052687837,
+        "scale": 1.0003016860450193,
         "scenario": "walk",
         "session_id": 4,
-        "similarity_residual_median": 0.11326691028862501,
-        "temporal_ok": true,
+        "similarity_residual_rms": 0.1484701805268153,
+        "temporal_ok": false,
         "translation": [
-          -0.06687778404486999,
-          -0.26926196802096325
+          -0.06392993159705362,
+          -0.2745086114882619
         ]
       },
       {
+        "along_track_bias": 0.00726907063148341,
         "best_row_lag": 0,
         "comparable": false,
+        "cross_track_bias": -0.008391821529408587,
         "frame_ok": false,
         "median_offset_at_best_lag": 0.3532698650725401,
         "median_offset_at_zero_lag": 0.3532698650725401,
+        "motion_ok": true,
         "n_rows": 576,
         "range_sentinels": 0,
         "reasons": [
@@ -196,7 +223,7 @@
         "scale": 1.0062642270058324,
         "scenario": "walk",
         "session_id": 5,
-        "similarity_residual_median": 0.1079339655327009,
+        "similarity_residual_rms": 0.13234495846698677,
         "temporal_ok": true,
         "translation": [
           -0.07112966435606483,
@@ -204,22 +231,26 @@
         ]
       },
       {
+        "along_track_bias": -0.07424898843386352,
         "best_row_lag": 3,
         "comparable": false,
+        "cross_track_bias": 0.03725582531221146,
         "frame_ok": false,
         "median_offset_at_best_lag": 0.08879365338269801,
         "median_offset_at_zero_lag": 0.10308483511128563,
+        "motion_ok": false,
         "n_rows": 794,
         "range_sentinels": 0,
         "reasons": [
-          "best row lag 3 != 0: same-row samples are not simultaneous",
-          "scale 0.9696 differs from 1 by > 0.01"
+          "best integer row lag 3 != 0: simultaneity of same-row samples not established (a delay or an along-track mounting offset)",
+          "scale 0.9696 differs from 1 by > 0.01",
+          "residual depends on direction of motion (along -0.074, cross +0.037; tolerance 0.02): fractional lag or mounting offset, not separable without timestamps and mounting geometry"
         ],
         "rotation_deg": 0.7691342427248101,
         "scale": 0.96955483541657,
         "scenario": "trolley",
         "session_id": 1,
-        "similarity_residual_median": 0.06904668593030222,
+        "similarity_residual_rms": 0.07734608571186223,
         "temporal_ok": false,
         "translation": [
           0.042259203803603373,
@@ -227,22 +258,26 @@
         ]
       },
       {
+        "along_track_bias": -0.07378512395892554,
         "best_row_lag": 3,
         "comparable": false,
+        "cross_track_bias": 0.03991275920363251,
         "frame_ok": false,
         "median_offset_at_best_lag": 0.07765343370752631,
         "median_offset_at_zero_lag": 0.11222254287226856,
+        "motion_ok": false,
         "n_rows": 627,
         "range_sentinels": 0,
         "reasons": [
-          "best row lag 3 != 0: same-row samples are not simultaneous",
-          "scale 0.9717 differs from 1 by > 0.01"
+          "best integer row lag 3 != 0: simultaneity of same-row samples not established (a delay or an along-track mounting offset)",
+          "scale 0.9717 differs from 1 by > 0.01",
+          "residual depends on direction of motion (along -0.074, cross +0.040; tolerance 0.02): fractional lag or mounting offset, not separable without timestamps and mounting geometry"
         ],
         "rotation_deg": 0.6343327108162997,
         "scale": 0.9716521754887265,
         "scenario": "trolley",
         "session_id": 2,
-        "similarity_residual_median": 0.069844967973666,
+        "similarity_residual_rms": 0.08252325105743584,
         "temporal_ok": false,
         "translation": [
           0.04637961207326269,
@@ -250,24 +285,28 @@
         ]
       },
       {
+        "along_track_bias": -0.08079457074672135,
         "best_row_lag": 3,
         "comparable": false,
+        "cross_track_bias": 0.04270773221819209,
         "frame_ok": false,
         "median_offset_at_best_lag": 0.08706496909848323,
         "median_offset_at_zero_lag": 0.12715161416246842,
+        "motion_ok": false,
         "n_rows": 611,
         "range_sentinels": 0,
         "reasons": [
-          "best row lag 3 != 0: same-row samples are not simultaneous",
+          "best integer row lag 3 != 0: simultaneity of same-row samples not established (a delay or an along-track mounting offset)",
           "scale 0.9753 differs from 1 by > 0.01",
           "rotation 1.01 deg exceeds 1 deg",
-          "translation |t| 0.067 exceeds 0.05"
+          "translation |t| 0.067 exceeds 0.05",
+          "residual depends on direction of motion (along -0.081, cross +0.043; tolerance 0.02): fractional lag or mounting offset, not separable without timestamps and mounting geometry"
         ],
         "rotation_deg": 1.013878351915614,
         "scale": 0.9753299207792699,
         "scenario": "trolley",
         "session_id": 3,
-        "similarity_residual_median": 0.07815141355098694,
+        "similarity_residual_rms": 0.07990242656386358,
         "temporal_ok": false,
         "translation": [
           0.05066574701278981,
@@ -275,48 +314,56 @@
         ]
       },
       {
-        "best_row_lag": 4,
+        "along_track_bias": -0.08649107807686172,
+        "best_row_lag": 3,
         "comparable": false,
+        "cross_track_bias": 0.04483795412556374,
         "frame_ok": false,
-        "median_offset_at_best_lag": 0.17008741320052195,
+        "median_offset_at_best_lag": 0.17113393769281915,
         "median_offset_at_zero_lag": 0.18916372887825458,
+        "motion_ok": false,
         "n_rows": 594,
         "range_sentinels": 0,
         "reasons": [
-          "best row lag 4 != 0: same-row samples are not simultaneous",
-          "scale 0.9718 differs from 1 by > 0.01",
-          "rotation 2.75 deg exceeds 1 deg",
-          "translation |t| 0.063 exceeds 0.05"
+          "best integer row lag 3 != 0: simultaneity of same-row samples not established (a delay or an along-track mounting offset)",
+          "scale 0.9723 differs from 1 by > 0.01",
+          "rotation 2.96 deg exceeds 1 deg",
+          "translation |t| 0.055 exceeds 0.05",
+          "residual depends on direction of motion (along -0.086, cross +0.045; tolerance 0.02): fractional lag or mounting offset, not separable without timestamps and mounting geometry"
         ],
-        "rotation_deg": 2.7489206293595454,
-        "scale": 0.9718280327125138,
+        "rotation_deg": 2.963011672781016,
+        "scale": 0.9722862624868528,
         "scenario": "trolley",
         "session_id": 4,
-        "similarity_residual_median": 0.07122128893777428,
+        "similarity_residual_rms": 0.08917711935174724,
         "temporal_ok": false,
         "translation": [
-          0.0012860485374015518,
-          0.06257776031161544
+          0.0036189689526338054,
+          0.055259096000473185
         ]
       },
       {
+        "along_track_bias": -0.06906412727513293,
         "best_row_lag": 3,
         "comparable": false,
+        "cross_track_bias": 0.027010057162754543,
         "frame_ok": false,
         "median_offset_at_best_lag": 0.16196810040152562,
         "median_offset_at_zero_lag": 0.19269302815358305,
+        "motion_ok": false,
         "n_rows": 575,
         "range_sentinels": 0,
         "reasons": [
-          "best row lag 3 != 0: same-row samples are not simultaneous",
+          "best integer row lag 3 != 0: simultaneity of same-row samples not established (a delay or an along-track mounting offset)",
           "scale 0.9675 differs from 1 by > 0.01",
-          "rotation 3.26 deg exceeds 1 deg"
+          "rotation 3.26 deg exceeds 1 deg",
+          "residual depends on direction of motion (along -0.069, cross +0.027; tolerance 0.02): fractional lag or mounting offset, not separable without timestamps and mounting geometry"
         ],
         "rotation_deg": 3.255963720520446,
         "scale": 0.9674577040325569,
         "scenario": "trolley",
         "session_id": 5,
-        "similarity_residual_median": 0.060960909490040405,
+        "similarity_residual_rms": 0.06603617535677149,
         "temporal_ok": false,
         "translation": [
           0.006648415329114865,
@@ -553,13 +600,13 @@
       "status": "passed"
     },
     {
-      "detail": "10/10 sessions not comparable (temporal 7, frame 10)",
+      "detail": "10/10 sessions not comparable (temporal 7, frame 10, motion 9)",
       "evidence": {},
       "name": "comparability",
       "status": "blocked"
     },
     {
-      "detail": "not computed: UWB and OptiTrack are not shown to share a time base and frame; a difference would not be device error",
+      "detail": "not computed: UWB and OptiTrack are not shown to share a time base, frame and reference point; a difference would not be device error",
       "evidence": {},
       "name": "error_metrics",
       "status": "blocked"
@@ -567,6 +614,7 @@
   ],
   "thresholds": {
     "lag_search_rows": 30,
+    "max_motion_bias": 0.02,
     "max_rotation_deg": 1.0,
     "max_row_lag": 0,
     "max_scale_deviation": 0.01,

@@ -116,21 +116,23 @@ Zenodo 3452007 (RES-721, assessed 2026-11-17).
   tables. README counts include the header row.
 * **Metadata gaps:** no timestamps, sampling rate, units, coordinate frames, anchor
   geometry, or tag/marker reference points.
-* **Usage:** cross-validation-only, and only as a comparability study. The
+* **Usage:** cross-validation-only, and only as a negative comparability example. The
   [comparability report](external-data/reports/uwb-optitrack-comparability-report.md)
-  finds UWB and OptiTrack **not** shown to be comparable in 10/10 sessions:
-  * The frame-invariant best row lag is non-zero in 7/10 (Walk 1,1,0,0,0;
-    Trolley 3,3,3,4,3 rows).
-  * The lag-aligned similarity frame fails in 10/10 (Walk translation ≈ 0.27;
-    Trolley scale ≈ 0.97, rotation up to 3.3°).
-  * Walk has 4 negative-range sentinels.
-  * Trolley anchor geometry is inconsistent.
+  finds 0/10 sessions comparable:
+  * The integer row lag is non-zero in 7/10 (Walk 1,0,0,1,0; Trolley 3,3,3,3,3).
+  * The lag-aligned similarity frame fails in 10/10 (Walk translation 0.27–0.30;
+    Trolley scale 0.968–0.975, rotation up to 3.3°).
+  * There is a motion-dependent residual in 9/10. In Trolley, the cross-track bias of
+    +0.027 to +0.045 shows a mounting offset. In Walk, the along-track bias of −0.028
+    to −0.037 is a fractional lag or a mounting offset; the two can't be separated.
+  * The ranges contain sentinels and physically impossible short values, and the
+    Trolley anchor geometry is inconsistent.
 
   So no UWB error metric is reported, and OptiTrack is never treated as ground truth.
-* **Population:** not human-subject data (anonymous tag positions). Not soccer, so
-  no `test_id` applies.
-
-## Excluded
+* **Population:** the Walk scenario is non-identifiable human locomotion: a tag carried
+  by an unidentified person. Consent is undocumented and was judged not applicable,
+  because no personal data exist. The Trolley scenario has no human subject. Not
+  soccer, so no `test_id` applies.
 
 ### jass2026-sampling-article
 Zenodo [20352639](https://zenodo.org/records/20352639) contains only the article

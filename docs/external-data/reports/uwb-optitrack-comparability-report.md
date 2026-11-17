@@ -20,8 +20,8 @@
 | ingestion | **passed** | canonical store ingest, verify and read-only stage (uwb-optitrack@zenodo-3452007, cross-validation-only) |
 | safe_parse | **passed** | in-memory strict parse of both UWB/OptiTrack members |
 | profile | **passed** | dbs-planar-validation@1: 2D, no Z, no soccer task, no clock |
-| comparability | **blocked** | 10/10 sessions not comparable (temporal 7, frame 10) |
-| error_metrics | **blocked** | not computed: UWB and OptiTrack are not shown to share a time base and frame; a difference would not be device error |
+| comparability | **blocked** | 10/10 sessions not comparable (temporal 7, frame 10, motion 9) |
+| error_metrics | **blocked** | not computed: UWB and OptiTrack are not shown to share a time base, frame and reference point; a difference would not be device error |
 
 Record 3452007 (`10.5281/zenodo.3452007`) · `USMAN_Raza-Dataset_Indoor_Localization_with_Narrowband_Ultra-Wideband_and_Motion_Capture_Systems.zip` · 570029 B · MD5 `d5221f12a5f093eacc21db797c0ac13a` · SHA-256 `0e26251bff1ddd1f868205c481c63137c4729d480444e60769c3240ba3fc4f38`
 
@@ -32,35 +32,35 @@ Record 3452007 (`10.5281/zenodo.3452007`) · `USMAN_Raza-Dataset_Indoor_Localiza
 
 ## Comparability (measured, never applied)
 
-Gates: best row lag ≤ 0 (search ±30); |scale - 1| ≤ 0.01; |rotation| ≤ 1.0°; |translation| ≤ 0.05 (source units). Data modified: False; lag or transform applied: False.
+Gates: best row lag ≤ 0 (search ±30); |scale - 1| ≤ 0.01; |rotation| ≤ 1.0°; |translation| ≤ 0.05; |along/cross-track bias| ≤ 0.02 (source units). Data modified: False; lag or transform applied: False.
 
-| Scenario | Session | n | Best row lag | Median offset @0 / @best | Scale | Rotation ° | Translation | Similarity residual median | Range sentinels | Comparable |
-| -- | --: | --: | --: | -- | --: | --: | -- | --: | --: | -- |
-| walk | 1 | 463 | 1 | 0.3225 / 0.328 | 0.9842 | -0.761 | (0.0064, -0.269) | 0.1202 | 0 | **False** |
-| walk | 2 | 541 | 1 | 0.3069 / 0.314 | 1.008 | -0.76 | (-0.0624, -0.279) | 0.1192 | 3 | **False** |
-| walk | 3 | 586 | 0 | 0.3058 / 0.3058 | 1.005 | -1.06 | (-0.0678, -0.262) | 0.107 | 1 | **False** |
-| walk | 4 | 630 | 0 | 0.3204 / 0.3204 | 1 | -1.62 | (-0.0669, -0.269) | 0.1133 | 0 | **False** |
-| walk | 5 | 576 | 0 | 0.3533 / 0.3533 | 1.006 | -1.55 | (-0.0711, -0.29) | 0.1079 | 0 | **False** |
-| trolley | 1 | 794 | 3 | 0.1031 / 0.08879 | 0.9696 | 0.769 | (0.0423, -0.0252) | 0.06905 | 0 | **False** |
-| trolley | 2 | 627 | 3 | 0.1122 / 0.07765 | 0.9717 | 0.634 | (0.0464, -0.00876) | 0.06984 | 0 | **False** |
-| trolley | 3 | 611 | 3 | 0.1272 / 0.08706 | 0.9753 | 1.01 | (0.0507, -0.0437) | 0.07815 | 0 | **False** |
-| trolley | 4 | 594 | 4 | 0.1892 / 0.1701 | 0.9718 | 2.75 | (0.00129, 0.0626) | 0.07122 | 0 | **False** |
-| trolley | 5 | 575 | 3 | 0.1927 / 0.162 | 0.9675 | 3.26 | (0.00665, 0.0328) | 0.06096 | 0 | **False** |
+| Scenario | Session | n | Best integer row lag | Median offset @0 / @best | Scale | Rotation ° | Translation | Similarity RMS | Along / cross-track bias | Range sentinels | Gates T/F/M | Comparable |
+| -- | --: | --: | --: | -- | --: | --: | -- | --: | -- | --: | -- | -- |
+| walk | 1 | 463 | 1 | 0.3225 / 0.328 | 0.9842 | -0.761 | (0.0064, -0.269) | 0.1489 | -0.0367 / -0.0243 | 0 | FAIL/FAIL/FAIL | **False** |
+| walk | 2 | 541 | 0 | 0.3069 / 0.3069 | 1.009 | -0.85 | (-0.0645, -0.276) | 0.1459 | -0.0286 / -0.0217 | 3 | ok/FAIL/FAIL | **False** |
+| walk | 3 | 586 | 0 | 0.3058 / 0.3058 | 1.005 | -1.06 | (-0.0678, -0.262) | 0.1378 | -0.0297 / 0.0146 | 1 | ok/FAIL/FAIL | **False** |
+| walk | 4 | 630 | 1 | 0.3204 / 0.3366 | 1 | -1.46 | (-0.0639, -0.275) | 0.1485 | -0.0284 / -0.0125 | 0 | FAIL/FAIL/FAIL | **False** |
+| walk | 5 | 576 | 0 | 0.3533 / 0.3533 | 1.006 | -1.55 | (-0.0711, -0.29) | 0.1323 | 0.00727 / -0.00839 | 0 | ok/FAIL/ok | **False** |
+| trolley | 1 | 794 | 3 | 0.1031 / 0.08879 | 0.9696 | 0.769 | (0.0423, -0.0252) | 0.07735 | -0.0742 / 0.0373 | 0 | FAIL/FAIL/FAIL | **False** |
+| trolley | 2 | 627 | 3 | 0.1122 / 0.07765 | 0.9717 | 0.634 | (0.0464, -0.00876) | 0.08252 | -0.0738 / 0.0399 | 0 | FAIL/FAIL/FAIL | **False** |
+| trolley | 3 | 611 | 3 | 0.1272 / 0.08706 | 0.9753 | 1.01 | (0.0507, -0.0437) | 0.0799 | -0.0808 / 0.0427 | 0 | FAIL/FAIL/FAIL | **False** |
+| trolley | 4 | 594 | 3 | 0.1892 / 0.1711 | 0.9723 | 2.96 | (0.00362, 0.0553) | 0.08918 | -0.0865 / 0.0448 | 0 | FAIL/FAIL/FAIL | **False** |
+| trolley | 5 | 575 | 3 | 0.1927 / 0.162 | 0.9675 | 3.26 | (0.00665, 0.0328) | 0.06604 | -0.0691 / 0.027 | 0 | FAIL/FAIL/FAIL | **False** |
 
-Median offsets are **alignment diagnostics** used to find the lag. They are not accuracy, because the systems are not shown to be comparable.
+Median offsets are **alignment diagnostics**, not accuracy. A non-zero integer lag or a motion-dependent bias means simultaneity is **not established**: without timestamps, a delay and a tag/marker mounting offset along the direction of motion give the same signature, and they are not separated here.
 
 ### Anchor-range geometry (flag): fit d² = |p - a|² + h² to OptiTrack positions
 
-| Scenario | Anchor | x | y | h² | median abs(range residual) | Consistent (h² ≥ 0) |
-| -- | --: | --: | --: | --: | --: | -- |
-| walk | 1 | -0.12 | -0.343 | 0.89 | 0.0702 | True |
-| walk | 2 | 4.6 | 0.171 | 0.956 | 0.0733 | True |
-| walk | 3 | 4.48 | 2.62 | 1.72 | 0.0768 | True |
-| walk | 4 | -0.153 | 2.58 | 1.53 | 0.0874 | True |
-| trolley | 1 | -0.0903 | -0.157 | -0.454 | 0.13 | False |
-| trolley | 2 | 4.66 | -0.129 | -0.623 | 0.119 | False |
-| trolley | 3 | 4.59 | 2.58 | -0.795 | 0.159 | False |
-| trolley | 4 | 0.252 | 2.47 | -0.293 | 0.0787 | False |
+| Scenario | Anchor | x | y | h² | median abs(range residual) | Impossibly short ranges | Consistent |
+| -- | --: | --: | --: | --: | --: | --: | -- |
+| walk | 1 | -0.12 | -0.343 | 0.89 | 0.0702 | 122 | False |
+| walk | 2 | 4.6 | 0.171 | 0.956 | 0.0733 | 0 | True |
+| walk | 3 | 4.48 | 2.62 | 1.72 | 0.0768 | 65 | False |
+| walk | 4 | -0.153 | 2.58 | 1.53 | 0.0874 | 18 | True |
+| trolley | 1 | -0.0903 | -0.157 | -0.454 | 0.13 | 0 | False |
+| trolley | 2 | 4.66 | -0.129 | -0.623 | 0.119 | 0 | False |
+| trolley | 3 | 4.59 | 2.58 | -0.795 | 0.159 | 0 | False |
+| trolley | 4 | 0.252 | 2.47 | -0.293 | 0.0787 | 0 | False |
 
 ## Error metrics
 

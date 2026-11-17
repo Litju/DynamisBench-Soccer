@@ -69,7 +69,7 @@
   "doi": "10.5281/zenodo.3452007",
   "kind": "dbs-zenodo-source-lock",
   "license_id": "cc-by-4.0",
-  "metadata_digest": "167818ab76432ca4cbe77ff3657dbb27e249ba43a8d6f5f629daa92cf90a12b5",
+  "metadata_digest": "8fef825820ea8fdcbd44e09980b4a30bef0e775ab0e9d9d094accd6058fca5fd",
   "record_id": 3452007,
   "schema_version": 1,
   "source_id": "uwb-optitrack"

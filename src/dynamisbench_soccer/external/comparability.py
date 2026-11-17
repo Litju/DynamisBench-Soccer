@@ -1,27 +1,34 @@
 """Physical and temporal comparability checks for paired planar positions (RES-721).
 
-These run **before** any error metric, and they never alter the data. The row lag and
-the similarity transform are *measured*; they are not applied. If a check fails, the
-two systems are not shown to be comparable, and no "error" between them may be
-reported, because the difference would mix device error with frame, time and
-reference-point mismatches.
+These run **before** any error metric, and they never alter the data. Lag, transform
+and motion-dependent biases are *measured*; none is applied. If any gate fails, the two
+systems are not shown to be comparable, and no "error" between them may be reported:
+the difference would mix device error with time, frame, scale or reference-point
+mismatch.
 
-Gating checks (all must pass, per session):
+Gates (all must pass, per session):
 
-* **temporal**: the frame-invariant row lag (the lag minimising the similarity-fit
-  residual) must be 0. There are no timestamps, so row order is the only time
-  relation, and a non-zero lag shows that same-row samples are not simultaneous.
-* **frame and scale**: on the lag-aligned pairs, the 2D similarity transform
-  ``device ≈ s·R·reference + t`` must be the identity within tolerance (scale,
-  rotation, translation). Otherwise the systems do not share a demonstrated frame,
-  unit scale or reference point.
+* **temporal (integer lag)**: the integer row lag minimising the RMS residual of a 2D
+  similarity fit must be 0. There are no timestamps, so row order is the only time
+  relation. A non-zero lag means simultaneity is *not established*. It does not prove
+  a delay: a lever-arm offset along the direction of motion can produce the same
+  signature at constant speed.
+* **frame and scale**: on the lag-aligned pairs, the similarity transform
+  ``device ≈ s·R·reference + t`` must be the identity within tolerance.
+* **motion-dependent bias**: on the pairs as published (lag 0), the mean residual
+  resolved along and across the reference direction of motion must be within
+  tolerance. A non-zero along-track bias indicates a fractional time lag *or* a
+  mounting (lever-arm) offset; a non-zero cross-track bias indicates a mounting offset.
+  The two cannot be separated without timestamps and declared mounting geometry, and
+  neither is ever corrected.
 
-Flags (reported, not gating for position comparability):
+Flags (reported, not gating):
 
-* **range sentinels**: negative or impossible device ranges.
-* **anchor geometry**: fitting fixed anchors to reference positions and device ranges,
-  ``d² = |p - a|² + h²``, must give ``h² ≥ 0``. If it doesn't, the ranges are not
-  Euclidean distances to the reference positions under any fixed anchor geometry.
+* **range sentinels**: negative device ranges.
+* **anchor geometry**: fixed anchors are fitted to reference positions and device
+  ranges, ``d² = |p - a|² + h²``. The geometry is consistent only if ``h² ≥ 0`` and at
+  most 1 % of ranges are shorter than the fitted vertical separation ``sqrt(h²)``, which
+  is physically impossible.
 """
 
 from __future__ import annotations
@@ -33,6 +40,9 @@ import numpy as np
 
 from dynamisbench_soccer.signals.schema import FloatArray
 
+IMPOSSIBLE_RANGE_TOLERANCE = 0.05  # source units
+MAX_IMPOSSIBLE_FRACTION = 0.01
+
 
 @dataclass(frozen=True)
 class Thresholds:
@@ -41,6 +51,7 @@ class Thresholds:
     max_scale_deviation: float = 0.01
     max_rotation_deg: float = 1.0
     max_translation: float = 0.05  # source units (undeclared; consistent with metres)
+    max_motion_bias: float = 0.02  # source units, along- or cross-track mean residual
     min_rows: int = 50
 
 
@@ -55,20 +66,18 @@ class SessionCheck:
     scale: float
     rotation_deg: float
     translation: tuple[float, float]
-    similarity_residual_median: float
+    similarity_residual_rms: float
+    along_track_bias: float
+    cross_track_bias: float
     range_sentinels: int
     temporal_ok: bool
     frame_ok: bool
+    motion_ok: bool
     reasons: list[str] = field(default_factory=list)
 
     @property
     def comparable(self) -> bool:
-        return self.temporal_ok and self.frame_ok
-
-
-def _offsets(u: FloatArray, o: FloatArray, lag: int) -> FloatArray:
-    a, b = _pairs(u, o, lag)
-    return np.asarray(np.linalg.norm(a - b, axis=1), dtype=np.float64)
+        return self.temporal_ok and self.frame_ok and self.motion_ok
 
 
 def _pairs(u: FloatArray, o: FloatArray, lag: int) -> tuple[FloatArray, FloatArray]:
@@ -76,11 +85,32 @@ def _pairs(u: FloatArray, o: FloatArray, lag: int) -> tuple[FloatArray, FloatArr
     return (u[lag:], o[: len(o) - lag]) if lag >= 0 else (u[:lag], o[-lag:])
 
 
-def best_row_lag(u: FloatArray, o: FloatArray, search: int) -> int:
-    """Frame-invariant lag: minimise the *similarity-fit residual* over candidate lags.
+def _offsets(u: FloatArray, o: FloatArray, lag: int) -> FloatArray:
+    a, b = _pairs(u, o, lag)
+    return np.asarray(np.linalg.norm(a - b, axis=1), dtype=np.float64)
 
-    Minimising the raw offset instead would let a spatial frame offset along the path be
-    absorbed as a spurious time shift, so time and frame mismatch would be confounded.
+
+def similarity_fit(
+    reference: FloatArray, device: FloatArray
+) -> tuple[float, float, FloatArray, float]:
+    """Least-squares ``device ≈ s·R·reference + t`` (Umeyama). Returns s, deg, t, RMS residual."""
+    mu_r, mu_d = reference.mean(0), device.mean(0)
+    rc, dc = reference - mu_r, device - mu_d
+    u_, sv, vt = np.linalg.svd(dc.T @ rc)
+    d = np.diag([1.0, np.sign(np.linalg.det(u_ @ vt))])
+    rot = u_ @ d @ vt
+    scale = float(np.trace(np.diag(sv) @ d) / np.sum(rc**2))
+    t = mu_d - scale * rot @ mu_r
+    resid = device - (scale * reference @ rot.T + t)
+    rms = float(np.sqrt(np.mean(np.sum(resid**2, axis=1))))
+    return scale, float(np.degrees(np.arctan2(rot[1, 0], rot[0, 0]))), t, rms
+
+
+def best_row_lag(u: FloatArray, o: FloatArray, search: int) -> int:
+    """Integer lag minimising the similarity-fit RMS residual (robust to a fixed frame offset).
+
+    A heading-dependent mounting offset at constant speed can still appear as a lag; the
+    motion-bias gate reports that ambiguity rather than resolving it.
     """
     span = min(search, len(u) // 4)
 
@@ -91,20 +121,17 @@ def best_row_lag(u: FloatArray, o: FloatArray, search: int) -> int:
     return min(range(-span, span + 1), key=residual)
 
 
-def similarity_fit(
-    reference: FloatArray, device: FloatArray
-) -> tuple[float, float, FloatArray, float]:
-    """Least-squares ``device ≈ s·R·reference + t`` (Umeyama). Returns s, deg, t, residual."""
-    mu_r, mu_d = reference.mean(0), device.mean(0)
-    rc, dc = reference - mu_r, device - mu_d
-    u_, sv, vt = np.linalg.svd(dc.T @ rc)
-    d = np.diag([1.0, np.sign(np.linalg.det(u_ @ vt))])
-    rot = u_ @ d @ vt
-    scale = float(np.trace(np.diag(sv) @ d) / np.sum(rc**2))
-    t = mu_d - scale * rot @ mu_r
-    pred = scale * reference @ rot.T + t
-    resid = np.linalg.norm(device - pred, axis=1)
-    return scale, float(np.degrees(np.arctan2(rot[1, 0], rot[0, 0]))), t, float(np.median(resid))
+def motion_bias(device: FloatArray, reference: FloatArray) -> tuple[float, float]:
+    """Mean (device - reference) along and across the reference direction of motion."""
+    vel = np.gradient(reference, axis=0)
+    speed = np.linalg.norm(vel, axis=1)
+    moving = speed > 1e-9
+    if moving.sum() < 2:
+        return 0.0, 0.0
+    tan = vel[moving] / speed[moving, None]
+    nrm = np.c_[-tan[:, 1], tan[:, 0]]
+    r = (device - reference)[moving]
+    return float(np.mean(np.sum(r * tan, axis=1))), float(np.mean(np.sum(r * nrm, axis=1)))
 
 
 def check_session(
@@ -117,9 +144,8 @@ def check_session(
 ) -> SessionCheck:
     th = th or Thresholds()
     n = len(device)
-    reasons: list[str] = []
+    sentinels = int(np.sum(ranges < 0))
     if n < th.min_rows:
-        reasons.append(f"only {n} rows (< {th.min_rows}); comparability undetermined")
         return SessionCheck(
             scenario,
             session_id,
@@ -131,18 +157,24 @@ def check_session(
             0.0,
             (0.0, 0.0),
             0.0,
-            int(np.sum(ranges < 0)),
+            0.0,
+            0.0,
+            sentinels,
             False,
             False,
-            reasons,
+            False,
+            [f"only {n} rows (< {th.min_rows}); comparability undetermined"],
         )
+    reasons: list[str] = []
     lag = best_row_lag(device, reference, th.lag_search_rows)
-    # frame assessed on the lag-aligned pairs, so a time shift is not read as a frame error
-    dev_l, ref_l = _pairs(device, reference, lag)
-    scale, deg, t, resid = similarity_fit(ref_l, dev_l)
     temporal_ok = abs(lag) <= th.max_row_lag
     if not temporal_ok:
-        reasons.append(f"best row lag {lag} != 0: same-row samples are not simultaneous")
+        reasons.append(
+            f"best integer row lag {lag} != 0: simultaneity of same-row samples not "
+            "established (a delay or an along-track mounting offset)"
+        )
+    dev_l, ref_l = _pairs(device, reference, lag)
+    scale, deg, t, rms = similarity_fit(ref_l, dev_l)
     frame_ok = True
     if abs(scale - 1) > th.max_scale_deviation:
         frame_ok = False
@@ -153,6 +185,14 @@ def check_session(
     if float(np.hypot(*t)) > th.max_translation:
         frame_ok = False
         reasons.append(f"translation |t| {float(np.hypot(*t)):.3f} exceeds {th.max_translation:g}")
+    along, cross = motion_bias(device, reference)
+    motion_ok = abs(along) <= th.max_motion_bias and abs(cross) <= th.max_motion_bias
+    if not motion_ok:
+        reasons.append(
+            f"residual depends on direction of motion (along {along:+.3f}, cross {cross:+.3f}; "
+            f"tolerance {th.max_motion_bias:g}): fractional lag or mounting offset, not "
+            "separable without timestamps and mounting geometry"
+        )
     return SessionCheck(
         scenario,
         session_id,
@@ -163,16 +203,19 @@ def check_session(
         scale,
         deg,
         (float(t[0]), float(t[1])),
-        resid,
-        int(np.sum(ranges < 0)),
+        rms,
+        along,
+        cross,
+        sentinels,
         temporal_ok,
         frame_ok,
+        motion_ok,
         reasons,
     )
 
 
 def anchor_geometry(reference: FloatArray, ranges: FloatArray) -> list[dict[str, float | bool]]:
-    """Per anchor: fit ``d² = |p - a|² + h²`` to reference positions; h² < 0 is impossible."""
+    """Per anchor: fit ``d² = |p - a|² + h²`` to reference positions (sentinels excluded)."""
     out: list[dict[str, float | bool]] = []
     for i in range(ranges.shape[1]):
         d = ranges[:, i]
@@ -182,7 +225,9 @@ def anchor_geometry(reference: FloatArray, ranges: FloatArray) -> list[dict[str,
         b = d[ok] ** 2 - (p**2).sum(1)
         (ax, ay, c), *_ = np.linalg.lstsq(a_mat, b, rcond=None)
         h2 = float(c - ax**2 - ay**2)
-        pred = np.sqrt(np.maximum((p[:, 0] - ax) ** 2 + (p[:, 1] - ay) ** 2 + max(h2, 0.0), 0))
+        floor = np.sqrt(max(h2, 0.0))
+        impossible = int(np.sum(d[ok] < floor - IMPOSSIBLE_RANGE_TOLERANCE))
+        pred = np.sqrt((p[:, 0] - ax) ** 2 + (p[:, 1] - ay) ** 2 + max(h2, 0.0))
         out.append(
             {
                 "anchor": float(i + 1),
@@ -191,7 +236,9 @@ def anchor_geometry(reference: FloatArray, ranges: FloatArray) -> list[dict[str,
                 "h2": h2,
                 "range_residual_median_abs": float(np.median(np.abs(d[ok] - pred))),
                 "rows_used": float(ok.sum()),
-                "geometrically_consistent": h2 >= 0,
+                "impossibly_short_ranges": float(impossible),
+                "geometrically_consistent": h2 >= 0
+                and impossible <= MAX_IMPOSSIBLE_FRACTION * float(ok.sum()),
             }
         )
     return out

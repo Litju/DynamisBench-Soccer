@@ -90,7 +90,7 @@ def _acquire_zenodo(args: argparse.Namespace, root: Path) -> int:
             for a, path in zip(lock.archives, archives, strict=True)
             for p in zenodo.audit_archive(a, path)
         ]
-    except (IntegrityError, rights.RightsBlocked) as exc:
+    except (IntegrityError, rights.RightsBlocked, OSError, json.JSONDecodeError) as exc:
         print(f"FAIL {exc}", file=sys.stderr)
         return 1
     for p in problems:
@@ -129,9 +129,13 @@ def _cmd_run_uwb(args: argparse.Namespace) -> int:
             f"{EXTERNAL_ROOT}; results are an unreviewed local override",
             file=sys.stderr,
         )
-    metadata = (
-        json.loads(Path(args.metadata).read_text(encoding="utf-8")) if args.metadata else None
-    )
+    try:
+        metadata = (
+            json.loads(Path(args.metadata).read_text(encoding="utf-8")) if args.metadata else None
+        )
+    except (OSError, json.JSONDecodeError) as exc:
+        print(f"FAIL --metadata unreadable: {exc}", file=sys.stderr)
+        return 1
     out = Path(args.out) if args.out else paths.runs_root() / "external" / args.source_id
     report = uwb_pipeline.run_uwb_optitrack(
         out,

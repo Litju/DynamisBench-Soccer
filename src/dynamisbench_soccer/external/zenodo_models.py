@@ -159,6 +159,14 @@ def metadata_subset(record: Mapping[str, Any]) -> dict[str, Any]:
         "license": m["license"]["id"],
         "access_right": m.get("access_right"),
         "creators": [[c.get("name"), c.get("affiliation")] for c in m["creators"]],
+        # free-text and access fields can carry extra terms even when license.id is unchanged
+        "description": m.get("description"),
+        "notes": m.get("notes"),
+        "access_conditions": m.get("access_conditions"),
+        "embargo_date": m.get("embargo_date"),
+        "version": m.get("version"),
+        "resource_type": m.get("resource_type"),
+        "related_identifiers": m.get("related_identifiers"),
         "files": sorted([f["key"], int(f["size"]), f["checksum"]] for f in record["files"]),
     }
 

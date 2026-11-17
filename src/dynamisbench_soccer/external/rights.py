@@ -139,8 +139,9 @@ def verify_zenodo(
     try:
         current = metadata_digest(metadata)
         license_now = str(metadata["metadata"]["license"]["id"])
-        affiliations = {str(c.get("affiliation")) for c in metadata["metadata"]["creators"]} | {
-            str(c.get("name")) for c in metadata["metadata"]["creators"]
+        creators = metadata["metadata"]["creators"]
+        affiliations = {
+            str(v) for c in creators for v in (c.get("affiliation"), c.get("name")) if v
         }
         record_id = int(metadata["id"])
     except (KeyError, TypeError, ValueError) as exc:

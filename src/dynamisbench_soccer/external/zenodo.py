@@ -153,12 +153,16 @@ def audit_archive(entry: ZenodoArchive, archive: Path) -> list[str]:
     with zipfile.ZipFile(archive) as z:
         for info in z.infolist():
             name = info.filename
-            if info.is_dir():
-                continue
-            seen.add(name)
-            mode = (info.external_attr >> 16) & 0o170000
             if name.startswith("/") or ".." in name.split("/") or "\\" in name:
                 problems.append(f"{name!r}: unsafe path")
+            if info.is_dir():
+                if info.file_size:
+                    problems.append(f"{name!r}: directory entry carries {info.file_size} B")
+                continue
+            if name in seen:
+                problems.append(f"{name!r}: duplicate entry name")
+            seen.add(name)
+            mode = (info.external_attr >> 16) & 0o170000
             if mode == stat.S_IFLNK:
                 problems.append(f"{name!r}: symbolic link")
             if info.compress_size and info.file_size / info.compress_size > MAX_COMPRESSION_RATIO:

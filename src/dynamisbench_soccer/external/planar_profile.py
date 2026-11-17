@@ -26,6 +26,7 @@ from typing import Literal
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from dynamisbench_soccer.external.models import SignalStage
+from dynamisbench_soccer.registry.models import V01_TESTS
 
 PROFILE_VERSION: Literal["dbs-planar-validation@1"] = "dbs-planar-validation@1"
 SCHEMA_DOC = "docs/schemas/planar-validation-profile.v1.json"
@@ -41,13 +42,17 @@ class PlanarSystem(_Strict):
     stage: SignalStage
     x_column: str
     y_column: str
-    frame: Literal["undeclared"] | str = "undeclared"
+    frame: Literal["undeclared"] = "undeclared"
     meaning: str = Field(min_length=10)
 
     @model_validator(mode="after")
     def _not_native(self) -> PlanarSystem:
         if self.stage is SignalStage.PIPELINE_DERIVED:
             raise ValueError("source positions cannot be pipeline-derived")
+        if not (self.x_column.endswith("_x") and self.y_column.endswith("_y")):
+            raise ValueError("planar systems carry exactly one _x and one _y column")
+        if self.x_column[:-2] != self.y_column[:-2]:
+            raise ValueError("x and y columns must belong to the same system")
         return self
 
 
@@ -73,7 +78,7 @@ class PlanarProfile(_Strict):
     sampling_rate: Literal["undeclared"] = "undeclared"
     units: Literal["undeclared"] = "undeclared"
     units_note: str = Field(min_length=10)
-    systems: list[PlanarSystem] = Field(min_length=2)
+    systems: list[PlanarSystem] = Field(min_length=2, max_length=2)
     sessions: list[PlanarSession] = Field(min_length=1)
 
     @model_validator(mode="after")
@@ -84,6 +89,8 @@ class PlanarProfile(_Strict):
         roles = [s.role for s in self.systems]
         if roles.count("depositor_reference") != 1:
             raise ValueError("exactly one depositor_reference system is required")
+        if any(s.scenario in V01_TESTS for s in self.sessions):
+            raise ValueError("scenario names may not be soccer test ids")
         keys = [(s.scenario, s.session_id) for s in self.sessions]
         if len(keys) != len(set(keys)):
             raise ValueError("duplicate scenario/session")

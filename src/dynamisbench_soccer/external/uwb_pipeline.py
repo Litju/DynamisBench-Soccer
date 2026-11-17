@@ -128,7 +128,7 @@ def _stages(
     # rights: public metadata only; no measurement byte is touched before this passes
     try:
         meta = metadata if metadata is not None else zenodo.fetch_metadata(lock, opener=opener)
-    except (IntegrityError, ValueError) as exc:
+    except (IntegrityError, ValueError, OSError) as exc:  # OSError: URLError/HTTPError
         run.add("rights_verification", "failed", f"record metadata unavailable: {exc}")
     check = rights.verify_zenodo(record, lock, meta)
     report["rights"] = {
@@ -182,10 +182,22 @@ def _stages(
         committed = manifests / f"{lock.source_id}.json"
         if committed.is_file():
             pinned = DatasetManifest.load(committed)
-            if [(f.path, f.sha256, f.size_bytes) for f in pinned.files] != [
-                (f.path, f.sha256, f.size_bytes) for f in manifest.files
-            ] or pinned.usage is not manifest.usage:
-                run.add("ingestion", "failed", "committed manifest disagrees with the lock")
+            fields = ("dataset_id", "version", "data_category", "usage", "license")
+            mismatched = [f for f in fields if getattr(pinned, f) != getattr(manifest, f)]
+            if pinned.redistribution_allowed != manifest.redistribution_allowed:
+                mismatched.append("redistribution_allowed")
+            if pinned.source.doi != manifest.source.doi:
+                mismatched.append("source.doi")
+            if [(f.path, f.sha256, f.size_bytes, f.url) for f in pinned.files] != [
+                (f.path, f.sha256, f.size_bytes, f.url) for f in manifest.files
+            ]:
+                mismatched.append("files")
+            if mismatched:
+                run.add(
+                    "ingestion",
+                    "failed",
+                    "committed manifest disagrees with lock/rights: " + ", ".join(mismatched),
+                )
             manifest = pinned
         staged = acquire.admit_canonical(
             manifest, path.parent, store_root=store_root, staging=staging
@@ -246,13 +258,14 @@ def _stages(
             "blocked",
             f"{len(failing)}/{len(checks)} sessions not comparable "
             f"(temporal {sum(not c.temporal_ok for c in checks)}, "
-            f"frame {sum(not c.frame_ok for c in checks)})",
+            f"frame {sum(not c.frame_ok for c in checks)}, "
+            f"motion {sum(not c.motion_ok for c in checks)})",
         )
         run.add(
             "error_metrics",
             "blocked",
-            "not computed: UWB and OptiTrack are not shown to "
-            "share a time base and frame; a difference would not be device error",
+            "not computed: UWB and OptiTrack are not shown to share a time base, frame and "
+            "reference point; a difference would not be device error",
         )
         return
     run.add(
@@ -325,40 +338,51 @@ def render(r: dict[str, Any]) -> str:
         a(
             f"Gates: best row lag ≤ {t['max_row_lag']} (search ±{t['lag_search_rows']}); "
             f"|scale - 1| ≤ {t['max_scale_deviation']}; |rotation| ≤ {t['max_rotation_deg']}°; "
-            f"|translation| ≤ {t['max_translation']} (source units). Data modified: "
+            f"|translation| ≤ {t['max_translation']}; |along/cross-track bias| ≤ "
+            f"{t['max_motion_bias']} (source units). Data modified: "
             f"{c['data_modified']}; lag or transform applied: {c['lag_or_transform_applied']}."
         )
         a("")
         a(
-            "| Scenario | Session | n | Best row lag | Median offset @0 / @best | Scale | "
-            "Rotation ° | Translation | Similarity residual median | Range sentinels | Comparable |"
+            "| Scenario | Session | n | Best integer row lag | Median offset @0 / @best | "
+            "Scale | Rotation ° | Translation | Similarity RMS | Along / cross-track bias | "
+            "Range sentinels | Gates T/F/M | Comparable |"
         )
-        a("| -- | --: | --: | --: | -- | --: | --: | -- | --: | --: | -- |")
+        a("| -- | --: | --: | --: | -- | --: | --: | -- | --: | -- | --: | -- | -- |")
         for x in c["sessions"]:
             tx, ty = x["translation"]
             a(
                 f"| {x['scenario']} | {x['session_id']} | {x['n_rows']} | {x['best_row_lag']} | "
                 f"{_f(x['median_offset_at_zero_lag'])} / {_f(x['median_offset_at_best_lag'])} | "
                 f"{_f(x['scale'])} | {_f(x['rotation_deg'], 3)} | ({_f(tx, 3)}, {_f(ty, 3)}) | "
-                f"{_f(x['similarity_residual_median'])} | {x['range_sentinels']} | "
-                f"**{x['comparable']}** |"
+                f"{_f(x['similarity_residual_rms'])} | {_f(x['along_track_bias'], 3)} / "
+                f"{_f(x['cross_track_bias'], 3)} | {x['range_sentinels']} | "
+                + "/".join(
+                    "ok" if x[k] else "FAIL" for k in ("temporal_ok", "frame_ok", "motion_ok")
+                )
+                + f" | **{x['comparable']}** |"
             )
         a("")
         a(
-            "Median offsets are **alignment diagnostics** used to find the lag. They are not "
-            "accuracy, because the systems are not shown to be comparable."
+            "Median offsets are **alignment diagnostics**, not accuracy. A non-zero integer lag "
+            "or a motion-dependent bias means simultaneity is **not established**: without "
+            "timestamps, a delay and a tag/marker mounting offset along the direction of motion "
+            "give the same signature, and they are not separated here."
         )
         a("")
         a("### Anchor-range geometry (flag): fit d² = |p - a|² + h² to OptiTrack positions")
         a("")
-        a("| Scenario | Anchor | x | y | h² | median abs(range residual) | Consistent (h² ≥ 0) |")
-        a("| -- | --: | --: | --: | --: | --: | -- |")
+        a(
+            "| Scenario | Anchor | x | y | h² | median abs(range residual) | "
+            "Impossibly short ranges | Consistent |"
+        )
+        a("| -- | --: | --: | --: | --: | --: | --: | -- |")
         for scen, rows in c["anchor_geometry"].items():
             for g in rows:
                 a(
                     f"| {scen} | {int(g['anchor'])} | {_f(g['x'], 3)} | {_f(g['y'], 3)} | "
                     f"{_f(g['h2'], 3)} | {_f(g['range_residual_median_abs'], 3)} | "
-                    f"{g['geometrically_consistent']} |"
+                    f"{int(g['impossibly_short_ranges'])} | {g['geometrically_consistent']} |"
                 )
         a("")
     a("## Error metrics")

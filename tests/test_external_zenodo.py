@@ -163,6 +163,7 @@ def test_holder_must_be_a_creator(src: dict[str, Any]) -> None:
 # --- archive acquisition --------------------------------------------------------------------
 
 
+@pytest.mark.skipif(hasattr(os, "geteuid") and os.geteuid() == 0, reason="root")
 def test_archive_acquired_only_with_permitting_check(src: dict[str, Any], tmp_path: Path) -> None:
     denied = _check(
         src, local_inspection_permitted=False, canonical_admission="pending", blockers=["synthetic"]

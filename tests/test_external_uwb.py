@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 from pathlib import Path
 from typing import Any
 
@@ -237,6 +238,7 @@ def test_lagged_or_offset_source_blocks_metrics(tmp_path: Path) -> None:
     assert "Not computed" in (tmp_path / "run" / "report.md").read_text()
 
 
+@pytest.mark.skipif(hasattr(os, "geteuid") and os.geteuid() == 0, reason="root")
 def test_rights_without_inspection_never_read_archive(tmp_path: Path) -> None:
     s = _setup(
         tmp_path,
@@ -254,6 +256,7 @@ def test_rights_without_inspection_never_read_archive(tmp_path: Path) -> None:
     assert _status(r)["data_integrity"] == "blocked" and r["outcome"] == "stopped_at_blocked_gate"
 
 
+@pytest.mark.skipif(hasattr(os, "geteuid") and os.geteuid() == 0, reason="root")
 def test_relicensed_record_fails_before_archive(tmp_path: Path) -> None:
     s = _setup(tmp_path, uwb_csv(), uwb_csv(sessions=2))
     s["archive"].chmod(0o000)
@@ -317,18 +320,24 @@ def test_committed_report_blocks_metrics_honestly(repo_root: Path) -> None:
     sessions = r["comparability"]["sessions"]
     assert len(sessions) == 10 and not any(x["comparable"] for x in sessions)
     lags = {(x["scenario"], x["session_id"]): x["best_row_lag"] for x in sessions}
-    assert [lags[("walk", i)] for i in range(1, 6)] == [1, 1, 0, 0, 0]
-    assert [lags[("trolley", i)] for i in range(1, 6)] == [3, 3, 3, 4, 3]
+    assert [lags[("walk", i)] for i in range(1, 6)] == [1, 0, 0, 1, 0]
+    assert [lags[("trolley", i)] for i in range(1, 6)] == [3, 3, 3, 3, 3]
     assert sum(not x["temporal_ok"] for x in sessions) == 7
+    assert sum(not x["motion_ok"] for x in sessions) == 9
+    # Trolley: a cross-track offset no time lag can produce -> mounting offset demonstrated
+    trolley_rows = [x for x in sessions if x["scenario"] == "trolley"]
+    assert all(0.02 < x["cross_track_bias"] < 0.06 for x in trolley_rows)
+    assert all(-0.1 < x["along_track_bias"] < -0.06 for x in trolley_rows)
     assert all(not x["frame_ok"] for x in sessions)
     walk = [x for x in sessions if x["scenario"] == "walk"]
     trolley = [x for x in sessions if x["scenario"] == "trolley"]
     assert all(x["translation"][1] == pytest.approx(-0.27, abs=0.03) for x in walk)
     assert all(x["scale"] == pytest.approx(0.97, abs=0.01) for x in trolley)
     assert r["comparability"]["range_sentinels"] == {"walk": 4, "trolley": 0}
-    assert not any(
-        g["geometrically_consistent"] for g in r["comparability"]["anchor_geometry"]["trolley"]
-    )
+    geo = r["comparability"]["anchor_geometry"]
+    assert not any(g["geometrically_consistent"] for g in geo["trolley"])
+    assert [g["geometrically_consistent"] for g in geo["walk"]] == [False, True, False, True]
+    assert geo["walk"][0]["impossibly_short_ranges"] > 100
     assert r["comparability"]["data_modified"] is False
     assert all(v["readme_counts_header_line"] for v in r["readme_reconciliation"].values())
     assert all(

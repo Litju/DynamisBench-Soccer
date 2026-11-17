@@ -38,17 +38,10 @@
       "additionalProperties": false,
       "properties": {
         "frame": {
-          "anyOf": [
-            {
-              "const": "undeclared",
-              "type": "string"
-            },
-            {
-              "type": "string"
-            }
-          ],
+          "const": "undeclared",
           "default": "undeclared",
-          "title": "Frame"
+          "title": "Frame",
+          "type": "string"
         },
         "id": {
           "pattern": "^[a-z][a-z0-9_]*$",
@@ -164,6 +157,7 @@
       "items": {
         "$ref": "#/$defs/PlanarSystem"
       },
+      "maxItems": 2,
       "minItems": 2,
       "title": "Systems",
       "type": "array"

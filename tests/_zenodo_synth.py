@@ -36,6 +36,7 @@ def uwb_csv(
     shift: tuple[float, float] = (0.0, 0.0),
     noise: float = 0.0,
     sentinel: bool = False,
+    lever: tuple[float, float] = (0.0, 0.0),
 ) -> bytes:
     """A planar path; UWB = similarity(OPT) shifted by ``lag`` rows (+ optional noise)."""
     rng = np.random.default_rng(7)
@@ -49,6 +50,11 @@ def uwb_csv(
         src = path[:n_per_session] if lag >= 0 else path[-lag : -lag + n_per_session]
         opt = path[lag : lag + n_per_session] if lag >= 0 else path[:n_per_session]
         uwb = scale * (src @ rot.T) + np.array(shift) + noise * rng.standard_normal(src.shape)
+        if lever != (0.0, 0.0):  # body-frame tag/marker offset: (along, cross) the motion
+            v = np.gradient(src, axis=0)
+            tan = v / np.linalg.norm(v, axis=1)[:, None]
+            nrm = np.c_[-tan[:, 1], tan[:, 0]]
+            uwb = uwb + lever[0] * tan + lever[1] * nrm
         d = np.sqrt(((opt[:, None, :] - ANCHORS[None]) ** 2).sum(-1) + ANCHOR_H**2)
         for i in range(n_per_session):
             dd = d[i].copy()
