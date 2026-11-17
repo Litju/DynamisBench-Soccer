@@ -6,6 +6,8 @@
 | [Source inventory (RES-719)](DynamisBench_Soccer_source_inventory_PRE_ADMISSION_2026-11-16.json) | Pre-admission planning inventory (not a manifest) |
 | [`shorts-laser` rights disposition (RES-720)](shorts-laser-rights-disposition.md) | Exact source, rights findings, blockers, what unblocks admission |
 | [`shorts-laser` diagnostic report (RES-720)](reports/shorts-laser-diagnostic-report.md) | Generated pipeline report from the real pinned bytes ([JSON](reports/shorts-laser-diagnostic-report.json)) |
+| [`uwb-optitrack` disposition (RES-721)](uwb-optitrack-disposition.md) | Zenodo 3452007: CC BY 4.0, admitted cross-validation-only; comparability blocked |
+| [`uwb-optitrack` comparability report (RES-721)](reports/uwb-optitrack-comparability-report.md) | 2D planar profile v1 and comparability gates; no error metrics ([JSON](reports/uwb-optitrack-comparability-report.json)) |
 
 ## Pipeline (`dbs external`, RES-720)
 

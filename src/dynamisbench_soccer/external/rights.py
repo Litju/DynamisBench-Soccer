@@ -11,8 +11,12 @@ import hashlib
 import hmac
 import json
 import secrets
+from collections.abc import Mapping
 from dataclasses import asdict, dataclass, field, replace
 from pathlib import Path
+from typing import Any
+
+from pydantic import BaseModel
 
 from dynamisbench_soccer.external.models import (
     FileRole,
@@ -20,6 +24,13 @@ from dynamisbench_soccer.external.models import (
     RightsStatus,
     SourceLock,
 )
+from dynamisbench_soccer.external.zenodo_models import (
+    ZenodoLock,
+    ZenodoRightsRecord,
+    metadata_digest,
+)
+
+AnyLock = SourceLock | ZenodoLock
 
 
 class RightsBlocked(PermissionError):
@@ -62,7 +73,7 @@ def _seal(check: RightsCheck) -> str:
     return hmac.new(_KEY, check._payload(), hashlib.sha256).hexdigest()
 
 
-def digest(model: SourceLock | RightsRecord) -> str:
+def digest(model: BaseModel) -> str:
     """Content digest of a lock or record; a check is bound to the exact content it saw."""
     return hashlib.sha256(model.model_dump_json().encode()).hexdigest()
 
@@ -73,7 +84,7 @@ def issued(check: RightsCheck) -> bool:
     return hmac.compare_digest(check.seal, _seal(check))
 
 
-def _authentic(action: str, check: RightsCheck, lock: SourceLock) -> None:
+def _authentic(action: str, check: RightsCheck, lock: AnyLock) -> None:
     if not issued(check):
         raise RightsBlocked(action, ["rights check was not issued by rights.verify"])
     if (check.source_id, check.pinned_ref) != (lock.source_id, lock.pinned_ref):
@@ -108,6 +119,48 @@ def verify(record: RightsRecord, lock: SourceLock, files: dict[str, Path]) -> Ri
         problems.append("license grant phrase not found in the pinned license text")
     if texts and record.copyright_holder not in joined:
         problems.append("copyright holder not named in the pinned license text")
+    return _issue(record, lock, problems)
+
+
+def verify_zenodo(
+    record: ZenodoRightsRecord, lock: ZenodoLock, metadata: Mapping[str, Any]
+) -> RightsCheck:
+    """Check a Zenodo rights record against the lock and freshly fetched record metadata.
+
+    The license evidence is ``metadata.license.id`` on the live record. The lock pins a
+    digest of the rights-relevant metadata, so a relicense, a replaced file or changed
+    creators after assessment fails closed.
+    """
+    problems: list[str] = []
+    if record.source_id != lock.source_id:
+        problems.append(f"rights source_id {record.source_id!r} != lock {lock.source_id!r}")
+    if record.pinned_ref != lock.pinned_ref:
+        problems.append("rights record assessed a different Zenodo record than the lock")
+    try:
+        current = metadata_digest(metadata)
+        license_now = str(metadata["metadata"]["license"]["id"])
+        creators = metadata["metadata"]["creators"]
+        affiliations = {
+            str(v) for c in creators for v in (c.get("affiliation"), c.get("name")) if v
+        }
+        record_id = int(metadata["id"])
+    except (KeyError, TypeError, ValueError) as exc:
+        problems.append(f"record metadata is malformed: {exc!r}")
+    else:
+        if record_id != lock.record_id:
+            problems.append(f"metadata is for record {record_id}, not {lock.record_id}")
+        if current != lock.metadata_digest:
+            problems.append(
+                "record metadata differs from the pinned digest (relicensed or changed)"
+            )
+        if license_now != lock.license_id or license_now != record.license_grant_phrase:
+            problems.append(f"record license {license_now!r} is not the assessed license")
+        if record.copyright_holder not in affiliations:
+            problems.append("copyright holder is not a creator or creator affiliation")
+    return _issue(record, lock, problems)
+
+
+def _issue(record: RightsRecord, lock: AnyLock, problems: list[str]) -> RightsCheck:
     verified = not problems
     blockers = list(record.blockers)
     if not verified:
@@ -127,13 +180,13 @@ def verify(record: RightsRecord, lock: SourceLock, files: dict[str, Path]) -> Ri
     return replace(check, seal=_seal(check))
 
 
-def require_local_inspection(check: RightsCheck, lock: SourceLock) -> None:
+def require_local_inspection(check: RightsCheck, lock: AnyLock) -> None:
     _authentic("local quarantine inspection", check, lock)
     if not check.local_inspection_permitted:
         raise RightsBlocked("local quarantine inspection", check.blockers or check.problems)
 
 
-def require_canonical_admission(check: RightsCheck, lock: SourceLock) -> None:
+def require_canonical_admission(check: RightsCheck, lock: AnyLock) -> None:
     _authentic("canonical admission", check, lock)
     if check.canonical_admission is not RightsStatus.VERIFIED:
         raise RightsBlocked("canonical admission", check.blockers)

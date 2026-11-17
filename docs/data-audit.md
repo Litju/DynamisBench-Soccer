@@ -35,6 +35,7 @@ scoring.
 | [white2022-cmj-vgrf-acc](#white2022-cmj-vgrf-acc) | cross-validation-only | Real CMJ vGRF and accelerometer signals, but stored as pickle-only object arrays and with metadata that contradicts the files |
 | [holik2025-youth-soccer-plyometrics](#holik2025-youth-soccer-plyometrics) | cross-validation-only | Youth soccer, maturation and repeated attempts; summary metrics only, methods unstated |
 | [braking-rfd-cmj-2025](#braking-rfd-cmj-2025) | cross-validation-only | Both jump-height estimands for 206 participants; software-derived values |
+| [uwb-optitrack](#uwb-optitrack) | cross-validation-only | CC BY 4.0 UWB/OptiTrack testbed (RES-721, 2026-11-17); comparability not established (time and frame), so no error metrics |
 | [jass2026-sampling-article](#jass2026-sampling-article) | excluded | Article deposit, no data |
 | [rugby-league-hawkin-2023](#rugby-league-hawkin-2023) | excluded | Vendor summaries, rugby league |
 | [badminton-eccentric-2025](#badminton-eccentric-2025) | excluded | Derived analysis tables |
@@ -99,7 +100,39 @@ from **take-off velocity and from flight time**, push-off impulses, and eccentri
   (registry FP-003), and plausibility ranges. The values are software-derived, so
   they are never reference truth (DB-07).
 
-## Excluded
+### uwb-optitrack
+
+Zenodo 3452007 (RES-721, assessed 2026-11-17).
+[Rights disposition](external-data/uwb-optitrack-disposition.md),
+[source lock](../data/external/uwb-optitrack/source-lock.json).
+
+* **License:** `cc-by-4.0` in the record metadata, verified live through the Zenodo
+  API and pinned by a metadata digest, so a later relicense fails closed. The
+  depositors are the seven creators, all at Toshiba Research Europe.
+* **Bytes:** a 570,029 B archive. The published MD5 matches, SHA-256 is computed
+  locally, and every member is pinned by SHA-256. Six `__MACOSX` entries are
+  excluded. Members are read in memory only, never extracted.
+* **Content:** UWB/OptiTrack tables (Walk 2,796 rows, Trolley 3,201) and BLE/UWB
+  tables. README counts include the header row.
+* **Metadata gaps:** no timestamps, sampling rate, units, coordinate frames, anchor
+  geometry, or tag/marker reference points.
+* **Usage:** cross-validation-only, and only as a negative comparability example. The
+  [comparability report](external-data/reports/uwb-optitrack-comparability-report.md)
+  finds 0/10 sessions comparable:
+  * The integer row lag is non-zero in 7/10 (Walk 1,0,0,1,0; Trolley 3,3,3,3,3).
+  * The lag-aligned similarity frame fails in 10/10 (Walk translation 0.27–0.30;
+    Trolley scale 0.968–0.975, rotation up to 3.3°).
+  * There is a motion-dependent residual in 9/10. In Trolley, the cross-track bias of
+    +0.027 to +0.045 shows a mounting offset. In Walk, the along-track bias of −0.028
+    to −0.037 is a fractional lag or a mounting offset; the two can't be separated.
+  * The ranges contain sentinels and physically impossible short values, and the
+    Trolley anchor geometry is inconsistent.
+
+  So no UWB error metric is reported, and OptiTrack is never treated as ground truth.
+* **Population:** the Walk scenario is non-identifiable human locomotion: a tag carried
+  by an unidentified person. Consent is undocumented and was judged not applicable,
+  because no personal data exist. The Trolley scenario has no human subject. Not
+  soccer, so no `test_id` applies.
 
 ### jass2026-sampling-article
 Zenodo [20352639](https://zenodo.org/records/20352639) contains only the article

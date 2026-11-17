@@ -1,0 +1,27 @@
+{
+  "audit_ref": "docs/data-audit.md#uwb-optitrack",
+  "data_category": "empirical",
+  "dataset_id": "uwb-optitrack",
+  "files": [
+    {
+      "path": "USMAN_Raza-Dataset_Indoor_Localization_with_Narrowband_Ultra-Wideband_and_Motion_Capture_Systems.zip",
+      "sha256": "0e26251bff1ddd1f868205c481c63137c4729d480444e60769c3240ba3fc4f38",
+      "size_bytes": 570029,
+      "url": "https://zenodo.org/api/records/3452007/files/USMAN_Raza-Dataset_Indoor_Localization_with_Narrowband_Ultra-Wideband_and_Motion_Capture_Systems.zip/content"
+    }
+  ],
+  "handling_notes": "ZIP archive: read pinned members in memory only (dbs external); never extract. 6 __MACOSX AppleDouble entries are excluded. No timestamps (rows paired by index within SessionID 1-5); units, coordinate frames, anchor geometry and tag/marker reference points are undeclared; README sample counts include the header row. UWB vs OptiTrack comparability is established in 0/10 sessions (RES-721 report): integer row lag non-zero in 7/10 (Walk 1,0,0,1,0; Trolley 3,3,3,3,3), lag-aligned similarity frame fails in 10/10 (Walk translation 0.27-0.30; Trolley scale 0.968-0.975, rotation up to 3.3 deg), motion-dependent residual in 9/10 (Trolley cross-track +0.027..+0.045 = mounting offset; Walk along-track -0.028..-0.037 = fractional lag or mounting offset, not separable). Walk: 4 negative-range sentinels and impossibly short ranges at anchors 1 and 3; Trolley anchor geometry inconsistent (h^2 < 0). No UWB error metric may be reported; OptiTrack is not ground truth.",
+  "license": "CC-BY-4.0",
+  "privacy_notes": "Testbed radio-localisation data from Toshiba Research Europe: tag positions, ranges and radio features (CIR, PSA, AoA, RSSI). The 'walking' scenario is non-identifiable human locomotion (a tag carried by an unidentified person; consent undocumented, judged not applicable because no personal data exist); 'trolley' has a tag on a trolley. No names, IDs, demographics, biometrics, dates or images.",
+  "redistribution_allowed": false,
+  "schema_version": 1,
+  "source": {
+    "citation": "Raza U, Khan A, Kou R, Farnham T, Premalal T, Stanoev A, Thompson W (2019). Dataset: Indoor Localization with Narrow-band, Ultra-Wideband, and Motion Capture Systems. Zenodo. doi:10.5281/zenodo.3452007",
+    "doi": "10.5281/zenodo.3452007",
+    "kind": "url",
+    "location": "https://zenodo.org/records/3452007"
+  },
+  "title": "Indoor localization with narrow-band, ultra-wideband and motion capture systems (UWB/OptiTrack and BLE/UWB tables)",
+  "usage": "cross-validation-only",
+  "version": "zenodo-3452007"
+}

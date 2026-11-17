@@ -29,7 +29,9 @@ jobs:
           manifests=(data/manifests/*.json)
           if [ ${#manifests[@]} -gt 0 ]; then uv run dbs data validate "${manifests[@]}"; fi
       - name: External source locks and rights records
-        run: uv run dbs external validate
+        run: |
+          uv run dbs external validate
+          uv run dbs external planar-schema --check
       - name: Evidence registry
         run: |
           uv run dbs registry validate
