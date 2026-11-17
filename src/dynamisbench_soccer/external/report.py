@@ -47,6 +47,9 @@ def render(r: dict[str, Any]) -> str:
             f"Git blob `{src['git_blob_sha1']}`"
         )
         a("")
+    if "records" in r and not r["records"]["committed_default_root"]:
+        a("> **WARNING: UNREVIEWED RECORDS.** " + r["records"]["note"] + ".")
+        a("")
     if "rights" in r:
         rt = r["rights"]
         a("## Rights")

@@ -77,3 +77,22 @@ source column `raw_velocity` becomes channel `velocity_vendor_unsmoothed`.
 * **Model-fit sensitivity:** across four documented preprocessing variants,
   MSS 8.13–8.22 m/s and TAU 1.03–1.07 s. This is a diagnostic of vendor-processed
   velocity, not reference truth.
+
+## Known limitations (independent review, 2026-11-17)
+
+These are deliberately **not** fixed here, because fixing them means changing the
+global schema-v2 `BundleMeta` or the lock format, which needs separate review:
+
+* **Temporal qualification and the provisional `sprint_fv` mapping live in bundle
+  provenance text and conversion determinations only.** Schema v2 has no structured
+  field for either. Bundle QC (`dbs qc run`) has no `SRC-05` equivalent, so a
+  converted bundle's QC verdict can read `accept` while source QC flags the time
+  base. Consumers must read `source_qc` and the provenance.
+* **Evidence outside the pinned repository commit** (for example a rights-holder
+  letter) cannot be expressed: lock URLs must be commit-pinned raw URLs of the same
+  repository.
+* **`--root` overrides** load unreviewed local records. The CLI warns, and the report
+  records `records.committed_default_root=false` with an `UNREVIEWED RECORDS` banner.
+  Only `data/external/` is reviewed in Git.
+* The report embeds Python and numpy versions, so it is byte-reproducible only within
+  the same locked environment.

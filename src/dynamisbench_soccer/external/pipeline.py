@@ -38,6 +38,7 @@ from dynamisbench_soccer.qc import spec
 from dynamisbench_soccer.signals import io
 
 PIPELINE_VERSION = "1.0.0"
+DEFAULT_ROOT = Path("data/external")
 StageStatus = Literal["passed", "blocked", "failed"]
 
 
@@ -153,6 +154,11 @@ def _stages(
         "git_blob_sha1": data_entry.git_blob_sha1,
     }
     report["source"] = pin
+    report["records"] = {
+        "committed_default_root": external_root.resolve() == DEFAULT_ROOT.resolve(),
+        "note": "only records committed under data/external/ are reviewed in Git; any other "
+        "root is an unreviewed local override",
+    }
     if lock.pinned_ref != expected_ref or data_entry.sha256 != expected_sha256:
         run.add("pinned_source", "failed", "lock does not pin the adapter's source version", **pin)
     run.add("pinned_source", "passed", "commit-pinned lock matches adapter version", **pin)
@@ -278,7 +284,7 @@ def _stages(
         table,
         lock,
         files,
-        canonical_admitted=check.canonical_admission is RightsStatus.VERIFIED,
+        admission=check,
         time_base=time_base,
     )
     report["conversion"] = {

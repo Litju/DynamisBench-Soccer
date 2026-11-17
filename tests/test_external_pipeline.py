@@ -56,6 +56,11 @@ def _files(root: Path, lock: SourceLock) -> dict[str, Path]:
     return {f.path: root / f.path for f in lock.files}
 
 
+def _admission(lock: SourceLock, up: Path, admitted: bool = True) -> rights.RightsCheck:
+    payload = verified_payload() if admitted else rights_payload()
+    return rights.verify(RightsRecord.model_validate(payload), lock, _files(up, lock))
+
+
 def _convert(
     tmp_path: Path,
     cols: dict[str, np.ndarray] | None = None,
@@ -67,7 +72,11 @@ def _convert(
     up = tmp_path / "evidence-up"
     lock = dated_upstream(up) if dated else upstream(up)
     return table, shorts_laser.convert(
-        table, lock, _files(up, lock), canonical_admitted=admitted, time_base=timebase.assess(table)
+        table,
+        lock,
+        _files(up, lock),
+        admission=_admission(lock, up, admitted),
+        time_base=timebase.assess(table),
     )
 
 
@@ -131,7 +140,11 @@ def test_excerpt_absent_from_evidence_bytes_blocks_conversion(tmp_path: Path) ->
     )  # claim names a date the file never states
     table = _table(tmp_path)
     outcome = shorts_laser.convert(
-        table, lock, _files(up, lock), canonical_admitted=True, time_base=timebase.assess(table)
+        table,
+        lock,
+        _files(up, lock),
+        admission=_admission(lock, up),
+        time_base=timebase.assess(table),
     )
     assert not outcome.converted
     assert "excerpt not found verbatim" in outcome.blockers[0]
@@ -145,7 +158,11 @@ def test_evidence_bytes_changed_after_pinning_block_conversion(tmp_path: Path) -
     )
     table = _table(tmp_path)
     outcome = shorts_laser.convert(
-        table, lock, _files(up, lock), canonical_admitted=True, time_base=timebase.assess(table)
+        table,
+        lock,
+        _files(up, lock),
+        admission=_admission(lock, up),
+        time_base=timebase.assess(table),
     )
     assert not outcome.converted and "differ from the pinned evidence" in outcome.blockers[0]
 
@@ -156,7 +173,7 @@ def test_evidence_not_acquired_blocks_conversion(tmp_path: Path) -> None:
     files = {k: v for k, v in _files(up, lock).items() if k != EVIDENCE_PATH}
     table = _table(tmp_path)
     outcome = shorts_laser.convert(
-        table, lock, files, canonical_admitted=True, time_base=timebase.assess(table)
+        table, lock, files, admission=_admission(lock, up), time_base=timebase.assess(table)
     )
     assert not outcome.converted and "was not acquired" in outcome.blockers[0]
 
@@ -267,7 +284,7 @@ def test_convert_requires_a_time_base_assessment(tmp_path: Path) -> None:
     lock = dated_upstream(up)
     with pytest.raises(TypeError):
         shorts_laser.convert(  # type: ignore[call-arg]
-            _table(tmp_path), lock, _files(up, lock), canonical_admitted=True
+            _table(tmp_path), lock, _files(up, lock), admission=_admission(lock, up)
         )
 
 

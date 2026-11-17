@@ -34,6 +34,11 @@ from dynamisbench_soccer.external.models import (
     SourceLock,
     date_mentioned,
 )
+from dynamisbench_soccer.external.rights import (
+    RightsBlocked,
+    RightsCheck,
+    require_canonical_admission,
+)
 from dynamisbench_soccer.signals.schema import (
     CANONICAL_UNIT,
     Acquisition,
@@ -341,18 +346,20 @@ def convert(
     lock: SourceLock,
     evidence_files: Mapping[str, Path],
     *,
-    canonical_admitted: bool,
+    admission: RightsCheck,
     time_base: TimeBaseStatement,
 ) -> ConversionOutcome:
     """Build a strict schema-v2 bundle, or report every blocker; never fill gaps.
 
-    Two independent authorities are required: verified canonical admission (rights) and a
-    session date bound to pinned evidence in the source lock. Neither can be supplied by a
-    caller as a plain value.
+    Two independent authorities are required: a :class:`RightsCheck` issued by
+    ``rights.verify`` that permits canonical admission, and a session date bound to pinned
+    evidence in the source lock. Neither is accepted as a plain value.
     """
     pinned_ref = lock.pinned_ref
     blockers: list[str] = []
-    if not canonical_admitted:
+    try:
+        require_canonical_admission(admission)
+    except RightsBlocked:
         blockers.append(
             "canonical admission: rights.json does not verify canonical admission; an empirical "
             "schema-v2 bundle is a canonical artifact and is not built for quarantined data"

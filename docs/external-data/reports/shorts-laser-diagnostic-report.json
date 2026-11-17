@@ -252,6 +252,10 @@
     "velocity_max": 8.099571,
     "velocity_min": 0.08052382
   },
+  "records": {
+    "committed_default_root": true,
+    "note": "only records committed under data/external/ are reviewed in Git; any other root is an unreviewed local override"
+  },
   "rights": {
     "blockers": [
       "measurement-data rights: no dataset-specific grant, data-availability statement or originating study identifies who owns the original Noptel CMP3 / Musclelab recording; the repository-wide MIT file is a software license by the package author and does not by itself establish rights to the underlying measurements (RES-719 Gate 0)",

@@ -16,6 +16,7 @@ manifest is created only when the rights record permits canonical admission.
 
 from __future__ import annotations
 
+import contextlib
 import re
 from datetime import date
 from enum import StrEnum
@@ -61,17 +62,50 @@ _MONTHS = (
 )  # fmt: skip
 
 
+_MONTH_RE = "|".join(_MONTHS)
+#: Every date-like token we recognise. Numeric day/month forms are found so they can be
+#: *rejected* as ambiguous, never accepted.
+_ISO_RE = re.compile(r"(?<![\w-])(\d{4})-(\d{2})-(\d{2})(?![\w-])")
+_DMY_RE = re.compile(rf"(?<!\w)(\d{{1,2}}) ({_MONTH_RE}) (\d{{4}})(?!\w)")
+_MDY_RE = re.compile(rf"(?<!\w)({_MONTH_RE}) (\d{{1,2}}), (\d{{4}})(?!\w)")
+_NUMERIC_RE = re.compile(r"(?<!\w)\d{1,4}[/.]\d{1,2}[/.]\d{1,4}(?!\w)")
+#: The excerpt must say that this is when the data were taken, not merely contain a date.
+ACQUISITION_WORDS = ("recorded", "collected", "acquired", "measured", "tested")
+
+
+def dates_in(text: str) -> list[date]:
+    """All unambiguous dates stated in ``text`` (word-bounded; invalid dates dropped)."""
+    found: list[date] = []
+    for m in _ISO_RE.finditer(text):
+        with contextlib.suppress(ValueError):
+            found.append(date(int(m[1]), int(m[2]), int(m[3])))
+    for m in _DMY_RE.finditer(text):
+        with contextlib.suppress(ValueError):
+            found.append(date(int(m[3]), _MONTHS.index(m[2]) + 1, int(m[1])))
+    for m in _MDY_RE.finditer(text):
+        with contextlib.suppress(ValueError):
+            found.append(date(int(m[3]), _MONTHS.index(m[1]) + 1, int(m[2])))
+    return found
+
+
+def date_problem(text: str, iso: str) -> str | None:
+    """Why ``text`` does not state ``iso`` unambiguously as an acquisition date, or None."""
+    claimed = date.fromisoformat(iso)
+    if _NUMERIC_RE.search(text):
+        return "numeric day/month date forms are ambiguous"
+    found = dates_in(text)
+    if len(found) != 1:
+        return f"excerpt must state exactly one date, found {len(found)}"
+    if found[0] != claimed:
+        return f"excerpt states {found[0].isoformat()}, not the claimed {iso}"
+    if not any(w in text.lower() for w in ACQUISITION_WORDS):
+        return "excerpt must say the data were recorded/collected/acquired/measured/tested"
+    return None
+
+
 def date_mentioned(text: str, iso: str) -> bool:
-    """True if ``text`` states ``iso`` unambiguously (ISO, '6 January 2024', 'January 6, 2024')."""
-    d = date.fromisoformat(iso)
-    month = _MONTHS[d.month - 1]
-    forms = {
-        iso,
-        f"{d.day} {month} {d.year}",
-        f"{d.day:02d} {month} {d.year}",
-        f"{month} {d.day}, {d.year}",
-    }
-    return any(form in text for form in forms)
+    """True if ``text`` states ``iso`` as its single, unambiguous acquisition date."""
+    return date_problem(text, iso) is None
 
 
 class AcquisitionDateClaim(_Strict):
@@ -84,7 +118,7 @@ class AcquisitionDateClaim(_Strict):
 
     date: str
     evidence_path: str
-    excerpt: str = Field(min_length=10, description="verbatim text from the evidence file")
+    excerpt: str = Field(min_length=20, description="verbatim text from the evidence file")
     reviewed_by: str = Field(min_length=1)
     reviewed_on: str
 
@@ -96,8 +130,13 @@ class AcquisitionDateClaim(_Strict):
 
     @model_validator(mode="after")
     def _states_date(self) -> AcquisitionDateClaim:
-        if not date_mentioned(self.excerpt, self.date):
-            raise ValueError("evidence excerpt must state the claimed date unambiguously")
+        problem = date_problem(self.excerpt, self.date)
+        if problem is not None:
+            raise ValueError(
+                f"evidence excerpt must state the claimed date unambiguously: {problem}"
+            )
+        if date.fromisoformat(self.date) > date.fromisoformat(self.reviewed_on):
+            raise ValueError("acquisition date cannot be after the evidence review date")
         return self
 
 

@@ -21,7 +21,9 @@ from dynamisbench_soccer.external.shorts_laser import SourceTable
 TOLERANCE_MS = 5.0
 HALF_WINDOW_S = 0.025
 MAX_LAG_SAMPLES = 2000
-Qualification = Literal["qualified", "unqualified"]
+#: Fewer overlapping samples than this cannot establish a shared time base.
+MIN_COMPARED = 200
+Qualification = Literal["qualified", "unqualified", "undetermined"]
 
 
 @dataclass(frozen=True)
@@ -33,12 +35,24 @@ class TimeBaseAgreement:
     tolerance_ms: float
     first_time_distance_above_0_5_m_s: float
     first_time_velocity_above_1_m_s: float
+    n_compared: int = 0
 
     @property
     def qualification(self) -> Qualification:
-        return "qualified" if abs(self.best_lag_ms) <= self.tolerance_ms else "unqualified"
+        """Only a positive finding within tolerance qualifies; too little data never does."""
+        if self.n_compared < MIN_COMPARED:
+            return "undetermined"
+        # compare at microsecond precision: an integer-sample lag must not fail on float noise
+        within = round(abs(self.best_lag_ms), 3) <= self.tolerance_ms
+        return "qualified" if within else "unqualified"
 
     def statement(self) -> str:
+        if self.qualification == "undetermined":
+            return (
+                "TEMPORALLY UNQUALIFIED joint distance/velocity reconstruction: time base "
+                f"undetermined ({self.n_compared} comparable samples < {MIN_COMPARED}); "
+                "source timestamps unmodified and no shift applied."
+            )
         if self.qualification == "qualified":
             return (
                 f"joint distance/velocity reconstruction qualified: best lag "
@@ -66,6 +80,10 @@ def assess(table: SourceTable) -> TimeBaseAgreement:
         a, b = (v_in[lag:], dv[: len(dv) - lag]) if lag >= 0 else (v_in[:lag], dv[-lag:])
         return float(np.sqrt(np.mean((a - b) ** 2)))
 
+    first_d = float(t[np.argmax(d > 0.5)])
+    first_v = float(t[np.argmax(v > 1.0)])
+    if len(dv) < MIN_COMPARED:
+        return TimeBaseAgreement(0.0, 0.0, 0.0, 0.0, TOLERANCE_MS, first_d, first_v, len(dv))
     max_lag = min(MAX_LAG_SAMPLES, len(v_in) // 2)
     best = min(range(-max_lag, max_lag + 1), key=shift_rms)
     return TimeBaseAgreement(
@@ -74,6 +92,7 @@ def assess(table: SourceTable) -> TimeBaseAgreement:
         rms_at_best_lag_m_s=shift_rms(best),
         search_range_ms=max_lag * dt * 1000,
         tolerance_ms=TOLERANCE_MS,
-        first_time_distance_above_0_5_m_s=float(t[np.argmax(d > 0.5)]),
-        first_time_velocity_above_1_m_s=float(t[np.argmax(v > 1.0)]),
+        first_time_distance_above_0_5_m_s=first_d,
+        first_time_velocity_above_1_m_s=first_v,
+        n_compared=len(dv) - abs(best),
     )

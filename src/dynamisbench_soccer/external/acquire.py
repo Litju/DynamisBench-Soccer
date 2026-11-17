@@ -40,6 +40,7 @@ from dynamisbench_soccer.external.models import (
     SourceLock,
 )
 from dynamisbench_soccer.external.rights import (
+    RightsBlocked,
     RightsCheck,
     require_canonical_admission,
     require_local_inspection,
@@ -117,6 +118,7 @@ def acquire(
     opener: Opener | None = None,
     timeout: float = 60.0,
     roles: Collection[FileRole] = EVIDENCE_ROLES,
+    check: RightsCheck | None = None,
 ) -> dict[str, Path]:
     """Install the pinned files of ``roles`` into quarantine, verified.
 
@@ -129,6 +131,10 @@ def acquire(
     With ``source_dir`` the bytes are read from a local copy laid out like the upstream
     repository; otherwise they are downloaded from the commit-pinned URLs.
     """
+    if set(roles) & DATA_ROLES:
+        if check is None:
+            raise RightsBlocked("local quarantine inspection", ["no rights check supplied"])
+        require_local_inspection(check)
     target = (root or quarantine_root()) / lock.source_id / lock.pinned_ref
     out: dict[str, Path] = {}
     for entry in (f for f in lock.files if f.role in roles):
@@ -159,15 +165,25 @@ def acquire_data(
     timeout: float = 60.0,
 ) -> dict[str, Path]:
     """Acquire measurement-data bytes, refused unless the rights check permits inspection."""
-    require_local_inspection(check)
     return acquire(
-        lock, source_dir=source_dir, root=root, opener=opener, timeout=timeout, roles=DATA_ROLES
+        lock,
+        source_dir=source_dir,
+        root=root,
+        opener=opener,
+        timeout=timeout,
+        roles=DATA_ROLES,
+        check=check,
     )
 
 
 def verify_quarantine(
-    lock: SourceLock, root: Path | None = None, roles: Collection[FileRole] = frozenset(FileRole)
+    lock: SourceLock, root: Path | None = None, check: RightsCheck | None = None
 ) -> list[str]:
+    """Re-hash quarantined evidence; data files too only with a permitting rights check."""
+    roles: frozenset[FileRole] = EVIDENCE_ROLES
+    if check is not None:
+        require_local_inspection(check)
+        roles = frozenset(FileRole)
     target = (root or quarantine_root()) / lock.source_id / lock.pinned_ref
     problems = []
     for entry in (f for f in lock.files if f.role in roles):

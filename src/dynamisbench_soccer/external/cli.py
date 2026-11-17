@@ -69,6 +69,12 @@ def _cmd_run(args: argparse.Namespace) -> int:
     if args.source_id != shorts_laser.SOURCE_ID:
         print(f"FAIL no adapter for {args.source_id!r}", file=sys.stderr)
         return 1
+    if Path(args.root).resolve() != EXTERNAL_ROOT.resolve():
+        print(
+            f"WARNING records root {args.root} is not the committed, reviewed "
+            f"{EXTERNAL_ROOT}; results are an unreviewed local override",
+            file=sys.stderr,
+        )
     out = Path(args.out) if args.out else paths.runs_root() / "external" / args.source_id
     report = pipeline.run_shorts_laser(
         out,

@@ -27,14 +27,30 @@ class RightsBlocked(PermissionError):
         super().__init__(f"{action} blocked: " + "; ".join(blockers))
 
 
+#: Marks checks produced by :func:`verify`; a hand-built RightsCheck carries no authority.
+_ISSUED: object = object()
+
+
 @dataclass(frozen=True)
 class RightsCheck:
+    """Result of :func:`verify`. Only checks issued by ``verify`` authorise anything."""
+
     license_evidence_verified: bool
     problems: list[str] = field(default_factory=list)
     local_inspection_permitted: bool = False
     canonical_admission: RightsStatus = RightsStatus.PENDING
     redistribution_allowed: bool = False
     blockers: list[str] = field(default_factory=list)
+    issued_by: object = field(default=None, repr=False, compare=False)
+
+
+def issued(check: RightsCheck) -> bool:
+    return check.issued_by is _ISSUED
+
+
+def _authentic(action: str, check: RightsCheck) -> None:
+    if not issued(check):
+        raise RightsBlocked(action, ["rights check was not issued by rights.verify"])
 
 
 def verify(record: RightsRecord, lock: SourceLock, files: dict[str, Path]) -> RightsCheck:
@@ -69,14 +85,17 @@ def verify(record: RightsRecord, lock: SourceLock, files: dict[str, Path]) -> Ri
         canonical_admission=record.canonical_admission if verified else RightsStatus.PENDING,
         redistribution_allowed=verified and record.redistribution_allowed,
         blockers=blockers,
+        issued_by=_ISSUED,
     )
 
 
 def require_local_inspection(check: RightsCheck) -> None:
+    _authentic("local quarantine inspection", check)
     if not check.local_inspection_permitted:
         raise RightsBlocked("local quarantine inspection", check.blockers or check.problems)
 
 
 def require_canonical_admission(check: RightsCheck) -> None:
+    _authentic("canonical admission", check)
     if check.canonical_admission is not RightsStatus.VERIFIED:
         raise RightsBlocked("canonical admission", check.blockers)
