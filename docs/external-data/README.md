@@ -94,5 +94,8 @@ global schema-v2 `BundleMeta` or the lock format, which needs separate review:
 * **`--root` overrides** load unreviewed local records. The CLI warns, and the report
   records `records.committed_default_root=false` with an `UNREVIEWED RECORDS` banner.
   Only `data/external/` is reviewed in Git.
+* Rights checks are sealed with a per-process key and bound to one source and commit.
+  This defends against API misuse (edited copies, reused seals, cross-source checks),
+  not against deliberate in-process tampering with module internals.
 * The report embeds Python and numpy versions, so it is byte-reproducible only within
   the same locked environment.

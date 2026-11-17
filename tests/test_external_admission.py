@@ -195,9 +195,9 @@ def _check(tmp_path: Path, **overrides: object) -> rights.RightsCheck:
 def test_rights_gate_permits_quarantine_but_blocks_canonical(tmp_path: Path) -> None:
     check = _check(tmp_path)
     assert check.license_evidence_verified
-    rights.require_local_inspection(check)
+    rights.require_local_inspection(check, upstream(tmp_path / "up"))
     with pytest.raises(rights.RightsBlocked, match="synthetic blocker"):
-        rights.require_canonical_admission(check)
+        rights.require_canonical_admission(check, upstream(tmp_path / "up"))
 
 
 @pytest.mark.parametrize(
@@ -216,7 +216,7 @@ def test_license_evidence_must_match_pinned_text(
     assert not check.license_evidence_verified
     assert any(problem in p for p in check.problems)
     with pytest.raises(rights.RightsBlocked):
-        rights.require_local_inspection(check)
+        rights.require_local_inspection(check, upstream(tmp_path / "up"))
 
 
 def test_manifest_refused_while_pending(tmp_path: Path) -> None:

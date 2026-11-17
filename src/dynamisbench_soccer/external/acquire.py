@@ -134,7 +134,7 @@ def acquire(
     if set(roles) & DATA_ROLES:
         if check is None:
             raise RightsBlocked("local quarantine inspection", ["no rights check supplied"])
-        require_local_inspection(check)
+        require_local_inspection(check, lock)
     target = (root or quarantine_root()) / lock.source_id / lock.pinned_ref
     out: dict[str, Path] = {}
     for entry in (f for f in lock.files if f.role in roles):
@@ -182,7 +182,7 @@ def verify_quarantine(
     """Re-hash quarantined evidence; data files too only with a permitting rights check."""
     roles: frozenset[FileRole] = EVIDENCE_ROLES
     if check is not None:
-        require_local_inspection(check)
+        require_local_inspection(check, lock)
         roles = frozenset(FileRole)
     target = (root or quarantine_root()) / lock.source_id / lock.pinned_ref
     problems = []
@@ -199,7 +199,7 @@ def to_manifest(
     lock: SourceLock, record: RightsRecord, check: RightsCheck, *, title: str, citation: str
 ) -> DatasetManifest:
     """Manifest-v1 for canonical admission. Refused unless the rights check permits it."""
-    require_canonical_admission(check)
+    require_canonical_admission(check, lock)
     return DatasetManifest(
         dataset_id=lock.source_id,
         version=f"git-{lock.pinned_ref}",

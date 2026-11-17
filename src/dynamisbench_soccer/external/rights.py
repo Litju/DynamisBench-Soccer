@@ -7,7 +7,11 @@ what the record claims, and (2) refuses every action the record does not permit.
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+import hashlib
+import hmac
+import json
+import secrets
+from dataclasses import asdict, dataclass, field, replace
 from pathlib import Path
 
 from dynamisbench_soccer.external.models import (
@@ -27,13 +31,15 @@ class RightsBlocked(PermissionError):
         super().__init__(f"{action} blocked: " + "; ".join(blockers))
 
 
-#: Marks checks produced by :func:`verify`; a hand-built RightsCheck carries no authority.
-_ISSUED: object = object()
+#: Per-process key for sealing checks. Only :func:`verify` holds it; a seal over every
+#: field means a hand-built, edited (``dataclasses.replace``) or re-targeted check carries
+#: no authority. (Deliberate in-process tampering with module privates is out of scope.)
+_KEY: bytes = secrets.token_bytes(32)
 
 
 @dataclass(frozen=True)
 class RightsCheck:
-    """Result of :func:`verify`. Only checks issued by ``verify`` authorise anything."""
+    """Result of :func:`verify`, bound to one source and commit. Only sealed checks count."""
 
     license_evidence_verified: bool
     problems: list[str] = field(default_factory=list)
@@ -41,16 +47,28 @@ class RightsCheck:
     canonical_admission: RightsStatus = RightsStatus.PENDING
     redistribution_allowed: bool = False
     blockers: list[str] = field(default_factory=list)
-    issued_by: object = field(default=None, repr=False, compare=False)
+    source_id: str = ""
+    pinned_ref: str = ""
+    seal: str = field(default="", repr=False, compare=False)
+
+    def _payload(self) -> bytes:
+        body = {k: v for k, v in asdict(self).items() if k != "seal"}
+        return json.dumps(body, sort_keys=True, default=str).encode()
+
+
+def _seal(check: RightsCheck) -> str:
+    return hmac.new(_KEY, check._payload(), hashlib.sha256).hexdigest()
 
 
 def issued(check: RightsCheck) -> bool:
-    return check.issued_by is _ISSUED
+    return bool(check.seal) and hmac.compare_digest(check.seal, _seal(check))
 
 
-def _authentic(action: str, check: RightsCheck) -> None:
+def _authentic(action: str, check: RightsCheck, lock: SourceLock) -> None:
     if not issued(check):
         raise RightsBlocked(action, ["rights check was not issued by rights.verify"])
+    if (check.source_id, check.pinned_ref) != (lock.source_id, lock.pinned_ref):
+        raise RightsBlocked(action, ["rights check was issued for a different source or commit"])
 
 
 def verify(record: RightsRecord, lock: SourceLock, files: dict[str, Path]) -> RightsCheck:
@@ -68,7 +86,12 @@ def verify(record: RightsRecord, lock: SourceLock, files: dict[str, Path]) -> Ri
         elif rel not in files:
             problems.append(f"{rel}: license evidence not acquired")
         else:
-            texts.append(files[rel].read_text(encoding="utf-8"))
+            data = files[rel].read_bytes()
+            entry = lock.file(rel)
+            if len(data) != entry.size_bytes or hashlib.sha256(data).hexdigest() != entry.sha256:
+                problems.append(f"{rel}: license evidence bytes differ from the source lock")
+            else:
+                texts.append(data.decode("utf-8"))
     joined = "\n".join(texts)
     if texts and record.license_grant_phrase not in joined:
         problems.append("license grant phrase not found in the pinned license text")
@@ -78,24 +101,26 @@ def verify(record: RightsRecord, lock: SourceLock, files: dict[str, Path]) -> Ri
     blockers = list(record.blockers)
     if not verified:
         blockers = [*problems, *blockers]
-    return RightsCheck(
+    check = RightsCheck(
         license_evidence_verified=verified,
         problems=problems,
         local_inspection_permitted=verified and record.local_inspection_permitted,
         canonical_admission=record.canonical_admission if verified else RightsStatus.PENDING,
         redistribution_allowed=verified and record.redistribution_allowed,
         blockers=blockers,
-        issued_by=_ISSUED,
+        source_id=lock.source_id,
+        pinned_ref=lock.pinned_ref,
     )
+    return replace(check, seal=_seal(check))
 
 
-def require_local_inspection(check: RightsCheck) -> None:
-    _authentic("local quarantine inspection", check)
+def require_local_inspection(check: RightsCheck, lock: SourceLock) -> None:
+    _authentic("local quarantine inspection", check, lock)
     if not check.local_inspection_permitted:
         raise RightsBlocked("local quarantine inspection", check.blockers or check.problems)
 
 
-def require_canonical_admission(check: RightsCheck) -> None:
-    _authentic("canonical admission", check)
+def require_canonical_admission(check: RightsCheck, lock: SourceLock) -> None:
+    _authentic("canonical admission", check, lock)
     if check.canonical_admission is not RightsStatus.VERIFIED:
         raise RightsBlocked("canonical admission", check.blockers)

@@ -88,9 +88,26 @@ def dates_in(text: str) -> list[date]:
     return found
 
 
+#: After the recognised dates are removed, anything still date-like fails closed: digit
+#: runs of 3+, ordinals, any month word or abbreviation (any case) and clock times.
+_RESIDUE_RE = re.compile(
+    r"\d{3,}|\b\d{1,2}(?:st|nd|rd|th)\b|\d{1,2}:\d{2}"
+    r"|\b(?:jan|feb|mar|apr|may|jun|jul|aug|sep|sept|oct|nov|dec)[a-z]*\b",
+    re.IGNORECASE,
+)
+_VERB_RE = re.compile(r"\b(?:" + "|".join(ACQUISITION_WORDS) + r")\b", re.IGNORECASE)
+_NEGATION_RE = re.compile(r"\b(?:not|never|no|without)\b", re.IGNORECASE)
+
+
 def date_problem(text: str, iso: str) -> str | None:
-    """Why ``text`` does not state ``iso`` unambiguously as an acquisition date, or None."""
+    """Why ``text`` does not state ``iso`` unambiguously as an acquisition date, or None.
+
+    Fails closed: the excerpt must be ASCII, contain exactly one recognised date equal to
+    the claim, and contain no other date-like text the recogniser cannot parse.
+    """
     claimed = date.fromisoformat(iso)
+    if not text.isascii():
+        return "excerpt must be ASCII (no look-alike hyphens or digits)"
     if _NUMERIC_RE.search(text):
         return "numeric day/month date forms are ambiguous"
     found = dates_in(text)
@@ -98,8 +115,15 @@ def date_problem(text: str, iso: str) -> str | None:
         return f"excerpt must state exactly one date, found {len(found)}"
     if found[0] != claimed:
         return f"excerpt states {found[0].isoformat()}, not the claimed {iso}"
-    if not any(w in text.lower() for w in ACQUISITION_WORDS):
+    residue = text
+    for pattern in (_ISO_RE, _DMY_RE, _MDY_RE):
+        residue = pattern.sub(" ", residue)
+    if _RESIDUE_RE.search(residue):
+        return "excerpt contains other date-like text that cannot be parsed unambiguously"
+    if not _VERB_RE.search(text):
         return "excerpt must say the data were recorded/collected/acquired/measured/tested"
+    if _NEGATION_RE.search(text):
+        return "excerpt must not be negated"
     return None
 
 

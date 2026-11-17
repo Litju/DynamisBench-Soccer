@@ -55,6 +55,18 @@ def _lock_with(tmp_path: Path, evidence: str, **claim: object) -> Any:
         ("Package released to CRAN on 2024-01-06", "2024-01-06", "recorded/collected"),
         ("Sprint recorded on 06/01/2024 at the track", "2024-01-06", "ambiguous"),
         ("Sprint recorded on 2024.01.06 at the track", "2024-01-06", "ambiguous"),
+        # re-review: unrecognised spellings must fail closed, not hide a second date
+        ("Data recorded 6th January 2024; released 2024-03-01", "2024-03-01", "other date"),
+        ("Data recorded 06-01-2024; released 2024-03-01", "2024-03-01", "other date"),
+        ("Data recorded 6 Jan 2024; released 2024-03-01", "2024-03-01", "other date"),
+        ("Data recorded 6 january 2024; released 2024-03-01", "2024-03-01", "other date"),
+        ("Data recorded January 6 2024; released 2024-03-01", "2024-03-01", "other date"),
+        ("Data recorded 20240106; released 2024-03-01", "2024-03-01", "other date"),
+        ("Data recorded 2024-01-06T10:00 at the track", "2024-01-06", "exactly one date"),
+        ("Data recorded 2024\u201101\u201106 at the track", "2024-01-06", "ASCII"),
+        ("License attested by the author on 2024-01-06", "2024-01-06", "recorded/collected"),
+        ("Data were unrecorded; package built 2024-01-06", "2024-01-06", "recorded/collected"),
+        ("Data were not recorded on 2024-01-06 here", "2024-01-06", "negated"),
     ],
 )
 def test_date_claim_rejects_substring_multi_and_ambiguous_dates(
@@ -120,11 +132,115 @@ def test_forged_or_copied_check_cannot_acquire_data(tmp_path: Path) -> None:
         acquire.acquire_data(lock, _forged(), source_dir=tmp_path / "up", root=tmp_path / "q")
     files = acquire.acquire(lock, source_dir=tmp_path / "up", root=tmp_path / "q")
     real = rights.verify(RightsRecord.model_validate(rights_payload()), lock, files)
-    copied = dataclasses.replace(real, issued_by=None)
+    stripped = dataclasses.replace(real, seal="")
     with pytest.raises(rights.RightsBlocked, match="not issued"):
-        acquire.acquire_data(lock, copied, source_dir=tmp_path / "up", root=tmp_path / "q")
+        acquire.acquire_data(lock, stripped, source_dir=tmp_path / "up", root=tmp_path / "q")
     with pytest.raises(rights.RightsBlocked, match="not issued"):
-        rights.require_canonical_admission(_forged())
+        rights.require_canonical_admission(_forged(), lock)
+
+
+# --- re-review findings: edited, re-sealed and cross-source checks -----------------------
+
+
+def _issued(tmp_path: Path, name: str, **overrides: object) -> tuple[Any, Any, Path]:
+    up = tmp_path / name
+    lock = upstream(up, source_id=name)
+    files = acquire.acquire(lock, source_dir=up, root=tmp_path / "q")
+    record = RightsRecord.model_validate(rights_payload(source_id=name, **overrides))
+    return lock, rights.verify(record, lock, files), up
+
+
+def test_edited_copy_of_a_real_check_keeps_no_authority(tmp_path: Path) -> None:
+    lock, denied, up = _issued(tmp_path, "src-a", local_inspection_permitted=False)
+    promoted = dataclasses.replace(denied, local_inspection_permitted=True)  # seal kept
+    assert promoted.seal == denied.seal
+    with pytest.raises(rights.RightsBlocked, match="not issued"):
+        acquire.acquire_data(lock, promoted, source_dir=up, root=tmp_path / "q")
+    _, pending, _ = _issued(tmp_path, "src-b")
+    admitted = dataclasses.replace(pending, canonical_admission=RightsStatus.VERIFIED)
+    with pytest.raises(rights.RightsBlocked, match="not issued"):
+        rights.require_canonical_admission(admitted, lock)
+
+
+def test_reused_seal_on_a_new_check_keeps_no_authority(tmp_path: Path) -> None:
+    lock, real, up = _issued(tmp_path, "src-a")
+    minted = rights.RightsCheck(
+        True,
+        local_inspection_permitted=True,
+        canonical_admission=RightsStatus.VERIFIED,
+        source_id=real.source_id,
+        pinned_ref=real.pinned_ref,
+        seal=real.seal,
+    )
+    with pytest.raises(rights.RightsBlocked, match="not issued"):
+        acquire.acquire_data(lock, minted, source_dir=up, root=tmp_path / "q")
+
+
+def test_check_for_one_source_cannot_authorise_another(tmp_path: Path) -> None:
+    lock_a, _, up_a = _issued(tmp_path, "src-a", local_inspection_permitted=False)
+    _, ok_b, _ = _issued(tmp_path, "src-b")
+    assert rights.issued(ok_b) and ok_b.local_inspection_permitted
+    with pytest.raises(rights.RightsBlocked, match="different source"):
+        acquire.acquire_data(lock_a, ok_b, source_dir=up_a, root=tmp_path / "q")
+    with pytest.raises(rights.RightsBlocked, match="different source"):
+        acquire.verify_quarantine(lock_a, tmp_path / "q", ok_b)
+    assert not (tmp_path / "q" / "src-a" / REF / shorts_laser.DATA_PATH).exists()
+
+
+def test_cross_source_verified_admission_cannot_convert(tmp_path: Path) -> None:
+    up = tmp_path / "dated"
+    dated = upstream(
+        up,
+        source_id="src-a",
+        evidence="Sprint recorded on 2024-01-06 here.\n",
+        claim=date_claim(excerpt="Sprint recorded on 2024-01-06"),
+    )
+    _, other_ok, _ = _issued(tmp_path, "src-b", **_verified_overrides())
+    assert other_ok.canonical_admission is RightsStatus.VERIFIED
+    import hashlib
+
+    data = (up / shorts_laser.DATA_PATH).read_bytes()
+    table = shorts_laser.parse(up / shorts_laser.DATA_PATH, hashlib.sha256(data).hexdigest())
+    outcome = shorts_laser.convert(
+        table,
+        dated,
+        {f.path: up / f.path for f in dated.files},
+        admission=other_ok,
+        time_base=tbm.assess(table),
+    )
+    assert not outcome.converted and outcome.blockers[0].startswith("canonical admission")
+
+
+def _verified_overrides() -> dict[str, object]:
+    return {
+        "measurement_data_rights": "verified",
+        "participant_consent": "documented",
+        "canonical_admission": "verified",
+        "blockers": [],
+    }
+
+
+def test_license_evidence_is_rehashed_not_trusted(tmp_path: Path) -> None:
+    up = tmp_path / "up"
+    lock = upstream(up)
+    forged = tmp_path / "forged-license.md"
+    forged.write_text("Permission is hereby granted, free of charge\nSynthetic Holder\n")
+    check = rights.verify(
+        RightsRecord.model_validate(rights_payload()), lock, {"LICENSE.md": forged}
+    )
+    assert not check.license_evidence_verified
+    assert any("differ from the source lock" in p for p in check.problems)
+
+
+def test_future_review_date_rejected_at_binding(tmp_path: Path) -> None:
+    up = tmp_path / "up"
+    lock = upstream(
+        up,
+        evidence="Sprint recorded on 2024-01-06 here.\n",
+        claim=date_claim(excerpt="Sprint recorded on 2024-01-06", reviewed_on="2099-01-01"),
+    )
+    with pytest.raises(shorts_laser.SessionEvidenceError, match="future"):
+        shorts_laser.bind_session_date(lock, {f.path: up / f.path for f in lock.files})
 
 
 def test_low_level_acquire_refuses_data_role_without_check(tmp_path: Path) -> None:

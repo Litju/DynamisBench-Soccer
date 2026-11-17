@@ -21,6 +21,7 @@ import re
 import stat
 from collections.abc import Mapping
 from dataclasses import dataclass
+from datetime import date as _date
 from pathlib import Path
 from typing import Protocol as _Protocol
 
@@ -276,6 +277,8 @@ def bind_session_date(lock: SourceLock, files: Mapping[str, Path]) -> BoundSessi
         text = data.decode("utf-8")
     except UnicodeDecodeError as exc:
         raise SessionEvidenceError(f"{entry.path}: evidence is not UTF-8 text") from exc
+    if _date.fromisoformat(claim.reviewed_on) > _date.today():
+        raise SessionEvidenceError("evidence review date is in the future")
     if claim.excerpt not in text:
         raise SessionEvidenceError(f"{entry.path}: excerpt not found verbatim in evidence")
     if not date_mentioned(claim.excerpt, claim.date):
@@ -358,7 +361,7 @@ def convert(
     pinned_ref = lock.pinned_ref
     blockers: list[str] = []
     try:
-        require_canonical_admission(admission)
+        require_canonical_admission(admission, lock)
     except RightsBlocked:
         blockers.append(
             "canonical admission: rights.json does not verify canonical admission; an empirical "
