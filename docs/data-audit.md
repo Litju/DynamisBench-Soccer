@@ -35,7 +35,7 @@ scoring.
 | [white2022-cmj-vgrf-acc](#white2022-cmj-vgrf-acc) | cross-validation-only | Real CMJ vGRF and accelerometer signals, but stored as pickle-only object arrays and with metadata that contradicts the files |
 | [holik2025-youth-soccer-plyometrics](#holik2025-youth-soccer-plyometrics) | cross-validation-only | Youth soccer, maturation and repeated attempts; summary metrics only, methods unstated |
 | [braking-rfd-cmj-2025](#braking-rfd-cmj-2025) | cross-validation-only | Both jump-height estimands for 206 participants; software-derived values |
-| [uwb-optitrack](#uwb-optitrack) | cross-validation-only | CC BY 4.0 UWB/OptiTrack testbed (RES-721, 2026-11-17); UWB vs OptiTrack comparability not established, so no error metrics |
+| [uwb-optitrack](#uwb-optitrack) | cross-validation-only | CC BY 4.0 UWB/OptiTrack testbed (RES-721, 2026-11-17); comparability not established (time and frame), so no error metrics |
 | [jass2026-sampling-article](#jass2026-sampling-article) | excluded | Article deposit, no data |
 | [rugby-league-hawkin-2023](#rugby-league-hawkin-2023) | excluded | Vendor summaries, rugby league |
 | [badminton-eccentric-2025](#badminton-eccentric-2025) | excluded | Derived analysis tables |
@@ -116,12 +116,17 @@ Zenodo 3452007 (RES-721, assessed 2026-11-17).
   tables. README counts include the header row.
 * **Metadata gaps:** no timestamps, sampling rate, units, coordinate frames, anchor
   geometry, or tag/marker reference points.
-* **Usage:** cross-validation-only, and only as a comparability study. UWB and
-  OptiTrack positions are **not** shown to be comparable: the best row lag is
-  non-zero, the frame fit differs by scenario (Walk offset ≈ 0.27, Trolley scale
-  ≈ 0.97), there is a −49.13 range sentinel, and the fitted anchor geometry is
-  inconsistent. No UWB accuracy metric is reported, and OptiTrack is never treated
-  as ground truth.
+* **Usage:** cross-validation-only, and only as a comparability study. The
+  [comparability report](external-data/reports/uwb-optitrack-comparability-report.md)
+  finds UWB and OptiTrack **not** shown to be comparable in 10/10 sessions:
+  * The frame-invariant best row lag is non-zero in 7/10 (Walk 1,1,0,0,0;
+    Trolley 3,3,3,4,3 rows).
+  * The lag-aligned similarity frame fails in 10/10 (Walk translation ≈ 0.27;
+    Trolley scale ≈ 0.97, rotation up to 3.3°).
+  * Walk has 4 negative-range sentinels.
+  * Trolley anchor geometry is inconsistent.
+
+  So no UWB error metric is reported, and OptiTrack is never treated as ground truth.
 * **Population:** not human-subject data (anonymous tag positions). Not soccer, so
   no `test_id` applies.
 

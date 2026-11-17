@@ -1,0 +1,576 @@
+{
+  "adapter": "uwb_optitrack_csv@1.0.0",
+  "attribution": "Raza U, Khan A, Kou R, Farnham T, Premalal T, Stanoev A, Thompson W (2019). Dataset: Indoor Localization with Narrow-band, Ultra-Wideband, and Motion Capture Systems. Zenodo. doi:10.5281/zenodo.3452007. CC BY 4.0.",
+  "comparability": {
+    "anchor_geometry": {
+      "trolley": [
+        {
+          "anchor": 1.0,
+          "geometrically_consistent": false,
+          "h2": -0.45422563090574336,
+          "range_residual_median_abs": 0.1300975573609724,
+          "rows_used": 3201.0,
+          "x": -0.09034750777097349,
+          "y": -0.15707697534926685
+        },
+        {
+          "anchor": 2.0,
+          "geometrically_consistent": false,
+          "h2": -0.6231381081823589,
+          "range_residual_median_abs": 0.11925289999513344,
+          "rows_used": 3201.0,
+          "x": 4.662783380291698,
+          "y": -0.12870642031720259
+        },
+        {
+          "anchor": 3.0,
+          "geometrically_consistent": false,
+          "h2": -0.7946364107813704,
+          "range_residual_median_abs": 0.1591786776166293,
+          "rows_used": 3201.0,
+          "x": 4.587809046820679,
+          "y": 2.579279320863411
+        },
+        {
+          "anchor": 4.0,
+          "geometrically_consistent": false,
+          "h2": -0.29325939758087305,
+          "range_residual_median_abs": 0.0786877785579645,
+          "rows_used": 3201.0,
+          "x": 0.25182142340461255,
+          "y": 2.4682867053406903
+        }
+      ],
+      "walk": [
+        {
+          "anchor": 1.0,
+          "geometrically_consistent": true,
+          "h2": 0.890021968608458,
+          "range_residual_median_abs": 0.07018436611782564,
+          "rows_used": 2795.0,
+          "x": -0.11991523013396353,
+          "y": -0.3430625531941405
+        },
+        {
+          "anchor": 2.0,
+          "geometrically_consistent": true,
+          "h2": 0.9557435762092789,
+          "range_residual_median_abs": 0.07327104016544927,
+          "rows_used": 2796.0,
+          "x": 4.596205730639464,
+          "y": 0.17091888337877403
+        },
+        {
+          "anchor": 3.0,
+          "geometrically_consistent": true,
+          "h2": 1.7235459886369435,
+          "range_residual_median_abs": 0.07680516124598213,
+          "rows_used": 2796.0,
+          "x": 4.484514362654104,
+          "y": 2.6191067760801303
+        },
+        {
+          "anchor": 4.0,
+          "geometrically_consistent": true,
+          "h2": 1.5349461620186808,
+          "range_residual_median_abs": 0.08736362502079587,
+          "rows_used": 2793.0,
+          "x": -0.15299823967921222,
+          "y": 2.5764872904637466
+        }
+      ]
+    },
+    "data_modified": false,
+    "lag_or_transform_applied": false,
+    "range_sentinels": {
+      "trolley": 0,
+      "walk": 4
+    },
+    "sessions": [
+      {
+        "best_row_lag": 1,
+        "comparable": false,
+        "frame_ok": false,
+        "median_offset_at_best_lag": 0.3279929870458147,
+        "median_offset_at_zero_lag": 0.3224969665352977,
+        "n_rows": 463,
+        "range_sentinels": 0,
+        "reasons": [
+          "best row lag 1 != 0: same-row samples are not simultaneous",
+          "scale 0.9842 differs from 1 by > 0.01",
+          "translation |t| 0.269 exceeds 0.05"
+        ],
+        "rotation_deg": -0.7606941807304173,
+        "scale": 0.9842342003140632,
+        "scenario": "walk",
+        "session_id": 1,
+        "similarity_residual_median": 0.12019972577154726,
+        "temporal_ok": false,
+        "translation": [
+          0.006404902928928813,
+          -0.26931824265713034
+        ]
+      },
+      {
+        "best_row_lag": 1,
+        "comparable": false,
+        "frame_ok": false,
+        "median_offset_at_best_lag": 0.3140209562135926,
+        "median_offset_at_zero_lag": 0.3068526468289892,
+        "n_rows": 541,
+        "range_sentinels": 3,
+        "reasons": [
+          "best row lag 1 != 0: same-row samples are not simultaneous",
+          "translation |t| 0.286 exceeds 0.05"
+        ],
+        "rotation_deg": -0.759963588655782,
+        "scale": 1.0084001865901273,
+        "scenario": "walk",
+        "session_id": 2,
+        "similarity_residual_median": 0.11922074806751026,
+        "temporal_ok": false,
+        "translation": [
+          -0.06244809819855024,
+          -0.2793404536938715
+        ]
+      },
+      {
+        "best_row_lag": 0,
+        "comparable": false,
+        "frame_ok": false,
+        "median_offset_at_best_lag": 0.30581578706372237,
+        "median_offset_at_zero_lag": 0.30581578706372237,
+        "n_rows": 586,
+        "range_sentinels": 1,
+        "reasons": [
+          "rotation -1.06 deg exceeds 1 deg",
+          "translation |t| 0.271 exceeds 0.05"
+        ],
+        "rotation_deg": -1.0631019107166837,
+        "scale": 1.005426278159497,
+        "scenario": "walk",
+        "session_id": 3,
+        "similarity_residual_median": 0.10697980719686792,
+        "temporal_ok": true,
+        "translation": [
+          -0.06775683482599071,
+          -0.26188724058462287
+        ]
+      },
+      {
+        "best_row_lag": 0,
+        "comparable": false,
+        "frame_ok": false,
+        "median_offset_at_best_lag": 0.32036651592580306,
+        "median_offset_at_zero_lag": 0.32036651592580306,
+        "n_rows": 630,
+        "range_sentinels": 0,
+        "reasons": [
+          "rotation -1.62 deg exceeds 1 deg",
+          "translation |t| 0.277 exceeds 0.05"
+        ],
+        "rotation_deg": -1.6185239365736315,
+        "scale": 1.0002558359641582,
+        "scenario": "walk",
+        "session_id": 4,
+        "similarity_residual_median": 0.11326691028862501,
+        "temporal_ok": true,
+        "translation": [
+          -0.06687778404486999,
+          -0.26926196802096325
+        ]
+      },
+      {
+        "best_row_lag": 0,
+        "comparable": false,
+        "frame_ok": false,
+        "median_offset_at_best_lag": 0.3532698650725401,
+        "median_offset_at_zero_lag": 0.3532698650725401,
+        "n_rows": 576,
+        "range_sentinels": 0,
+        "reasons": [
+          "rotation -1.55 deg exceeds 1 deg",
+          "translation |t| 0.299 exceeds 0.05"
+        ],
+        "rotation_deg": -1.5534271371495574,
+        "scale": 1.0062642270058324,
+        "scenario": "walk",
+        "session_id": 5,
+        "similarity_residual_median": 0.1079339655327009,
+        "temporal_ok": true,
+        "translation": [
+          -0.07112966435606483,
+          -0.2900381491174102
+        ]
+      },
+      {
+        "best_row_lag": 3,
+        "comparable": false,
+        "frame_ok": false,
+        "median_offset_at_best_lag": 0.08879365338269801,
+        "median_offset_at_zero_lag": 0.10308483511128563,
+        "n_rows": 794,
+        "range_sentinels": 0,
+        "reasons": [
+          "best row lag 3 != 0: same-row samples are not simultaneous",
+          "scale 0.9696 differs from 1 by > 0.01"
+        ],
+        "rotation_deg": 0.7691342427248101,
+        "scale": 0.96955483541657,
+        "scenario": "trolley",
+        "session_id": 1,
+        "similarity_residual_median": 0.06904668593030222,
+        "temporal_ok": false,
+        "translation": [
+          0.042259203803603373,
+          -0.025199704761397435
+        ]
+      },
+      {
+        "best_row_lag": 3,
+        "comparable": false,
+        "frame_ok": false,
+        "median_offset_at_best_lag": 0.07765343370752631,
+        "median_offset_at_zero_lag": 0.11222254287226856,
+        "n_rows": 627,
+        "range_sentinels": 0,
+        "reasons": [
+          "best row lag 3 != 0: same-row samples are not simultaneous",
+          "scale 0.9717 differs from 1 by > 0.01"
+        ],
+        "rotation_deg": 0.6343327108162997,
+        "scale": 0.9716521754887265,
+        "scenario": "trolley",
+        "session_id": 2,
+        "similarity_residual_median": 0.069844967973666,
+        "temporal_ok": false,
+        "translation": [
+          0.04637961207326269,
+          -0.008761181928323092
+        ]
+      },
+      {
+        "best_row_lag": 3,
+        "comparable": false,
+        "frame_ok": false,
+        "median_offset_at_best_lag": 0.08706496909848323,
+        "median_offset_at_zero_lag": 0.12715161416246842,
+        "n_rows": 611,
+        "range_sentinels": 0,
+        "reasons": [
+          "best row lag 3 != 0: same-row samples are not simultaneous",
+          "scale 0.9753 differs from 1 by > 0.01",
+          "rotation 1.01 deg exceeds 1 deg",
+          "translation |t| 0.067 exceeds 0.05"
+        ],
+        "rotation_deg": 1.013878351915614,
+        "scale": 0.9753299207792699,
+        "scenario": "trolley",
+        "session_id": 3,
+        "similarity_residual_median": 0.07815141355098694,
+        "temporal_ok": false,
+        "translation": [
+          0.05066574701278981,
+          -0.04371717690740273
+        ]
+      },
+      {
+        "best_row_lag": 4,
+        "comparable": false,
+        "frame_ok": false,
+        "median_offset_at_best_lag": 0.17008741320052195,
+        "median_offset_at_zero_lag": 0.18916372887825458,
+        "n_rows": 594,
+        "range_sentinels": 0,
+        "reasons": [
+          "best row lag 4 != 0: same-row samples are not simultaneous",
+          "scale 0.9718 differs from 1 by > 0.01",
+          "rotation 2.75 deg exceeds 1 deg",
+          "translation |t| 0.063 exceeds 0.05"
+        ],
+        "rotation_deg": 2.7489206293595454,
+        "scale": 0.9718280327125138,
+        "scenario": "trolley",
+        "session_id": 4,
+        "similarity_residual_median": 0.07122128893777428,
+        "temporal_ok": false,
+        "translation": [
+          0.0012860485374015518,
+          0.06257776031161544
+        ]
+      },
+      {
+        "best_row_lag": 3,
+        "comparable": false,
+        "frame_ok": false,
+        "median_offset_at_best_lag": 0.16196810040152562,
+        "median_offset_at_zero_lag": 0.19269302815358305,
+        "n_rows": 575,
+        "range_sentinels": 0,
+        "reasons": [
+          "best row lag 3 != 0: same-row samples are not simultaneous",
+          "scale 0.9675 differs from 1 by > 0.01",
+          "rotation 3.26 deg exceeds 1 deg"
+        ],
+        "rotation_deg": 3.255963720520446,
+        "scale": 0.9674577040325569,
+        "scenario": "trolley",
+        "session_id": 5,
+        "similarity_residual_median": 0.060960909490040405,
+        "temporal_ok": false,
+        "translation": [
+          0.006648415329114865,
+          0.03284601708669155
+        ]
+      }
+    ]
+  },
+  "environment": {
+    "dynamisbench_soccer": "0.0.1",
+    "numpy": "2.5.4",
+    "python": "3.12.13"
+  },
+  "kind": "dbs-external-planar-validation-report",
+  "outcome": "completed_with_blocked_gates: comparability, error_metrics",
+  "pipeline": "dbs-external-uwb@1.0.0",
+  "profiles": [
+    {
+      "adapter": "uwb_optitrack_csv@1.0.0",
+      "dimensionality": "2D",
+      "member": "USMAN_Raza-Dataset_Indoor_Localization_with_Narrowband_Ultra-Wideband_and_Motion_Capture_Systems/UWB_Walk_dataset.csv",
+      "member_sha256": "0cc3cfde0f842d45622ccd7ff6ead377237a22c38ffa381321133b5e31ee2014",
+      "pairing": "row_index_within_session",
+      "profile": "dbs-planar-validation@1",
+      "sampling_rate": "undeclared",
+      "sessions": [
+        {
+          "first_row": 0,
+          "n_rows": 463,
+          "scenario": "walk",
+          "session_id": 1
+        },
+        {
+          "first_row": 463,
+          "n_rows": 541,
+          "scenario": "walk",
+          "session_id": 2
+        },
+        {
+          "first_row": 1004,
+          "n_rows": 586,
+          "scenario": "walk",
+          "session_id": 3
+        },
+        {
+          "first_row": 1590,
+          "n_rows": 630,
+          "scenario": "walk",
+          "session_id": 4
+        },
+        {
+          "first_row": 2220,
+          "n_rows": 576,
+          "scenario": "walk",
+          "session_id": 5
+        }
+      ],
+      "soccer_task": false,
+      "source_id": "uwb-optitrack",
+      "systems": [
+        {
+          "frame": "undeclared",
+          "id": "uwb",
+          "meaning": "depositor's UWB localisation estimate; frame undeclared",
+          "role": "device_estimate",
+          "stage": "package_derived",
+          "x_column": "UWB_x",
+          "y_column": "UWB_y"
+        },
+        {
+          "frame": "undeclared",
+          "id": "optitrack",
+          "meaning": "OptiTrack system output reduced to 2D; frame and marker point undeclared; a separate measurement, not ground truth",
+          "role": "depositor_reference",
+          "stage": "manufacturer_processed",
+          "x_column": "OPT_x",
+          "y_column": "OPT_y"
+        }
+      ],
+      "timestamps": "absent",
+      "units": "undeclared",
+      "units_note": "no units declared by the depositor; values are consistent with metres in a ~5 x 3 room but this is not stated and is not assumed",
+      "usage": "cross-validation-only",
+      "z_coordinate": "not_recorded"
+    },
+    {
+      "adapter": "uwb_optitrack_csv@1.0.0",
+      "dimensionality": "2D",
+      "member": "USMAN_Raza-Dataset_Indoor_Localization_with_Narrowband_Ultra-Wideband_and_Motion_Capture_Systems/UWB_Trolley_dataset.csv",
+      "member_sha256": "66b32f3e5976564e0e6585d96797bd3887c7794ba6d72905a71b5be175d2e3e3",
+      "pairing": "row_index_within_session",
+      "profile": "dbs-planar-validation@1",
+      "sampling_rate": "undeclared",
+      "sessions": [
+        {
+          "first_row": 0,
+          "n_rows": 794,
+          "scenario": "trolley",
+          "session_id": 1
+        },
+        {
+          "first_row": 794,
+          "n_rows": 627,
+          "scenario": "trolley",
+          "session_id": 2
+        },
+        {
+          "first_row": 1421,
+          "n_rows": 611,
+          "scenario": "trolley",
+          "session_id": 3
+        },
+        {
+          "first_row": 2032,
+          "n_rows": 594,
+          "scenario": "trolley",
+          "session_id": 4
+        },
+        {
+          "first_row": 2626,
+          "n_rows": 575,
+          "scenario": "trolley",
+          "session_id": 5
+        }
+      ],
+      "soccer_task": false,
+      "source_id": "uwb-optitrack",
+      "systems": [
+        {
+          "frame": "undeclared",
+          "id": "uwb",
+          "meaning": "depositor's UWB localisation estimate; frame undeclared",
+          "role": "device_estimate",
+          "stage": "package_derived",
+          "x_column": "UWB_x",
+          "y_column": "UWB_y"
+        },
+        {
+          "frame": "undeclared",
+          "id": "optitrack",
+          "meaning": "OptiTrack system output reduced to 2D; frame and marker point undeclared; a separate measurement, not ground truth",
+          "role": "depositor_reference",
+          "stage": "manufacturer_processed",
+          "x_column": "OPT_x",
+          "y_column": "OPT_y"
+        }
+      ],
+      "timestamps": "absent",
+      "units": "undeclared",
+      "units_note": "no units declared by the depositor; values are consistent with metres in a ~5 x 3 room but this is not stated and is not assumed",
+      "usage": "cross-validation-only",
+      "z_coordinate": "not_recorded"
+    }
+  ],
+  "readme_reconciliation": {
+    "trolley": {
+      "data_rows": 3201,
+      "matches_data_rows": false,
+      "readme_counts_header_line": true,
+      "readme_stated": 3202
+    },
+    "walk": {
+      "data_rows": 2796,
+      "matches_data_rows": false,
+      "readme_counts_header_line": true,
+      "readme_stated": 2797
+    }
+  },
+  "records": {
+    "committed_default_root": true
+  },
+  "rights": {
+    "blockers": [],
+    "canonical_admission": "verified",
+    "license_evidence_verified": true,
+    "license_id": "CC-BY-4.0",
+    "measurement_data_rights": "verified",
+    "participant_consent": "not_applicable",
+    "problems": [],
+    "record_digest": "546505ec6a9e9f5b42b803abe41ac301b72b3ff1ce9fbe5146162f132120dc78",
+    "record_license": "cc-by-4.0",
+    "redistribution_allowed": false
+  },
+  "source": {
+    "archive": "USMAN_Raza-Dataset_Indoor_Localization_with_Narrowband_Ultra-Wideband_and_Motion_Capture_Systems.zip",
+    "doi": "10.5281/zenodo.3452007",
+    "md5": "d5221f12a5f093eacc21db797c0ac13a",
+    "record_id": 3452007,
+    "sha256": "0e26251bff1ddd1f868205c481c63137c4729d480444e60769c3240ba3fc4f38",
+    "size_bytes": 570029
+  },
+  "source_id": "uwb-optitrack",
+  "stages": [
+    {
+      "detail": "Zenodo record, archive and every member pinned",
+      "evidence": {},
+      "name": "pinned_source",
+      "status": "passed"
+    },
+    {
+      "detail": "record license cc-by-4.0 matches pinned digest",
+      "evidence": {},
+      "name": "rights_verification",
+      "status": "passed"
+    },
+    {
+      "detail": "published MD5, SHA-256 and size verified",
+      "evidence": {},
+      "name": "data_integrity",
+      "status": "passed"
+    },
+    {
+      "detail": "5 pinned and 6 excluded members; no unsafe paths, links or bombs",
+      "evidence": {},
+      "name": "archive_audit",
+      "status": "passed"
+    },
+    {
+      "detail": "canonical store ingest, verify and read-only stage (uwb-optitrack@zenodo-3452007, cross-validation-only)",
+      "evidence": {},
+      "name": "ingestion",
+      "status": "passed"
+    },
+    {
+      "detail": "in-memory strict parse of both UWB/OptiTrack members",
+      "evidence": {},
+      "name": "safe_parse",
+      "status": "passed"
+    },
+    {
+      "detail": "dbs-planar-validation@1: 2D, no Z, no soccer task, no clock",
+      "evidence": {},
+      "name": "profile",
+      "status": "passed"
+    },
+    {
+      "detail": "10/10 sessions not comparable (temporal 7, frame 10)",
+      "evidence": {},
+      "name": "comparability",
+      "status": "blocked"
+    },
+    {
+      "detail": "not computed: UWB and OptiTrack are not shown to share a time base and frame; a difference would not be device error",
+      "evidence": {},
+      "name": "error_metrics",
+      "status": "blocked"
+    }
+  ],
+  "thresholds": {
+    "lag_search_rows": 30,
+    "max_rotation_deg": 1.0,
+    "max_row_lag": 0,
+    "max_scale_deviation": 0.01,
+    "max_translation": 0.05,
+    "min_rows": 50
+  }
+}

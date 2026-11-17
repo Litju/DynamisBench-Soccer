@@ -1,0 +1,212 @@
+{
+  "$defs": {
+    "PlanarSession": {
+      "additionalProperties": false,
+      "properties": {
+        "first_row": {
+          "description": "0-based data-row index in the source member",
+          "minimum": 0,
+          "title": "First Row",
+          "type": "integer"
+        },
+        "n_rows": {
+          "minimum": 1,
+          "title": "N Rows",
+          "type": "integer"
+        },
+        "scenario": {
+          "pattern": "^[a-z][a-z0-9_]*$",
+          "title": "Scenario",
+          "type": "string"
+        },
+        "session_id": {
+          "minimum": 1,
+          "title": "Session Id",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "scenario",
+        "session_id",
+        "n_rows",
+        "first_row"
+      ],
+      "title": "PlanarSession",
+      "type": "object"
+    },
+    "PlanarSystem": {
+      "additionalProperties": false,
+      "properties": {
+        "frame": {
+          "anyOf": [
+            {
+              "const": "undeclared",
+              "type": "string"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "default": "undeclared",
+          "title": "Frame"
+        },
+        "id": {
+          "pattern": "^[a-z][a-z0-9_]*$",
+          "title": "Id",
+          "type": "string"
+        },
+        "meaning": {
+          "minLength": 10,
+          "title": "Meaning",
+          "type": "string"
+        },
+        "role": {
+          "enum": [
+            "device_estimate",
+            "depositor_reference"
+          ],
+          "title": "Role",
+          "type": "string"
+        },
+        "stage": {
+          "$ref": "#/$defs/SignalStage"
+        },
+        "x_column": {
+          "title": "X Column",
+          "type": "string"
+        },
+        "y_column": {
+          "title": "Y Column",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "role",
+        "stage",
+        "x_column",
+        "y_column",
+        "meaning"
+      ],
+      "title": "PlanarSystem",
+      "type": "object"
+    },
+    "SignalStage": {
+      "description": "Processing stage of a signal. Stages are never merged or relabelled.",
+      "enum": [
+        "measured_native",
+        "manufacturer_processed",
+        "package_derived",
+        "pipeline_derived"
+      ],
+      "title": "SignalStage",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "adapter": {
+      "title": "Adapter",
+      "type": "string"
+    },
+    "dimensionality": {
+      "const": "2D",
+      "default": "2D",
+      "title": "Dimensionality",
+      "type": "string"
+    },
+    "member": {
+      "title": "Member",
+      "type": "string"
+    },
+    "member_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Member Sha256",
+      "type": "string"
+    },
+    "pairing": {
+      "const": "row_index_within_session",
+      "default": "row_index_within_session",
+      "title": "Pairing",
+      "type": "string"
+    },
+    "profile": {
+      "const": "dbs-planar-validation@1",
+      "default": "dbs-planar-validation@1",
+      "title": "Profile",
+      "type": "string"
+    },
+    "sampling_rate": {
+      "const": "undeclared",
+      "default": "undeclared",
+      "title": "Sampling Rate",
+      "type": "string"
+    },
+    "sessions": {
+      "items": {
+        "$ref": "#/$defs/PlanarSession"
+      },
+      "minItems": 1,
+      "title": "Sessions",
+      "type": "array"
+    },
+    "soccer_task": {
+      "const": false,
+      "default": false,
+      "title": "Soccer Task",
+      "type": "boolean"
+    },
+    "source_id": {
+      "title": "Source Id",
+      "type": "string"
+    },
+    "systems": {
+      "items": {
+        "$ref": "#/$defs/PlanarSystem"
+      },
+      "minItems": 2,
+      "title": "Systems",
+      "type": "array"
+    },
+    "timestamps": {
+      "const": "absent",
+      "default": "absent",
+      "title": "Timestamps",
+      "type": "string"
+    },
+    "units": {
+      "const": "undeclared",
+      "default": "undeclared",
+      "title": "Units",
+      "type": "string"
+    },
+    "units_note": {
+      "minLength": 10,
+      "title": "Units Note",
+      "type": "string"
+    },
+    "usage": {
+      "const": "cross-validation-only",
+      "default": "cross-validation-only",
+      "title": "Usage",
+      "type": "string"
+    },
+    "z_coordinate": {
+      "const": "not_recorded",
+      "default": "not_recorded",
+      "title": "Z Coordinate",
+      "type": "string"
+    }
+  },
+  "required": [
+    "source_id",
+    "member",
+    "member_sha256",
+    "adapter",
+    "units_note",
+    "systems",
+    "sessions"
+  ],
+  "title": "PlanarProfile",
+  "type": "object"
+}

@@ -51,3 +51,33 @@ admission, and the manifest must be removed.
   data, so no soccer `test_id` applies.
 * The README sample counts (2797 / 3202) include the header row. The data row counts
   are 2796 / 3201.
+
+## 4. Comparability result (Gate 5, measured, never applied)
+
+From the [comparability report](reports/uwb-optitrack-comparability-report.md):
+
+| Gate | Walk (sessions 1–5) | Trolley (sessions 1–5) |
+| -- | -- | -- |
+| Frame-invariant best row lag (must be 0) | 1, 1, 0, 0, 0 | 3, 3, 3, 4, 3 |
+| Lag-aligned similarity scale (must be 1 ± 0.01) | 0.984–1.008 | **0.968–0.975** |
+| Rotation (must be ≤ 1°) | **0.76–1.62°** | 0.63–**3.26°** |
+| Translation (must be ≤ 0.05) | **0.27–0.30 (mostly in y)** | 0.03–**0.07** |
+| Negative-range sentinels | 4 (e.g. −49.13) | 0 |
+| Anchor-range geometry (h² ≥ 0) | consistent once sentinels are excluded | **inconsistent (all four anchors h² < 0)** |
+
+**Result:** 0 of 10 sessions are comparable, so **no error metrics are computed.**
+The disagreement mixes an unknown device error with a scenario-specific frame,
+scale or reference-point mismatch (consistent with the tag and the marker sitting
+at different points), and with row misalignment. Neither the lag nor the transform
+is applied to "rescue" a metric. A valid comparison would need, from the
+depositors:
+
+* timestamps or a stated synchronisation method;
+* the common frame definition;
+* the tag and marker mounting offsets;
+* the units.
+
+**Method note.** The lag is estimated *frame-invariantly*: it is the lag that
+minimises the similarity-fit residual. Minimising the raw offset instead confounds
+a spatial offset along the path with a time shift. An early exploratory estimate
+made that mistake, and the corrected estimator is what is committed and tested.

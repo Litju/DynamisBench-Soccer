@@ -45,8 +45,9 @@ def uwb_csv(
     for s in range(1, sessions + 1):
         k = np.arange(n_per_session + abs(lag))
         path = np.c_[2.5 + 1.8 * np.cos(k / 40 + s), 1.5 + 1.0 * np.sin(k / 25 + s)]
-        opt = path[:n_per_session] if lag >= 0 else path[-lag:]
-        src = path[lag : lag + n_per_session] if lag >= 0 else path[:n_per_session]
+        # positive lag: the device trails the reference (device row i+lag ~ reference row i)
+        src = path[:n_per_session] if lag >= 0 else path[-lag : -lag + n_per_session]
+        opt = path[lag : lag + n_per_session] if lag >= 0 else path[:n_per_session]
         uwb = scale * (src @ rot.T) + np.array(shift) + noise * rng.standard_normal(src.shape)
         d = np.sqrt(((opt[:, None, :] - ANCHORS[None]) ** 2).sum(-1) + ANCHOR_H**2)
         for i in range(n_per_session):
@@ -56,7 +57,8 @@ def uwb_csv(
             lines.append(
                 f"{s},2000,1700,1650,2000,125,117,117,125,"
                 + ",".join(f"{x:.2f}" for x in dd)
-                + f",{uwb[i, 0]!r},{uwb[i, 1]!r},{opt[i, 0]!r},{opt[i, 1]!r}"
+                + ","
+                + ",".join(repr(float(v)) for v in (*uwb[i], *opt[i]))
             )
     return ("\n".join(lines) + "\n").encode()
 

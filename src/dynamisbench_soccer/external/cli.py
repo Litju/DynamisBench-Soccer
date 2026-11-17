@@ -9,7 +9,16 @@ from pathlib import Path
 
 from dynamisbench_soccer.data import paths
 from dynamisbench_soccer.data.store import IntegrityError
-from dynamisbench_soccer.external import acquire, pipeline, rights, shorts_laser, zenodo
+from dynamisbench_soccer.external import (
+    acquire,
+    pipeline,
+    planar_profile,
+    rights,
+    shorts_laser,
+    uwb_optitrack,
+    uwb_pipeline,
+    zenodo,
+)
 from dynamisbench_soccer.external.models import (
     EXTERNAL_ROOT,
     RightsRecord,
@@ -112,7 +121,55 @@ def _cmd_acquire(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_run_uwb(args: argparse.Namespace) -> int:
+    root = Path(args.root)
+    if root.resolve() != EXTERNAL_ROOT.resolve():
+        print(
+            f"WARNING records root {args.root} is not the committed, reviewed "
+            f"{EXTERNAL_ROOT}; results are an unreviewed local override",
+            file=sys.stderr,
+        )
+    metadata = (
+        json.loads(Path(args.metadata).read_text(encoding="utf-8")) if args.metadata else None
+    )
+    out = Path(args.out) if args.out else paths.runs_root() / "external" / args.source_id
+    report = uwb_pipeline.run_uwb_optitrack(
+        out,
+        external_root=root,
+        metadata=metadata,
+        source_dir=Path(args.source_dir) if args.source_dir else None,
+    )
+    for stage in report["stages"]:
+        print(f"{stage['status']:<8} {stage['name']:<22} {stage['detail']}")
+    print(f"outcome: {report['outcome']}")
+    for flag, name in ((args.report_md, "report.md"), (args.report_json, "report.json")):
+        if flag:
+            Path(flag).parent.mkdir(parents=True, exist_ok=True)
+            Path(flag).write_text((out / name).read_text(encoding="utf-8"), encoding="utf-8")
+            print(f"wrote {flag}")
+    return 1 if report["outcome"] == "failed" else 0
+
+
+def _cmd_planar_schema(args: argparse.Namespace) -> int:
+    text = planar_profile.json_schema()
+    target = Path(args.out)
+    if args.write:
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(text, encoding="utf-8")
+        print(f"wrote {target}")
+    elif args.check:
+        if not target.is_file() or target.read_text(encoding="utf-8") != text:
+            print(f"FAIL {target} out of date; run `dbs external planar-schema --write`")
+            return 1
+        print(f"{target} up to date")
+    else:
+        sys.stdout.write(text)
+    return 0
+
+
 def _cmd_run(args: argparse.Namespace) -> int:
+    if args.source_id == uwb_optitrack.SOURCE_ID:
+        return _cmd_run_uwb(args)
     if args.source_id != shorts_laser.SOURCE_ID:
         print(f"FAIL no adapter for {args.source_id!r}", file=sys.stderr)
         return 1
@@ -164,5 +221,12 @@ def register(sub: argparse._SubParsersAction) -> None:  # type: ignore[type-arg]
     run.add_argument("--report-md", default=None, help="also copy the Markdown report here")
     run.add_argument("--report-json", default=None, help="also copy the JSON report here")
     run.add_argument("--rules", default="qc/rules.toml")
+    run.add_argument("--metadata", default=None, help="Zenodo only: saved record metadata JSON")
     run.add_argument("--root", default=str(EXTERNAL_ROOT))
     run.set_defaults(handler=_cmd_run)
+    ps = esub.add_parser("planar-schema", help="emit the planar validation profile JSON Schema")
+    ps.add_argument("--out", default=planar_profile.SCHEMA_DOC)
+    mode = ps.add_mutually_exclusive_group()
+    mode.add_argument("--write", action="store_true")
+    mode.add_argument("--check", action="store_true")
+    ps.set_defaults(handler=_cmd_planar_schema)
