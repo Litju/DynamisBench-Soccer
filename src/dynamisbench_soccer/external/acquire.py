@@ -20,7 +20,7 @@ import os
 import stat
 import tempfile
 import urllib.request
-from collections.abc import Callable
+from collections.abc import Callable, Collection
 from pathlib import Path
 from typing import Protocol
 
@@ -33,8 +33,17 @@ from dynamisbench_soccer.data.manifest import (
     Usage,
 )
 from dynamisbench_soccer.data.store import IntegrityError
-from dynamisbench_soccer.external.models import PinnedFile, RightsRecord, SourceLock
-from dynamisbench_soccer.external.rights import RightsCheck, require_canonical_admission
+from dynamisbench_soccer.external.models import (
+    FileRole,
+    PinnedFile,
+    RightsRecord,
+    SourceLock,
+)
+from dynamisbench_soccer.external.rights import (
+    RightsCheck,
+    require_canonical_admission,
+    require_local_inspection,
+)
 
 
 class _Readable(Protocol):
@@ -42,6 +51,9 @@ class _Readable(Protocol):
 
 
 Opener = Callable[[str, float], _Readable]
+
+DATA_ROLES: frozenset[FileRole] = frozenset({FileRole.DATA})
+EVIDENCE_ROLES: frozenset[FileRole] = frozenset(FileRole) - DATA_ROLES
 
 
 def _urlopen(url: str, timeout: float) -> _Readable:
@@ -104,15 +116,22 @@ def acquire(
     root: Path | None = None,
     opener: Opener | None = None,
     timeout: float = 60.0,
+    roles: Collection[FileRole] = EVIDENCE_ROLES,
 ) -> dict[str, Path]:
-    """Install every pinned file into quarantine, verified; return ``path -> local file``.
+    """Install the pinned files of ``roles`` into quarantine, verified.
+
+    Returns ``path -> local file``. By default only **evidence** (license, documentation,
+    transform scripts, acquisition evidence) is acquired. Measurement-data bytes are
+    acquired only when a caller passes ``roles=DATA_ROLES``, which callers do only after
+    the rights gate permits it (:func:`acquire_data`). A file outside ``roles`` is never
+    downloaded, opened or hashed, including a copy already sitting in quarantine.
 
     With ``source_dir`` the bytes are read from a local copy laid out like the upstream
     repository; otherwise they are downloaded from the commit-pinned URLs.
     """
     target = (root or quarantine_root()) / lock.source_id / lock.pinned_ref
     out: dict[str, Path] = {}
-    for entry in lock.files:
+    for entry in (f for f in lock.files if f.role in roles):
         dest = target / entry.path
         if dest.is_file() and not dest.is_symlink() and not check_bytes(entry, dest.read_bytes()):
             out[entry.path] = dest
@@ -120,9 +139,9 @@ def acquire(
         if source_dir is not None:
             data = _read_local(source_dir / entry.path, entry.size_bytes)
         else:
-            with_resp = (opener or _urlopen)(entry.url, timeout)
-            data = with_resp.read(entry.size_bytes + 1)  # bounded: one byte past pinned size
-            close = getattr(with_resp, "close", None)
+            resp = (opener or _urlopen)(entry.url, timeout)
+            data = resp.read(entry.size_bytes + 1)  # bounded: one byte past pinned size
+            close = getattr(resp, "close", None)
             if callable(close):
                 close()
         _install(entry, data, dest)
@@ -130,10 +149,28 @@ def acquire(
     return out
 
 
-def verify_quarantine(lock: SourceLock, root: Path | None = None) -> list[str]:
+def acquire_data(
+    lock: SourceLock,
+    check: RightsCheck,
+    *,
+    source_dir: Path | None = None,
+    root: Path | None = None,
+    opener: Opener | None = None,
+    timeout: float = 60.0,
+) -> dict[str, Path]:
+    """Acquire measurement-data bytes, refused unless the rights check permits inspection."""
+    require_local_inspection(check)
+    return acquire(
+        lock, source_dir=source_dir, root=root, opener=opener, timeout=timeout, roles=DATA_ROLES
+    )
+
+
+def verify_quarantine(
+    lock: SourceLock, root: Path | None = None, roles: Collection[FileRole] = frozenset(FileRole)
+) -> list[str]:
     target = (root or quarantine_root()) / lock.source_id / lock.pinned_ref
     problems = []
-    for entry in lock.files:
+    for entry in (f for f in lock.files if f.role in roles):
         path = target / entry.path
         if not path.is_file() or path.is_symlink():
             problems.append(f"{entry.path}: missing from quarantine")

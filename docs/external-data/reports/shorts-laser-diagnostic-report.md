@@ -12,8 +12,9 @@
 | Stage | Status | Detail |
 | -- | -- | -- |
 | pinned_source | **passed** | commit-pinned lock matches adapter version |
-| integrity | **passed** | size, SHA-256 and Git blob SHA-1 verified for every file |
+| evidence_integrity | **passed** | size, SHA-256 and Git blob SHA-1 verified for every evidence file; measurement data not yet acquired |
 | rights_verification | **blocked** | license evidence verified; canonical admission pending |
+| data_integrity | **passed** | measurement-data size, SHA-256 and Git blob SHA-1 verified after the rights gate |
 | ingestion | **blocked** | canonical store refused by rights gate; read-only quarantine copy inspected under the license grant only |
 | safe_parse | **passed** | hash-bound strict parse; exact header, ASCII, finite values |
 | profile | **passed** | Gate-2 shape audit recorded |

@@ -32,6 +32,8 @@ from dynamisbench_soccer.external.models import (
     load_rights,
 )
 
+ALL = frozenset(FileRole)
+
 # --- the committed shorts-laser records --------------------------------------------------
 
 
@@ -120,7 +122,7 @@ def test_verified_admission_still_needs_consent_and_no_minor_redistribution() ->
 
 def test_local_acquisition_verifies_and_is_read_only(tmp_path: Path) -> None:
     lock = upstream(tmp_path / "up")
-    files = acquire.acquire(lock, source_dir=tmp_path / "up", root=tmp_path / "q")
+    files = acquire.acquire(lock, source_dir=tmp_path / "up", root=tmp_path / "q", roles=ALL)
     assert set(files) == {f.path for f in lock.files}
     for path in files.values():
         assert path.stat().st_mode & 0o222 == 0
@@ -134,7 +136,7 @@ def test_acquisition_fails_closed_on_tampered_bytes(tmp_path: Path) -> None:
     data[-5] = ord("9") if data[-5] != ord("9") else ord("8")
     csv.write_bytes(bytes(data))
     with pytest.raises(IntegrityError, match="sha256"):
-        acquire.acquire(lock, source_dir=tmp_path / "up", root=tmp_path / "q")
+        acquire.acquire(lock, source_dir=tmp_path / "up", root=tmp_path / "q", roles=ALL)
     assert not (tmp_path / "q" / lock.source_id / REF / "data-raw/laser-gun-data.csv").exists()
 
 
@@ -146,7 +148,7 @@ def test_acquisition_refuses_symlinks(tmp_path: Path) -> None:
     csv.unlink()
     csv.symlink_to(real)
     with pytest.raises(IntegrityError, match="regular file"):
-        acquire.acquire(lock, source_dir=tmp_path / "up", root=tmp_path / "q")
+        acquire.acquire(lock, source_dir=tmp_path / "up", root=tmp_path / "q", roles=ALL)
 
 
 def test_download_is_bounded_and_verified(tmp_path: Path) -> None:
@@ -159,11 +161,15 @@ def test_download_is_bounded_and_verified(tmp_path: Path) -> None:
             requested.append(n)
             return super().read(n)
 
-    files = acquire.acquire(lock, root=tmp_path / "q", opener=lambda u, _t: Resp(served[u]))
+    files = acquire.acquire(
+        lock, root=tmp_path / "q", opener=lambda u, _t: Resp(served[u]), roles=ALL
+    )
     assert len(files) == 2 and requested == [f.size_bytes + 1 for f in lock.files]
     oversized = {u: b + b"x" for u, b in served.items()}
     with pytest.raises(IntegrityError, match="size"):
-        acquire.acquire(lock, root=tmp_path / "q2", opener=lambda u, _t: Resp(oversized[u]))
+        acquire.acquire(
+            lock, root=tmp_path / "q2", opener=lambda u, _t: Resp(oversized[u]), roles=ALL
+        )
 
 
 def test_default_opener_refuses_non_pinned_hosts() -> None:
@@ -176,7 +182,7 @@ def test_default_opener_refuses_non_pinned_hosts() -> None:
 
 def _check(tmp_path: Path, **overrides: object) -> rights.RightsCheck:
     lock = upstream(tmp_path / "up")
-    files = acquire.acquire(lock, source_dir=tmp_path / "up", root=tmp_path / "q")
+    files = acquire.acquire(lock, source_dir=tmp_path / "up", root=tmp_path / "q", roles=ALL)
     return rights.verify(RightsRecord.model_validate(rights_payload(**overrides)), lock, files)
 
 
@@ -217,7 +223,7 @@ def test_manifest_refused_while_pending(tmp_path: Path) -> None:
 
 def test_canonical_path_uses_existing_store_when_verified(tmp_path: Path) -> None:
     lock = upstream(tmp_path / "up")
-    files = acquire.acquire(lock, source_dir=tmp_path / "up", root=tmp_path / "q")
+    files = acquire.acquire(lock, source_dir=tmp_path / "up", root=tmp_path / "q", roles=ALL)
     record = RightsRecord.model_validate(verified_payload())
     check = rights.verify(record, lock, files)
     manifest = acquire.to_manifest(lock, record, check, title="Synthetic", citation="test")

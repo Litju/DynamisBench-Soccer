@@ -413,18 +413,17 @@
       "status": "passed"
     },
     {
-      "detail": "size, SHA-256 and Git blob SHA-1 verified for every file",
+      "detail": "size, SHA-256 and Git blob SHA-1 verified for every evidence file; measurement data not yet acquired",
       "evidence": {
         "files": {
           "DESCRIPTION": "8c25e7b1e1cddc829383e096a98bef43974586dcb40629d17dcc545fda9496a2",
           "LICENSE": "73393882eb035045f7dc6d117a6c2503838b37d6176bc3517c1a0af6181b2d0f",
           "LICENSE.md": "84a0cf8b871cbec2540c4378f44a04bcbe2e48b732fc0ee6b0bb2918ca15877e",
           "R/data-laser-gun.R": "210d9b26ac46a097935fb0855c6a4ec460e4833d5fd45c666e3cc4d3a5a57310",
-          "data-raw/laser-gun-data.R": "048b3be912f9a2d53790b192909eef9bbc5cf6725459c188b5bad62bc168dc19",
-          "data-raw/laser-gun-data.csv": "52b48d928460a656775e8df2aa1824c84b214040e281d4992754fbac73f3c6ba"
+          "data-raw/laser-gun-data.R": "048b3be912f9a2d53790b192909eef9bbc5cf6725459c188b5bad62bc168dc19"
         }
       },
-      "name": "integrity",
+      "name": "evidence_integrity",
       "status": "passed"
     },
     {
@@ -438,6 +437,16 @@
       },
       "name": "rights_verification",
       "status": "blocked"
+    },
+    {
+      "detail": "measurement-data size, SHA-256 and Git blob SHA-1 verified after the rights gate",
+      "evidence": {
+        "files": {
+          "data-raw/laser-gun-data.csv": "52b48d928460a656775e8df2aa1824c84b214040e281d4992754fbac73f3c6ba"
+        }
+      },
+      "name": "data_integrity",
+      "status": "passed"
     },
     {
       "detail": "canonical store refused by rights gate; read-only quarantine copy inspected under the license grant only",

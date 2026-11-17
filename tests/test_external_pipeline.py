@@ -21,13 +21,29 @@ from _external_synth import (
     upstream,
     verified_payload,
 )
+from pydantic import ValidationError
 
 from dynamisbench_soccer.cli import main
-from dynamisbench_soccer.external import diagnostics, pipeline, shorts_laser, sourceqc
-from dynamisbench_soccer.external.models import SignalStage
+from dynamisbench_soccer.data.paths import cache_home as paths_cache
+from dynamisbench_soccer.external import (
+    acquire,
+    diagnostics,
+    pipeline,
+    rights,
+    shorts_laser,
+    sourceqc,
+)
+from dynamisbench_soccer.external.models import RightsRecord, SignalStage
 from dynamisbench_soccer.qc import spec
 from dynamisbench_soccer.signals import io
 from dynamisbench_soccer.signals.schema import CANONICAL_UNIT, DeviceClass, Quantity
+
+
+def io_bytes(data: bytes) -> Any:
+    import io as stdio
+
+    return stdio.BytesIO(data)
+
 
 SESSION = shorts_laser.SessionEvidence("2024-01-01", "synthetic test evidence reference")
 
@@ -223,8 +239,9 @@ def test_pending_rights_run_quarantine_and_block_honestly(tmp_path: Path, repo_r
     report = _run(tmp_path, repo_root, rights_payload())
     assert _status(report) == {
         "pinned_source": "passed",
-        "integrity": "passed",
+        "evidence_integrity": "passed",
         "rights_verification": "blocked",
+        "data_integrity": "passed",
         "ingestion": "blocked",
         "safe_parse": "passed",
         "profile": "passed",
@@ -263,7 +280,7 @@ def test_tampered_source_fails_closed(tmp_path: Path, repo_root: Path) -> None:
         expected_sha256=sha,
         source_id="synthetic-laser",
     )
-    assert report["outcome"] == "failed" and _status(report)["integrity"] == "failed"
+    assert report["outcome"] == "failed" and _status(report)["data_integrity"] == "failed"
     assert "diagnostics" not in report and "profile" not in report
 
 
@@ -272,10 +289,88 @@ def test_unverifiable_license_evidence_fails(tmp_path: Path, repo_root: Path) ->
     assert _status(report)["rights_verification"] == "failed" and "profile" not in report
 
 
-def test_no_local_inspection_stops_before_reading_data(tmp_path: Path, repo_root: Path) -> None:
+def test_no_local_inspection_never_touches_measurement_bytes(
+    tmp_path: Path, repo_root: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Regression: data bytes were acquired and hashed before the rights gate (PR #11 review)."""
+    touched: list[str] = []
+    real_check, real_read = acquire.check_bytes, acquire._read_local
+
+    def spy_check(entry: Any, data: bytes) -> list[str]:
+        touched.append(entry.path)
+        return real_check(entry, data)
+
+    def spy_read(path: Path, limit: int) -> bytes:
+        touched.append(str(path))
+        return real_read(path, limit)
+
+    monkeypatch.setattr(acquire, "check_bytes", spy_check)
+    monkeypatch.setattr(acquire, "_read_local", spy_read)
     report = _run(tmp_path, repo_root, rights_payload(local_inspection_permitted=False))
-    assert _status(report)["ingestion"] == "blocked"
+    status = _status(report)
+    assert status["rights_verification"] == "blocked"
+    assert status["data_integrity"] == "blocked" and "ingestion" not in status
     assert report["outcome"] == "stopped_at_blocked_gate" and "profile" not in report
+    assert touched and not any(shorts_laser.DATA_PATH in t for t in touched)
+    assert not (tmp_path / "q" / "synthetic-laser" / REF / shorts_laser.DATA_PATH).exists()
+
+
+def test_preexisting_quarantine_data_is_not_read_without_permission(
+    tmp_path: Path, repo_root: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    _run(tmp_path, repo_root, rights_payload())  # earlier permitted run leaves a copy
+    cached = tmp_path / "q" / "synthetic-laser" / REF / shorts_laser.DATA_PATH
+    assert cached.is_file()
+    opened: list[str] = []
+    real = Path.read_bytes
+
+    def spy(self: Path) -> bytes:
+        opened.append(str(self))
+        return real(self)
+
+    monkeypatch.setattr(Path, "read_bytes", spy)
+    report = _run(tmp_path, repo_root, rights_payload(local_inspection_permitted=False))
+    assert _status(report)["data_integrity"] == "blocked"
+    assert str(cached) not in opened
+
+
+def test_download_order_requests_data_only_after_permission(tmp_path: Path) -> None:
+    lock = upstream(tmp_path / "up")
+    served = {f.url: (tmp_path / "up" / f.path).read_bytes() for f in lock.files}
+    asked: list[str] = []
+
+    def opener(url: str, _t: float) -> Any:
+        asked.append(url)
+        return io_bytes(served[url])
+
+    files = acquire.acquire(lock, root=tmp_path / "q", opener=opener)
+    data_url = lock.file(shorts_laser.DATA_PATH).url
+    assert data_url not in asked and shorts_laser.DATA_PATH not in files
+    denied = rights.verify(
+        RightsRecord.model_validate(rights_payload(local_inspection_permitted=False)), lock, files
+    )
+    with pytest.raises(rights.RightsBlocked, match="local quarantine inspection"):
+        acquire.acquire_data(lock, denied, root=tmp_path / "q", opener=opener)
+    assert data_url not in asked
+    allowed = rights.verify(RightsRecord.model_validate(rights_payload()), lock, files)
+    acquire.acquire_data(lock, allowed, root=tmp_path / "q", opener=opener)
+    assert asked[-1] == data_url
+
+
+def test_cli_acquire_refuses_data_without_permission(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    up, ext, _ = _setup(tmp_path, rights_payload(local_inspection_permitted=False))
+    code = main(
+        ["external", "acquire", "synthetic-laser", "--source-dir", str(up), "--root", str(ext)]
+    )
+    assert code == 1 and "local quarantine inspection blocked" in capsys.readouterr().err
+    assert not any(p.name == "laser-gun-data.csv" for p in Path(paths_cache()).rglob("*"))
+
+
+def test_verified_admission_requires_local_read_permission() -> None:
+    with pytest.raises(ValidationError, match="implies the data may be read"):
+        RightsRecord.model_validate(verified_payload(local_inspection_permitted=False))
 
 
 def test_adapter_version_binding(tmp_path: Path, repo_root: Path) -> None:

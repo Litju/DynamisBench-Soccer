@@ -50,10 +50,12 @@ def _cmd_rights(args: argparse.Namespace) -> int:
 def _cmd_acquire(args: argparse.Namespace) -> int:
     root = Path(args.root)
     lock, record = load_lock(args.source_id, root), load_rights(args.source_id, root)
+    source_dir = Path(args.source_dir) if args.source_dir else None
     try:
-        files = acquire.acquire(lock, source_dir=Path(args.source_dir) if args.source_dir else None)
+        # Evidence first; measurement bytes only after the rights gate permits it.
+        files = acquire.acquire(lock, source_dir=source_dir)
         check = rights.verify(record, lock, files)
-        rights.require_local_inspection(check)
+        files |= acquire.acquire_data(lock, check, source_dir=source_dir)
     except (IntegrityError, rights.RightsBlocked) as exc:
         print(f"FAIL {exc}", file=sys.stderr)
         return 1

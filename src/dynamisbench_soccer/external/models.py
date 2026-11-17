@@ -170,6 +170,11 @@ class RightsRecord(_Strict):
             )
         if self.local_inspection_permitted and self.canonical_admission is RightsStatus.REFUSED:
             raise ValueError("a refused source may not be inspected locally")
+        if (
+            self.canonical_admission is RightsStatus.VERIFIED
+            and not self.local_inspection_permitted
+        ):
+            raise ValueError("canonical admission implies the data may be read locally")
         return self
 
 

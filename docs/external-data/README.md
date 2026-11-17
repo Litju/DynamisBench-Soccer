@@ -13,16 +13,18 @@
 data/external/<id>/source-lock.json  ─┐   commit-pinned URLs; SHA-256, size, Git blob SHA-1
 data/external/<id>/rights.json       ─┤   license evidence vs measurement-data rights, consent
                                       ▼
-pinned_source → integrity → rights_verification → ingestion → safe_parse → profile
+pinned_source → evidence_integrity → rights_verification → data_integrity → ingestion
+             → safe_parse → profile
              → schema_v2_conversion → qc → diagnostics → report.{json,md}
 ```
 
 | Stage | Passes when | Otherwise |
 | -- | -- | -- |
 | `pinned_source` | lock pins the exact commit and data SHA-256 the adapter was written for | failed |
-| `integrity` | every file matches pinned size, SHA-256 and Git blob SHA-1 (bounded download, no symlinks) | failed, nothing installed |
+| `evidence_integrity` | license, documentation and transform-script files only match pinned size, SHA-256 and Git blob SHA-1 (bounded download, no symlinks). **No measurement byte is touched.** | failed, nothing installed |
 | `rights_verification` | license text in the pinned bytes contains the recorded grant and holder, **and** the record permits canonical admission | blocked (license verified, admission not permitted) or failed (evidence mismatch) |
-| `ingestion` | canonical: manifest-v1 → existing `ingest_local` / `verify` / `stage` | blocked → read-only **quarantine** copy, only if `local_inspection_permitted`; otherwise the run stops |
+| `data_integrity` | runs **only if** `local_inspection_permitted`; measurement data then verified like the evidence | blocked: data bytes are never downloaded, opened or hashed, not even an existing quarantine copy, and the run stops |
+| `ingestion` | canonical: manifest-v1 → existing `ingest_local` / `verify` / `stage` | blocked → read-only **quarantine** copy (reached only after `data_integrity` passed) |
 | `safe_parse` | hash-bound, exact header, ASCII, finite numbers, bounded size/rows | failed |
 | `schema_v2_conversion` | strict `BundleMeta`; written, read back and streamed through `signals.io` with SHA-256 verification | blocked with each precise blocker; the global schema is never weakened |
 | `qc` | source-level QC always (mirrors `sprint_fv` QC rules, params from `qc/rules.toml`); bundle QC when a v2 bundle exists | records the verdict |

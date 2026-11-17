@@ -1,6 +1,7 @@
 """End-to-end external-source pipeline for ``shorts-laser`` (RES-720).
 
-pinned source -> integrity (SHA-256/size/blob) -> rights verification -> ingestion
+pinned source -> evidence integrity (license/docs only) -> rights verification ->
+data integrity (measurement bytes, only if rights permit inspection) -> ingestion
 (canonical only if rights permit, else quarantine) -> strict parse -> profile ->
 schema-v2 conversion (where valid) -> QC -> numerical diagnostics -> report.
 
@@ -152,19 +153,20 @@ def _stages(
         run.add("pinned_source", "failed", "lock does not pin the adapter's source version", **pin)
     run.add("pinned_source", "passed", "commit-pinned lock matches adapter version", **pin)
 
-    # 2. integrity
+    # 2. evidence integrity: license, documentation and scripts only, never data bytes
     try:
         files = acquire.acquire(lock, source_dir=source_dir, root=quarantine, opener=opener)
     except IntegrityError as exc:
-        run.add("integrity", "failed", str(exc))
+        run.add("evidence_integrity", "failed", str(exc))
     run.add(
-        "integrity",
+        "evidence_integrity",
         "passed",
-        "size, SHA-256 and Git blob SHA-1 verified for every file",
-        files={f.path: f.sha256 for f in lock.files},
+        "size, SHA-256 and Git blob SHA-1 verified for every evidence file; "
+        "measurement data not yet acquired",
+        files={p: lock.file(p).sha256 for p in sorted(files)},
     )
 
-    # 3. rights
+    # 3. rights, decided before any measurement byte is acquired or read
     check = rights.verify(record, lock, files)
     report["rights"] = {
         "license_id": record.license_id,
@@ -188,8 +190,29 @@ def _stages(
             "license evidence verified; canonical admission " + str(check.canonical_admission),
             blockers=check.blockers,
         )
+    if not check.local_inspection_permitted:
+        run.add(
+            "data_integrity",
+            "blocked",
+            "rights record does not permit local inspection; measurement-data bytes were "
+            "not acquired, opened or hashed",
+            data_bytes_acquired=False,
+        )
+        return
 
-    # 4. ingestion
+    # 4. data integrity, then ingestion
+    try:
+        files |= acquire.acquire_data(
+            lock, check, source_dir=source_dir, root=quarantine, opener=opener
+        )
+    except IntegrityError as exc:
+        run.add("data_integrity", "failed", str(exc))
+    run.add(
+        "data_integrity",
+        "passed",
+        "measurement-data size, SHA-256 and Git blob SHA-1 verified after the rights gate",
+        files={data_entry.path: data_entry.sha256},
+    )
     if check.canonical_admission is RightsStatus.VERIFIED:
         manifest = acquire.to_manifest(
             lock,
@@ -211,11 +234,6 @@ def _stages(
             manifest=manifest.key,
         )
     else:
-        try:
-            rights.require_local_inspection(check)
-        except rights.RightsBlocked as exc:
-            run.add("ingestion", "blocked", str(exc))
-            return
         data_path = files[shorts_laser.DATA_PATH]
         run.add(
             "ingestion",
