@@ -1,0 +1,40 @@
+{
+  "assessed_by": "RES-720 implementation (Claude Code); requires human review in the RES-720 PR",
+  "assessed_on": "2026-11-17",
+  "blockers": [
+    "measurement-data rights: no dataset-specific grant, data-availability statement or originating study identifies who owns the original Noptel CMP3 / Musclelab recording; the repository-wide MIT file is a software license by the package author and does not by itself establish rights to the underlying measurements (RES-719 Gate 0)",
+    "participant consent: no consent or ethics statement is published for the recorded athlete",
+    "minor status: the athlete is described only as a 'youth basketball player'; minor status cannot be excluded, so privacy rule 5 (aggregate-only, no individual record as a task) applies even after any admission"
+  ],
+  "canonical_admission": "pending",
+  "copyright_holder": "Mladen Jovanović",
+  "dataset_specific_terms": "None found. README.md, DESCRIPTION, R/data-laser-gun.R (man/laser_gun_data.Rd source) and data-raw/laser-gun-data.R at the pinned commit contain no data-specific license, consent or data-availability statement.",
+  "evidence_urls": [
+    "https://github.com/mladenjovanovic/shorts/blob/5f8ce5554b5aca0e857199e0eb50bf66d7089130/LICENSE.md",
+    "https://github.com/mladenjovanovic/shorts/blob/5f8ce5554b5aca0e857199e0eb50bf66d7089130/DESCRIPTION",
+    "https://github.com/mladenjovanovic/shorts/blob/5f8ce5554b5aca0e857199e0eb50bf66d7089130/R/data-laser-gun.R",
+    "https://mladenjovanovic.github.io/shorts/reference/laser_gun_data.html"
+  ],
+  "kind": "dbs-external-rights-record",
+  "license_files": [
+    "LICENSE",
+    "LICENSE.md"
+  ],
+  "license_grant_phrase": "Permission is hereby granted, free of charge, to any person obtaining a copy",
+  "license_id": "MIT",
+  "license_scope": "Repository-wide MIT license (DESCRIPTION: 'License: MIT + file LICENSE'; author role 'cph'). It grants use, copy and modification of the repository files, including data-raw/laser-gun-data.csv, but is phrased for 'the Software' and is silent on the provenance of measurement data.",
+  "local_inspection_basis": "The MIT grant at the pinned commit expressly permits copying and modifying the repository files. Local, non-redistributed inspection of the hash-pinned CSV in quarantine, and publication of aggregate pipeline diagnostics with attribution, rely on that grant only. They are not canonical admission.",
+  "local_inspection_permitted": true,
+  "measurement_data_rights": "pending",
+  "minors_possible": true,
+  "participant_consent": "not_documented",
+  "permitted_outputs": [
+    "hash-verified read-only quarantine copy under $DBS_CACHE_HOME (never Git, never the canonical store, never staged)",
+    "aggregate numerical diagnostics and QC values with attribution to shorts (MIT notice retained)"
+  ],
+  "personal_identifiers_in_source": "none",
+  "pinned_ref": "5f8ce5554b5aca0e857199e0eb50bf66d7089130",
+  "redistribution_allowed": false,
+  "schema_version": 1,
+  "source_id": "shorts-laser"
+}

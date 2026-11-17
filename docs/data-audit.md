@@ -131,6 +131,14 @@ virtual-reality height manipulation. It exceeds the practical v0.1 staging budge
 on an 8 GB host. It is a candidate for v0.2 drop-jump cross-validation, through
 streaming extraction of selected trials.
 
+## Pending rights review (not admitted)
+
+* `shorts-laser` (RES-720): pinned and hash-verified under `data/external/shorts-laser/`, but
+  canonical admission is **pending**. Rights to the original measurement data and participant
+  consent are undocumented. See
+  [shorts-laser-rights-disposition.md](external-data/shorts-laser-rights-disposition.md).
+  No manifest exists until those rights are confirmed.
+
 ## Privacy rules for any empirical data
 
 1. **Pseudonyms only.** Bundles carry `subject.pseudonym`, never names, and
