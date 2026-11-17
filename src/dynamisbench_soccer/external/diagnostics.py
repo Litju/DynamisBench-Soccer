@@ -16,6 +16,7 @@ from dataclasses import asdict, dataclass
 
 import numpy as np
 
+from dynamisbench_soccer.external import timebase
 from dynamisbench_soccer.external.shorts_laser import (
     PACKAGE_DOCUMENTED_ROWS,
     PACKAGE_TRIM_S,
@@ -26,6 +27,12 @@ from dynamisbench_soccer.signals.schema import FloatArray
 _GOLDEN = (math.sqrt(5) - 1) / 2
 WINDOWS_MS = (1, 5, 25, 50)
 STAGE = "pipeline_derived"
+#: Outputs that combine vendor distance with vendor velocity on the shared time grid.
+JOINT_OUTPUTS = (
+    "distance_derivative_vs_vendor_velocity",
+    "integrated_velocity_vs_distance",
+    "mono_exponential_fit_sensitivity.variants.velocity_to_30m",
+)
 
 
 def _golden(f: Callable[[float], float], lo: float, hi: float, tol: float) -> tuple[float, float]:
@@ -95,7 +102,9 @@ def _stats(residual: FloatArray) -> dict[str, float]:
     }
 
 
-def compute(table: SourceTable) -> dict[str, object]:
+def compute(
+    table: SourceTable, time_base: timebase.TimeBaseAgreement | None = None
+) -> dict[str, object]:
     c = table.columns
     t, d, v, vu = c["time"], c["distance"], c["velocity"], c["raw_velocity"]
     dt = float(np.median(np.diff(t)))
@@ -130,24 +139,25 @@ def compute(table: SourceTable) -> dict[str, object]:
     out["distance_derivative_vs_vendor_velocity"] = rows
 
     # Time-base agreement: the shift that best aligns d(distance)/dt with vendor velocity.
-    k25 = max(1, round(0.025 / dt))
-    dv25, inner25 = _central_diff(t, d, k25)
-    v_in = v[inner25]
-
-    def shift_rms(lag: int) -> float:
-        a, b = (v_in[lag:], dv25[: len(dv25) - lag]) if lag >= 0 else (v_in[:lag], dv25[-lag:])
-        return float(np.sqrt(np.mean((a - b) ** 2)))
-
-    max_lag = min(2000, len(v_in) // 2)
-    best_lag = min(range(-max_lag, max_lag + 1), key=shift_rms)
+    # Measured and reported only; it is never applied to any other output.
+    tb = time_base or timebase.assess(table)
     out["distance_velocity_time_base"] = {
-        "best_lag_ms": best_lag * dt * 1000,
-        "rms_at_zero_lag_m_s": shift_rms(0),
-        "rms_at_best_lag_m_s": shift_rms(best_lag),
-        "search_range_ms": max_lag * dt * 1000,
+        "best_lag_ms": tb.best_lag_ms,
+        "rms_at_zero_lag_m_s": tb.rms_at_zero_lag_m_s,
+        "rms_at_best_lag_m_s": tb.rms_at_best_lag_m_s,
+        "search_range_ms": tb.search_range_ms,
         "sign": "positive lag: vendor velocity trails the distance-derived speed",
-        "first_time_distance_above_0_5_m_s": float(t[np.argmax(d > 0.5)]),
-        "first_time_velocity_above_1_m_s": float(t[np.argmax(v > 1.0)]),
+        "first_time_distance_above_0_5_m_s": tb.first_time_distance_above_0_5_m_s,
+        "first_time_velocity_above_1_m_s": tb.first_time_velocity_above_1_m_s,
+        "tolerance_ms": tb.tolerance_ms,
+        "temporal_qualification": tb.qualification,
+        "timestamps_modified": False,
+        "lag_applied_to_any_output": False,
+    }
+    out["joint_distance_velocity_reconstruction"] = {
+        "temporal_qualification": tb.qualification,
+        "statement": tb.statement(),
+        "affected_outputs": list(JOINT_OUTPUTS),
     }
 
     # Integrating each vendor velocity vs vendor distance.

@@ -27,7 +27,7 @@ pinned_source → evidence_integrity → rights_verification → data_integrity 
 | `ingestion` | canonical: manifest-v1 → existing `ingest_local` / `verify` / `stage` | blocked → read-only **quarantine** copy (reached only after `data_integrity` passed) |
 | `safe_parse` | hash-bound, exact header, ASCII, finite numbers, bounded size/rows | failed |
 | `schema_v2_conversion` | canonical admission verified **and** a lock-pinned, reviewed acquisition-date claim; strict `BundleMeta`; written, read back and streamed through `signals.io` with SHA-256 verification | blocked with each precise blocker; the global schema is never weakened |
-| `qc` | source-level QC always (mirrors `sprint_fv` QC rules, params from `qc/rules.toml`); bundle QC when a v2 bundle exists | records the verdict |
+| `qc` | source-level QC always, including `SRC-05` distance/velocity time-base consistency (mirrors `sprint_fv` QC rules, params from `qc/rules.toml`); bundle QC when a v2 bundle exists | records the verdict |
 | `diagnostics` | pipeline-derived numerical diagnostics | n/a |
 
 ```bash
@@ -65,10 +65,15 @@ source column `raw_velocity` becomes channel `velocity_vendor_unsmoothed`.
 * **Vendor channels disagree on time base:** d(distance)/dt matches vendor velocity
   to 0.094 m/s RMS only after a **≈ 996 ms shift**. At zero lag the RMS is 2.09 m/s,
   and integrating velocity falls ≈ 7.8 m short of the vendor distance. The cause
-  cannot be determined from vendor exports. TD-type and distance-derived split
-  estimands therefore depend on which channel defines t0.
+  cannot be determined from vendor exports. Joint distance/velocity reconstruction is
+  therefore **temporally unqualified** (`SRC-05` fails; tolerance ±5 ms). The shift is
+  measured and reported, never applied. Source timestamps are never corrected, and
+  joint outputs (derivative residuals, integration, the distance-defined 30 m fit)
+  are reported unshifted and labelled. Any converted bundle carries the same
+  statement in its provenance.
 * **QC:** `velocity_vendor_unsmoothed` fails QC-R02 (56.6 m/s² sample-to-sample).
-  Smoothed velocity passes (5.4 m/s²). Source verdict `accept_with_flags`.
+  Smoothed velocity passes (5.4 m/s²). `SRC-05` (time base) is flagged. Source verdict
+  `accept_with_flags`.
 * **Model-fit sensitivity:** across four documented preprocessing variants,
   MSS 8.13–8.22 m/s and TAU 1.03–1.07 s. This is a diagnostic of vendor-processed
   velocity, not reference truth.

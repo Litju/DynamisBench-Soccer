@@ -46,6 +46,10 @@
       {
         "decision": "all channels manufacturer_processed; no measured_native channel exists",
         "field": "signal_stage"
+      },
+      {
+        "decision": "TEMPORALLY UNQUALIFIED joint distance/velocity reconstruction: d(distance)/dt aligns with vendor velocity only after a 996 ms shift (RMS 2.088 -> 0.094 m/s; tolerance \u00b15 ms). Cause undetermined; source timestamps unmodified and no shift applied.",
+        "field": "temporal_alignment"
       }
     ]
   },
@@ -118,10 +122,14 @@
       "best_lag_ms": 996.0000000000009,
       "first_time_distance_above_0_5_m_s": 0.357,
       "first_time_velocity_above_1_m_s": 1.052,
+      "lag_applied_to_any_output": false,
       "rms_at_best_lag_m_s": 0.09354186719428531,
       "rms_at_zero_lag_m_s": 2.0878069831563777,
       "search_range_ms": 2000.0000000000018,
-      "sign": "positive lag: vendor velocity trails the distance-derived speed"
+      "sign": "positive lag: vendor velocity trails the distance-derived speed",
+      "temporal_qualification": "unqualified",
+      "timestamps_modified": false,
+      "tolerance_ms": 5.0
     },
     "integrated_velocity_vs_distance": {
       "velocity": {
@@ -132,6 +140,15 @@
         "end_difference_m": -7.5664228387699595,
         "max_abs_difference_m": 7.6141376897699615
       }
+    },
+    "joint_distance_velocity_reconstruction": {
+      "affected_outputs": [
+        "distance_derivative_vs_vendor_velocity",
+        "integrated_velocity_vs_distance",
+        "mono_exponential_fit_sensitivity.variants.velocity_to_30m"
+      ],
+      "statement": "TEMPORALLY UNQUALIFIED joint distance/velocity reconstruction: d(distance)/dt aligns with vendor velocity only after a 996 ms shift (RMS 2.088 -> 0.094 m/s; tolerance \u00b15 ms). Cause undetermined; source timestamps unmodified and no shift applied.",
+      "temporal_qualification": "unqualified"
     },
     "mono_exponential_fit_sensitivity": {
       "note": "model-fit diagnostic of vendor-processed velocity; not reference truth",
@@ -345,6 +362,18 @@
         "status": "pass",
         "values": {
           "minimum": 0.02498627
+        }
+      },
+      {
+        "basis": "source contract (RES-720 adapter)",
+        "detail": "TEMPORALLY UNQUALIFIED joint distance/velocity reconstruction: d(distance)/dt aligns with vendor velocity only after a 996 ms shift (RMS 2.088 -> 0.094 m/s; tolerance \u00b15 ms). Cause undetermined; source timestamps unmodified and no shift applied.",
+        "name": "distance_velocity_time_base_consistent",
+        "rule_id": "SRC-05",
+        "severity": "flag",
+        "status": "fail",
+        "values": {
+          "best_lag_ms": 996.0000000000009,
+          "tolerance_ms": 5.0
         }
       },
       {

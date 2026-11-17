@@ -14,6 +14,7 @@ from dataclasses import dataclass, field
 
 import numpy as np
 
+from dynamisbench_soccer.external import timebase
 from dynamisbench_soccer.external.shorts_laser import (
     PUBLISHED_RESAMPLED_HZ,
     SOURCE_COLUMNS,
@@ -50,7 +51,9 @@ def _fs(time: FloatArray) -> float | None:
     return float(1 / np.median(dt))
 
 
-def run(table: SourceTable, rules: RuleSet) -> list[SourceCheck]:
+def run(
+    table: SourceTable, rules: RuleSet, time_base: timebase.TimeBaseAgreement | None = None
+) -> list[SourceCheck]:
     ch = _channels(table)
     t = ch["time"]
     dt = np.diff(t)
@@ -119,6 +122,17 @@ def run(table: SourceTable, rules: RuleSet) -> list[SourceCheck]:
             f"{name} minimum {vmin:.4f} m/s",
             minimum=vmin,
         )
+
+    tb = time_base or timebase.assess(table)
+    add(
+        "SRC-05",
+        "distance_velocity_time_base_consistent",
+        Severity.FLAG,
+        tb.qualification == "qualified",
+        tb.statement(),
+        best_lag_ms=tb.best_lag_ms,
+        tolerance_ms=tb.tolerance_ms,
+    )
 
     rs = {r.id: r for r in rules.rule}
     basis = f"mirrors {{}} params from qc/rules.toml v{rules.version}"

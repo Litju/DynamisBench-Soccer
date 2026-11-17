@@ -149,7 +149,21 @@ def _diagnostics(a: Any, d: dict[str, Any]) -> None:
         "distance-defined 30 m cut below) depends on which vendor channel defines t0."
     )
     a("")
-    a("### d(distance)/dt versus vendor velocities, by half-window")
+    a(
+        f"* Temporal qualification: **{tb['temporal_qualification']}** (tolerance "
+        f"±{_f(tb['tolerance_ms'])} ms); timestamps modified: {tb['timestamps_modified']}; "
+        f"lag applied to any output: {tb['lag_applied_to_any_output']}"
+    )
+    a("")
+    joint = d["joint_distance_velocity_reconstruction"]
+    a(f"> **{joint['statement']}**")
+    a(">")
+    a(
+        "> Affected outputs (reported unshifted, at zero lag): "
+        + ", ".join(f"`{x}`" for x in joint["affected_outputs"])
+    )
+    a("")
+    a("### d(distance)/dt versus vendor velocities, by half-window (joint: see qualification)")
     a("")
     a(
         "| Half-window ms | Quantisation floor RMS m/s | vs velocity RMS / mean / max | "
@@ -164,7 +178,7 @@ def _diagnostics(a: Any, d: dict[str, Any]) -> None:
             f"{_f(u['rms'])} / {_f(u['mean'])} / {_f(u['max_abs'])} |"
         )
     a("")
-    a("### Integrated vendor velocity versus vendor distance")
+    a("### Integrated vendor velocity versus vendor distance (joint: see qualification)")
     a("")
     for name, x in d["integrated_velocity_vs_distance"].items():
         a(

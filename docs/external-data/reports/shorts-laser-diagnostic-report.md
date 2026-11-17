@@ -93,6 +93,7 @@ Converted: **False**.
 | sampling | nominal 1000 Hz is the published resampled rate; measured from the time column |
 | subject | anonymous pseudonym; sex, body mass and birth year not recorded |
 | signal_stage | all channels manufacturer_processed; no measured_native channel exists |
+| temporal_alignment | TEMPORALLY UNQUALIFIED joint distance/velocity reconstruction: d(distance)/dt aligns with vendor velocity only after a 996 ms shift (RMS 2.088 -> 0.094 m/s; tolerance ±5 ms). Cause undetermined; source timestamps unmodified and no shift applied. |
 
 ## Source-level QC (rules v0.1.0): verdict `accept_with_flags`
 
@@ -103,6 +104,7 @@ Converted: **False**.
 | SRC-03 | `distance_non_decreasing` | flag | **pass** | n_decreasing=0 |  |
 | SRC-04 | `velocity_non_negative` | flag | **pass** | minimum=0.08052 |  |
 | SRC-04 | `velocity_vendor_unsmoothed_non_negative` | flag | **pass** | minimum=0.02499 |  |
+| SRC-05 | `distance_velocity_time_base_consistent` | flag | **fail** | best_lag_ms=996, tolerance_ms=5 | TEMPORALLY UNQUALIFIED joint distance/velocity reconstruction: d(distance)/dt aligns with vendor velocity only after a 996 ms shift (RMS 2.088 -> 0.094 m/s; tolerance ±5 ms). Cause undetermined; source timestamps unmodified and no shift applied. |
 | QC-S03 | `clipping` | reject | **pass** | longest_run_at_max=1 |  |
 | QC-S04 | `timestamp_integrity` | reject | **pass** | n_gaps=0, max_dt_ms=1 |  |
 | QC-R01 | `radar_start_captured` | flag | **pass** | start_speed=0.09702 |  |
@@ -127,7 +129,13 @@ Converted: **False**.
 * distance first exceeds 0.5 m at 0.357 s; velocity first exceeds 1 m/s at 1.052 s
 * The cause cannot be identified from manufacturer-processed exports. Any estimand that depends on the time origin (TD, split times read from distance, the distance-defined 30 m cut below) depends on which vendor channel defines t0.
 
-### d(distance)/dt versus vendor velocities, by half-window
+* Temporal qualification: **unqualified** (tolerance ±5 ms); timestamps modified: False; lag applied to any output: False
+
+> **TEMPORALLY UNQUALIFIED joint distance/velocity reconstruction: d(distance)/dt aligns with vendor velocity only after a 996 ms shift (RMS 2.088 -> 0.094 m/s; tolerance ±5 ms). Cause undetermined; source timestamps unmodified and no shift applied.**
+>
+> Affected outputs (reported unshifted, at zero lag): `distance_derivative_vs_vendor_velocity`, `integrated_velocity_vs_distance`, `mono_exponential_fit_sensitivity.variants.velocity_to_30m`
+
+### d(distance)/dt versus vendor velocities, by half-window (joint: see qualification)
 
 | Half-window ms | Quantisation floor RMS m/s | vs velocity RMS / mean / max | vs unsmoothed RMS / mean / max |
 | --: | --: | --: | --: |
@@ -136,7 +144,7 @@ Converted: **False**.
 | 25 | 0.008165 | 2.088 / 1.498 / 4.443 | 2.113 / 1.461 / 4.646 |
 | 50 | 0.004082 | 2.097 / 1.511 / 4.432 | 2.122 / 1.473 / 4.634 |
 
-### Integrated vendor velocity versus vendor distance
+### Integrated vendor velocity versus vendor distance (joint: see qualification)
 
 * `velocity`: end difference -7.762 m, max |difference| 7.771 m
 * `velocity_vendor_unsmoothed`: end difference -7.566 m, max |difference| 7.614 m

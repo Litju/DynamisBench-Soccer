@@ -24,7 +24,14 @@ import numpy as np
 from dynamisbench_soccer import __version__
 from dynamisbench_soccer.data import store
 from dynamisbench_soccer.data.store import IntegrityError
-from dynamisbench_soccer.external import acquire, diagnostics, rights, shorts_laser, sourceqc
+from dynamisbench_soccer.external import (
+    acquire,
+    diagnostics,
+    rights,
+    shorts_laser,
+    sourceqc,
+    timebase,
+)
 from dynamisbench_soccer.external.acquire import Opener
 from dynamisbench_soccer.external.models import RightsStatus, load_lock, load_rights
 from dynamisbench_soccer.qc import spec
@@ -265,12 +272,14 @@ def _stages(
     report["package_derived_not_ingested"] = dict(shorts_laser.PACKAGE_DERIVED_NOT_INGESTED)
     run.add("profile", "passed", "Gate-2 shape audit recorded")
 
-    # 7. schema-v2 conversion
+    # 7. schema-v2 conversion (time base measured once; reported, never applied)
+    time_base = timebase.assess(table)
     outcome = shorts_laser.convert(
         table,
         lock,
         files,
         canonical_admitted=check.canonical_admission is RightsStatus.VERIFIED,
+        time_base=time_base,
     )
     report["conversion"] = {
         "converted": outcome.converted,
@@ -315,7 +324,7 @@ def _stages(
         )
 
     # 8. QC
-    checks = sourceqc.run(table, rules)
+    checks = sourceqc.run(table, rules, time_base)
     report["source_qc"] = {
         "verdict": sourceqc.verdict(checks),
         "rules_version": rules.version,
@@ -335,7 +344,7 @@ def _stages(
     )
 
     # 9. diagnostics
-    report["diagnostics"] = diagnostics.compute(table)
+    report["diagnostics"] = diagnostics.compute(table, time_base)
     run.add("diagnostics", "passed", "pipeline-derived numerical diagnostics computed")
 
 

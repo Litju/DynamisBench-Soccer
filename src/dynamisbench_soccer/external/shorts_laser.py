@@ -22,6 +22,7 @@ import stat
 from collections.abc import Mapping
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Protocol as _Protocol
 
 import numpy as np
 from pydantic import ValidationError
@@ -277,6 +278,12 @@ def bind_session_date(lock: SourceLock, files: Mapping[str, Path]) -> BoundSessi
     return BoundSessionDate(claim.date, entry.path, entry.sha256, claim.excerpt, claim.reviewed_by)
 
 
+class TimeBaseStatement(_Protocol):
+    """The part of ``timebase.TimeBaseAgreement`` that conversion records."""
+
+    def statement(self) -> str: ...
+
+
 @dataclass(frozen=True)
 class ConversionOutcome:
     bundle: SignalBundle | None
@@ -335,6 +342,7 @@ def convert(
     evidence_files: Mapping[str, Path],
     *,
     canonical_admitted: bool,
+    time_base: TimeBaseStatement,
 ) -> ConversionOutcome:
     """Build a strict schema-v2 bundle, or report every blocker; never fill gaps.
 
@@ -365,7 +373,7 @@ def convert(
     dt = np.diff(t)
     if np.any(dt <= 0):
         blockers.append("time: source timestamps are not strictly increasing")
-    determinations = list(DETERMINATIONS)
+    determinations = [*DETERMINATIONS, ("temporal_alignment", time_base.statement())]
     if blockers or session is None:
         return ConversionOutcome(None, blockers, determinations)
 
@@ -424,6 +432,7 @@ def convert(
                     f"(sha256 {session.evidence_sha256}), excerpt {session.excerpt!r}, "
                     f"reviewed by {session.reviewed_by}",
                     f"test_id sprint_fv: {SPRINT_FV_MAPPING}",
+                    f"temporal alignment: {time_base.statement()}",
                     f"adapter {ADAPTER_ID}@{ADAPTER_VERSION}: column raw_velocity renamed "
                     "velocity_vendor_unsmoothed; no resampling, filtering, offset removal, "
                     "trimming or imputation",

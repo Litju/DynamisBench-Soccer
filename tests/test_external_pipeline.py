@@ -38,6 +38,7 @@ from dynamisbench_soccer.external import (
     rights,
     shorts_laser,
     sourceqc,
+    timebase,
 )
 from dynamisbench_soccer.external.models import RightsRecord, SignalStage, SourceLock
 from dynamisbench_soccer.qc import spec
@@ -65,7 +66,9 @@ def _convert(
     table = _table(tmp_path, cols)
     up = tmp_path / "evidence-up"
     lock = dated_upstream(up) if dated else upstream(up)
-    return table, shorts_laser.convert(table, lock, _files(up, lock), canonical_admitted=admitted)
+    return table, shorts_laser.convert(
+        table, lock, _files(up, lock), canonical_admitted=admitted, time_base=timebase.assess(table)
+    )
 
 
 def _table(tmp_path: Path, cols: dict[str, np.ndarray] | None = None) -> shorts_laser.SourceTable:
@@ -126,8 +129,9 @@ def test_excerpt_absent_from_evidence_bytes_blocks_conversion(tmp_path: Path) ->
     lock = upstream(
         up, evidence="An unrelated document.\n", claim=date_claim()
     )  # claim names a date the file never states
+    table = _table(tmp_path)
     outcome = shorts_laser.convert(
-        _table(tmp_path), lock, _files(up, lock), canonical_admitted=True
+        table, lock, _files(up, lock), canonical_admitted=True, time_base=timebase.assess(table)
     )
     assert not outcome.converted
     assert "excerpt not found verbatim" in outcome.blockers[0]
@@ -139,8 +143,9 @@ def test_evidence_bytes_changed_after_pinning_block_conversion(tmp_path: Path) -
     (up / EVIDENCE_PATH).write_text(
         EVIDENCE_TEXT.replace("2024-01-06", "2024-01-07"), encoding="utf-8"
     )
+    table = _table(tmp_path)
     outcome = shorts_laser.convert(
-        _table(tmp_path), lock, _files(up, lock), canonical_admitted=True
+        table, lock, _files(up, lock), canonical_admitted=True, time_base=timebase.assess(table)
     )
     assert not outcome.converted and "differ from the pinned evidence" in outcome.blockers[0]
 
@@ -149,7 +154,10 @@ def test_evidence_not_acquired_blocks_conversion(tmp_path: Path) -> None:
     up = tmp_path / "up"
     lock = dated_upstream(up)
     files = {k: v for k, v in _files(up, lock).items() if k != EVIDENCE_PATH}
-    outcome = shorts_laser.convert(_table(tmp_path), lock, files, canonical_admitted=True)
+    table = _table(tmp_path)
+    outcome = shorts_laser.convert(
+        table, lock, files, canonical_admitted=True, time_base=timebase.assess(table)
+    )
     assert not outcome.converted and "was not acquired" in outcome.blockers[0]
 
 
@@ -208,6 +216,59 @@ def test_converted_bundle_round_trips_through_v2_reader(tmp_path: Path) -> None:
     back = io.read(stem)
     assert back.meta == bundle.meta
     assert sum(len(b["time"]) for b in io.iter_batches(stem, batch_rows=700)) == bundle.meta.n_rows
+
+
+# --- temporal qualification (the ~996 ms finding) ------------------------------------------
+
+
+def _lagged(n: int = 6000, lead_s: float = 0.5) -> dict[str, np.ndarray]:
+    cols = sprint(n=n)
+    cols["distance"] = sprint(n=n, td=TD - lead_s)["distance"]  # distance leads velocity
+    return cols
+
+
+def test_time_base_tolerance_boundary(tmp_path: Path) -> None:
+    ok = timebase.assess(_table(tmp_path, sprint(n=6000)))
+    assert ok.qualification == "qualified" and abs(ok.best_lag_ms) <= timebase.TOLERANCE_MS
+    bad = timebase.assess(_table(tmp_path, _lagged(lead_s=0.010)))
+    assert bad.best_lag_ms == pytest.approx(10, abs=1.5) and bad.qualification == "unqualified"
+
+
+def test_lagged_source_is_flagged_never_corrected(tmp_path: Path, rules: spec.RuleSet) -> None:
+    cols = _lagged()
+    table, outcome = _convert(tmp_path, cols)
+    assert outcome.bundle is not None  # flagged, not blocked
+    for col in shorts_laser.SOURCE_COLUMNS:  # timestamps and values exactly as in the source
+        assert np.array_equal(outcome.bundle[col.channel], table.columns[col.source_column])
+    statement = dict(outcome.determinations)["temporal_alignment"]
+    assert statement.startswith("TEMPORALLY UNQUALIFIED") and "no shift applied" in statement
+    assert any("TEMPORALLY UNQUALIFIED" in t for t in outcome.bundle.meta.provenance.transforms)
+    src05 = next(c for c in sourceqc.run(table, rules) if c.rule_id == "SRC-05")
+    assert src05.status is spec.Status.FAIL and src05.severity is spec.Severity.FLAG
+    d: Any = diagnostics.compute(table)
+    assert d["distance_velocity_time_base"]["timestamps_modified"] is False
+    assert d["distance_velocity_time_base"]["lag_applied_to_any_output"] is False
+    joint = d["joint_distance_velocity_reconstruction"]
+    assert joint["temporal_qualification"] == "unqualified"
+    assert "integrated_velocity_vs_distance" in joint["affected_outputs"]
+    # the joint diagnostics are reported at zero lag (unshifted), so the offset stays visible
+    assert abs(d["integrated_velocity_vs_distance"]["velocity"]["end_difference_m"]) > 3.0
+
+
+def test_consistent_source_is_qualified(tmp_path: Path, rules: spec.RuleSet) -> None:
+    table, outcome = _convert(tmp_path, sprint(n=6000))
+    assert dict(outcome.determinations)["temporal_alignment"].startswith("joint distance")
+    src05 = next(c for c in sourceqc.run(table, rules) if c.rule_id == "SRC-05")
+    assert src05.status is spec.Status.PASS
+
+
+def test_convert_requires_a_time_base_assessment(tmp_path: Path) -> None:
+    up = tmp_path / "up"
+    lock = dated_upstream(up)
+    with pytest.raises(TypeError):
+        shorts_laser.convert(  # type: ignore[call-arg]
+            _table(tmp_path), lock, _files(up, lock), canonical_admitted=True
+        )
 
 
 # --- QC -------------------------------------------------------------------------------------
@@ -517,6 +578,20 @@ def test_committed_report_is_aggregate_and_honest(repo_root: Path) -> None:
     assert report["profile"]["n_rows"] == 5232
     assert report["diagnostics"]["package_preprocessing"]["reproduces_documented_rows"]
     assert _longest_list(report) < 50  # no per-sample arrays are published
+    # the ~996 ms vendor time-base disagreement is preserved and qualifies joint outputs
+    tb = report["diagnostics"]["distance_velocity_time_base"]
+    assert tb["best_lag_ms"] == pytest.approx(996, abs=0.5)
+    assert tb["rms_at_zero_lag_m_s"] == pytest.approx(2.0878, abs=1e-3)
+    assert tb["rms_at_best_lag_m_s"] == pytest.approx(0.09354, abs=1e-4)
+    assert tb["temporal_qualification"] == "unqualified" and tb["timestamps_modified"] is False
+    joint = report["diagnostics"]["joint_distance_velocity_reconstruction"]
+    assert joint["statement"].startswith("TEMPORALLY UNQUALIFIED")
+    src05 = next(r for r in report["source_qc"]["results"] if r["rule_id"] == "SRC-05")
+    assert src05["status"] == "fail" and report["source_qc"]["verdict"] == "accept_with_flags"
+    blockers = [b.split(":")[0] for b in report["conversion"]["blockers"]]
+    assert blockers == ["canonical admission", "session.date"]
+    assert report["rights"]["canonical_admission"] == "pending"
+    assert report["rights"]["measurement_data_rights"] == "pending"
     md = base.with_suffix(".md").read_text(encoding="utf-8")
     assert "not reference truth" in md and "/home/" not in md
     assert pipeline.dumps(report) == base.with_suffix(".json").read_text(encoding="utf-8")
