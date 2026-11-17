@@ -57,25 +57,59 @@ def _entry(path: str, role: str, data: bytes) -> dict[str, object]:
     }
 
 
+EVIDENCE_PATH = "docs/acquisition-log.txt"
+EVIDENCE_TEXT = "Synthetic acquisition log.\nSprint recorded on 2024-01-06 at the test track.\n"
+EVIDENCE_EXCERPT = "Sprint recorded on 2024-01-06"
+EVIDENCE_DATE = "2024-01-06"
+
+
+def date_claim(**overrides: object) -> dict[str, object]:
+    claim: dict[str, object] = {
+        "date": EVIDENCE_DATE,
+        "evidence_path": EVIDENCE_PATH,
+        "excerpt": EVIDENCE_EXCERPT,
+        "reviewed_by": "synthetic reviewer",
+        "reviewed_on": "2026-11-17",
+    }
+    claim.update(overrides)
+    return claim
+
+
 def upstream(
-    root: Path, csv: bytes | None = None, source_id: str = "synthetic-laser"
+    root: Path,
+    csv: bytes | None = None,
+    source_id: str = "synthetic-laser",
+    *,
+    evidence: str | None = None,
+    claim: dict[str, object] | None = None,
 ) -> SourceLock:
-    """Write a fake upstream checkout under ``root`` and return its source lock."""
+    """Write a fake upstream checkout under ``root`` and return its source lock.
+
+    ``evidence`` adds a pinned ``acquisition_evidence`` file; ``claim`` adds the lock's
+    ``acquisition_date`` claim (both SYNTHETIC).
+    """
     files = {
         "data-raw/laser-gun-data.csv": ("data", csv if csv is not None else csv_bytes(sprint())),
         "LICENSE.md": ("license", LICENSE_TEXT.encode()),
     }
+    if evidence is not None:
+        files[EVIDENCE_PATH] = ("acquisition_evidence", evidence.encode())
     for rel, (_, data) in files.items():
         (root / rel).parent.mkdir(parents=True, exist_ok=True)
         (root / rel).write_bytes(data)
-    return SourceLock.model_validate(
-        {
-            "source_id": source_id,
-            "repository": REPO,
-            "pinned_ref": REF,
-            "files": [_entry(rel, role, data) for rel, (role, data) in files.items()],
-        }
-    )
+    payload: dict[str, object] = {
+        "source_id": source_id,
+        "repository": REPO,
+        "pinned_ref": REF,
+        "files": [_entry(rel, role, data) for rel, (role, data) in files.items()],
+    }
+    if claim is not None:
+        payload["acquisition_date"] = claim
+    return SourceLock.model_validate(payload)
+
+
+def dated_upstream(root: Path, csv: bytes | None = None) -> SourceLock:
+    return upstream(root, csv, evidence=EVIDENCE_TEXT, claim=date_claim())
 
 
 def rights_payload(source_id: str = "synthetic-laser", **overrides: object) -> dict[str, object]:

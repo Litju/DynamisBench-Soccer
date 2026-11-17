@@ -2,13 +2,22 @@
   "adapter": "shorts_laser_csv@1.0.0",
   "conversion": {
     "blockers": [
-      "session.date: the acquisition date is not published by the source; schema-v2 Session.date is mandatory and no date may be invented (RES-719 falsifier matrix)"
+      "canonical admission: rights.json does not verify canonical admission; an empirical schema-v2 bundle is a canonical artifact and is not built for quarantined data",
+      "session.date: no source-bound, reviewed acquisition-date evidence is pinned in the source lock (the date is not published by the source); schema-v2 Session.date is mandatory and no date may be invented (RES-719 falsifier matrix)"
     ],
     "converted": false,
     "determinations": [
       {
-        "decision": "protocol fit only: maximal 35 m standing-start linear sprint with continuous laser distance. Supports kinematic estimands (vmax, tau). Force/power estimands (f0, pmax, fv_slope, rf_max, drf) need body mass, which is unpublished. Population is a youth basketball player and no soccer claim is made (see protocol_id).",
+        "decision": "PROVISIONAL kinematic protocol mapping only, not soccer task admission: a maximal 35 m standing-start linear sprint with continuous laser distance matches the sprint_fv acquisition protocol. Only kinematic estimands (vmax, tau) are supportable; force/power estimands (f0, pmax, fv_slope, rf_max, drf) are unsupported (no body mass). Population: one youth basketball player, no soccer claim (see protocol_id). Any task use requires separate review; data usage stays cross-validation-only.",
         "field": "test_id=sprint_fv"
+      },
+      {
+        "decision": "accepted only from a source-lock acquisition_date claim: a pinned acquisition_evidence file (SHA-256), a verbatim excerpt stating the date and a named reviewer; never from a CLI flag or free text",
+        "field": "session_date"
+      },
+      {
+        "decision": "an empirical v2 bundle is a canonical artifact; it is built only after canonical admission is verified in rights.json",
+        "field": "conversion_authority"
       },
       {
         "decision": "Noptel Oy CMP3 Distance Sensor; native 2560 Hz",
@@ -471,10 +480,11 @@
       "status": "passed"
     },
     {
-      "detail": "session.date: the acquisition date is not published by the source; schema-v2 Session.date is mandatory and no date may be invented (RES-719 falsifier matrix)",
+      "detail": "canonical admission: rights.json does not verify canonical admission; an empirical schema-v2 bundle is a canonical artifact and is not built for quarantined data; session.date: no source-bound, reviewed acquisition-date evidence is pinned in the source lock (the date is not published by the source); schema-v2 Session.date is mandatory and no date may be invented (RES-719 falsifier matrix)",
       "evidence": {
         "blockers": [
-          "session.date: the acquisition date is not published by the source; schema-v2 Session.date is mandatory and no date may be invented (RES-719 falsifier matrix)"
+          "canonical admission: rights.json does not verify canonical admission; an empirical schema-v2 bundle is a canonical artifact and is not built for quarantined data",
+          "session.date: no source-bound, reviewed acquisition-date evidence is pinned in the source lock (the date is not published by the source); schema-v2 Session.date is mandatory and no date may be invented (RES-719 falsifier matrix)"
         ]
       },
       "name": "schema_v2_conversion",

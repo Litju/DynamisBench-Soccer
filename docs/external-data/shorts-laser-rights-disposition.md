@@ -84,8 +84,33 @@ the same time.
 
 ## 4. Schema-v2 blocker (Gate 4)
 
-Strict v2 `Session.date` is mandatory, and the acquisition date is unpublished. No
-date is invented, so **v2 conversion is blocked** even after rights clearance, unless
-the rights holder also supplies the date. The converter accepts a date only together
-with an evidence reference. See the [diagnostic report](reports/shorts-laser-diagnostic-report.md)
-for the full conversion outcome.
+Conversion needs **two independent authorities**, and neither can be passed in as a
+plain value:
+
+1. **Canonical admission** verified in `rights.json`. An empirical v2 bundle is a
+   canonical artifact and is never built from quarantined data.
+2. **A session date bound to source evidence.** The only accepted route is an
+   `acquisition_date` claim in `source-lock.json`, which must include:
+   * an `evidence_path` naming a pinned `acquisition_evidence` file (with its SHA-256,
+     size and Git blob SHA-1, at a commit-pinned URL);
+   * an `excerpt` that occurs verbatim in those bytes and states the date
+     unambiguously (ISO, `6 January 2024` or `January 6, 2024`; numeric `06/01/2024`
+     is rejected as ambiguous);
+   * `reviewed_by` and `reviewed_on`.
+
+   The converter re-hashes the evidence and re-checks the excerpt itself. There is no
+   CLI flag or free-text reference.
+
+The acquisition date is unpublished, so the committed lock has no claim and **v2
+conversion stays blocked**, with both blockers listed. Evidence that lives outside the
+pinned repository commit would need a reviewed extension of the lock format. See the
+[diagnostic report](reports/shorts-laser-diagnostic-report.md) for the full conversion
+outcome.
+
+### Test identity
+
+`test_id=sprint_fv` is a **provisional kinematic protocol mapping only, not a soccer
+task admission**. A maximal 35 m standing-start sprint with continuous laser distance
+matches the acquisition protocol. Only vmax and tau are supportable; force and power
+estimands are unsupported (no body mass). Usage stays `cross-validation-only`, and any
+task use needs separate review.

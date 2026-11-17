@@ -18,7 +18,7 @@
 | ingestion | **blocked** | canonical store refused by rights gate; read-only quarantine copy inspected under the license grant only |
 | safe_parse | **passed** | hash-bound strict parse; exact header, ASCII, finite values |
 | profile | **passed** | Gate-2 shape audit recorded |
-| schema_v2_conversion | **blocked** | session.date: the acquisition date is not published by the source; schema-v2 Session.date is mandatory and no date may be invented (RES-719 falsifier matrix) |
+| schema_v2_conversion | **blocked** | canonical admission: rights.json does not verify canonical admission; an empirical schema-v2 bundle is a canonical artifact and is not built for quarantined data; session.date: no source-bound, reviewed acquisition-date evidence is pinned in the source lock (the date is not published by the source); schema-v2 Session.date is mandatory and no date may be invented (RES-719 falsifier matrix) |
 | qc | **passed** | source QC verdict accept_with_flags; bundle QC not run (no v2 bundle) |
 | diagnostics | **passed** | pipeline-derived numerical diagnostics computed |
 
@@ -78,11 +78,14 @@ Package-derived (documented in `data-raw/laser-gun-data.R`, **not ingested**): `
 
 Converted: **False**.
 
-* BLOCKER: session.date: the acquisition date is not published by the source; schema-v2 Session.date is mandatory and no date may be invented (RES-719 falsifier matrix)
+* BLOCKER: canonical admission: rights.json does not verify canonical admission; an empirical schema-v2 bundle is a canonical artifact and is not built for quarantined data
+* BLOCKER: session.date: no source-bound, reviewed acquisition-date evidence is pinned in the source lock (the date is not published by the source); schema-v2 Session.date is mandatory and no date may be invented (RES-719 falsifier matrix)
 
 | Determination | Decision |
 | -- | -- |
-| test_id=sprint_fv | protocol fit only: maximal 35 m standing-start linear sprint with continuous laser distance. Supports kinematic estimands (vmax, tau). Force/power estimands (f0, pmax, fv_slope, rf_max, drf) need body mass, which is unpublished. Population is a youth basketball player and no soccer claim is made (see protocol_id). |
+| test_id=sprint_fv | PROVISIONAL kinematic protocol mapping only, not soccer task admission: a maximal 35 m standing-start linear sprint with continuous laser distance matches the sprint_fv acquisition protocol. Only kinematic estimands (vmax, tau) are supportable; force/power estimands (f0, pmax, fv_slope, rf_max, drf) are unsupported (no body mass). Population: one youth basketball player, no soccer claim (see protocol_id). Any task use requires separate review; data usage stays cross-validation-only. |
+| session_date | accepted only from a source-lock acquisition_date claim: a pinned acquisition_evidence file (SHA-256), a verbatim excerpt stating the date and a named reviewer; never from a CLI flag or free text |
+| conversion_authority | an empirical v2 bundle is a canonical artifact; it is built only after canonical admission is verified in rights.json |
 | device_class=laser | Noptel Oy CMP3 Distance Sensor; native 2560 Hz |
 | geometry | mounting_height_m and aiming_point unpublished: declared unknown, not inferred |
 | calibration | no calibration record published: calibration_unknown_reason, no certificate |

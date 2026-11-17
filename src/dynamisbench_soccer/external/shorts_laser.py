@@ -19,15 +19,20 @@ from __future__ import annotations
 import hashlib
 import re
 import stat
+from collections.abc import Mapping
 from dataclasses import dataclass
-from datetime import date as _date
 from pathlib import Path
 
 import numpy as np
 from pydantic import ValidationError
 
 from dynamisbench_soccer.data.manifest import DataCategory
-from dynamisbench_soccer.external.models import SignalStage
+from dynamisbench_soccer.external.models import (
+    FileRole,
+    SignalStage,
+    SourceLock,
+    date_mentioned,
+)
 from dynamisbench_soccer.signals.schema import (
     CANONICAL_UNIT,
     Acquisition,
@@ -228,17 +233,48 @@ def profile(table: SourceTable) -> dict[str, float | int | bool]:
 
 
 # --- schema-v2 conversion ----------------------------------------------------------------
+class SessionEvidenceError(ValueError):
+    """A claimed acquisition date is not supported by its pinned evidence bytes."""
+
+
 @dataclass(frozen=True)
-class SessionEvidence:
-    """An acquisition date *supplied by the rights holder*, with where it came from."""
+class BoundSessionDate:
+    """A session date proven against a hash-verified ``acquisition_evidence`` file."""
 
     date: str
-    evidence_ref: str
+    evidence_path: str
+    evidence_sha256: str
+    excerpt: str
+    reviewed_by: str
 
-    def __post_init__(self) -> None:
-        _date.fromisoformat(self.date)
-        if len(self.evidence_ref.strip()) < 5:
-            raise ValueError("a session date needs a citable evidence reference")
+
+def bind_session_date(lock: SourceLock, files: Mapping[str, Path]) -> BoundSessionDate | None:
+    """Return the lock's date claim only if its evidence bytes prove it, else raise.
+
+    ``None`` means no claim exists. Re-hashes the evidence file (even though acquisition
+    already verified it), decodes it strictly and requires the excerpt verbatim.
+    """
+    claim = lock.acquisition_date
+    if claim is None:
+        return None
+    entry = lock.file(claim.evidence_path)
+    if entry.role is not FileRole.ACQUISITION_EVIDENCE:
+        raise SessionEvidenceError(f"{entry.path}: not an acquisition_evidence file")
+    path = files.get(entry.path)
+    if path is None:
+        raise SessionEvidenceError(f"{entry.path}: evidence file was not acquired")
+    data = path.read_bytes()
+    if hashlib.sha256(data).hexdigest() != entry.sha256 or len(data) != entry.size_bytes:
+        raise SessionEvidenceError(f"{entry.path}: bytes differ from the pinned evidence")
+    try:
+        text = data.decode("utf-8")
+    except UnicodeDecodeError as exc:
+        raise SessionEvidenceError(f"{entry.path}: evidence is not UTF-8 text") from exc
+    if claim.excerpt not in text:
+        raise SessionEvidenceError(f"{entry.path}: excerpt not found verbatim in evidence")
+    if not date_mentioned(claim.excerpt, claim.date):
+        raise SessionEvidenceError("excerpt does not state the claimed date")
+    return BoundSessionDate(claim.date, entry.path, entry.sha256, claim.excerpt, claim.reviewed_by)
 
 
 @dataclass(frozen=True)
@@ -252,14 +288,29 @@ class ConversionOutcome:
         return self.bundle is not None
 
 
+#: The test identity is a measurement-protocol mapping, never a soccer task admission.
+SPRINT_FV_MAPPING = (
+    "PROVISIONAL kinematic protocol mapping only, not soccer task admission: a maximal 35 m "
+    "standing-start linear sprint with continuous laser distance matches the sprint_fv "
+    "acquisition protocol. Only kinematic estimands (vmax, tau) are supportable; force/power "
+    "estimands (f0, pmax, fv_slope, rf_max, drf) are unsupported (no body mass). Population: "
+    "one youth basketball player, no soccer claim (see protocol_id). Any task use requires "
+    "separate review; data usage stays cross-validation-only."
+)
+
 #: Recorded with every conversion attempt, converted or not.
 DETERMINATIONS: tuple[tuple[str, str], ...] = (
+    ("test_id=sprint_fv", SPRINT_FV_MAPPING),
     (
-        "test_id=sprint_fv",
-        "protocol fit only: maximal 35 m standing-start linear sprint with continuous laser "
-        "distance. Supports kinematic estimands (vmax, tau). Force/power estimands (f0, pmax, "
-        "fv_slope, rf_max, drf) need body mass, which is unpublished. Population is a youth "
-        "basketball player and no soccer claim is made (see protocol_id).",
+        "session_date",
+        "accepted only from a source-lock acquisition_date claim: a pinned "
+        "acquisition_evidence file (SHA-256), a verbatim excerpt stating the date and a named "
+        "reviewer; never from a CLI flag or free text",
+    ),
+    (
+        "conversion_authority",
+        "an empirical v2 bundle is a canonical artifact; it is built only after canonical "
+        "admission is verified in rights.json",
     ),
     (
         "device_class=laser",
@@ -279,15 +330,37 @@ def bundle_id(pinned_ref: str = PINNED_REF) -> str:
 
 
 def convert(
-    table: SourceTable, session: SessionEvidence | None, pinned_ref: str = PINNED_REF
+    table: SourceTable,
+    lock: SourceLock,
+    evidence_files: Mapping[str, Path],
+    *,
+    canonical_admitted: bool,
 ) -> ConversionOutcome:
-    """Build a strict schema-v2 bundle, or report every blocker; never fill gaps."""
+    """Build a strict schema-v2 bundle, or report every blocker; never fill gaps.
+
+    Two independent authorities are required: verified canonical admission (rights) and a
+    session date bound to pinned evidence in the source lock. Neither can be supplied by a
+    caller as a plain value.
+    """
+    pinned_ref = lock.pinned_ref
     blockers: list[str] = []
-    if session is None:
+    if not canonical_admitted:
         blockers.append(
-            "session.date: the acquisition date is not published by the source; schema-v2 "
-            "Session.date is mandatory and no date may be invented (RES-719 falsifier matrix)"
+            "canonical admission: rights.json does not verify canonical admission; an empirical "
+            "schema-v2 bundle is a canonical artifact and is not built for quarantined data"
         )
+    session: BoundSessionDate | None = None
+    try:
+        session = bind_session_date(lock, evidence_files)
+    except SessionEvidenceError as exc:
+        blockers.append(f"session.date: acquisition-date evidence rejected: {exc}")
+    else:
+        if session is None:
+            blockers.append(
+                "session.date: no source-bound, reviewed acquisition-date evidence is pinned "
+                "in the source lock (the date is not published by the source); schema-v2 "
+                "Session.date is mandatory and no date may be invented (RES-719 falsifier matrix)"
+            )
     t = table.columns["time"]
     dt = np.diff(t)
     if np.any(dt <= 0):
@@ -346,8 +419,11 @@ def convert(
                     f"{NATIVE_ACQUISITION_HZ:g} Hz (per shorts documentation)",
                     f"[manufacturer_processed] {MUSCLELAB_VERSION}: polynomial distance-time "
                     "model, 1 kHz resampling, smoothed and unsmoothed velocity export",
-                    f"shorts @ {pinned_ref[:12]} {DATA_PATH} used unchanged "
-                    f"(session date from: {session.evidence_ref})",
+                    f"shorts @ {pinned_ref[:12]} {DATA_PATH} used unchanged",
+                    f"session date {session.date} from pinned {session.evidence_path} "
+                    f"(sha256 {session.evidence_sha256}), excerpt {session.excerpt!r}, "
+                    f"reviewed by {session.reviewed_by}",
+                    f"test_id sprint_fv: {SPRINT_FV_MAPPING}",
                     f"adapter {ADAPTER_ID}@{ADAPTER_VERSION}: column raw_velocity renamed "
                     "velocity_vendor_unsmoothed; no resampling, filtering, offset removal, "
                     "trimming or imputation",

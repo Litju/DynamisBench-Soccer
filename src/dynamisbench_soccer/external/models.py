@@ -52,6 +52,53 @@ class FileRole(StrEnum):
     LICENSE = "license"
     DOCUMENTATION = "documentation"
     TRANSFORM_SCRIPT = "transform_script"  # recorded for provenance, never executed
+    ACQUISITION_EVIDENCE = "acquisition_evidence"  # source-bound record of when data was taken
+
+
+_MONTHS = (
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December",
+)  # fmt: skip
+
+
+def date_mentioned(text: str, iso: str) -> bool:
+    """True if ``text`` states ``iso`` unambiguously (ISO, '6 January 2024', 'January 6, 2024')."""
+    d = date.fromisoformat(iso)
+    month = _MONTHS[d.month - 1]
+    forms = {
+        iso,
+        f"{d.day} {month} {d.year}",
+        f"{d.day:02d} {month} {d.year}",
+        f"{month} {d.day}, {d.year}",
+    }
+    return any(form in text for form in forms)
+
+
+class AcquisitionDateClaim(_Strict):
+    """A session date that is bound to a pinned, hash-verified evidence file.
+
+    Nothing outside this committed record (no CLI flag, no free-text reference) can
+    supply a session date. The excerpt must occur verbatim in the evidence bytes, and it
+    must state the date unambiguously. A named reviewer must have read it.
+    """
+
+    date: str
+    evidence_path: str
+    excerpt: str = Field(min_length=10, description="verbatim text from the evidence file")
+    reviewed_by: str = Field(min_length=1)
+    reviewed_on: str
+
+    @field_validator("date", "reviewed_on")
+    @classmethod
+    def _iso(cls, value: str) -> str:
+        date.fromisoformat(value)
+        return value
+
+    @model_validator(mode="after")
+    def _states_date(self) -> AcquisitionDateClaim:
+        if not date_mentioned(self.excerpt, self.date):
+            raise ValueError("evidence excerpt must state the claimed date unambiguously")
+        return self
 
 
 class PinnedFile(_Strict):
@@ -78,6 +125,9 @@ class SourceLock(_Strict):
     repository: str = Field(description="GitHub owner/name")
     pinned_ref: str = Field(pattern=_HEX40, description="full commit SHA, never a branch")
     files: list[PinnedFile] = Field(min_length=1)
+    acquisition_date: AcquisitionDateClaim | None = Field(
+        default=None, description="absent unless source-bound evidence of the date exists"
+    )
 
     @model_validator(mode="after")
     def _pinned(self) -> SourceLock:
@@ -95,6 +145,12 @@ class SourceLock(_Strict):
         roles = {f.role for f in self.files}
         if FileRole.DATA not in roles or FileRole.LICENSE not in roles:
             raise ValueError("a source lock needs at least one data and one license file")
+        claim = self.acquisition_date
+        if claim is not None and not any(
+            f.path == claim.evidence_path and f.role is FileRole.ACQUISITION_EVIDENCE
+            for f in self.files
+        ):
+            raise ValueError("acquisition_date evidence must be a pinned acquisition_evidence file")
         return self
 
     def file(self, path: str) -> PinnedFile:

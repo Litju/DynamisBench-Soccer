@@ -64,7 +64,6 @@ def run_shorts_laser(
     source_dir: Path | None = None,
     quarantine: Path | None = None,
     opener: Opener | None = None,
-    session: shorts_laser.SessionEvidence | None = None,
     expected_ref: str = shorts_laser.PINNED_REF,
     expected_sha256: str = shorts_laser.PINNED_SHA256,
     source_id: str = shorts_laser.SOURCE_ID,
@@ -94,7 +93,6 @@ def run_shorts_laser(
             source_dir,
             quarantine,
             opener,
-            session,
             expected_ref,
             expected_sha256,
             source_id,
@@ -130,7 +128,6 @@ def _stages(
     source_dir: Path | None,
     quarantine: Path | None,
     opener: Opener | None,
-    session: shorts_laser.SessionEvidence | None,
     expected_ref: str,
     expected_sha256: str,
     source_id: str,
@@ -269,7 +266,12 @@ def _stages(
     run.add("profile", "passed", "Gate-2 shape audit recorded")
 
     # 7. schema-v2 conversion
-    outcome = shorts_laser.convert(table, session, lock.pinned_ref)
+    outcome = shorts_laser.convert(
+        table,
+        lock,
+        files,
+        canonical_admitted=check.canonical_admission is RightsStatus.VERIFIED,
+    )
     report["conversion"] = {
         "converted": outcome.converted,
         "blockers": outcome.blockers,

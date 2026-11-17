@@ -26,7 +26,7 @@ pinned_source → evidence_integrity → rights_verification → data_integrity 
 | `data_integrity` | runs **only if** `local_inspection_permitted`; measurement data then verified like the evidence | blocked: data bytes are never downloaded, opened or hashed, not even an existing quarantine copy, and the run stops |
 | `ingestion` | canonical: manifest-v1 → existing `ingest_local` / `verify` / `stage` | blocked → read-only **quarantine** copy (reached only after `data_integrity` passed) |
 | `safe_parse` | hash-bound, exact header, ASCII, finite numbers, bounded size/rows | failed |
-| `schema_v2_conversion` | strict `BundleMeta`; written, read back and streamed through `signals.io` with SHA-256 verification | blocked with each precise blocker; the global schema is never weakened |
+| `schema_v2_conversion` | canonical admission verified **and** a lock-pinned, reviewed acquisition-date claim; strict `BundleMeta`; written, read back and streamed through `signals.io` with SHA-256 verification | blocked with each precise blocker; the global schema is never weakened |
 | `qc` | source-level QC always (mirrors `sprint_fv` QC rules, params from `qc/rules.toml`); bundle QC when a v2 bundle exists | records the verdict |
 | `diagnostics` | pipeline-derived numerical diagnostics | n/a |
 
@@ -37,8 +37,9 @@ uv run dbs external acquire shorts-laser     # verified quarantine copy only
 uv run dbs external run shorts-laser \
   --report-md docs/external-data/reports/shorts-laser-diagnostic-report.md \
   --report-json docs/external-data/reports/shorts-laser-diagnostic-report.json
-# only with a date supplied by the rights holder:
-#   --session-date YYYY-MM-DD --session-date-evidence "<citable reference>"
+# v2 conversion additionally needs verified admission in rights.json AND an
+# acquisition_date claim in source-lock.json bound to a pinned acquisition_evidence
+# file (see shorts-laser-rights-disposition.md §4). There is no CLI date flag.
 ```
 
 Bytes live under `$DBS_CACHE_HOME/quarantine/` (or the canonical store once admitted),

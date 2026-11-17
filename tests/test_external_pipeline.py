@@ -10,11 +10,17 @@ from typing import Any
 import numpy as np
 import pytest
 from _external_synth import (
+    EVIDENCE_DATE,
+    EVIDENCE_EXCERPT,
+    EVIDENCE_PATH,
+    EVIDENCE_TEXT,
     MSS,
     REF,
     TAU,
     TD,
     csv_bytes,
+    date_claim,
+    dated_upstream,
     dump,
     rights_payload,
     sprint,
@@ -33,7 +39,7 @@ from dynamisbench_soccer.external import (
     shorts_laser,
     sourceqc,
 )
-from dynamisbench_soccer.external.models import RightsRecord, SignalStage
+from dynamisbench_soccer.external.models import RightsRecord, SignalStage, SourceLock
 from dynamisbench_soccer.qc import spec
 from dynamisbench_soccer.signals import io
 from dynamisbench_soccer.signals.schema import CANONICAL_UNIT, DeviceClass, Quantity
@@ -45,7 +51,21 @@ def io_bytes(data: bytes) -> Any:
     return stdio.BytesIO(data)
 
 
-SESSION = shorts_laser.SessionEvidence("2024-01-01", "synthetic test evidence reference")
+def _files(root: Path, lock: SourceLock) -> dict[str, Path]:
+    return {f.path: root / f.path for f in lock.files}
+
+
+def _convert(
+    tmp_path: Path,
+    cols: dict[str, np.ndarray] | None = None,
+    *,
+    dated: bool = True,
+    admitted: bool = True,
+) -> tuple[shorts_laser.SourceTable, shorts_laser.ConversionOutcome]:
+    table = _table(tmp_path, cols)
+    up = tmp_path / "evidence-up"
+    lock = dated_upstream(up) if dated else upstream(up)
+    return table, shorts_laser.convert(table, lock, _files(up, lock), canonical_admitted=admitted)
 
 
 def _table(tmp_path: Path, cols: dict[str, np.ndarray] | None = None) -> shorts_laser.SourceTable:
@@ -64,34 +84,91 @@ def rules(repo_root: Path) -> spec.RuleSet:
 
 
 def test_missing_session_date_blocks_conversion(tmp_path: Path) -> None:
-    outcome = shorts_laser.convert(_table(tmp_path), None)
+    _, outcome = _convert(tmp_path, dated=False)
     assert not outcome.converted and outcome.bundle is None
     assert len(outcome.blockers) == 1 and outcome.blockers[0].startswith("session.date")
-    assert dict(outcome.determinations)["test_id=sprint_fv"].startswith("protocol fit only")
+    mapping = dict(outcome.determinations)["test_id=sprint_fv"]
+    assert mapping.startswith("PROVISIONAL kinematic protocol mapping only")
+    assert "not soccer task admission" in mapping
 
 
-@pytest.mark.parametrize(("date", "ref"), [("2024-13-01", "valid reference"), ("2024-01-01", "")])
-def test_session_evidence_requires_real_date_and_reference(date: str, ref: str) -> None:
-    with pytest.raises(ValueError):
-        shorts_laser.SessionEvidence(date, ref)
+def test_pending_admission_blocks_conversion_even_with_bound_date(tmp_path: Path) -> None:
+    _, outcome = _convert(tmp_path, admitted=False)
+    assert not outcome.converted
+    assert [b.split(":")[0] for b in outcome.blockers] == ["canonical admission"]
+
+
+def test_unadmitted_and_undated_lists_both_blockers(tmp_path: Path) -> None:
+    _, outcome = _convert(tmp_path, dated=False, admitted=False)
+    assert [b.split(":")[0] for b in outcome.blockers] == ["canonical admission", "session.date"]
+
+
+@pytest.mark.parametrize(
+    ("claim", "message"),
+    [
+        ({"excerpt": "Sprint recorded at the test track"}, "state the claimed date"),
+        ({"excerpt": "Sprint recorded on 06/01/2024"}, "state the claimed date"),
+        ({"date": "2024-02-30"}, "date"),
+        ({"evidence_path": "LICENSE.md"}, "acquisition_evidence file"),
+        ({"evidence_path": "docs/not-pinned.txt"}, "acquisition_evidence file"),
+        ({"reviewed_by": ""}, "reviewed_by"),
+    ],
+)
+def test_date_claim_must_be_bound_and_reviewed(
+    tmp_path: Path, claim: dict[str, object], message: str
+) -> None:
+    with pytest.raises(ValidationError, match=message):
+        upstream(tmp_path, evidence=EVIDENCE_TEXT, claim=date_claim(**claim))
+
+
+def test_excerpt_absent_from_evidence_bytes_blocks_conversion(tmp_path: Path) -> None:
+    up = tmp_path / "up"
+    lock = upstream(
+        up, evidence="An unrelated document.\n", claim=date_claim()
+    )  # claim names a date the file never states
+    outcome = shorts_laser.convert(
+        _table(tmp_path), lock, _files(up, lock), canonical_admitted=True
+    )
+    assert not outcome.converted
+    assert "excerpt not found verbatim" in outcome.blockers[0]
+
+
+def test_evidence_bytes_changed_after_pinning_block_conversion(tmp_path: Path) -> None:
+    up = tmp_path / "up"
+    lock = dated_upstream(up)
+    (up / EVIDENCE_PATH).write_text(
+        EVIDENCE_TEXT.replace("2024-01-06", "2024-01-07"), encoding="utf-8"
+    )
+    outcome = shorts_laser.convert(
+        _table(tmp_path), lock, _files(up, lock), canonical_admitted=True
+    )
+    assert not outcome.converted and "differ from the pinned evidence" in outcome.blockers[0]
+
+
+def test_evidence_not_acquired_blocks_conversion(tmp_path: Path) -> None:
+    up = tmp_path / "up"
+    lock = dated_upstream(up)
+    files = {k: v for k, v in _files(up, lock).items() if k != EVIDENCE_PATH}
+    outcome = shorts_laser.convert(_table(tmp_path), lock, files, canonical_admitted=True)
+    assert not outcome.converted and "was not acquired" in outcome.blockers[0]
 
 
 def test_non_increasing_time_blocks_conversion(tmp_path: Path) -> None:
     cols = sprint(n=300)
     cols["time"] = cols["time"].copy()
     cols["time"][100] = cols["time"][99]
-    outcome = shorts_laser.convert(_table(tmp_path, cols), SESSION)
+    _, outcome = _convert(tmp_path, cols)
     assert not outcome.converted and any(b.startswith("time:") for b in outcome.blockers)
 
 
 def test_conversion_is_strict_and_truthful(tmp_path: Path) -> None:
-    table = _table(tmp_path)
-    bundle = shorts_laser.convert(table, SESSION).bundle
+    table, outcome = _convert(tmp_path)
+    bundle = outcome.bundle
     assert bundle is not None
     m = bundle.meta
     assert m.test_id == "sprint_fv" and m.data_category == "empirical"
     assert "non-soccer" in m.protocol.protocol_id and m.protocol.start_mode == "standing"
-    assert m.session.date == SESSION.date
+    assert m.session.date == EVIDENCE_DATE
     assert [c.name for c in m.channels] == [
         "time",
         "distance",
@@ -115,14 +192,16 @@ def test_conversion_is_strict_and_truthful(tmp_path: Path) -> None:
     assert m.sampling is not None and m.sampling.nominal_hz == 1000.0
     assert m.provenance.source_sha256 == table.sha256
     assert any(t.startswith("NOT applied (package_derived)") for t in m.provenance.transforms)
-    assert SESSION.evidence_ref in " ".join(m.provenance.transforms)
+    transforms = " ".join(m.provenance.transforms)
+    assert EVIDENCE_PATH in transforms and EVIDENCE_EXCERPT in transforms
+    assert "PROVISIONAL kinematic protocol mapping only" in transforms
     # values are the source values, untouched
     for col in shorts_laser.SOURCE_COLUMNS:
         assert np.array_equal(bundle[col.channel], table.columns[col.source_column])
 
 
 def test_converted_bundle_round_trips_through_v2_reader(tmp_path: Path) -> None:
-    bundle = shorts_laser.convert(_table(tmp_path), SESSION).bundle
+    bundle = _convert(tmp_path)[1].bundle
     assert bundle is not None
     stem = tmp_path / "out" / bundle.meta.bundle_id
     io.write(bundle, stem)
@@ -135,8 +214,8 @@ def test_converted_bundle_round_trips_through_v2_reader(tmp_path: Path) -> None:
 
 
 def test_source_qc_matches_bundle_qc_evaluators(tmp_path: Path, rules: spec.RuleSet) -> None:
-    table = _table(tmp_path)
-    bundle = shorts_laser.convert(table, SESSION).bundle
+    table, outcome = _convert(tmp_path)
+    bundle = outcome.bundle
     assert bundle is not None
     by_rule = {r.rule_id: r for r in spec.run(bundle, rules)}
     source = {(c.rule_id, c.name): c for c in sourceqc.run(table, rules)}
@@ -205,9 +284,12 @@ def test_diagnostics_detect_a_time_base_offset(tmp_path: Path) -> None:
 # --- end to end -----------------------------------------------------------------------------
 
 
-def _setup(tmp_path: Path, rights: dict[str, object]) -> tuple[Path, Path, str]:
+def _setup(
+    tmp_path: Path, rights: dict[str, object], dated: bool = False
+) -> tuple[Path, Path, str]:
     up = tmp_path / "up"
-    lock = upstream(up, csv_bytes(sprint(n=6000)))
+    csv = csv_bytes(sprint(n=6000))
+    lock = dated_upstream(up, csv) if dated else upstream(up, csv)
     ext = tmp_path / "external"
     dump(lock.model_dump(mode="json"), ext / lock.source_id / "source-lock.json")
     dump(rights, ext / lock.source_id / "rights.json")
@@ -215,7 +297,7 @@ def _setup(tmp_path: Path, rights: dict[str, object]) -> tuple[Path, Path, str]:
 
 
 def _run(tmp_path: Path, repo_root: Path, rights: dict[str, object], **kw: Any) -> dict[str, Any]:
-    up, ext, sha = _setup(tmp_path, rights)
+    up, ext, sha = _setup(tmp_path, rights, kw.pop("dated", False))
     return pipeline.run_shorts_laser(
         tmp_path / "run",
         external_root=ext,
@@ -258,7 +340,7 @@ def test_pending_rights_run_quarantine_and_block_honestly(tmp_path: Path, repo_r
 
 
 def test_verified_rights_and_date_complete_canonical_path(tmp_path: Path, repo_root: Path) -> None:
-    report = _run(tmp_path, repo_root, verified_payload(), session=SESSION)
+    report = _run(tmp_path, repo_root, verified_payload(), dated=True)
     assert report["outcome"] == "completed"
     assert set(_status(report).values()) == {"passed"}
     assert report["conversion"]["bundle"]["rows_streamed"] == 6000
@@ -378,9 +460,37 @@ def test_adapter_version_binding(tmp_path: Path, repo_root: Path) -> None:
     assert _status(report) == {"pinned_source": "failed"}
 
 
-def test_cli_requires_date_evidence(capsys: pytest.CaptureFixture[str]) -> None:
-    assert main(["external", "run", "shorts-laser", "--session-date", "2024-01-01"]) == 1
-    assert "needs --session-date-evidence" in capsys.readouterr().err
+def test_cli_has_no_free_text_session_date(capsys: pytest.CaptureFixture[str]) -> None:
+    """Regression: a CLI flag could previously supply an unbound session date."""
+    with pytest.raises(SystemExit) as exc:
+        main(["external", "run", "shorts-laser", "--session-date", "2024-01-01"])
+    assert exc.value.code == 2 and "unrecognized arguments" in capsys.readouterr().err
+
+
+def test_dated_but_pending_rights_still_blocks_conversion(tmp_path: Path, repo_root: Path) -> None:
+    report = _run(tmp_path, repo_root, rights_payload(), dated=True)
+    status = _status(report)
+    assert status["rights_verification"] == status["ingestion"] == "blocked"
+    assert status["schema_v2_conversion"] == "blocked" and "bundle_qc" not in report
+    assert [b.split(":")[0] for b in report["conversion"]["blockers"]] == ["canonical admission"]
+
+
+def test_committed_lock_has_no_date_claim(repo_root: Path) -> None:
+    from dynamisbench_soccer.external.models import load_lock
+
+    lock = load_lock("shorts-laser", repo_root / "data/external")
+    assert lock.acquisition_date is None
+    assert not [f for f in lock.files if f.role.value == "acquisition_evidence"]
+
+
+def test_manifest_never_admits_as_task_input(tmp_path: Path) -> None:
+    lock = upstream(tmp_path / "up")
+    files = acquire.acquire(lock, source_dir=tmp_path / "up", root=tmp_path / "q")
+    record = RightsRecord.model_validate(verified_payload())
+    manifest = acquire.to_manifest(
+        lock, record, rights.verify(record, lock, files), title="t", citation="c"
+    )
+    assert manifest.usage.value == "cross-validation-only"
 
 
 # --- the committed real-source report -------------------------------------------------------
