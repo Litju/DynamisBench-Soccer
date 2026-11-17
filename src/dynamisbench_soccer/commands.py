@@ -16,6 +16,7 @@ def registrars() -> list[Registrar]:
     from dynamisbench_soccer.adapters import cli as adapters_cli
     from dynamisbench_soccer.data import cli as data_cli
     from dynamisbench_soccer.engines import cli as engines_cli
+    from dynamisbench_soccer.engines import load_cell_cli
     from dynamisbench_soccer.ontology import cli as ontology_cli
     from dynamisbench_soccer.qc import cli as qc_cli
     from dynamisbench_soccer.qualification import cli as qualification_cli
@@ -31,4 +32,5 @@ def registrars() -> list[Registrar]:
         qc_cli.register,
         qualification_cli.register,
         engines_cli.register,
+        load_cell_cli.register,
     ]

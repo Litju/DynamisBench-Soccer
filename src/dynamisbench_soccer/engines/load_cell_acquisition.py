@@ -529,7 +529,8 @@ def check_timing(timing: Timing, rfd_min_hz: float, mismatch_limit: float) -> li
             "LC-RATE",
             qc.Severity.FLAG,
             qc.Status.PASS
-            if timing.rate_mismatch <= mismatch_limit and timing.measured_hz >= rfd_min_hz
+            if timing.rate_mismatch <= mismatch_limit
+            and timing.measured_hz >= rfd_min_hz * (1 - 1e-9)
             else qc.Status.FAIL,
             "timestamp rate vs declared rate and RFD minimum rate"
             + (
