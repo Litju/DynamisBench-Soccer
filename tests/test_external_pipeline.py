@@ -147,7 +147,7 @@ def test_excerpt_absent_from_evidence_bytes_blocks_conversion(tmp_path: Path) ->
         time_base=timebase.assess(table),
     )
     assert not outcome.converted
-    assert "excerpt not found verbatim" in outcome.blockers[0]
+    assert "excerpt must occur verbatim exactly once" in outcome.blockers[0]
 
 
 def test_evidence_bytes_changed_after_pinning_block_conversion(tmp_path: Path) -> None:

@@ -91,12 +91,13 @@ def dates_in(text: str) -> list[date]:
 #: After the recognised dates are removed, anything still date-like fails closed: digit
 #: runs of 3+, ordinals, any month word or abbreviation (any case) and clock times.
 _RESIDUE_RE = re.compile(
-    r"\d{3,}|\b\d{1,2}(?:st|nd|rd|th)\b|\d{1,2}:\d{2}"
-    r"|\b(?:jan|feb|mar|apr|may|jun|jul|aug|sep|sept|oct|nov|dec)[a-z]*\b",
+    r"\d{3,}|\b\d{1,2}(?:st|nd|rd|th)\b|\d{1,2}:\d{2}|\b\d{1,2}-\d{1,2}\b|'\d{2}\b"
+    rf"|\b(?:{_MONTH_RE})\b"
+    r"|\b(?:jan|feb|mar|apr|jun|jul|aug|sep|sept|oct|nov|dec)\b\.?",
     re.IGNORECASE,
 )
 _VERB_RE = re.compile(r"\b(?:" + "|".join(ACQUISITION_WORDS) + r")\b", re.IGNORECASE)
-_NEGATION_RE = re.compile(r"\b(?:not|never|no|without)\b", re.IGNORECASE)
+_NEGATION_RE = re.compile(r"\b(?:not|never|no|without)\b|n't\b", re.IGNORECASE)
 
 
 def date_problem(text: str, iso: str) -> str | None:

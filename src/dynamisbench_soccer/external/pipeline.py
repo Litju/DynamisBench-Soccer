@@ -187,7 +187,8 @@ def _stages(
         "canonical_admission": str(check.canonical_admission),
         "redistribution_allowed": check.redistribution_allowed,
         "local_inspection_permitted": check.local_inspection_permitted,
-        "blockers": check.blockers,
+        "blockers": list(check.blockers),
+        "record_digest": check.record_digest,
     }
     if not check.license_evidence_verified:
         run.add("rights_verification", "failed", "; ".join(check.problems))

@@ -34,6 +34,7 @@ from dynamisbench_soccer.external.models import (
     SignalStage,
     SourceLock,
     date_mentioned,
+    date_problem,
 )
 from dynamisbench_soccer.external.rights import (
     RightsBlocked,
@@ -279,10 +280,19 @@ def bind_session_date(lock: SourceLock, files: Mapping[str, Path]) -> BoundSessi
         raise SessionEvidenceError(f"{entry.path}: evidence is not UTF-8 text") from exc
     if _date.fromisoformat(claim.reviewed_on) > _date.today():
         raise SessionEvidenceError("evidence review date is in the future")
-    if claim.excerpt not in text:
-        raise SessionEvidenceError(f"{entry.path}: excerpt not found verbatim in evidence")
+    if text.count(claim.excerpt) != 1:
+        raise SessionEvidenceError(f"{entry.path}: excerpt must occur verbatim exactly once")
     if not date_mentioned(claim.excerpt, claim.date):
         raise SessionEvidenceError("excerpt does not state the claimed date")
+    # Judge the excerpt in context: the whole line(s) it sits on must pass the same check,
+    # so an excerpt cut out of a negating or multi-date sentence cannot bind.
+    at = text.index(claim.excerpt)
+    start = text.rfind("\n", 0, at) + 1
+    end = text.find("\n", at + len(claim.excerpt))
+    context = text[start : end if end != -1 else len(text)]
+    problem = date_problem(context, claim.date)
+    if problem is not None:
+        raise SessionEvidenceError(f"{entry.path}: excerpt context fails: {problem}")
     return BoundSessionDate(claim.date, entry.path, entry.sha256, claim.excerpt, claim.reviewed_by)
 
 

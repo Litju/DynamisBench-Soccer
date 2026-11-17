@@ -94,8 +94,16 @@ global schema-v2 `BundleMeta` or the lock format, which needs separate review:
 * **`--root` overrides** load unreviewed local records. The CLI warns, and the report
   records `records.committed_default_root=false` with an `UNREVIEWED RECORDS` banner.
   Only `data/external/` is reviewed in Git.
-* Rights checks are sealed with a per-process key and bound to one source and commit.
-  This defends against API misuse (edited copies, reused seals, cross-source checks),
-  not against deliberate in-process tampering with module internals.
+* Rights checks are sealed with a per-process key and bound to one source, commit and
+  exact source-lock content; the report records the rights-record digest. This defends
+  against API misuse (edited copies, reused seals, cross-source or changed-lock checks),
+  not against deliberate in-process tampering with module internals. The seal proves
+  `rights.verify` ran on a given record. Only the committed `data/external/` records are
+  reviewed, and a caller can still hand `verify` a self-written record.
+* The acquisition-date check is a fail-closed **syntactic** guard; the named reviewer
+  is the semantic backstop. It rejects whole-line contexts containing unparsed
+  date-like text, so legitimate lines mentioning e.g. "May", "100 m", "1000 Hz" or a
+  clock time are rejected and must be quoted from a cleaner line. Relative wording
+  ("the day before", "± a week") is not detected.
 * The report embeds Python and numpy versions, so it is byte-reproducible only within
   the same locked environment.

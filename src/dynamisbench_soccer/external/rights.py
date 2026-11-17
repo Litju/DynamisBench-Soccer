@@ -49,6 +49,8 @@ class RightsCheck:
     blockers: list[str] = field(default_factory=list)
     source_id: str = ""
     pinned_ref: str = ""
+    lock_digest: str = ""
+    record_digest: str = ""
     seal: str = field(default="", repr=False, compare=False)
 
     def _payload(self) -> bytes:
@@ -60,8 +62,15 @@ def _seal(check: RightsCheck) -> str:
     return hmac.new(_KEY, check._payload(), hashlib.sha256).hexdigest()
 
 
+def digest(model: SourceLock | RightsRecord) -> str:
+    """Content digest of a lock or record; a check is bound to the exact content it saw."""
+    return hashlib.sha256(model.model_dump_json().encode()).hexdigest()
+
+
 def issued(check: RightsCheck) -> bool:
-    return bool(check.seal) and hmac.compare_digest(check.seal, _seal(check))
+    if not isinstance(check.seal, str) or not check.seal:
+        return False
+    return hmac.compare_digest(check.seal, _seal(check))
 
 
 def _authentic(action: str, check: RightsCheck, lock: SourceLock) -> None:
@@ -69,6 +78,8 @@ def _authentic(action: str, check: RightsCheck, lock: SourceLock) -> None:
         raise RightsBlocked(action, ["rights check was not issued by rights.verify"])
     if (check.source_id, check.pinned_ref) != (lock.source_id, lock.pinned_ref):
         raise RightsBlocked(action, ["rights check was issued for a different source or commit"])
+    if check.lock_digest != digest(lock):
+        raise RightsBlocked(action, ["rights check was issued for different source-lock content"])
 
 
 def verify(record: RightsRecord, lock: SourceLock, files: dict[str, Path]) -> RightsCheck:
@@ -110,6 +121,8 @@ def verify(record: RightsRecord, lock: SourceLock, files: dict[str, Path]) -> Ri
         blockers=blockers,
         source_id=lock.source_id,
         pinned_ref=lock.pinned_ref,
+        lock_digest=digest(lock),
+        record_digest=digest(record),
     )
     return replace(check, seal=_seal(check))
 

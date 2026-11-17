@@ -382,3 +382,79 @@ def test_time_base_tolerance_edge(tmp_path: Path, lead_ms: int, expected: str) -
     tb = tbm.assess(_table(tmp_path, cols))
     assert tb.best_lag_ms == pytest.approx(lead_ms, abs=1.0)
     assert tb.qualification == expected
+
+
+# --- final re-review: content binding, excerpt context, fairness --------------------------
+
+
+def test_check_is_bound_to_lock_content_not_just_id(tmp_path: Path) -> None:
+    up = tmp_path / "src-a"
+    plain = upstream(up, source_id="src-a")
+    files = acquire.acquire(plain, source_dir=up, root=tmp_path / "q")
+    record = RightsRecord.model_validate(rights_payload(source_id="src-a", **_verified_overrides()))
+    check = rights.verify(record, plain, files)
+    dated = upstream(
+        up,
+        source_id="src-a",
+        evidence="Sprint recorded on 2024-01-06 here.\n",
+        claim=date_claim(excerpt="Sprint recorded on 2024-01-06"),
+    )  # same id and commit, different content (adds a date claim)
+    assert (dated.source_id, dated.pinned_ref) == (check.source_id, check.pinned_ref)
+    with pytest.raises(rights.RightsBlocked, match="different source-lock content"):
+        rights.require_canonical_admission(check, dated)
+
+
+def test_malformed_seal_fails_closed_with_rights_error(tmp_path: Path) -> None:
+    lock, real, up = _issued(tmp_path, "src-a")
+    bad = dataclasses.replace(real, seal=b"\x00" * 32)  # type: ignore[arg-type]
+    with pytest.raises(rights.RightsBlocked, match="not issued"):
+        acquire.acquire_data(lock, bad, source_dir=up, root=tmp_path / "q")
+
+
+def _bind(tmp_path: Path, evidence: str, excerpt: str) -> Any:
+    up = tmp_path / "up"
+    lock = upstream(up, evidence=evidence, claim=date_claim(excerpt=excerpt))
+    return shorts_laser.bind_session_date(lock, {f.path: up / f.path for f in lock.files})
+
+
+@pytest.mark.parametrize(
+    ("evidence", "why"),
+    [
+        (
+            "The sprint was NOT recorded on 2024-01-06; it was recorded on 2024-02-10.\n",
+            "context fails",
+        ),
+        ("Sprint recorded on 2024-01-06 to 2024-01-09.\n", "context fails"),
+        ("Sprint recorded on 2024-01-06.\nSprint recorded on 2024-01-06.\n", "exactly once"),
+    ],
+)
+def test_excerpt_is_judged_in_its_line_context(tmp_path: Path, evidence: str, why: str) -> None:
+    with pytest.raises(shorts_laser.SessionEvidenceError, match=why):
+        _bind(tmp_path, evidence, "recorded on 2024-01-06")
+
+
+@pytest.mark.parametrize(
+    "excerpt",
+    [
+        "The sprint wasn't recorded on 2024-01-06",
+        "Sprint recorded on 2024-01-06, revised 01-07",
+        "Sprint recorded on 2024-01-06 season '23",
+        "Sprint recorded on 2024-01-06 and 6 Jan.",
+    ],
+)
+def test_contractions_short_dates_and_abbreviations_rejected(tmp_path: Path, excerpt: str) -> None:
+    with pytest.raises(ValidationError):
+        _lock_with(tmp_path, f"{excerpt}\n", excerpt=excerpt)
+
+
+@pytest.mark.parametrize(
+    "excerpt",
+    [
+        "Junior athletes were tested on 2024-01-06",
+        "Sprints recorded separately on 2024-01-06",
+        "Recorded at the Novi Sad track on 2024-01-06",
+    ],
+)
+def test_ordinary_words_are_not_mistaken_for_months(tmp_path: Path, excerpt: str) -> None:
+    bound = _bind(tmp_path, f"Log\n{excerpt}\n", excerpt)
+    assert bound is not None and bound.date == "2024-01-06"

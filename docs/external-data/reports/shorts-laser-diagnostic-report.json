@@ -269,6 +269,7 @@
     "measurement_data_rights": "pending",
     "minors_possible": true,
     "participant_consent": "not_documented",
+    "record_digest": "83d1cbaeede14544c183f65e72df3bc163102d37603fe34d1092ae4e6363cb49",
     "redistribution_allowed": false
   },
   "signal_stages": [
