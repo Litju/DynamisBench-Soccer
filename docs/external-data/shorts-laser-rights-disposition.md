@@ -87,5 +87,5 @@ the same time.
 Strict v2 `Session.date` is mandatory, and the acquisition date is unpublished. No
 date is invented, so **v2 conversion is blocked** even after rights clearance, unless
 the rights holder also supplies the date. The converter accepts a date only together
-with an evidence reference. See the diagnostic report for the full conversion
-outcome.
+with an evidence reference. See the [diagnostic report](reports/shorts-laser-diagnostic-report.md)
+for the full conversion outcome.

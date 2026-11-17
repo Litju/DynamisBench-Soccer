@@ -20,12 +20,34 @@ import hashlib
 import re
 import stat
 from dataclasses import dataclass
+from datetime import date as _date
 from pathlib import Path
 
 import numpy as np
+from pydantic import ValidationError
 
+from dynamisbench_soccer.data.manifest import DataCategory
 from dynamisbench_soccer.external.models import SignalStage
-from dynamisbench_soccer.signals.schema import FloatArray, Quantity
+from dynamisbench_soccer.signals.schema import (
+    CANONICAL_UNIT,
+    Acquisition,
+    AcquisitionSource,
+    BundleKind,
+    BundleMeta,
+    ChannelSpec,
+    Clock,
+    Device,
+    DeviceClass,
+    FloatArray,
+    Geometry,
+    Protocol,
+    Provenance,
+    Quantity,
+    Sampling,
+    Session,
+    SignalBundle,
+    Subject,
+)
 
 SOURCE_ID = "shorts-laser"
 ADAPTER_ID = "shorts_laser_csv"
@@ -203,3 +225,164 @@ def profile(table: SourceTable) -> dict[str, float | int | bool]:
         out[f"{name}_min"] = float(values.min())
         out[f"{name}_max"] = float(values.max())
     return out
+
+
+# --- schema-v2 conversion ----------------------------------------------------------------
+@dataclass(frozen=True)
+class SessionEvidence:
+    """An acquisition date *supplied by the rights holder*, with where it came from."""
+
+    date: str
+    evidence_ref: str
+
+    def __post_init__(self) -> None:
+        _date.fromisoformat(self.date)
+        if len(self.evidence_ref.strip()) < 5:
+            raise ValueError("a session date needs a citable evidence reference")
+
+
+@dataclass(frozen=True)
+class ConversionOutcome:
+    bundle: SignalBundle | None
+    blockers: list[str]
+    determinations: list[tuple[str, str]]
+
+    @property
+    def converted(self) -> bool:
+        return self.bundle is not None
+
+
+#: Recorded with every conversion attempt, converted or not.
+DETERMINATIONS: tuple[tuple[str, str], ...] = (
+    (
+        "test_id=sprint_fv",
+        "protocol fit only: maximal 35 m standing-start linear sprint with continuous laser "
+        "distance. Supports kinematic estimands (vmax, tau). Force/power estimands (f0, pmax, "
+        "fv_slope, rf_max, drf) need body mass, which is unpublished. Population is a youth "
+        "basketball player and no soccer claim is made (see protocol_id).",
+    ),
+    (
+        "device_class=laser",
+        f"{DEVICE_MANUFACTURER} {DEVICE_MODEL}; native {NATIVE_ACQUISITION_HZ:g} Hz",
+    ),
+    ("geometry", "mounting_height_m and aiming_point unpublished: declared unknown, not inferred"),
+    ("calibration", "no calibration record published: calibration_unknown_reason, no certificate"),
+    ("clock", "vendor trial-relative grid; source 'unknown', absolute epoch unpublished"),
+    ("sampling", "nominal 1000 Hz is the published resampled rate; measured from the time column"),
+    ("subject", "anonymous pseudonym; sex, body mass and birth year not recorded"),
+    ("signal_stage", "all channels manufacturer_processed; no measured_native channel exists"),
+)
+
+
+def bundle_id(pinned_ref: str = PINNED_REF) -> str:
+    return f"shorts-laser-{pinned_ref[:12]}-laser-gun-data"
+
+
+def convert(
+    table: SourceTable, session: SessionEvidence | None, pinned_ref: str = PINNED_REF
+) -> ConversionOutcome:
+    """Build a strict schema-v2 bundle, or report every blocker; never fill gaps."""
+    blockers: list[str] = []
+    if session is None:
+        blockers.append(
+            "session.date: the acquisition date is not published by the source; schema-v2 "
+            "Session.date is mandatory and no date may be invented (RES-719 falsifier matrix)"
+        )
+    t = table.columns["time"]
+    dt = np.diff(t)
+    if np.any(dt <= 0):
+        blockers.append("time: source timestamps are not strictly increasing")
+    determinations = list(DETERMINATIONS)
+    if blockers or session is None:
+        return ConversionOutcome(None, blockers, determinations)
+
+    names = [c.channel for c in SOURCE_COLUMNS]
+    channels = [
+        ChannelSpec(
+            name=c.channel,
+            quantity=c.quantity,
+            unit=CANONICAL_UNIT[c.quantity],
+            description=c.description,
+        )
+        for c in SOURCE_COLUMNS
+    ]
+    device = Device(
+        device_class=DeviceClass.LASER, manufacturer=DEVICE_MANUFACTURER, model=DEVICE_MODEL
+    )
+    geometry = Geometry(unknown=["mounting_height_m", "aiming_point"])
+    uniform = bool(np.allclose(dt, np.median(dt), rtol=1e-6, atol=1e-12))
+    raw_format = (
+        f"{MUSCLELAB_VERSION} export: polynomial distance-time model resampled from "
+        f"{NATIVE_ACQUISITION_HZ:g} Hz to {PUBLISHED_RESAMPLED_HZ:g} Hz, committed as shorts "
+        f"{DATA_PATH} @ {pinned_ref[:12]}"
+    )
+    try:
+        meta = BundleMeta(
+            bundle_id=bundle_id(pinned_ref),
+            kind=BundleKind.TIMESERIES,
+            test_id="sprint_fv",
+            data_category=DataCategory.EMPIRICAL,
+            subject=Subject(pseudonym="shorts-laser-athlete-01"),
+            session=Session(session_id="shorts-laser-gun-data", date=session.date),
+            device=device,
+            protocol=Protocol(
+                protocol_id="shorts-laser-35m-standing-start-youth-basketball-non-soccer",
+                start_mode="standing",
+            ),
+            sampling=Sampling(
+                nominal_hz=PUBLISHED_RESAMPLED_HZ,
+                measured_hz=float(1.0 / np.median(dt)),
+                t0_s=float(t[0]),
+                irregular=not uniform,
+            ),
+            channels=channels,
+            n_rows=table.n_rows,
+            geometry=geometry,
+            provenance=Provenance(
+                created_by=f"adapter:{ADAPTER_ID}@{ADAPTER_VERSION}",
+                source_sha256=table.sha256,
+                transforms=[
+                    f"[measured_native, unavailable] {DEVICE_MODEL} acquisition at "
+                    f"{NATIVE_ACQUISITION_HZ:g} Hz (per shorts documentation)",
+                    f"[manufacturer_processed] {MUSCLELAB_VERSION}: polynomial distance-time "
+                    "model, 1 kHz resampling, smoothed and unsmoothed velocity export",
+                    f"shorts @ {pinned_ref[:12]} {DATA_PATH} used unchanged "
+                    f"(session date from: {session.evidence_ref})",
+                    f"adapter {ADAPTER_ID}@{ADAPTER_VERSION}: column raw_velocity renamed "
+                    "velocity_vendor_unsmoothed; no resampling, filtering, offset removal, "
+                    "trimming or imputation",
+                    "NOT applied (package_derived): "
+                    + "; ".join(f"{k}: {v}" for k, v in PACKAGE_DERIVED_NOT_INGESTED),
+                ],
+            ),
+            acquisition=Acquisition(
+                clocks=[
+                    Clock(
+                        id="musclelab_trial",
+                        source="unknown",
+                        epoch="Musclelab trial-relative time; absolute epoch and native "
+                        "2.56 kHz sensor clock unpublished",
+                    )
+                ],
+                reference_clock="musclelab_trial",
+                sources=[
+                    AcquisitionSource(
+                        id="laser",
+                        device=device,
+                        clock="musclelab_trial",
+                        channels=names,
+                        geometry=geometry,
+                        calibration_unknown_reason="no calibration record is published by "
+                        "the source; none is assumed",
+                        raw_format=raw_format,
+                        source_sha256=table.sha256,
+                    )
+                ],
+            ),
+            acquisition_unknown_reason=None,
+        )
+        data = {c.channel: table.columns[c.source_column].copy() for c in SOURCE_COLUMNS}
+        bundle = SignalBundle(meta, data)
+    except (ValidationError, ValueError) as exc:
+        return ConversionOutcome(None, [f"schema-v2 validation: {exc}"], determinations)
+    return ConversionOutcome(bundle, [], determinations)

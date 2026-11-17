@@ -1,0 +1,71 @@
+# External data: admission pipeline
+
+| Document | What it is |
+| -- | -- |
+| [Admission plan (RES-719)](DynamisBench_Soccer_external_data_admission_plan_2026-11-16.md) | Gates, falsifier matrix, six-source dispositions |
+| [Source inventory (RES-719)](DynamisBench_Soccer_source_inventory_PRE_ADMISSION_2026-11-16.json) | Pre-admission planning inventory (not a manifest) |
+| [`shorts-laser` rights disposition (RES-720)](shorts-laser-rights-disposition.md) | Exact source, rights findings, blockers, what unblocks admission |
+| [`shorts-laser` diagnostic report (RES-720)](reports/shorts-laser-diagnostic-report.md) | Generated pipeline report from the real pinned bytes ([JSON](reports/shorts-laser-diagnostic-report.json)) |
+
+## Pipeline (`dbs external`, RES-720)
+
+```text
+data/external/<id>/source-lock.json  ─┐   commit-pinned URLs; SHA-256, size, Git blob SHA-1
+data/external/<id>/rights.json       ─┤   license evidence vs measurement-data rights, consent
+                                      ▼
+pinned_source → integrity → rights_verification → ingestion → safe_parse → profile
+             → schema_v2_conversion → qc → diagnostics → report.{json,md}
+```
+
+| Stage | Passes when | Otherwise |
+| -- | -- | -- |
+| `pinned_source` | lock pins the exact commit and data SHA-256 the adapter was written for | failed |
+| `integrity` | every file matches pinned size, SHA-256 and Git blob SHA-1 (bounded download, no symlinks) | failed, nothing installed |
+| `rights_verification` | license text in the pinned bytes contains the recorded grant and holder, **and** the record permits canonical admission | blocked (license verified, admission not permitted) or failed (evidence mismatch) |
+| `ingestion` | canonical: manifest-v1 → existing `ingest_local` / `verify` / `stage` | blocked → read-only **quarantine** copy, only if `local_inspection_permitted`; otherwise the run stops |
+| `safe_parse` | hash-bound, exact header, ASCII, finite numbers, bounded size/rows | failed |
+| `schema_v2_conversion` | strict `BundleMeta`; written, read back and streamed through `signals.io` with SHA-256 verification | blocked with each precise blocker; the global schema is never weakened |
+| `qc` | source-level QC always (mirrors `sprint_fv` QC rules, params from `qc/rules.toml`); bundle QC when a v2 bundle exists | records the verdict |
+| `diagnostics` | pipeline-derived numerical diagnostics | n/a |
+
+```bash
+uv run dbs external validate                 # CI: committed locks + rights records
+uv run dbs external rights shorts-laser      # disposition and blockers
+uv run dbs external acquire shorts-laser     # verified quarantine copy only
+uv run dbs external run shorts-laser \
+  --report-md docs/external-data/reports/shorts-laser-diagnostic-report.md \
+  --report-json docs/external-data/reports/shorts-laser-diagnostic-report.json
+# only with a date supplied by the rights holder:
+#   --session-date YYYY-MM-DD --session-date-evidence "<citable reference>"
+```
+
+Bytes live under `$DBS_CACHE_HOME/quarantine/` (or the canonical store once admitted),
+never in Git. The report is deterministic for a fixed lockfile and contains only
+aggregate values.
+
+### Signal-stage taxonomy
+
+`measured_native` (sensor samples as acquired), `manufacturer_processed` (vendor
+software output), `package_derived` (third-party package transforms),
+`pipeline_derived` (computed here, for diagnostics only). Stages are never merged or
+relabelled. In `shorts-laser`, every CSV column is `manufacturer_processed`, and the
+source column `raw_velocity` becomes channel `velocity_vendor_unsmoothed`.
+
+## `shorts-laser` findings (2026-11-17)
+
+* **Blocked:** canonical admission (measurement-data rights, consent, possible minor)
+  and v2 conversion (no published session date). Both blockers are recorded, not
+  bypassed.
+* **Source integrity:** 5,232 rows on an exact 1 ms grid (−0.012 to 5.219 s), no gaps
+  or duplicates, distance monotonic at 1 mm resolution. The package's documented
+  4,805-row object is reproduced arithmetically from its trim rule.
+* **Vendor channels disagree on time base:** d(distance)/dt matches vendor velocity
+  to 0.094 m/s RMS only after a **≈ 996 ms shift**. At zero lag the RMS is 2.09 m/s,
+  and integrating velocity falls ≈ 7.8 m short of the vendor distance. The cause
+  cannot be determined from vendor exports. TD-type and distance-derived split
+  estimands therefore depend on which channel defines t0.
+* **QC:** `velocity_vendor_unsmoothed` fails QC-R02 (56.6 m/s² sample-to-sample).
+  Smoothed velocity passes (5.4 m/s²). Source verdict `accept_with_flags`.
+* **Model-fit sensitivity:** across four documented preprocessing variants,
+  MSS 8.13–8.22 m/s and TAU 1.03–1.07 s. This is a diagnostic of vendor-processed
+  velocity, not reference truth.

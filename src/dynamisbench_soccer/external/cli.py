@@ -6,8 +6,9 @@ import argparse
 import sys
 from pathlib import Path
 
+from dynamisbench_soccer.data import paths
 from dynamisbench_soccer.data.store import IntegrityError
-from dynamisbench_soccer.external import acquire, rights
+from dynamisbench_soccer.external import acquire, pipeline, rights, shorts_laser
 from dynamisbench_soccer.external.models import (
     EXTERNAL_ROOT,
     load_lock,
@@ -62,6 +63,37 @@ def _cmd_acquire(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_run(args: argparse.Namespace) -> int:
+    if args.source_id != shorts_laser.SOURCE_ID:
+        print(f"FAIL no adapter for {args.source_id!r}", file=sys.stderr)
+        return 1
+    session = None
+    if args.session_date or args.session_date_evidence:
+        if not (args.session_date and args.session_date_evidence):
+            print("FAIL --session-date needs --session-date-evidence (and vice versa)",
+                  file=sys.stderr)  # fmt: skip
+            return 1
+        session = shorts_laser.SessionEvidence(args.session_date, args.session_date_evidence)
+    out = Path(args.out) if args.out else paths.runs_root() / "external" / args.source_id
+    report = pipeline.run_shorts_laser(
+        out,
+        external_root=Path(args.root),
+        rules_path=Path(args.rules),
+        source_dir=Path(args.source_dir) if args.source_dir else None,
+        session=session,
+    )
+    for stage in report["stages"]:
+        print(f"{stage['status']:<8} {stage['name']:<22} {stage['detail']}")
+    print(f"outcome: {report['outcome']}")
+    print(f"report: {out / 'report.md'}")
+    for flag, name in ((args.report_md, "report.md"), (args.report_json, "report.json")):
+        if flag:
+            Path(flag).parent.mkdir(parents=True, exist_ok=True)
+            Path(flag).write_text((out / name).read_text(encoding="utf-8"), encoding="utf-8")
+            print(f"wrote {flag}")
+    return 1 if report["outcome"] == "failed" else 0
+
+
 def register(sub: argparse._SubParsersAction) -> None:  # type: ignore[type-arg]
     ext = sub.add_parser("external", help="pinned external sources and their rights gate")
     esub = ext.add_subparsers(dest="external_command", required=True)
@@ -77,3 +109,14 @@ def register(sub: argparse._SubParsersAction) -> None:  # type: ignore[type-arg]
     a.add_argument("--source-dir", default=None, help="local copy laid out like upstream")
     a.add_argument("--root", default=str(EXTERNAL_ROOT))
     a.set_defaults(handler=_cmd_acquire)
+    run = esub.add_parser("run", help="run the full source pipeline and write a report")
+    run.add_argument("source_id")
+    run.add_argument("--source-dir", default=None, help="local copy laid out like upstream")
+    run.add_argument("--out", default=None, help="run directory (default under DBS_CACHE_HOME)")
+    run.add_argument("--report-md", default=None, help="also copy the Markdown report here")
+    run.add_argument("--report-json", default=None, help="also copy the JSON report here")
+    run.add_argument("--session-date", default=None, help="rights-holder supplied ISO date")
+    run.add_argument("--session-date-evidence", default=None, help="citable source of the date")
+    run.add_argument("--rules", default="qc/rules.toml")
+    run.add_argument("--root", default=str(EXTERNAL_ROOT))
+    run.set_defaults(handler=_cmd_run)
