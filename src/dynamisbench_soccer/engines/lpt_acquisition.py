@@ -122,6 +122,8 @@ def _read_cable(bundle: SignalBundle, spec: CableSpec, gap_factor: float) -> Cab
         if np.any(np.abs(raw) >= 2**53) or np.any(raw != np.floor(raw)):
             raise ValueError("encoder needs exactly represented integer counts")
         raw = raw - spec.zero_count
+        if np.any(np.abs(raw) >= 2**53):
+            raise ValueError("count difference exceeds exact integer range")
         resolution = abs(gain)
     else:
         if spec.count_direction != 1 or spec.zero_count != 0:
@@ -130,7 +132,7 @@ def _read_cable(bundle: SignalBundle, spec: CableSpec, gap_factor: float) -> Cab
         if calibration and (calibration.input_unit, calibration.output_unit) != ("m", "m"):
             raise ValueError("cable calibration requires metre-to-metre units")
         gain = calibration.gain if calibration and calibration.gain is not None else 1.0
-        offset = calibration.offset or 0 if calibration else 0.0
+        offset = calibration.offset if calibration and calibration.offset is not None else 0.0
         absolute = column.quantity is Quantity.DISTANCE
     if absolute and spec.initial_length_m is not None:
         raise ValueError("initial length is only for relative inputs")
@@ -217,7 +219,8 @@ def _common_time(
             raise ValueError("aligned timestamps must be finite and strictly increasing")
         aligned.append(t)
     error = float(np.max(np.abs(aligned[0] - aligned[1]))) + uncertainty
-    if error > min(limit, float(np.min(np.diff(aligned[0]))) / 2):
+    half_interval = min(float(np.min(np.diff(t))) for t in aligned) / 2
+    if error > min(limit, half_interval):
         raise ValueError("dual cable clocks exceed the synchronization error budget")
     return aligned[0]
 
@@ -234,12 +237,16 @@ def _anchor(cable: Cable) -> tuple[float, float, float]:
 
 
 def vertical(
-    cables: tuple[Cable, ...], geometry: GeometrySpec, angle_error_rad: float = 0
+    cables: tuple[Cable, ...],
+    geometry: GeometrySpec,
+    angle_error_rad: float = 0,
+    geometry_error_m: float = 0,
 ) -> tuple[str, FloatArray | None]:
     """Reconstruct attachment displacement under the declared geometric model."""
     first = cables[0]
     if len(cables) == 2:
         left, right = map(_anchor, cables)
+        right = (right[0], right[1], right[2] + geometry_error_m)
         dx, dy, dz = np.subtract(right, left)
         if dx <= 0 or abs(dy) > 1e-9:
             raise ValueError("dual anchors must be ordered by x in a vertical x-z plane")
@@ -252,7 +259,8 @@ def vertical(
         method = "planar_dual_circle_above_baseline"
     elif geometry.vertical_line_xy_m is not None:
         anchor = _anchor(first)
-        horizontal = np.linalg.norm(np.subtract(geometry.vertical_line_xy_m, anchor[:2]))
+        xy = np.add(geometry.vertical_line_xy_m, (geometry_error_m, 0))
+        horizontal = np.linalg.norm(np.subtract(xy, anchor[:2]))
         height_sq = first.length_m**2 - horizontal**2
         if np.any(height_sq < 0):
             raise ValueError("cable does not intersect the declared vertical line above its anchor")
