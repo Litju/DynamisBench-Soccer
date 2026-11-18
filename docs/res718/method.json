@@ -1,0 +1,15 @@
+{
+  "method": {
+    "filter": "raw",
+    "onset": "5sd",
+    "contact": "fixed_N",
+    "contact_threshold_n": 20,
+    "integration": "trapezoid",
+    "integration_start": "quiet_start",
+    "quiet_window_s": [0.01, 1.012]
+  },
+  "plates": [
+    {"plate": 1, "raw_limits": {"fz_left": [-5000, 5000]}},
+    {"plate": 2, "raw_limits": {"fz_right": [-5000, 5000]}}
+  ]
+}
