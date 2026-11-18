@@ -182,6 +182,4 @@ def test_start_offset_sensitivity_reports_actual_line_of_sight_speed_at_one_seco
     assert isinstance(baseline, float)
     assert isinstance(plus, float)
     assert 0 < minus < baseline < plus
-    assert baseline == pytest.approx(
-        np.interp(1.0, result.time_reference_s, result.velocity_m_s)
-    )
+    assert baseline == pytest.approx(np.interp(1.0, result.time_reference_s, result.velocity_m_s))
