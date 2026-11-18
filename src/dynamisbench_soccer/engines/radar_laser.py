@@ -149,7 +149,14 @@ def _quality(trace: AdmittedTrace, velocity: FloatArray, options: ProcessingOpti
         )
     if float(np.max(velocity)) > options.speed_limit_m_s:
         raise AcquisitionRefusal("implausible speed or foreign target / optical reflection")
-    flat = np.abs(np.diff(trace.values)) < 1e-14
+    # A pre-sprint standing zero is not a sensor saturation plateau. Only
+    # sustained equality to the observed ceiling is a clipping suspicion.
+    # Quantization can still cause plateaus; device rail telemetry is needed
+    # for a definitive clipping attribution.
+    ceiling = float(np.max(trace.values))
+    flat = (np.abs(np.diff(trace.values)) < 1e-14) & (
+        trace.values[1:] >= ceiling - 1e-14
+    )
     longest, run = 0, 0
     for equal in flat:
         run = run + 1 if equal else 0

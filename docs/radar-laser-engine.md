@@ -38,8 +38,10 @@ angle, COM position or a calibrated correction.
 Sample timestamps are mapped by declared v2 affine clock alignment. Native
 rate and measured rate must agree within the configured admission tolerance.
 Missing/duplicate or non-monotonic times, dropout gaps, conflicting clock
-metadata, negatives and absurd velocities refuse. Sustained flat clipping
-and physically unreasonable kinematic discontinuities also refuse. The
+metadata, negatives and absurd velocities refuse. Sustained ceiling-level
+plateaus are treated as *suspected* clipping, not proven hardware saturation;
+standing zero plateaus are valid. Physically unreasonable kinematic
+discontinuities also refuse. The
 source stream alone cannot distinguish a foreign reflection from a spike,
 target switching, or abrupt aiming movement; no missing samples are filled.
 

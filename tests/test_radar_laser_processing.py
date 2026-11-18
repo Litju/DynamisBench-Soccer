@@ -183,3 +183,19 @@ def test_start_offset_sensitivity_reports_actual_line_of_sight_speed_at_one_seco
     assert isinstance(plus, float)
     assert 0 < minus < baseline < plus
     assert baseline == pytest.approx(np.interp(1.0, result.time_reference_s, result.velocity_m_s))
+
+
+def test_stationary_prestart_zeros_are_not_false_clipping() -> None:
+    radar = export_case("radar_laser.radar", hz=47).observation
+    time = radar["time"]
+    # Preserve a genuine standing-zero interval and begin the same known
+    # smooth sprint trace at t=12 native samples, with no artificial jump.
+    shifted = np.interp(time - time[12], time, radar["velocity"], left=0.0)
+    assert np.count_nonzero(shifted[:13]) == 0
+    rested = SignalBundle(
+        BundleMeta.model_validate(radar.meta.model_dump()),
+        {"time": time.copy(), "velocity": shifted},
+    )
+    result = process(rested, _native())
+    assert result.velocity_m_s[0] == 0.0
+    assert result.peak_velocity_m_s > 1.0
