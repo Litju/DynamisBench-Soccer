@@ -10,12 +10,12 @@ from typing import Annotated, Literal
 from pydantic import Field, model_validator
 
 from dynamisbench_soccer.engines.event_time import (
+    Discard,
     EdgeTiming,
     Estimate,
     Event,
     EventRefusal,
     EventStream,
-    NativeEvent,
     Nonnegative,
     Policy,
     Positive,
@@ -51,10 +51,12 @@ class Gate(Policy):
 
 class FirstGate(Policy):
     mode: Literal["first_gate"]
+    start_position_m: float | None = None
 
 
 class FixedOffset(Policy):
     mode: Literal["fixed_offset"]
+    start_position_m: float | None = None
     offset_s: Positive
     error_s: Nonnegative
 
@@ -85,18 +87,14 @@ class GatePolicy(Policy):
             b.position_m <= a.position_m for a, b in pairwise(self.gates)
         ):
             raise ValueError("sprint gates must have distinct IDs and increasing positions")
-        if (
-            isinstance(self.start, TriggerStart)
-            and self.start.position_m > self.gates[0].position_m
-        ):
-            raise ValueError("start trigger must be at or before the first gate")
+        position = (
+            self.start.position_m
+            if isinstance(self.start, TriggerStart)
+            else self.start.start_position_m
+        )
+        if position is not None and position > self.gates[0].position_m:
+            raise ValueError("start position must be at or before the first gate")
         return self
-
-
-@dataclass(frozen=True)
-class Discard:
-    reason: str
-    native: tuple[NativeEvent, ...]
 
 
 @dataclass(frozen=True)

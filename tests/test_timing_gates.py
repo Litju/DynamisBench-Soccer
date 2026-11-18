@@ -307,3 +307,62 @@ def test_fixed_offset_sensitivity_via_cli(tmp_path, capsys):
     assert "refusal" in result["sensitivity"][1]
     assert main(["timing", "gates", str(path), "--policy", str(bad)]) == 1
     assert capsys.readouterr().err.startswith("REFUSED:")
+
+
+def test_multi_beam_quorum_and_beam_height_sensitivity_on_clean_events():
+    case = export_case("timing_contact.gates")
+    model = MonoExponentialSprint()
+    heights = (1.0, 1.06, 1.08)
+    events = [
+        (
+            spherical_gate_trigger_s(
+                model, 10, beam_height_m=height, center_height_m=1, radius_m=0.1
+            ),
+            10,
+            2,
+            i,
+        )
+        for i, height in enumerate(heights, start=1)
+    ]
+    gates = list(gate_policy().gates)
+    gates[1] = Gate(
+        id=2,
+        position_m=10,
+        beam_type="multiple",
+        coincidence_s=0.015,
+        quorum=1,
+        beams=tuple(Beam(id=i, height_m=h, timing=EDGE) for i, h in enumerate(heights, 1)),
+    )
+    sources = [
+        gate_stream(
+            case.observation,
+            [
+                (t, d, i, 1)
+                for i, (t, d) in enumerate(zip(case.observation["t_s"], DISTANCES, strict=True), 1)
+                if i != 2
+            ],
+            name="single",
+        ),
+        gate_stream(
+            case.observation, events, name="three-beam", geometry={"beam_type": "multiple"}
+        ),
+    ]
+    first = sprint(sources, gate_policy(gates=gates)).splits[1]
+    assert first.crossing.time_s.value == pytest.approx(events[0][0])
+    gates[1] = gates[1].model_copy(update={"quorum": 3})
+    all_beams = sprint(sources, gate_policy(gates=gates)).splits[1]
+    assert all_beams.crossing.time_s.value == pytest.approx(events[-1][0])
+    assert all_beams.split_s.value - first.split_s.value == pytest.approx(
+        events[-1][0] - events[0][0]
+    )
+    uncertain = (
+        gates[1]
+        .beams[-1]
+        .model_copy(
+            update={"timing": EDGE.model_copy(update={"definition_error_s": 0.002})},
+        )
+    )
+    gates[1] = gates[1].model_copy(update={"beams": (*gates[1].beams[:-1], uncertain)})
+    sensitivity = sprint(sources, gate_policy(gates=gates)).splits[1].split_s
+    assert sensitivity.value == all_beams.split_s.value
+    assert sensitivity.high == pytest.approx(all_beams.split_s.high + 0.002)

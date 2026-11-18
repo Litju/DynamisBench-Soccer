@@ -44,7 +44,7 @@ class Timing(Policy):
 
     @model_validator(mode="after")
     def _authority(self) -> Timing:
-        if not self.authority.strip():
+        if self.authority.strip().lower() in {"", "unknown", "none", "unrecorded"}:
             raise ValueError("timing authority must identify a calibration or protocol")
         return self
 
@@ -72,6 +72,7 @@ class Estimate:
 @dataclass(frozen=True)
 class NativeEvent:
     bundle_id: str
+    source_id: str
     row: int
     clock: str
     native_s: float
@@ -80,6 +81,12 @@ class NativeEvent:
 @dataclass(frozen=True)
 class Event:
     time_s: Estimate
+    native: tuple[NativeEvent, ...]
+
+
+@dataclass(frozen=True)
+class Discard:
+    reason: str
     native: tuple[NativeEvent, ...]
 
 
@@ -131,6 +138,9 @@ class EventStream:
         self.bundle_id = meta.bundle_id
         self.source = source
 
+    def native(self, row: int) -> NativeEvent:
+        return NativeEvent(self.bundle_id, self.source.id, row, self.clock.id, self.times[row])
+
     def event(self, row: int, edge: EdgeTiming) -> Event:
         native = self.times[row]
         seconds = native
@@ -149,5 +159,5 @@ class EventStream:
             raise EventRefusal("timing bounds are below timestamp numerical precision")
         return Event(
             Estimate(center, center - error, center + error),
-            (NativeEvent(self.bundle_id, row, self.clock.id, native),),
+            (self.native(row),),
         )
