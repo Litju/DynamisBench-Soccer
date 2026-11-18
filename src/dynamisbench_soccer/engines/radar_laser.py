@@ -23,9 +23,7 @@ from dynamisbench_soccer.signals.schema import DeviceClass, FloatArray, SignalBu
 
 FilterMethod = Literal["none", "boxcar5", "binomial5"]
 DerivativeMethod = Literal["central", "five_point"]
-StartMethod = Literal[
-    "record_origin", "velocity_threshold", "range_change", "external_trigger"
-]
+StartMethod = Literal["record_origin", "velocity_threshold", "range_change", "external_trigger"]
 CorrectionMethod = Literal["none", "declared_fixed_angle"]
 
 
@@ -97,9 +95,7 @@ def _laser_derivative(
     if float(np.max(np.abs(intervals / step - 1))) > 1e-5:
         raise AcquisitionRefusal("five_point requires a uniform native time grid")
     v = np.asarray(np.gradient(distance, time, edge_order=2), dtype=np.float64)
-    v[2:-2] = (
-        distance[:-4] - 8 * distance[1:-3] + 8 * distance[3:-1] - distance[4:]
-    ) / (12 * step)
+    v[2:-2] = (distance[:-4] - 8 * distance[1:-3] + 8 * distance[3:-1] - distance[4:]) / (12 * step)
     return v
 
 
@@ -207,10 +203,7 @@ def process(bundle: SignalBundle, options: ProcessingOptions) -> VelocityResult:
     if distance is not None and (not math.isfinite(distance) or distance < 0):
         raise AcquisitionRefusal("mount distance behind start must be nonnegative and declared")
     trace = admit(bundle, stage=options.channel_stage)
-    if (
-        trace.stage is ChannelStage.MANUFACTURER_PROCESSED
-        and options.correction_method != "none"
-    ):
+    if trace.stage is ChannelStage.MANUFACTURER_PROCESSED and options.correction_method != "none":
         raise AcquisitionRefusal(
             "opaque manufacturer-processed channels cannot be cosine-corrected"
         )

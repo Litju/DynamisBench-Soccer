@@ -15,8 +15,13 @@ def test_radar_and_laser_cli_are_distinct(tmp_path: Path, capsys) -> None:  # ty
         export_case(f"radar_laser.{kind}", hz=100).write(folder)
         output = tmp_path / f"{kind}.json"
         args = [
-            "radar-laser", "process", str(folder / "observation"),
-            "--stage", "native", "--out", str(output),
+            "radar-laser",
+            "process",
+            str(folder / "observation"),
+            "--stage",
+            "native",
+            "--out",
+            str(output),
         ]
         if kind == "radar":
             args.extend(["--correction", "declared_fixed_angle"])

@@ -53,17 +53,22 @@ def register(sub: argparse._SubParsersAction[argparse.ArgumentParser]) -> None:
         "--filter", dest="filter_method", choices=["none", "boxcar5", "binomial5"], default="none"
     )
     parser.add_argument(
-        "--derivative", dest="derivative_method",
-        choices=["central", "five_point"], default="five_point"
+        "--derivative",
+        dest="derivative_method",
+        choices=["central", "five_point"],
+        default="five_point",
     )
     parser.add_argument(
-        "--start", dest="start_method",
+        "--start",
+        dest="start_method",
         choices=["record_origin", "velocity_threshold", "range_change", "external_trigger"],
-        default="record_origin"
+        default="record_origin",
     )
     parser.add_argument(
-        "--correction", dest="correction_method",
-        choices=["none", "declared_fixed_angle"], default="none"
+        "--correction",
+        dest="correction_method",
+        choices=["none", "declared_fixed_angle"],
+        default="none",
     )
     parser.add_argument("--threshold-m-s", type=float, default=0.30)
     parser.add_argument("--range-change-m", type=float, default=0.05)

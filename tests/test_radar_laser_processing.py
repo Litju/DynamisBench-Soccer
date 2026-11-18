@@ -108,9 +108,12 @@ def test_smooth_aiming_drift_is_not_improperly_corrected() -> None:
         ContinuousFault(ContinuousKind.DRIFT, ("velocity",), magnitude=0.25),
     )
     estimated = process(altered, _native(correction_method="declared_fixed_angle"))
-    assert estimated.peak_velocity_m_s > process(
-        case.observation, _native(correction_method="declared_fixed_angle")
-    ).peak_velocity_m_s
+    assert (
+        estimated.peak_velocity_m_s
+        > process(
+            case.observation, _native(correction_method="declared_fixed_angle")
+        ).peak_velocity_m_s
+    )
     assert "UNSUPPORTED" in str(estimated.sensitivity["aiming_drift_correction"])
 
 
