@@ -97,7 +97,7 @@ def test_second_athlete_reflection_and_target_switch_refuse_without_repair() -> 
     with pytest.raises(AcquisitionRefusal, match="discontinuity"):
         process(_changed(radar, "velocity", 35, 3.5), _native())
     laser = export_case("radar_laser.laser", hz=256).observation
-    with pytest.raises(AcquisitionRefusal, match="discontinuity|negative reconstructed"):
+    with pytest.raises(AcquisitionRefusal, match=r"discontinuity|negative reconstructed"):
         process(_changed(laser, "distance", 65, 1.1), _native())
 
 
