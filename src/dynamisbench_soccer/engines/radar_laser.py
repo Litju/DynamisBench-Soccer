@@ -78,9 +78,16 @@ def _filtered(signal: FloatArray, method: FilterMethod) -> FloatArray:
         weights = np.array([1, 4, 6, 4, 1], dtype=np.float64) / 16
     else:
         raise AcquisitionRefusal("unsupported named filter")
-    # Mirror endpoints rather than inserting fabricated zeros. Filtering is
-    # non-causal and must not be represented as a real-time device algorithm.
-    return np.convolve(np.pad(signal, (2, 2), mode="reflect"), weights, mode="valid")
+    # Linear extension preserves the local boundary slope. Reflecting the
+    # range reverses the slope and manufactures a spurious braking event
+    # when differentiating filtered laser distance. These edge values are
+    # extrapolated analysis support points, not device measurements.
+    left_slope = signal[1] - signal[0]
+    right_slope = signal[-1] - signal[-2]
+    left = signal[0] - left_slope * np.array([2.0, 1.0])
+    right = signal[-1] + right_slope * np.array([1.0, 2.0])
+    extended = np.concatenate((left, signal, right))
+    return np.convolve(extended, weights, mode="valid")
 
 
 def _laser_derivative(

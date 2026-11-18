@@ -42,7 +42,10 @@ source stream alone cannot distinguish a foreign reflection from a spike,
 target switching, or abrupt aiming movement; no missing samples are filled.
 
 The named *offline* filters are none, five-point boxcar and five-point binomial.
-Neither is claimed to reproduce any manufacturer processing. Start conventions:
+The two smoothing filters use linear slope extrapolation at the first/last two
+samples to avoid generating false velocity reversal from reflected range
+boundaries; these extrapolated support points are not acquired measurements.
+Neither filter is claimed to reproduce any manufacturer processing. Start conventions:
 record origin, sustained three-sample velocity threshold, laser-only range-change
 threshold, or a separately declared reference-frame trigger. A threshold is an
 algorithmic crossing, NOT the athlete's physically measured sprint onset.
