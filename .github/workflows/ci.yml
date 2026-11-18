@@ -56,3 +56,19 @@ jobs:
         run: uv run pytest
       - name: Build
         run: uv build
+      - name: Built wheel LPT/encoder registration and QC rules
+        run: |
+          uv run python -I - <<'PYCODE'
+          from pathlib import Path
+          import sys
+          from zipfile import ZipFile
+
+          wheel = next(Path("dist").glob("*.whl")).resolve()
+          assert "dynamisbench_soccer/qc/rules.toml" in ZipFile(wheel).namelist()
+          sys.path.insert(0, str(wheel))
+          from dynamisbench_soccer.cli import build_parser
+          from dynamisbench_soccer.engines.lpt import process
+
+          assert str(wheel) in process.__code__.co_filename
+          assert "lpt-encoder" in build_parser().format_help()
+          PYCODE
