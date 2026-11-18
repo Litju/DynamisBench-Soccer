@@ -14,8 +14,8 @@ Registrar = Callable[[argparse._SubParsersAction], None]  # type: ignore[type-ar
 
 def registrars() -> list[Registrar]:
     from dynamisbench_soccer.adapters import cli as adapters_cli
-    from dynamisbench_soccer.engines import radar_laser_cli
     from dynamisbench_soccer.data import cli as data_cli
+    from dynamisbench_soccer.engines import radar_laser_cli
     from dynamisbench_soccer.ontology import cli as ontology_cli
     from dynamisbench_soccer.qc import cli as qc_cli
     from dynamisbench_soccer.qualification import cli as qualification_cli
