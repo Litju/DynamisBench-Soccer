@@ -139,13 +139,20 @@ def _quality(trace: AdmittedTrace, velocity: FloatArray, options: ProcessingOpti
         raise AcquisitionRefusal("differentiation produced non-finite velocity")
     if float(np.min(velocity)) < -0.05:
         raise AcquisitionRefusal("negative reconstructed speed; sign/beam integrity unresolved")
-    if float(np.max(velocity)) > options.speed_limit_m_s:
-        raise AcquisitionRefusal("implausible speed or foreign target / optical reflection")
     acceleration = np.diff(velocity) / np.diff(trace.reference_time_s)
     if float(np.max(np.abs(acceleration))) > options.acceleration_limit_m_s2:
         raise AcquisitionRefusal(
             "discontinuity: spike, reflection, target switch or aiming drift is unresolved"
         )
+    if float(np.max(velocity)) > options.speed_limit_m_s:
+        raise AcquisitionRefusal("implausible speed or foreign target / optical reflection")
+    flat = np.abs(np.diff(trace.values)) < 1e-14
+    longest, run = 0, 0
+    for equal in flat:
+        run = run + 1 if equal else 0
+        longest = max(longest, run)
+    if longest >= 9 and float(np.ptp(trace.values)) > 0.5:
+        raise AcquisitionRefusal("sustained flat rail: clipping or acquisition loss suspected")
 
 
 def _sensitivity(
@@ -158,7 +165,9 @@ def _sensitivity(
         "start_shift_minus_s": start_s - options.timing_perturbation_s,
         "start_shift_plus_s": start_s + options.timing_perturbation_s,
         "body_point_sensitivity": "UNSUPPORTED: no measured body-point-to-COM mapping",
-        "aiming_drift_correction": "UNSUPPORTED: a single line-of-sight stream cannot identify drift",
+        "aiming_drift_correction": (
+            "UNSUPPORTED: a single line-of-sight stream cannot identify drift"
+        ),
         "mount_offset_correction": "UNSUPPORTED: source schema has no surveyed start-relative pose",
     }
     if options.correction_method == "declared_fixed_angle":
@@ -198,10 +207,13 @@ def process(bundle: SignalBundle, options: ProcessingOptions) -> VelocityResult:
     if distance is not None and (not math.isfinite(distance) or distance < 0):
         raise AcquisitionRefusal("mount distance behind start must be nonnegative and declared")
     trace = admit(bundle, stage=options.channel_stage)
-    if trace.stage is ChannelStage.MANUFACTURER_PROCESSED and (
-        options.correction_method != "none"
+    if (
+        trace.stage is ChannelStage.MANUFACTURER_PROCESSED
+        and options.correction_method != "none"
     ):
-        raise AcquisitionRefusal("opaque manufacturer-processed channels cannot be cosine-corrected")
+        raise AcquisitionRefusal(
+            "opaque manufacturer-processed channels cannot be cosine-corrected"
+        )
     if options.correction_method not in {"none", "declared_fixed_angle"}:
         raise AcquisitionRefusal("unsupported cosine correction")
     line = _filtered(trace.values, options.filter_method)

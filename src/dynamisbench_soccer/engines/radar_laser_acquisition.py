@@ -79,6 +79,8 @@ def admit(
     ):
         raise AcquisitionRefusal("rate and jitter thresholds must be finite fractions")
     meta = bundle.meta
+    if meta.data_category not in {DataCategory.SYNTHETIC, DataCategory.EMPIRICAL}:
+        raise AcquisitionRefusal("analytical truth must never enter a device engine")
     cls = meta.device.device_class
     if cls not in {DeviceClass.RADAR, DeviceClass.LASER}:
         raise AcquisitionRefusal(
@@ -86,8 +88,6 @@ def admit(
         )
     if meta.kind is not BundleKind.TIMESERIES or meta.sampling is None:
         raise AcquisitionRefusal("native radar/laser requires a sampled timeseries")
-    if meta.data_category not in {DataCategory.SYNTHETIC, DataCategory.EMPIRICAL}:
-        raise AcquisitionRefusal("analytical truth must never enter a device engine")
     if meta.acquisition is None or len(meta.acquisition.sources) != 1:
         raise AcquisitionRefusal("one explicit acquisition source and clock are required")
     source = meta.acquisition.sources[0]

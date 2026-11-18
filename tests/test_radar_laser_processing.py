@@ -26,24 +26,18 @@ def _native(**kwargs):  # type: ignore[no-untyped-def]
 
 @pytest.mark.parametrize("rate", [47, 100, 256])
 def test_radar_recovers_independent_exact_velocity_at_native_rate(rate: int) -> None:
-    case = export_case(
-        "radar_laser.radar", hz=rate, clock=DeviceClock(0.12, 60)
-    )
+    case = export_case("radar_laser.radar", hz=rate, clock=DeviceClock(0.12, 60))
     result = process(case.observation, _native(correction_method="declared_fixed_angle"))
     assert result.estimand == "radar_declared_axis_projection_velocity"
     assert result.native_quantity == "velocity"
     np.testing.assert_allclose(result.velocity_m_s, case.truth["velocity"], atol=2e-12)
-    np.testing.assert_allclose(
-        result.time_reference_s, case.truth["time"], atol=2e-12
-    )
+    np.testing.assert_allclose(result.time_reference_s, case.truth["time"], atol=2e-12)
     assert result.sensitivity["cosine_peak_high_m_s"] > result.peak_velocity_m_s
 
 
 @pytest.mark.parametrize("rate", [47, 100, 256])
 @pytest.mark.parametrize("method", ["central", "five_point"])
-def test_laser_distance_derivative_recovers_analytical_speed(
-    rate: int, method: str
-) -> None:
+def test_laser_distance_derivative_recovers_analytical_speed(rate: int, method: str) -> None:
     case = export_case("radar_laser.laser", hz=rate)
     result = process(case.observation, _native(derivative_method=method))
     assert result.native_quantity == "distance"
@@ -88,9 +82,7 @@ def test_unqualified_cosine_correction_refuses_laser_and_processed_radar() -> No
                 correction_method="declared_fixed_angle",
             ),
         )
-    result = process(
-        radar, ProcessingOptions(channel_stage=ChannelStage.MANUFACTURER_PROCESSED)
-    )
+    result = process(radar, ProcessingOptions(channel_stage=ChannelStage.MANUFACTURER_PROCESSED))
     assert result.estimand == "manufacturer_processed_radar_velocity_as_supplied"
 
 
@@ -113,9 +105,7 @@ def test_smooth_aiming_drift_is_not_improperly_corrected() -> None:
     case = export_case("radar_laser.radar", hz=47)
     altered = inject(
         case.observation,
-        ContinuousFault(
-            ContinuousKind.DRIFT, ("velocity",), magnitude=0.25
-        ),
+        ContinuousFault(ContinuousKind.DRIFT, ("velocity",), magnitude=0.25),
     )
     estimated = process(altered, _native(correction_method="declared_fixed_angle"))
     assert estimated.peak_velocity_m_s > process(
@@ -139,9 +129,7 @@ def test_noise_in_distance_differentiation_is_not_doppler_velocity() -> None:
     case = export_case("radar_laser.laser", hz=256)
     noisy = inject(
         case.observation,
-        ContinuousFault(
-            ContinuousKind.NOISE, ("distance",), magnitude=0.00001, seed=9
-        ),
+        ContinuousFault(ContinuousKind.NOISE, ("distance",), magnitude=0.00001, seed=9),
     )
     unfiltered = process(noisy, _native(filter_method="none"))
     smoothed = process(noisy, _native(filter_method="binomial5"))
@@ -160,3 +148,10 @@ def test_no_reference_imports_in_engine_files() -> None:
             for n in ast.walk(tree)
             if isinstance(n, (ast.Import, ast.ImportFrom))
         )
+
+
+def test_clipped_native_radar_plateau_refuses_without_inventing_speed() -> None:
+    radar = export_case("radar_laser.radar").observation
+    clipped = inject(radar, ContinuousFault(ContinuousKind.CLIPPING, ("velocity",), magnitude=3.0))
+    with pytest.raises(AcquisitionRefusal, match="flat rail"):
+        process(clipped, _native())

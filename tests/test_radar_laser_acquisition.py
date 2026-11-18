@@ -68,6 +68,8 @@ def test_unmeasured_geometry_cannot_be_inferred() -> None:
     def unknown(raw, data) -> None:  # type: ignore[no-untyped-def]
         raw["acquisition"]["sources"][0]["geometry"]["aiming_point"] = None
         raw["acquisition"]["sources"][0]["geometry"]["unknown"].append("aiming_point")
+        raw["geometry"]["aiming_point"] = None
+        raw["geometry"]["unknown"].append("aiming_point")
 
     with pytest.raises(AcquisitionRefusal, match="aiming point"):
         admit(_edit(radar, unknown), stage=ChannelStage.NATIVE)
