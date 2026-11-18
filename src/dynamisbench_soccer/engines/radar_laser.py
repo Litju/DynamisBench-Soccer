@@ -154,9 +154,7 @@ def _quality(trace: AdmittedTrace, velocity: FloatArray, options: ProcessingOpti
     # Quantization can still cause plateaus; device rail telemetry is needed
     # for a definitive clipping attribution.
     ceiling = float(np.max(trace.values))
-    flat = (np.abs(np.diff(trace.values)) < 1e-14) & (
-        trace.values[1:] >= ceiling - 1e-14
-    )
+    flat = (np.abs(np.diff(trace.values)) < 1e-14) & (trace.values[1:] >= ceiling - 1e-14)
     longest, run = 0, 0
     for equal in flat:
         run = run + 1 if equal else 0
