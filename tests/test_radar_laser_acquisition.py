@@ -20,19 +20,13 @@ from dynamisbench_soccer.signals.schema import BundleMeta, SignalBundle
 
 
 @pytest.mark.parametrize("family,rate", [("radar", 47), ("laser", 256)])
-def test_admits_distinct_native_measurands_and_affine_clocks(
-    family: str, rate: int
-) -> None:
-    case = export_case(
-        f"radar_laser.{family}", hz=rate, clock=DeviceClock(0.13, 90)
-    )
+def test_admits_distinct_native_measurands_and_affine_clocks(family: str, rate: int) -> None:
+    case = export_case(f"radar_laser.{family}", hz=rate, clock=DeviceClock(0.13, 90))
     trace = admit(case.observation, stage=ChannelStage.NATIVE)
     assert trace.channel == ("velocity" if family == "radar" else "distance")
     assert trace.measured_hz == pytest.approx(rate, rel=1e-10)
     assert trace.native_nominal_hz == rate
-    np.testing.assert_allclose(
-        trace.reference_time_s, case.truth["time"], atol=1e-12
-    )
+    np.testing.assert_allclose(trace.reference_time_s, case.truth["time"], atol=1e-12)
     assert trace.cosine_angle_rad == (pytest.approx(0.2) if family == "radar" else None)
     assert trace.aiming_point
     assert trace.n_samples == case.observation.meta.n_rows
@@ -87,9 +81,7 @@ def test_native_timestamp_fault_and_dropouts_refuse() -> None:
 
     with pytest.raises(AcquisitionRefusal, match="non-monotonic"):
         admit(_edit(laser, backstep), stage=ChannelStage.NATIVE)
-    missing = inject(
-        laser, ContinuousFault(ContinuousKind.DROP, ("distance",), stride=5)
-    )
+    missing = inject(laser, ContinuousFault(ContinuousKind.DROP, ("distance",), stride=5))
     with pytest.raises(AcquisitionRefusal, match="timestamp gap"):
         admit(missing, stage=ChannelStage.NATIVE)
 
@@ -112,5 +104,16 @@ def test_engine_is_independent_of_reference_generators() -> None:
     imports = ast.walk(ast.parse(module.read_text()))
     assert not any(
         "dynamisbench_soccer.reference" in ast.unparse(n)
-        for n in imports if isinstance(n, (ast.Import, ast.ImportFrom))
+        for n in imports
+        if isinstance(n, (ast.Import, ast.ImportFrom))
     )
+
+
+def test_source_and_top_level_geometry_must_agree() -> None:
+    radar = export_case("radar_laser.radar").observation
+
+    def mismatch(raw, data) -> None:  # type: ignore[no-untyped-def]
+        raw["geometry"]["mounting_height_m"] = 4.0
+
+    with pytest.raises(AcquisitionRefusal, match="geometry declarations"):
+        admit(_edit(radar, mismatch), stage=ChannelStage.NATIVE)
