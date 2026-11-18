@@ -81,7 +81,9 @@ def admit(
     meta = bundle.meta
     cls = meta.device.device_class
     if cls not in {DeviceClass.RADAR, DeviceClass.LASER}:
-        raise AcquisitionRefusal("radar/laser only: GNSS speed and gate splits are different estimands")
+        raise AcquisitionRefusal(
+            "radar/laser only: GNSS speed and gate splits are different estimands"
+        )
     if meta.kind is not BundleKind.TIMESERIES or meta.sampling is None:
         raise AcquisitionRefusal("native radar/laser requires a sampled timeseries")
     if meta.data_category not in {DataCategory.SYNTHETIC, DataCategory.EMPIRICAL}:
@@ -91,10 +93,8 @@ def admit(
     source = meta.acquisition.sources[0]
     if source.device.device_class is not cls or source.device != meta.device:
         raise AcquisitionRefusal("source and trial device identity must agree")
-    if source.calibration_unknown_reason and not source.calibration:
-        # Missing empirical calibration is not reconstructed; measured SI samples
-        # can still be admitted, without a hardware accuracy claim.
-        pass
+    if source.geometry != meta.geometry:
+        raise AcquisitionRefusal("source and trial geometry declarations disagree")
     geometry = source.geometry
     if (
         geometry.mounting_height_m is None
@@ -111,20 +111,20 @@ def admit(
     if stage is ChannelStage.NATIVE and any(
         token in source.raw_format.lower().replace("-", "_") for token in processed_markers
     ):
-        raise AcquisitionRefusal("upstream processed/resampled acquisition cannot be labeled native")
+        raise AcquisitionRefusal(
+            "upstream processed/resampled acquisition cannot be labeled native"
+        )
     quantity = Quantity.VELOCITY if cls is DeviceClass.RADAR else Quantity.DISTANCE
     candidates = [
-        c.name for c in meta.channels
-        if c.quantity is quantity and c.name in source.channels
+        c.name for c in meta.channels if c.quantity is quantity and c.name in source.channels
     ]
     if len(candidates) != 1:
         raise AcquisitionRefusal("exactly one owned native-quantity channel is required")
     channel = candidates[0]
-    if any(
-        c.quantity not in {quantity, Quantity.TIME}
-        for c in meta.channels
-    ):
-        raise AcquisitionRefusal("mixed derived and native channels require separate declared streams")
+    if any(c.quantity not in {quantity, Quantity.TIME} for c in meta.channels):
+        raise AcquisitionRefusal(
+            "mixed derived and native channels require separate declared streams"
+        )
     raw_time = np.asarray(bundle.time(), dtype=np.float64)
     values = np.asarray(bundle[channel], dtype=np.float64)
     if len(raw_time) < 7:
@@ -160,9 +160,13 @@ def admit(
         a = matching[0]
         reference = raw_time + a.offset_s + (raw_time - a.origin_s) * a.drift_ppm * 1e-6
         if a.uncertainty_s > median_interval:
-            raise AcquisitionRefusal("clock synchronization uncertainty exceeds native sample interval")
+            raise AcquisitionRefusal(
+                "clock synchronization uncertainty exceeds native sample interval"
+            )
         if a.uncertainty_s > 0:
-            warnings.append("Declared synchronization uncertainty is not empirical trigger metrology")
+            warnings.append(
+                "Declared synchronization uncertainty is not empirical trigger metrology"
+            )
     if np.any(np.diff(reference) <= 0):
         raise AcquisitionRefusal("clock transformation reverses time")
     angles = [c.cosine_angle_rad for c in source.calibration if c.cosine_angle_rad is not None]
@@ -179,7 +183,9 @@ def admit(
         warnings.append("Vendor-reported values are not reference velocity or physical truth")
     if stage is ChannelStage.MANUFACTURER_PROCESSED:
         warnings.append("Manufacturer processing is opaque; no native raw reconstruction claimed")
-    warnings.append("Mount distance behind start and body-point offset are not encoded in schema v2")
+    warnings.append(
+        "Mount distance behind start and body-point offset are not encoded in schema v2"
+    )
     warnings.append("Physical acquisition latency and absolute sprint start remain unverified")
     return AdmittedTrace(
         device=cls,
