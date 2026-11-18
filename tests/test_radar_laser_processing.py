@@ -73,7 +73,18 @@ def test_unqualified_cosine_correction_refuses_laser_and_processed_radar() -> No
     laser = export_case("radar_laser.laser", hz=100).observation
     with pytest.raises(AcquisitionRefusal, match="calibration missing"):
         process(laser, _native(correction_method="declared_fixed_angle"))
-    radar = export_case("radar_laser.radar").observation
+    native_radar = export_case("radar_laser.radar").observation
+    with pytest.raises(AcquisitionRefusal, match="matching source processing provenance"):
+        process(
+            native_radar,
+            ProcessingOptions(channel_stage=ChannelStage.MANUFACTURER_PROCESSED),
+        )
+    raw = native_radar.meta.model_dump(mode="json")
+    raw["acquisition"]["sources"][0]["raw_format"] = "manufacturer_processed_velocity_csv"
+    radar = SignalBundle(
+        BundleMeta.model_validate(raw),
+        {name: values.copy() for name, values in native_radar.data.items()},
+    )
     with pytest.raises(AcquisitionRefusal, match="opaque"):
         process(
             radar,
@@ -158,3 +169,19 @@ def test_clipped_native_radar_plateau_refuses_without_inventing_speed() -> None:
     clipped = inject(radar, ContinuousFault(ContinuousKind.CLIPPING, ("velocity",), magnitude=3.0))
     with pytest.raises(AcquisitionRefusal, match="flat rail"):
         process(clipped, _native())
+
+
+def test_start_offset_sensitivity_reports_actual_line_of_sight_speed_at_one_second() -> None:
+    radar = export_case("radar_laser.radar", hz=47).observation
+    result = process(radar, _native(timing_perturbation_s=0.04))
+    sensitivity = result.sensitivity
+    minus = sensitivity["los_velocity_at_1s_start_minus_m_s"]
+    baseline = sensitivity["los_velocity_at_1s_baseline_m_s"]
+    plus = sensitivity["los_velocity_at_1s_start_plus_m_s"]
+    assert isinstance(minus, float)
+    assert isinstance(baseline, float)
+    assert isinstance(plus, float)
+    assert 0 < minus < baseline < plus
+    assert baseline == pytest.approx(
+        np.interp(1.0, result.time_reference_s, result.velocity_m_s)
+    )

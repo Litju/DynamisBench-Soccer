@@ -58,6 +58,8 @@ def test_processed_data_are_admitted_only_under_honest_stage() -> None:
     data = _edit(radar, processed)
     with pytest.raises(AcquisitionRefusal, match="processed/resampled"):
         admit(data, stage=ChannelStage.NATIVE)
+    with pytest.raises(AcquisitionRefusal, match="matching source processing provenance"):
+        admit(radar, stage=ChannelStage.MANUFACTURER_PROCESSED)
     processed_trace = admit(data, stage=ChannelStage.MANUFACTURER_PROCESSED)
     assert any("opaque" in w for w in processed_trace.warnings)
 

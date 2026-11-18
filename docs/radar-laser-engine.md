@@ -20,7 +20,9 @@ The v2 input is a verified Parquet + JSON bundle containing ONE source:
   velocity alone.
 
 A manufacturer-processed declaration is distinct from native acquisition:
-the output is explicitly labeled as supplied/derived from upstream processing.
+the source raw-format provenance must identify upstream processing before the
+processed stage is admitted; an invocation flag alone cannot relabel native data.
+The output is explicitly labeled as supplied/derived from upstream processing.
 The processor refuses to infer or invert proprietary manufacturer filtering or
 apply an unqualified extra cosine correction to already processed channels.
 The RES-669 synthetic fixture is a known mathematical projection, not a vendor
@@ -53,7 +55,9 @@ The engine does not perform exponential fitting, F-V profiling, gate timing
 or manual replacements for unsupported signal corrections.
 
 Sensitivity reports bounded perturbations in start time, declared cosine
-angle, and peak velocity across named filter variants. Body point, aiming
+angle, and peak velocity across named filter variants. Start sensitivity also
+reports native line-of-sight velocity at 1 s from each perturbed start (never
+extrapolating beyond recorded samples); this is distinct from a sprint F-V fit. Body point, aiming
 drift, and mounting offset corrections are explicitly unidentifiable from
 a single line-of-sight signal and report UNSUPPORTED.
 

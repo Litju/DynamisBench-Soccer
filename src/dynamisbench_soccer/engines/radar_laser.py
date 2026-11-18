@@ -173,6 +173,25 @@ def _sensitivity(
         ),
         "mount_offset_correction": "UNSUPPORTED: source schema has no surveyed start-relative pose",
     }
+    # Start sensitivity at a common 1 s elapsed-time evaluation point.
+    # Missing support windows refuse *extrapolation of this diagnostic*, while
+    # preserving the valid native velocity trace and its other sensitivities.
+    evaluation_times = (
+        start_s + 1.0 - options.timing_perturbation_s,
+        start_s + 1.0,
+        start_s + 1.0 + options.timing_perturbation_s,
+    )
+    if trace.reference_time_s[0] <= min(evaluation_times) and (
+        max(evaluation_times) <= trace.reference_time_s[-1]
+    ):
+        for key, t_s in zip(
+            ("start_minus", "baseline", "start_plus"), evaluation_times, strict=True
+        ):
+            result[f"los_velocity_at_1s_{key}_m_s"] = float(
+                np.interp(t_s, trace.reference_time_s, line_velocity)
+            )
+    else:
+        result["los_velocity_at_1s"] = "UNSUPPORTED: start perturbation outside observed clock"
     if options.correction_method == "declared_fixed_angle":
         angle = trace.cosine_angle_rad
         if angle is None:

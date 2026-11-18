@@ -108,11 +108,15 @@ def admit(
     if meta.test_id not in {"sprint_fv", "sprint_gates"}:
         raise AcquisitionRefusal("radar/laser processing requires a declared sprint context")
     processed_markers = ("manufacturer_processed", "vendor_processed", "resampled", "smoothed")
-    if stage is ChannelStage.NATIVE and any(
-        token in source.raw_format.lower().replace("-", "_") for token in processed_markers
-    ):
+    source_format = source.raw_format.lower().replace("-", "_")
+    declared_processed = any(token in source_format for token in processed_markers)
+    if stage is ChannelStage.NATIVE and declared_processed:
         raise AcquisitionRefusal(
             "upstream processed/resampled acquisition cannot be labeled native"
+        )
+    if stage is ChannelStage.MANUFACTURER_PROCESSED and not declared_processed:
+        raise AcquisitionRefusal(
+            "manufacturer-processed stage requires matching source processing provenance"
         )
     quantity = Quantity.VELOCITY if cls is DeviceClass.RADAR else Quantity.DISTANCE
     candidates = [
