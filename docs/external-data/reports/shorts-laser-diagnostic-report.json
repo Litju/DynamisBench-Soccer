@@ -1,0 +1,540 @@
+{
+  "adapter": "shorts_laser_csv@1.0.0",
+  "conversion": {
+    "blockers": [
+      "canonical admission: rights.json does not verify canonical admission; an empirical schema-v2 bundle is a canonical artifact and is not built for quarantined data",
+      "session.date: no source-bound, reviewed acquisition-date evidence is pinned in the source lock (the date is not published by the source); schema-v2 Session.date is mandatory and no date may be invented (RES-719 falsifier matrix)"
+    ],
+    "converted": false,
+    "determinations": [
+      {
+        "decision": "PROVISIONAL kinematic protocol mapping only, not soccer task admission: a maximal 35 m standing-start linear sprint with continuous laser distance matches the sprint_fv acquisition protocol. Only kinematic estimands (vmax, tau) are supportable; force/power estimands (f0, pmax, fv_slope, rf_max, drf) are unsupported (no body mass). Population: one youth basketball player, no soccer claim (see protocol_id). Any task use requires separate review; data usage stays cross-validation-only.",
+        "field": "test_id=sprint_fv"
+      },
+      {
+        "decision": "accepted only from a source-lock acquisition_date claim: a pinned acquisition_evidence file (SHA-256), a verbatim excerpt stating the date and a named reviewer; never from a CLI flag or free text",
+        "field": "session_date"
+      },
+      {
+        "decision": "an empirical v2 bundle is a canonical artifact; it is built only after canonical admission is verified in rights.json",
+        "field": "conversion_authority"
+      },
+      {
+        "decision": "Noptel Oy CMP3 Distance Sensor; native 2560 Hz",
+        "field": "device_class=laser"
+      },
+      {
+        "decision": "mounting_height_m and aiming_point unpublished: declared unknown, not inferred",
+        "field": "geometry"
+      },
+      {
+        "decision": "no calibration record published: calibration_unknown_reason, no certificate",
+        "field": "calibration"
+      },
+      {
+        "decision": "vendor trial-relative grid; source 'unknown', absolute epoch unpublished",
+        "field": "clock"
+      },
+      {
+        "decision": "nominal 1000 Hz is the published resampled rate; measured from the time column",
+        "field": "sampling"
+      },
+      {
+        "decision": "anonymous pseudonym; sex, body mass and birth year not recorded",
+        "field": "subject"
+      },
+      {
+        "decision": "all channels manufacturer_processed; no measured_native channel exists",
+        "field": "signal_stage"
+      },
+      {
+        "decision": "TEMPORALLY UNQUALIFIED joint distance/velocity reconstruction: d(distance)/dt aligns with vendor velocity only after a 996 ms shift (RMS 2.088 -> 0.094 m/s; tolerance \u00b15 ms). Cause undetermined; source timestamps unmodified and no shift applied.",
+        "field": "temporal_alignment"
+      }
+    ]
+  },
+  "diagnostics": {
+    "derived_acceleration_peak": {
+      "velocity_half_window_1ms_max_m_s2": 5.400999999999985,
+      "velocity_half_window_25ms_max_m_s2": 5.392419999999993,
+      "velocity_vendor_unsmoothed_half_window_1ms_max_m_s2": 55.17549999999365,
+      "velocity_vendor_unsmoothed_half_window_25ms_max_m_s2": 35.41014000000013
+    },
+    "distance_derivative_vs_vendor_velocity": [
+      {
+        "half_window_ms": 1,
+        "quantisation_floor_rms_m_s": 0.20412414523192585,
+        "vs_velocity": {
+          "max_abs": 4.872952000000055,
+          "mean": 1.4842299312332687,
+          "rms": 2.0869074073995777
+        },
+        "vs_velocity_vendor_unsmoothed": {
+          "max_abs": 5.063972500000055,
+          "mean": 1.4467764329005726,
+          "rms": 2.1114963320466336
+        }
+      },
+      {
+        "half_window_ms": 5,
+        "quantisation_floor_rms_m_s": 0.04082482904638517,
+        "vs_velocity": {
+          "max_abs": 4.5178822,
+          "mean": 1.4864950552853313,
+          "rms": 2.080374505049421
+        },
+        "vs_velocity_vendor_unsmoothed": {
+          "max_abs": 4.7197296,
+          "mean": 1.4491522178035239,
+          "rms": 2.105078062905244
+        }
+      },
+      {
+        "half_window_ms": 25,
+        "quantisation_floor_rms_m_s": 0.008164965809277034,
+        "vs_velocity": {
+          "max_abs": 4.442812799999998,
+          "mean": 1.4979155237282902,
+          "rms": 2.0878069831563777
+        },
+        "vs_velocity_vendor_unsmoothed": {
+          "max_abs": 4.6459661999999975,
+          "mean": 1.4606330122867617,
+          "rms": 2.1125949883709088
+        }
+      },
+      {
+        "half_window_ms": 50,
+        "quantisation_floor_rms_m_s": 0.004082482904638517,
+        "vs_velocity": {
+          "max_abs": 4.431883000000007,
+          "mean": 1.5112015221024941,
+          "rms": 2.0972903920644597
+        },
+        "vs_velocity_vendor_unsmoothed": {
+          "max_abs": 4.634343300000007,
+          "mean": 1.4729629983183945,
+          "rms": 2.122181506020405
+        }
+      }
+    ],
+    "distance_velocity_time_base": {
+      "best_lag_ms": 996.0000000000009,
+      "first_time_distance_above_0_5_m_s": 0.357,
+      "first_time_velocity_above_1_m_s": 1.052,
+      "lag_applied_to_any_output": false,
+      "rms_at_best_lag_m_s": 0.09354186719428531,
+      "rms_at_zero_lag_m_s": 2.0878069831563777,
+      "search_range_ms": 2000.0000000000018,
+      "sign": "positive lag: vendor velocity trails the distance-derived speed",
+      "temporal_qualification": "unqualified",
+      "timestamps_modified": false,
+      "tolerance_ms": 5.0
+    },
+    "integrated_velocity_vs_distance": {
+      "velocity": {
+        "end_difference_m": -7.762428347624979,
+        "max_abs_difference_m": 7.770536665624988
+      },
+      "velocity_vendor_unsmoothed": {
+        "end_difference_m": -7.5664228387699595,
+        "max_abs_difference_m": 7.6141376897699615
+      }
+    },
+    "joint_distance_velocity_reconstruction": {
+      "affected_outputs": [
+        "distance_derivative_vs_vendor_velocity",
+        "integrated_velocity_vs_distance",
+        "mono_exponential_fit_sensitivity.variants.velocity_to_30m"
+      ],
+      "statement": "TEMPORALLY UNQUALIFIED joint distance/velocity reconstruction: d(distance)/dt aligns with vendor velocity only after a 996 ms shift (RMS 2.088 -> 0.094 m/s; tolerance \u00b15 ms). Cause undetermined; source timestamps unmodified and no shift applied.",
+      "temporal_qualification": "unqualified"
+    },
+    "mono_exponential_fit_sensitivity": {
+      "note": "model-fit diagnostic of vendor-processed velocity; not reference truth",
+      "spread": {
+        "mac_m_s2": 0.3049746622126115,
+        "mss_m_s": 0.0903034792687869,
+        "tau_s": 0.044333762371623786,
+        "td_s": 0.02122364322059256
+      },
+      "variants": {
+        "velocity_all_rows": {
+          "mac_m_s2": 7.67189017266418,
+          "mss_m_s": 8.219975404711542,
+          "n": 5232,
+          "rmse_m_s": 0.13081383083322082,
+          "tau_s": 1.071440703622199,
+          "td_s": 0.9325000961800133
+        },
+        "velocity_package_trim_and_offset": {
+          "mac_m_s2": 7.651741131991673,
+          "mss_m_s": 8.129671925442755,
+          "n": 4805,
+          "rmse_m_s": 0.12066122184433908,
+          "tau_s": 1.0624603976019091,
+          "td_s": 0.9485619923768487
+        },
+        "velocity_to_30m": {
+          "mac_m_s2": 7.690476410105349,
+          "mss_m_s": 8.211139028767803,
+          "n": 4673,
+          "rmse_m_s": 0.13800147334420726,
+          "tau_s": 1.067702258078355,
+          "td_s": 0.9334343300142531
+        },
+        "velocity_vendor_unsmoothed_all_rows": {
+          "mac_m_s2": 7.9567157942042845,
+          "mss_m_s": 8.172398021785304,
+          "n": 5232,
+          "rmse_m_s": 0.49902463779119804,
+          "tau_s": 1.0271069412505751,
+          "td_s": 0.9273383491562561
+        }
+      }
+    },
+    "package_preprocessing": {
+      "offset_subtracted_by_package_m_s": 0.08052527,
+      "package_documented_rows": 4805,
+      "pre_movement_velocity_median_first_100ms_m_s": 0.09702461500000001,
+      "reproduces_documented_rows": true,
+      "rows_after_trim_0_414_s": 4805,
+      "time_of_velocity_min_s": 0.375,
+      "velocity_min_m_s": 0.08052382
+    },
+    "smoothed_vs_unsmoothed_velocity": {
+      "best_alignment_lag_ms": -21.000000000000018,
+      "max_abs": 1.4488390000000004,
+      "mean": 0.037486471985856265,
+      "rms": 0.4894886705244321,
+      "rms_at_best_lag": 0.4866675864582333,
+      "sign": "positive lag: unsmoothed trails smoothed"
+    },
+    "stage": "pipeline_derived"
+  },
+  "environment": {
+    "dynamisbench_soccer": "0.0.1",
+    "numpy": "2.5.4",
+    "python": "3.12.13"
+  },
+  "kind": "dbs-external-diagnostic-report",
+  "outcome": "completed_with_blocked_gates: rights_verification, ingestion, schema_v2_conversion",
+  "package_derived_not_ingested": {
+    "butter_acceleration": "4th-order 1 Hz low-pass Butterworth, filtfilt, of raw_acceleration",
+    "raw_acceleration": "dv/dt of smoothed velocity: c(NA, diff(velocity) / diff(time))",
+    "trim": "rows with time <= 0.375 s, then time <= 0.414 s, removed (4805 rows remain)",
+    "velocity_offset": "velocity <- velocity - min(velocity) after trimming time > 0.375 s"
+  },
+  "pipeline": "dbs-external@1.0.0",
+  "profile": {
+    "distance_max": 34.506,
+    "distance_min": 0.0,
+    "distance_resolution_m": 0.0009999999999999731,
+    "dt_max_s": 0.001000000000000334,
+    "dt_median_s": 0.0010000000000000009,
+    "dt_min_s": 0.0009999999999994458,
+    "duration_s": 5.231,
+    "grid_hz_from_median_dt": 999.9999999999991,
+    "missing_or_nonfinite": 0,
+    "n_columns": 4,
+    "n_distance_decreases": 0,
+    "n_duplicate_time": 0,
+    "n_nonpositive_dt": 0,
+    "n_rows": 5232,
+    "raw_velocity_max": 9.160156,
+    "raw_velocity_min": 0.02498627,
+    "size_bytes": 160957,
+    "t_first_s": -0.012,
+    "t_last_s": 5.219,
+    "time_max": 5.219,
+    "time_min": -0.012,
+    "uniform_grid": true,
+    "velocity_max": 8.099571,
+    "velocity_min": 0.08052382
+  },
+  "records": {
+    "committed_default_root": true,
+    "note": "only records committed under data/external/ are reviewed in Git; any other root is an unreviewed local override"
+  },
+  "rights": {
+    "blockers": [
+      "measurement-data rights: no dataset-specific grant, data-availability statement or originating study identifies who owns the original Noptel CMP3 / Musclelab recording; the repository-wide MIT file is a software license by the package author and does not by itself establish rights to the underlying measurements (RES-719 Gate 0)",
+      "participant consent: no consent or ethics statement is published for the recorded athlete",
+      "minor status: the athlete is described only as a 'youth basketball player'; minor status cannot be excluded, so privacy rule 5 (aggregate-only, no individual record as a task) applies even after any admission"
+    ],
+    "canonical_admission": "pending",
+    "license_evidence_verified": true,
+    "license_id": "MIT",
+    "local_inspection_permitted": true,
+    "measurement_data_rights": "pending",
+    "minors_possible": true,
+    "participant_consent": "not_documented",
+    "record_digest": "83d1cbaeede14544c183f65e72df3bc163102d37603fe34d1092ae4e6363cb49",
+    "redistribution_allowed": false
+  },
+  "signal_stages": [
+    {
+      "channel": "time",
+      "meaning": "Musclelab 1 kHz resampled, trial-relative time grid; vendor-constructed, not the native 2.56 kHz sensor clock",
+      "quantity": "time",
+      "source_column": "time",
+      "stage": "manufacturer_processed"
+    },
+    {
+      "channel": "distance",
+      "meaning": "Musclelab polynomial distance-time model evaluated on the 1 kHz grid; not native optical range samples",
+      "quantity": "distance",
+      "source_column": "distance",
+      "stage": "manufacturer_processed"
+    },
+    {
+      "channel": "velocity",
+      "meaning": "Musclelab smoothed (step-averaged) velocity",
+      "quantity": "velocity",
+      "source_column": "velocity",
+      "stage": "manufacturer_processed"
+    },
+    {
+      "channel": "velocity_vendor_unsmoothed",
+      "meaning": "Musclelab unsmoothed velocity export labelled 'raw' by the source; vendor derivation undocumented; NOT native range data",
+      "quantity": "velocity",
+      "source_column": "raw_velocity",
+      "stage": "manufacturer_processed"
+    }
+  ],
+  "source": {
+    "data_path": "data-raw/laser-gun-data.csv",
+    "data_sha256": "52b48d928460a656775e8df2aa1824c84b214040e281d4992754fbac73f3c6ba",
+    "data_size_bytes": 160957,
+    "git_blob_sha1": "4423e32f76b7e42560ed242cdeb331d2924a0570",
+    "pinned_ref": "5f8ce5554b5aca0e857199e0eb50bf66d7089130",
+    "repository": "mladenjovanovic/shorts"
+  },
+  "source_id": "shorts-laser",
+  "source_qc": {
+    "results": [
+      {
+        "basis": "source contract (RES-720 adapter)",
+        "detail": "",
+        "name": "time_strictly_increasing",
+        "rule_id": "SRC-01",
+        "severity": "reject",
+        "status": "pass",
+        "values": {
+          "n_nonincreasing": 0.0
+        }
+      },
+      {
+        "basis": "source contract (RES-720 adapter)",
+        "detail": "",
+        "name": "grid_matches_published_rate",
+        "rule_id": "SRC-02",
+        "severity": "reject",
+        "status": "pass",
+        "values": {
+          "measured_hz": 999.9999999999991,
+          "mismatch": 9.094947017729283e-16
+        }
+      },
+      {
+        "basis": "source contract (RES-720 adapter)",
+        "detail": "",
+        "name": "distance_non_decreasing",
+        "rule_id": "SRC-03",
+        "severity": "flag",
+        "status": "pass",
+        "values": {
+          "n_decreasing": 0.0
+        }
+      },
+      {
+        "basis": "source contract (RES-720 adapter)",
+        "detail": "",
+        "name": "velocity_non_negative",
+        "rule_id": "SRC-04",
+        "severity": "flag",
+        "status": "pass",
+        "values": {
+          "minimum": 0.08052382
+        }
+      },
+      {
+        "basis": "source contract (RES-720 adapter)",
+        "detail": "",
+        "name": "velocity_vendor_unsmoothed_non_negative",
+        "rule_id": "SRC-04",
+        "severity": "flag",
+        "status": "pass",
+        "values": {
+          "minimum": 0.02498627
+        }
+      },
+      {
+        "basis": "source contract (RES-720 adapter)",
+        "detail": "TEMPORALLY UNQUALIFIED joint distance/velocity reconstruction: d(distance)/dt aligns with vendor velocity only after a 996 ms shift (RMS 2.088 -> 0.094 m/s; tolerance \u00b15 ms). Cause undetermined; source timestamps unmodified and no shift applied.",
+        "name": "distance_velocity_time_base_consistent",
+        "rule_id": "SRC-05",
+        "severity": "flag",
+        "status": "fail",
+        "values": {
+          "best_lag_ms": 996.0000000000009,
+          "tolerance_ms": 5.0
+        }
+      },
+      {
+        "basis": "mirrors QC-S03 params from qc/rules.toml v0.1.0",
+        "detail": "",
+        "name": "clipping",
+        "rule_id": "QC-S03",
+        "severity": "reject",
+        "status": "pass",
+        "values": {
+          "longest_run_at_max": 1.0
+        }
+      },
+      {
+        "basis": "mirrors QC-S04 params from qc/rules.toml v0.1.0",
+        "detail": "",
+        "name": "timestamp_integrity",
+        "rule_id": "QC-S04",
+        "severity": "reject",
+        "status": "pass",
+        "values": {
+          "max_dt_ms": 1.000000000000334,
+          "n_gaps": 0.0
+        }
+      },
+      {
+        "basis": "mirrors QC-R01 params from qc/rules.toml v0.1.0",
+        "detail": "",
+        "name": "radar_start_captured",
+        "rule_id": "QC-R01",
+        "severity": "flag",
+        "status": "pass",
+        "values": {
+          "start_speed": 0.09702461500000001
+        }
+      },
+      {
+        "basis": "mirrors QC-R02 params from qc/rules.toml v0.1.0",
+        "detail": "",
+        "name": "radar_acceleration_spikes[velocity]",
+        "rule_id": "QC-R02",
+        "severity": "flag",
+        "status": "pass",
+        "values": {
+          "max_accel": 5.400999999999984
+        }
+      },
+      {
+        "basis": "mirrors QC-R02 params from qc/rules.toml v0.1.0",
+        "detail": "sample-to-sample 56.6 m/s^2",
+        "name": "radar_acceleration_spikes[velocity_vendor_unsmoothed]",
+        "rule_id": "QC-R02",
+        "severity": "flag",
+        "status": "fail",
+        "values": {
+          "max_accel": 56.63999999999975
+        }
+      }
+    ],
+    "rules_version": "0.1.0",
+    "verdict": "accept_with_flags"
+  },
+  "stages": [
+    {
+      "detail": "commit-pinned lock matches adapter version",
+      "evidence": {
+        "data_path": "data-raw/laser-gun-data.csv",
+        "data_sha256": "52b48d928460a656775e8df2aa1824c84b214040e281d4992754fbac73f3c6ba",
+        "data_size_bytes": 160957,
+        "git_blob_sha1": "4423e32f76b7e42560ed242cdeb331d2924a0570",
+        "pinned_ref": "5f8ce5554b5aca0e857199e0eb50bf66d7089130",
+        "repository": "mladenjovanovic/shorts"
+      },
+      "name": "pinned_source",
+      "status": "passed"
+    },
+    {
+      "detail": "size, SHA-256 and Git blob SHA-1 verified for every evidence file; measurement data not yet acquired",
+      "evidence": {
+        "files": {
+          "DESCRIPTION": "8c25e7b1e1cddc829383e096a98bef43974586dcb40629d17dcc545fda9496a2",
+          "LICENSE": "73393882eb035045f7dc6d117a6c2503838b37d6176bc3517c1a0af6181b2d0f",
+          "LICENSE.md": "84a0cf8b871cbec2540c4378f44a04bcbe2e48b732fc0ee6b0bb2918ca15877e",
+          "R/data-laser-gun.R": "210d9b26ac46a097935fb0855c6a4ec460e4833d5fd45c666e3cc4d3a5a57310",
+          "data-raw/laser-gun-data.R": "048b3be912f9a2d53790b192909eef9bbc5cf6725459c188b5bad62bc168dc19"
+        }
+      },
+      "name": "evidence_integrity",
+      "status": "passed"
+    },
+    {
+      "detail": "license evidence verified; canonical admission pending",
+      "evidence": {
+        "blockers": [
+          "measurement-data rights: no dataset-specific grant, data-availability statement or originating study identifies who owns the original Noptel CMP3 / Musclelab recording; the repository-wide MIT file is a software license by the package author and does not by itself establish rights to the underlying measurements (RES-719 Gate 0)",
+          "participant consent: no consent or ethics statement is published for the recorded athlete",
+          "minor status: the athlete is described only as a 'youth basketball player'; minor status cannot be excluded, so privacy rule 5 (aggregate-only, no individual record as a task) applies even after any admission"
+        ]
+      },
+      "name": "rights_verification",
+      "status": "blocked"
+    },
+    {
+      "detail": "measurement-data size, SHA-256 and Git blob SHA-1 verified after the rights gate",
+      "evidence": {
+        "files": {
+          "data-raw/laser-gun-data.csv": "52b48d928460a656775e8df2aa1824c84b214040e281d4992754fbac73f3c6ba"
+        }
+      },
+      "name": "data_integrity",
+      "status": "passed"
+    },
+    {
+      "detail": "canonical store refused by rights gate; read-only quarantine copy inspected under the license grant only",
+      "evidence": {
+        "mode": "quarantine"
+      },
+      "name": "ingestion",
+      "status": "blocked"
+    },
+    {
+      "detail": "hash-bound strict parse; exact header, ASCII, finite values",
+      "evidence": {
+        "n_rows": 5232
+      },
+      "name": "safe_parse",
+      "status": "passed"
+    },
+    {
+      "detail": "Gate-2 shape audit recorded",
+      "evidence": {},
+      "name": "profile",
+      "status": "passed"
+    },
+    {
+      "detail": "canonical admission: rights.json does not verify canonical admission; an empirical schema-v2 bundle is a canonical artifact and is not built for quarantined data; session.date: no source-bound, reviewed acquisition-date evidence is pinned in the source lock (the date is not published by the source); schema-v2 Session.date is mandatory and no date may be invented (RES-719 falsifier matrix)",
+      "evidence": {
+        "blockers": [
+          "canonical admission: rights.json does not verify canonical admission; an empirical schema-v2 bundle is a canonical artifact and is not built for quarantined data",
+          "session.date: no source-bound, reviewed acquisition-date evidence is pinned in the source lock (the date is not published by the source); schema-v2 Session.date is mandatory and no date may be invented (RES-719 falsifier matrix)"
+        ]
+      },
+      "name": "schema_v2_conversion",
+      "status": "blocked"
+    },
+    {
+      "detail": "source QC verdict accept_with_flags; bundle QC not run (no v2 bundle)",
+      "evidence": {},
+      "name": "qc",
+      "status": "passed"
+    },
+    {
+      "detail": "pipeline-derived numerical diagnostics computed",
+      "evidence": {},
+      "name": "diagnostics",
+      "status": "passed"
+    }
+  ]
+}

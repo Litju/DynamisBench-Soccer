@@ -1,0 +1,57 @@
+{
+  "files": [
+    {
+      "git_blob_sha1": "4423e32f76b7e42560ed242cdeb331d2924a0570",
+      "path": "data-raw/laser-gun-data.csv",
+      "role": "data",
+      "sha256": "52b48d928460a656775e8df2aa1824c84b214040e281d4992754fbac73f3c6ba",
+      "size_bytes": 160957,
+      "url": "https://raw.githubusercontent.com/mladenjovanovic/shorts/5f8ce5554b5aca0e857199e0eb50bf66d7089130/data-raw/laser-gun-data.csv"
+    },
+    {
+      "git_blob_sha1": "8727fe2ce3e9818fc89aa2bcecb8eb550124b4c0",
+      "path": "LICENSE",
+      "role": "license",
+      "sha256": "73393882eb035045f7dc6d117a6c2503838b37d6176bc3517c1a0af6181b2d0f",
+      "size_bytes": 46,
+      "url": "https://raw.githubusercontent.com/mladenjovanovic/shorts/5f8ce5554b5aca0e857199e0eb50bf66d7089130/LICENSE"
+    },
+    {
+      "git_blob_sha1": "0aea7661a675141afc5248b7d4c4d4ba3e767ffb",
+      "path": "LICENSE.md",
+      "role": "license",
+      "sha256": "84a0cf8b871cbec2540c4378f44a04bcbe2e48b732fc0ee6b0bb2918ca15877e",
+      "size_bytes": 1076,
+      "url": "https://raw.githubusercontent.com/mladenjovanovic/shorts/5f8ce5554b5aca0e857199e0eb50bf66d7089130/LICENSE.md"
+    },
+    {
+      "git_blob_sha1": "6476b2522a618bebd242932e910c4429f04aa561",
+      "path": "DESCRIPTION",
+      "role": "documentation",
+      "sha256": "8c25e7b1e1cddc829383e096a98bef43974586dcb40629d17dcc545fda9496a2",
+      "size_bytes": 1684,
+      "url": "https://raw.githubusercontent.com/mladenjovanovic/shorts/5f8ce5554b5aca0e857199e0eb50bf66d7089130/DESCRIPTION"
+    },
+    {
+      "git_blob_sha1": "b7cfbec0da054405b16f10c9323c8bef11968141",
+      "path": "R/data-laser-gun.R",
+      "role": "documentation",
+      "sha256": "210d9b26ac46a097935fb0855c6a4ec460e4833d5fd45c666e3cc4d3a5a57310",
+      "size_bytes": 1459,
+      "url": "https://raw.githubusercontent.com/mladenjovanovic/shorts/5f8ce5554b5aca0e857199e0eb50bf66d7089130/R/data-laser-gun.R"
+    },
+    {
+      "git_blob_sha1": "ed2ac50f2f3f1fe66603749fcd852fb9459cd90b",
+      "path": "data-raw/laser-gun-data.R",
+      "role": "transform_script",
+      "sha256": "048b3be912f9a2d53790b192909eef9bbc5cf6725459c188b5bad62bc168dc19",
+      "size_bytes": 1357,
+      "url": "https://raw.githubusercontent.com/mladenjovanovic/shorts/5f8ce5554b5aca0e857199e0eb50bf66d7089130/data-raw/laser-gun-data.R"
+    }
+  ],
+  "kind": "dbs-external-source-lock",
+  "pinned_ref": "5f8ce5554b5aca0e857199e0eb50bf66d7089130",
+  "repository": "mladenjovanovic/shorts",
+  "schema_version": 1,
+  "source_id": "shorts-laser"
+}

@@ -1,0 +1,624 @@
+{
+  "adapter": "uwb_optitrack_csv@1.0.0",
+  "attribution": "Raza U, Khan A, Kou R, Farnham T, Premalal T, Stanoev A, Thompson W (2019). Dataset: Indoor Localization with Narrow-band, Ultra-Wideband, and Motion Capture Systems. Zenodo. doi:10.5281/zenodo.3452007. CC BY 4.0.",
+  "comparability": {
+    "anchor_geometry": {
+      "trolley": [
+        {
+          "anchor": 1.0,
+          "geometrically_consistent": false,
+          "h2": -0.45422563090574336,
+          "impossibly_short_ranges": 0.0,
+          "range_residual_median_abs": 0.1300975573609724,
+          "rows_used": 3201.0,
+          "x": -0.09034750777097349,
+          "y": -0.15707697534926685
+        },
+        {
+          "anchor": 2.0,
+          "geometrically_consistent": false,
+          "h2": -0.6231381081823589,
+          "impossibly_short_ranges": 0.0,
+          "range_residual_median_abs": 0.11925289999513344,
+          "rows_used": 3201.0,
+          "x": 4.662783380291698,
+          "y": -0.12870642031720259
+        },
+        {
+          "anchor": 3.0,
+          "geometrically_consistent": false,
+          "h2": -0.7946364107813704,
+          "impossibly_short_ranges": 0.0,
+          "range_residual_median_abs": 0.1591786776166293,
+          "rows_used": 3201.0,
+          "x": 4.587809046820679,
+          "y": 2.579279320863411
+        },
+        {
+          "anchor": 4.0,
+          "geometrically_consistent": false,
+          "h2": -0.29325939758087305,
+          "impossibly_short_ranges": 0.0,
+          "range_residual_median_abs": 0.0786877785579645,
+          "rows_used": 3201.0,
+          "x": 0.25182142340461255,
+          "y": 2.4682867053406903
+        }
+      ],
+      "walk": [
+        {
+          "anchor": 1.0,
+          "geometrically_consistent": false,
+          "h2": 0.890021968608458,
+          "impossibly_short_ranges": 122.0,
+          "range_residual_median_abs": 0.07018436611782564,
+          "rows_used": 2795.0,
+          "x": -0.11991523013396353,
+          "y": -0.3430625531941405
+        },
+        {
+          "anchor": 2.0,
+          "geometrically_consistent": true,
+          "h2": 0.9557435762092789,
+          "impossibly_short_ranges": 0.0,
+          "range_residual_median_abs": 0.07327104016544927,
+          "rows_used": 2796.0,
+          "x": 4.596205730639464,
+          "y": 0.17091888337877403
+        },
+        {
+          "anchor": 3.0,
+          "geometrically_consistent": false,
+          "h2": 1.7235459886369435,
+          "impossibly_short_ranges": 65.0,
+          "range_residual_median_abs": 0.07680516124598213,
+          "rows_used": 2796.0,
+          "x": 4.484514362654104,
+          "y": 2.6191067760801303
+        },
+        {
+          "anchor": 4.0,
+          "geometrically_consistent": true,
+          "h2": 1.5349461620186808,
+          "impossibly_short_ranges": 18.0,
+          "range_residual_median_abs": 0.08736362502079587,
+          "rows_used": 2793.0,
+          "x": -0.15299823967921222,
+          "y": 2.5764872904637466
+        }
+      ]
+    },
+    "data_modified": false,
+    "lag_or_transform_applied": false,
+    "range_sentinels": {
+      "trolley": 0,
+      "walk": 4
+    },
+    "sessions": [
+      {
+        "along_track_bias": -0.03665548980513635,
+        "best_row_lag": 1,
+        "comparable": false,
+        "cross_track_bias": -0.02432331262912003,
+        "frame_ok": false,
+        "median_offset_at_best_lag": 0.3279929870458147,
+        "median_offset_at_zero_lag": 0.3224969665352977,
+        "motion_ok": false,
+        "n_rows": 463,
+        "range_sentinels": 0,
+        "reasons": [
+          "best integer row lag 1 != 0: simultaneity of same-row samples not established (a delay or an along-track mounting offset)",
+          "scale 0.9842 differs from 1 by > 0.01",
+          "translation |t| 0.269 exceeds 0.05",
+          "residual depends on direction of motion (along -0.037, cross -0.024; tolerance 0.02): fractional lag or mounting offset, not separable without timestamps and mounting geometry"
+        ],
+        "rotation_deg": -0.7606941807304173,
+        "scale": 0.9842342003140632,
+        "scenario": "walk",
+        "session_id": 1,
+        "similarity_residual_rms": 0.1488834338856357,
+        "temporal_ok": false,
+        "translation": [
+          0.006404902928928813,
+          -0.26931824265713034
+        ]
+      },
+      {
+        "along_track_bias": -0.02859987193490012,
+        "best_row_lag": 0,
+        "comparable": false,
+        "cross_track_bias": -0.021654503138945926,
+        "frame_ok": false,
+        "median_offset_at_best_lag": 0.3068526468289892,
+        "median_offset_at_zero_lag": 0.3068526468289892,
+        "motion_ok": false,
+        "n_rows": 541,
+        "range_sentinels": 3,
+        "reasons": [
+          "translation |t| 0.284 exceeds 0.05",
+          "residual depends on direction of motion (along -0.029, cross -0.022; tolerance 0.02): fractional lag or mounting offset, not separable without timestamps and mounting geometry"
+        ],
+        "rotation_deg": -0.8495423881640369,
+        "scale": 1.0085054691603315,
+        "scenario": "walk",
+        "session_id": 2,
+        "similarity_residual_rms": 0.1458599120369384,
+        "temporal_ok": true,
+        "translation": [
+          -0.06446362286930407,
+          -0.27622817586073123
+        ]
+      },
+      {
+        "along_track_bias": -0.02972410131463767,
+        "best_row_lag": 0,
+        "comparable": false,
+        "cross_track_bias": 0.014594592025489857,
+        "frame_ok": false,
+        "median_offset_at_best_lag": 0.30581578706372237,
+        "median_offset_at_zero_lag": 0.30581578706372237,
+        "motion_ok": false,
+        "n_rows": 586,
+        "range_sentinels": 1,
+        "reasons": [
+          "rotation -1.06 deg exceeds 1 deg",
+          "translation |t| 0.271 exceeds 0.05",
+          "residual depends on direction of motion (along -0.030, cross +0.015; tolerance 0.02): fractional lag or mounting offset, not separable without timestamps and mounting geometry"
+        ],
+        "rotation_deg": -1.0631019107166837,
+        "scale": 1.005426278159497,
+        "scenario": "walk",
+        "session_id": 3,
+        "similarity_residual_rms": 0.13780257639909774,
+        "temporal_ok": true,
+        "translation": [
+          -0.06775683482599071,
+          -0.26188724058462287
+        ]
+      },
+      {
+        "along_track_bias": -0.028418961102993592,
+        "best_row_lag": 1,
+        "comparable": false,
+        "cross_track_bias": -0.012488468219438838,
+        "frame_ok": false,
+        "median_offset_at_best_lag": 0.33661655637177657,
+        "median_offset_at_zero_lag": 0.32036651592580306,
+        "motion_ok": false,
+        "n_rows": 630,
+        "range_sentinels": 0,
+        "reasons": [
+          "best integer row lag 1 != 0: simultaneity of same-row samples not established (a delay or an along-track mounting offset)",
+          "rotation -1.46 deg exceeds 1 deg",
+          "translation |t| 0.282 exceeds 0.05",
+          "residual depends on direction of motion (along -0.028, cross -0.012; tolerance 0.02): fractional lag or mounting offset, not separable without timestamps and mounting geometry"
+        ],
+        "rotation_deg": -1.464727052687837,
+        "scale": 1.0003016860450193,
+        "scenario": "walk",
+        "session_id": 4,
+        "similarity_residual_rms": 0.1484701805268153,
+        "temporal_ok": false,
+        "translation": [
+          -0.06392993159705362,
+          -0.2745086114882619
+        ]
+      },
+      {
+        "along_track_bias": 0.00726907063148341,
+        "best_row_lag": 0,
+        "comparable": false,
+        "cross_track_bias": -0.008391821529408587,
+        "frame_ok": false,
+        "median_offset_at_best_lag": 0.3532698650725401,
+        "median_offset_at_zero_lag": 0.3532698650725401,
+        "motion_ok": true,
+        "n_rows": 576,
+        "range_sentinels": 0,
+        "reasons": [
+          "rotation -1.55 deg exceeds 1 deg",
+          "translation |t| 0.299 exceeds 0.05"
+        ],
+        "rotation_deg": -1.5534271371495574,
+        "scale": 1.0062642270058324,
+        "scenario": "walk",
+        "session_id": 5,
+        "similarity_residual_rms": 0.13234495846698677,
+        "temporal_ok": true,
+        "translation": [
+          -0.07112966435606483,
+          -0.2900381491174102
+        ]
+      },
+      {
+        "along_track_bias": -0.07424898843386352,
+        "best_row_lag": 3,
+        "comparable": false,
+        "cross_track_bias": 0.03725582531221146,
+        "frame_ok": false,
+        "median_offset_at_best_lag": 0.08879365338269801,
+        "median_offset_at_zero_lag": 0.10308483511128563,
+        "motion_ok": false,
+        "n_rows": 794,
+        "range_sentinels": 0,
+        "reasons": [
+          "best integer row lag 3 != 0: simultaneity of same-row samples not established (a delay or an along-track mounting offset)",
+          "scale 0.9696 differs from 1 by > 0.01",
+          "residual depends on direction of motion (along -0.074, cross +0.037; tolerance 0.02): fractional lag or mounting offset, not separable without timestamps and mounting geometry"
+        ],
+        "rotation_deg": 0.7691342427248101,
+        "scale": 0.96955483541657,
+        "scenario": "trolley",
+        "session_id": 1,
+        "similarity_residual_rms": 0.07734608571186223,
+        "temporal_ok": false,
+        "translation": [
+          0.042259203803603373,
+          -0.025199704761397435
+        ]
+      },
+      {
+        "along_track_bias": -0.07378512395892554,
+        "best_row_lag": 3,
+        "comparable": false,
+        "cross_track_bias": 0.03991275920363251,
+        "frame_ok": false,
+        "median_offset_at_best_lag": 0.07765343370752631,
+        "median_offset_at_zero_lag": 0.11222254287226856,
+        "motion_ok": false,
+        "n_rows": 627,
+        "range_sentinels": 0,
+        "reasons": [
+          "best integer row lag 3 != 0: simultaneity of same-row samples not established (a delay or an along-track mounting offset)",
+          "scale 0.9717 differs from 1 by > 0.01",
+          "residual depends on direction of motion (along -0.074, cross +0.040; tolerance 0.02): fractional lag or mounting offset, not separable without timestamps and mounting geometry"
+        ],
+        "rotation_deg": 0.6343327108162997,
+        "scale": 0.9716521754887265,
+        "scenario": "trolley",
+        "session_id": 2,
+        "similarity_residual_rms": 0.08252325105743584,
+        "temporal_ok": false,
+        "translation": [
+          0.04637961207326269,
+          -0.008761181928323092
+        ]
+      },
+      {
+        "along_track_bias": -0.08079457074672135,
+        "best_row_lag": 3,
+        "comparable": false,
+        "cross_track_bias": 0.04270773221819209,
+        "frame_ok": false,
+        "median_offset_at_best_lag": 0.08706496909848323,
+        "median_offset_at_zero_lag": 0.12715161416246842,
+        "motion_ok": false,
+        "n_rows": 611,
+        "range_sentinels": 0,
+        "reasons": [
+          "best integer row lag 3 != 0: simultaneity of same-row samples not established (a delay or an along-track mounting offset)",
+          "scale 0.9753 differs from 1 by > 0.01",
+          "rotation 1.01 deg exceeds 1 deg",
+          "translation |t| 0.067 exceeds 0.05",
+          "residual depends on direction of motion (along -0.081, cross +0.043; tolerance 0.02): fractional lag or mounting offset, not separable without timestamps and mounting geometry"
+        ],
+        "rotation_deg": 1.013878351915614,
+        "scale": 0.9753299207792699,
+        "scenario": "trolley",
+        "session_id": 3,
+        "similarity_residual_rms": 0.07990242656386358,
+        "temporal_ok": false,
+        "translation": [
+          0.05066574701278981,
+          -0.04371717690740273
+        ]
+      },
+      {
+        "along_track_bias": -0.08649107807686172,
+        "best_row_lag": 3,
+        "comparable": false,
+        "cross_track_bias": 0.04483795412556374,
+        "frame_ok": false,
+        "median_offset_at_best_lag": 0.17113393769281915,
+        "median_offset_at_zero_lag": 0.18916372887825458,
+        "motion_ok": false,
+        "n_rows": 594,
+        "range_sentinels": 0,
+        "reasons": [
+          "best integer row lag 3 != 0: simultaneity of same-row samples not established (a delay or an along-track mounting offset)",
+          "scale 0.9723 differs from 1 by > 0.01",
+          "rotation 2.96 deg exceeds 1 deg",
+          "translation |t| 0.055 exceeds 0.05",
+          "residual depends on direction of motion (along -0.086, cross +0.045; tolerance 0.02): fractional lag or mounting offset, not separable without timestamps and mounting geometry"
+        ],
+        "rotation_deg": 2.963011672781016,
+        "scale": 0.9722862624868528,
+        "scenario": "trolley",
+        "session_id": 4,
+        "similarity_residual_rms": 0.08917711935174724,
+        "temporal_ok": false,
+        "translation": [
+          0.0036189689526338054,
+          0.055259096000473185
+        ]
+      },
+      {
+        "along_track_bias": -0.06906412727513293,
+        "best_row_lag": 3,
+        "comparable": false,
+        "cross_track_bias": 0.027010057162754543,
+        "frame_ok": false,
+        "median_offset_at_best_lag": 0.16196810040152562,
+        "median_offset_at_zero_lag": 0.19269302815358305,
+        "motion_ok": false,
+        "n_rows": 575,
+        "range_sentinels": 0,
+        "reasons": [
+          "best integer row lag 3 != 0: simultaneity of same-row samples not established (a delay or an along-track mounting offset)",
+          "scale 0.9675 differs from 1 by > 0.01",
+          "rotation 3.26 deg exceeds 1 deg",
+          "residual depends on direction of motion (along -0.069, cross +0.027; tolerance 0.02): fractional lag or mounting offset, not separable without timestamps and mounting geometry"
+        ],
+        "rotation_deg": 3.255963720520446,
+        "scale": 0.9674577040325569,
+        "scenario": "trolley",
+        "session_id": 5,
+        "similarity_residual_rms": 0.06603617535677149,
+        "temporal_ok": false,
+        "translation": [
+          0.006648415329114865,
+          0.03284601708669155
+        ]
+      }
+    ]
+  },
+  "environment": {
+    "dynamisbench_soccer": "0.0.1",
+    "numpy": "2.5.4",
+    "python": "3.12.13"
+  },
+  "kind": "dbs-external-planar-validation-report",
+  "outcome": "completed_with_blocked_gates: comparability, error_metrics",
+  "pipeline": "dbs-external-uwb@1.0.0",
+  "profiles": [
+    {
+      "adapter": "uwb_optitrack_csv@1.0.0",
+      "dimensionality": "2D",
+      "member": "USMAN_Raza-Dataset_Indoor_Localization_with_Narrowband_Ultra-Wideband_and_Motion_Capture_Systems/UWB_Walk_dataset.csv",
+      "member_sha256": "0cc3cfde0f842d45622ccd7ff6ead377237a22c38ffa381321133b5e31ee2014",
+      "pairing": "row_index_within_session",
+      "profile": "dbs-planar-validation@1",
+      "sampling_rate": "undeclared",
+      "sessions": [
+        {
+          "first_row": 0,
+          "n_rows": 463,
+          "scenario": "walk",
+          "session_id": 1
+        },
+        {
+          "first_row": 463,
+          "n_rows": 541,
+          "scenario": "walk",
+          "session_id": 2
+        },
+        {
+          "first_row": 1004,
+          "n_rows": 586,
+          "scenario": "walk",
+          "session_id": 3
+        },
+        {
+          "first_row": 1590,
+          "n_rows": 630,
+          "scenario": "walk",
+          "session_id": 4
+        },
+        {
+          "first_row": 2220,
+          "n_rows": 576,
+          "scenario": "walk",
+          "session_id": 5
+        }
+      ],
+      "soccer_task": false,
+      "source_id": "uwb-optitrack",
+      "systems": [
+        {
+          "frame": "undeclared",
+          "id": "uwb",
+          "meaning": "depositor's UWB localisation estimate; frame undeclared",
+          "role": "device_estimate",
+          "stage": "package_derived",
+          "x_column": "UWB_x",
+          "y_column": "UWB_y"
+        },
+        {
+          "frame": "undeclared",
+          "id": "optitrack",
+          "meaning": "OptiTrack system output reduced to 2D; frame and marker point undeclared; a separate measurement, not ground truth",
+          "role": "depositor_reference",
+          "stage": "manufacturer_processed",
+          "x_column": "OPT_x",
+          "y_column": "OPT_y"
+        }
+      ],
+      "timestamps": "absent",
+      "units": "undeclared",
+      "units_note": "no units declared by the depositor; values are consistent with metres in a ~5 x 3 room but this is not stated and is not assumed",
+      "usage": "cross-validation-only",
+      "z_coordinate": "not_recorded"
+    },
+    {
+      "adapter": "uwb_optitrack_csv@1.0.0",
+      "dimensionality": "2D",
+      "member": "USMAN_Raza-Dataset_Indoor_Localization_with_Narrowband_Ultra-Wideband_and_Motion_Capture_Systems/UWB_Trolley_dataset.csv",
+      "member_sha256": "66b32f3e5976564e0e6585d96797bd3887c7794ba6d72905a71b5be175d2e3e3",
+      "pairing": "row_index_within_session",
+      "profile": "dbs-planar-validation@1",
+      "sampling_rate": "undeclared",
+      "sessions": [
+        {
+          "first_row": 0,
+          "n_rows": 794,
+          "scenario": "trolley",
+          "session_id": 1
+        },
+        {
+          "first_row": 794,
+          "n_rows": 627,
+          "scenario": "trolley",
+          "session_id": 2
+        },
+        {
+          "first_row": 1421,
+          "n_rows": 611,
+          "scenario": "trolley",
+          "session_id": 3
+        },
+        {
+          "first_row": 2032,
+          "n_rows": 594,
+          "scenario": "trolley",
+          "session_id": 4
+        },
+        {
+          "first_row": 2626,
+          "n_rows": 575,
+          "scenario": "trolley",
+          "session_id": 5
+        }
+      ],
+      "soccer_task": false,
+      "source_id": "uwb-optitrack",
+      "systems": [
+        {
+          "frame": "undeclared",
+          "id": "uwb",
+          "meaning": "depositor's UWB localisation estimate; frame undeclared",
+          "role": "device_estimate",
+          "stage": "package_derived",
+          "x_column": "UWB_x",
+          "y_column": "UWB_y"
+        },
+        {
+          "frame": "undeclared",
+          "id": "optitrack",
+          "meaning": "OptiTrack system output reduced to 2D; frame and marker point undeclared; a separate measurement, not ground truth",
+          "role": "depositor_reference",
+          "stage": "manufacturer_processed",
+          "x_column": "OPT_x",
+          "y_column": "OPT_y"
+        }
+      ],
+      "timestamps": "absent",
+      "units": "undeclared",
+      "units_note": "no units declared by the depositor; values are consistent with metres in a ~5 x 3 room but this is not stated and is not assumed",
+      "usage": "cross-validation-only",
+      "z_coordinate": "not_recorded"
+    }
+  ],
+  "readme_reconciliation": {
+    "trolley": {
+      "data_rows": 3201,
+      "matches_data_rows": false,
+      "readme_counts_header_line": true,
+      "readme_stated": 3202
+    },
+    "walk": {
+      "data_rows": 2796,
+      "matches_data_rows": false,
+      "readme_counts_header_line": true,
+      "readme_stated": 2797
+    }
+  },
+  "records": {
+    "committed_default_root": true
+  },
+  "rights": {
+    "blockers": [],
+    "canonical_admission": "verified",
+    "license_evidence_verified": true,
+    "license_id": "CC-BY-4.0",
+    "measurement_data_rights": "verified",
+    "participant_consent": "not_applicable",
+    "problems": [],
+    "record_digest": "546505ec6a9e9f5b42b803abe41ac301b72b3ff1ce9fbe5146162f132120dc78",
+    "record_license": "cc-by-4.0",
+    "redistribution_allowed": false
+  },
+  "source": {
+    "archive": "USMAN_Raza-Dataset_Indoor_Localization_with_Narrowband_Ultra-Wideband_and_Motion_Capture_Systems.zip",
+    "doi": "10.5281/zenodo.3452007",
+    "md5": "d5221f12a5f093eacc21db797c0ac13a",
+    "record_id": 3452007,
+    "sha256": "0e26251bff1ddd1f868205c481c63137c4729d480444e60769c3240ba3fc4f38",
+    "size_bytes": 570029
+  },
+  "source_id": "uwb-optitrack",
+  "stages": [
+    {
+      "detail": "Zenodo record, archive and every member pinned",
+      "evidence": {},
+      "name": "pinned_source",
+      "status": "passed"
+    },
+    {
+      "detail": "record license cc-by-4.0 matches pinned digest",
+      "evidence": {},
+      "name": "rights_verification",
+      "status": "passed"
+    },
+    {
+      "detail": "published MD5, SHA-256 and size verified",
+      "evidence": {},
+      "name": "data_integrity",
+      "status": "passed"
+    },
+    {
+      "detail": "5 pinned and 6 excluded members; no unsafe paths, links or bombs",
+      "evidence": {},
+      "name": "archive_audit",
+      "status": "passed"
+    },
+    {
+      "detail": "canonical store ingest, verify and read-only stage (uwb-optitrack@zenodo-3452007, cross-validation-only)",
+      "evidence": {},
+      "name": "ingestion",
+      "status": "passed"
+    },
+    {
+      "detail": "in-memory strict parse of both UWB/OptiTrack members",
+      "evidence": {},
+      "name": "safe_parse",
+      "status": "passed"
+    },
+    {
+      "detail": "dbs-planar-validation@1: 2D, no Z, no soccer task, no clock",
+      "evidence": {},
+      "name": "profile",
+      "status": "passed"
+    },
+    {
+      "detail": "10/10 sessions not comparable (temporal 7, frame 10, motion 9)",
+      "evidence": {},
+      "name": "comparability",
+      "status": "blocked"
+    },
+    {
+      "detail": "not computed: UWB and OptiTrack are not shown to share a time base, frame and reference point; a difference would not be device error",
+      "evidence": {},
+      "name": "error_metrics",
+      "status": "blocked"
+    }
+  ],
+  "thresholds": {
+    "lag_search_rows": 30,
+    "max_motion_bias": 0.02,
+    "max_rotation_deg": 1.0,
+    "max_row_lag": 0,
+    "max_scale_deviation": 0.01,
+    "max_translation": 0.05,
+    "min_rows": 50
+  }
+}
