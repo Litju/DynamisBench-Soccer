@@ -43,7 +43,8 @@ def test_complete_proposal_is_admission_ready_but_confers_nothing() -> None:
     assert "confers none" in result.report()["qualification"]  # type: ignore[operator]
 
 
-def test_admission_cannot_alter_the_qualified_scope() -> None:
+def test_admission_cannot_alter_the_qualified_scope(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.chdir(ROOT)
     before = hashlib.sha256((ROOT / "qualification/ledger.toml").read_bytes()).hexdigest()
     families, subfamilies = set(ledger_model.FAMILIES), set(ledger_model.SUBFAMILIES)
     assert main(["qualification", "admit", str(FIXTURE)]) == 0
@@ -181,7 +182,10 @@ def test_scope_impact_and_subfamily_prefix_are_enforced_by_the_schema() -> None:
         admission.Proposal.model_validate({**_base(), "unexpected": 1})
 
 
-def test_cli_exit_codes(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+def test_cli_exit_codes(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str], monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.chdir(ROOT)
     assert main(["qualification", "admit", str(FIXTURE)]) == 0
     assert json.loads(capsys.readouterr().out)["decision"] == "ADMISSION_READY"
     rejected = tmp_path / "bad.toml"
