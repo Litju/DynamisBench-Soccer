@@ -97,7 +97,7 @@ paradigm = "discrete_event"
 issue = "RES-698"
 engine_id = "gates"
 methods = ["debounce", "multi_beam_voting", "trigger_latency_correction"]
-ratings = { A = "specified", B = "specified", C = "specified", D = "partial", E = "partial", F = "partial", G = "absent", H = "absent", I = "partial", J = "partial", K = "partial", L = "absent", M = "partial", N = "absent", O = "partial" }
+ratings = { A = "specified", B = "specified", C = "specified", D = "partial", E = "partial", F = "partial", G = "partial", H = "partial", I = "partial", J = "partial", K = "partial", L = "absent", M = "partial", N = "absent", O = "partial" }
 blockers = ["Gate geometry, trigger validity and timing-error bounds need empirical metrology (RES-694)", "Sprint assessment variants and cross-device agreement remain open (RES-673/703)"]
 
 [[subfamily]]
@@ -119,7 +119,7 @@ paradigm = "continuous_signal"
 issue = "RES-699"
 engine_id = "radar"
 methods = ["filter", "start_detection"]
-ratings = { A = "specified", B = "specified", C = "specified", D = "absent", E = "absent", F = "absent", G = "absent", H = "absent", I = "absent", J = "partial", K = "partial", L = "absent", M = "absent", N = "absent", O = "absent" }
+ratings = { A = "specified", B = "specified", C = "specified", D = "absent", E = "absent", F = "absent", G = "partial", H = "partial", I = "absent", J = "partial", K = "partial", L = "absent", M = "absent", N = "absent", O = "absent" }
 blockers = ["No raw radar validity study (RES-694)"]
 
 [[subfamily]]
@@ -130,7 +130,7 @@ paradigm = "continuous_signal"
 issue = "RES-699"
 engine_id = "laser"
 methods = ["differentiate", "filter"]
-ratings = { A = "specified", B = "specified", C = "specified", D = "absent", E = "absent", F = "absent", G = "absent", H = "absent", I = "absent", J = "partial", K = "partial", L = "absent", M = "absent", N = "absent", O = "absent" }
+ratings = { A = "specified", B = "specified", C = "specified", D = "absent", E = "absent", F = "absent", G = "partial", H = "partial", I = "absent", J = "partial", K = "partial", L = "absent", M = "absent", N = "absent", O = "absent" }
 blockers = ["No raw laser validity study (RES-694)"]
 
 [[subfamily]]
@@ -141,7 +141,7 @@ paradigm = "position_track"
 issue = "RES-700"
 engine_id = "gnss"
 methods = ["resample", "smooth"]
-ratings = { A = "specified", B = "specified", C = "specified", D = "absent", E = "absent", F = "absent", G = "absent", H = "absent", I = "absent", J = "partial", K = "partial", L = "absent", M = "absent", N = "absent", O = "absent" }
+ratings = { A = "specified", B = "specified", C = "specified", D = "absent", E = "absent", F = "absent", G = "partial", H = "partial", I = "absent", J = "partial", K = "partial", L = "absent", M = "absent", N = "absent", O = "absent" }
 blockers = ["RES-700 reference processing and synthetic checks implemented; independent acceptance, audited native GNSS and empirical clock/latency and signal-integrity evidence remain open", "Sprint assessment (RES-673) and cross-device agreement (RES-703) remain open"]
 
 [[subfamily]]
@@ -152,7 +152,7 @@ paradigm = "position_track"
 issue = "RES-700"
 engine_id = "lps"
 methods = ["resample", "smooth"]
-ratings = { A = "specified", B = "specified", C = "specified", D = "absent", E = "absent", F = "absent", G = "absent", H = "absent", I = "absent", J = "partial", K = "partial", L = "absent", M = "absent", N = "absent", O = "absent" }
+ratings = { A = "specified", B = "specified", C = "specified", D = "absent", E = "absent", F = "absent", G = "partial", H = "partial", I = "absent", J = "partial", K = "partial", L = "absent", M = "absent", N = "absent", O = "absent" }
 blockers = ["RES-700 reference processing and synthetic checks implemented; independent acceptance, audited native LPS and empirical clock/latency and anchor survey evidence remain open", "Sprint assessment (RES-673) and cross-device agreement (RES-703) remain open"]
 
 [[subfamily]]
@@ -3026,3 +3026,83 @@ kind = "doc"
 ref = "repo:docs/isometric-assessment.md"
 issue = "RES-672"
 rationale = "Named RFD, impulse, peak, torque and repetition-policy definitions. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "radar_laser.radar"
+dimension = "G"
+kind = "independent_test"
+ref = "repo:tests/test_sprint_cod_assessment.py"
+issue = "RES-673"
+rationale = "Start definitions, milestones and COD events checked against closed forms; unsupported sources refused. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "radar_laser.radar"
+dimension = "H"
+kind = "doc"
+ref = "repo:docs/sprint-cod-assessment.md"
+issue = "RES-673"
+rationale = "Source-specific speed estimands, F-V model assumptions and COD definitions with explicit variants. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "radar_laser.laser"
+dimension = "G"
+kind = "independent_test"
+ref = "repo:tests/test_sprint_cod_assessment.py"
+issue = "RES-673"
+rationale = "Start definitions, milestones and COD events checked against closed forms; unsupported sources refused. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "radar_laser.laser"
+dimension = "H"
+kind = "doc"
+ref = "repo:docs/sprint-cod-assessment.md"
+issue = "RES-673"
+rationale = "Source-specific speed estimands, F-V model assumptions and COD definitions with explicit variants. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "gnss_lps.gnss"
+dimension = "G"
+kind = "independent_test"
+ref = "repo:tests/test_sprint_cod_assessment.py"
+issue = "RES-673"
+rationale = "Start definitions, milestones and COD events checked against closed forms; unsupported sources refused. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "gnss_lps.gnss"
+dimension = "H"
+kind = "doc"
+ref = "repo:docs/sprint-cod-assessment.md"
+issue = "RES-673"
+rationale = "Source-specific speed estimands, F-V model assumptions and COD definitions with explicit variants. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "gnss_lps.lps"
+dimension = "G"
+kind = "independent_test"
+ref = "repo:tests/test_sprint_cod_assessment.py"
+issue = "RES-673"
+rationale = "Start definitions, milestones and COD events checked against closed forms; unsupported sources refused. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "gnss_lps.lps"
+dimension = "H"
+kind = "doc"
+ref = "repo:docs/sprint-cod-assessment.md"
+issue = "RES-673"
+rationale = "Source-specific speed estimands, F-V model assumptions and COD definitions with explicit variants. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "timing_contact.gates"
+dimension = "G"
+kind = "independent_test"
+ref = "repo:tests/test_sprint_cod_assessment.py"
+issue = "RES-673"
+rationale = "Start definitions, milestones and COD events checked against closed forms; unsupported sources refused. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "timing_contact.gates"
+dimension = "H"
+kind = "doc"
+ref = "repo:docs/sprint-cod-assessment.md"
+issue = "RES-673"
+rationale = "Source-specific speed estimands, F-V model assumptions and COD definitions with explicit variants. Engineering calculation only; no empirical qualification."
