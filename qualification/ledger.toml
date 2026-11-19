@@ -9,8 +9,8 @@ paradigm = "continuous_signal"
 issue = "RES-670"
 engine_id = "fp_single"
 methods = ["filter", "integrate"]
-ratings = { A = "specified", B = "specified", C = "specified", D = "partial", E = "absent", F = "absent", G = "absent", H = "absent", I = "absent", J = "partial", K = "partial", L = "absent", M = "absent", N = "absent", O = "partial" }
-blockers = ["Reference engine and independent numerical checks absent"]
+ratings = { A = "specified", B = "specified", C = "specified", D = "partial", E = "partial", F = "partial", G = "absent", H = "absent", I = "partial", J = "partial", K = "partial", L = "absent", M = "partial", N = "absent", O = "partial" }
+blockers = ["Production engine and numerical checks available (RES-670); G/H assessment qualification remains RES-671/672", "Measured-device calibration/compliance/uncertainty and L agreement evidence remain open (RES-694/703/675)"]
 
 [[subfamily]]
 id = "force_platform.dual"
@@ -20,8 +20,8 @@ paradigm = "continuous_signal"
 issue = "RES-670"
 engine_id = "fp_dual"
 methods = ["filter", "integrate"]
-ratings = { A = "specified", B = "specified", C = "specified", D = "partial", E = "absent", F = "absent", G = "absent", H = "absent", I = "absent", J = "partial", K = "partial", L = "absent", M = "absent", N = "absent", O = "partial" }
-blockers = ["Bilateral calibration and timing unqualified"]
+ratings = { A = "specified", B = "specified", C = "specified", D = "partial", E = "partial", F = "partial", G = "absent", H = "absent", I = "partial", J = "partial", K = "partial", L = "absent", M = "partial", N = "absent", O = "partial" }
+blockers = ["Dual production processing verified on analytical controls (RES-670); actual bilateral calibration, cross-talk, assignment and timing remain unqualified", "G/H assessment and L agreement qualification remain open (RES-671/672/703/675)"]
 
 [[subfamily]]
 id = "lpt_encoder.lpt"
@@ -2594,3 +2594,163 @@ kind = "doc"
 ref = "repo:docs/timing-contact-engine.md"
 issue = "RES-698"
 rationale = "Explains event semantics, conditional derived measures and device-specific limits."
+
+[[evidence]]
+subfamily = "force_platform.single"
+dimension = "B"
+kind = "code"
+ref = "repo:src/dynamisbench_soccer/engines/force_platform_acquisition.py"
+issue = "RES-670"
+rationale = "Working production processing independently compared against RES-669 analytical controls; empirical instrument and assessment/agreement qualification remains open, so no device qualification is promoted."
+
+[[evidence]]
+subfamily = "force_platform.single"
+dimension = "C"
+kind = "test"
+ref = "repo:tests/test_force_platform_acquisition.py"
+issue = "RES-670"
+rationale = "Working production processing independently compared against RES-669 analytical controls; empirical instrument and assessment/agreement qualification remains open, so no device qualification is promoted."
+
+[[evidence]]
+subfamily = "force_platform.single"
+dimension = "D"
+kind = "test"
+ref = "repo:tests/test_force_platform_cli.py"
+issue = "RES-670"
+rationale = "Working production processing independently compared against RES-669 analytical controls; empirical instrument and assessment/agreement qualification remains open, so no device qualification is promoted."
+
+[[evidence]]
+subfamily = "force_platform.single"
+dimension = "E"
+kind = "code"
+ref = "repo:src/dynamisbench_soccer/engines/force_platform.py"
+issue = "RES-670"
+rationale = "Working production processing independently compared against RES-669 analytical controls; empirical instrument and assessment/agreement qualification remains open, so no device qualification is promoted."
+
+[[evidence]]
+subfamily = "force_platform.single"
+dimension = "F"
+kind = "test"
+ref = "repo:tests/test_force_platform_engine.py"
+issue = "RES-670"
+rationale = "Working production processing independently compared against RES-669 analytical controls; empirical instrument and assessment/agreement qualification remains open, so no device qualification is promoted."
+
+[[evidence]]
+subfamily = "force_platform.single"
+dimension = "I"
+kind = "doc"
+ref = "repo:docs/force-platform-verification.md"
+issue = "RES-670"
+rationale = "Working production processing independently compared against RES-669 analytical controls; empirical instrument and assessment/agreement qualification remains open, so no device qualification is promoted."
+
+[[evidence]]
+subfamily = "force_platform.single"
+dimension = "J"
+kind = "test"
+ref = "repo:tests/test_force_platform_engine.py"
+issue = "RES-670"
+rationale = "Working production processing independently compared against RES-669 analytical controls; empirical instrument and assessment/agreement qualification remains open, so no device qualification is promoted."
+
+[[evidence]]
+subfamily = "force_platform.single"
+dimension = "K"
+kind = "test"
+ref = "repo:tests/test_force_platform_engine.py"
+issue = "RES-670"
+rationale = "Working production processing independently compared against RES-669 analytical controls; empirical instrument and assessment/agreement qualification remains open, so no device qualification is promoted."
+
+[[evidence]]
+subfamily = "force_platform.single"
+dimension = "M"
+kind = "code"
+ref = "repo:src/dynamisbench_soccer/engines/force_platform.py"
+issue = "RES-670"
+rationale = "Working production processing independently compared against RES-669 analytical controls; empirical instrument and assessment/agreement qualification remains open, so no device qualification is promoted."
+
+[[evidence]]
+subfamily = "force_platform.single"
+dimension = "O"
+kind = "doc"
+ref = "repo:docs/force-platform-engine.md"
+issue = "RES-670"
+rationale = "Working production processing independently compared against RES-669 analytical controls; empirical instrument and assessment/agreement qualification remains open, so no device qualification is promoted."
+
+[[evidence]]
+subfamily = "force_platform.dual"
+dimension = "B"
+kind = "code"
+ref = "repo:src/dynamisbench_soccer/engines/force_platform_acquisition.py"
+issue = "RES-670"
+rationale = "Working production processing independently compared against RES-669 analytical controls; empirical instrument and assessment/agreement qualification remains open, so no device qualification is promoted."
+
+[[evidence]]
+subfamily = "force_platform.dual"
+dimension = "C"
+kind = "test"
+ref = "repo:tests/test_force_platform_acquisition.py"
+issue = "RES-670"
+rationale = "Working production processing independently compared against RES-669 analytical controls; empirical instrument and assessment/agreement qualification remains open, so no device qualification is promoted."
+
+[[evidence]]
+subfamily = "force_platform.dual"
+dimension = "D"
+kind = "test"
+ref = "repo:tests/test_force_platform_cli.py"
+issue = "RES-670"
+rationale = "Working production processing independently compared against RES-669 analytical controls; empirical instrument and assessment/agreement qualification remains open, so no device qualification is promoted."
+
+[[evidence]]
+subfamily = "force_platform.dual"
+dimension = "E"
+kind = "code"
+ref = "repo:src/dynamisbench_soccer/engines/force_platform.py"
+issue = "RES-670"
+rationale = "Working production processing independently compared against RES-669 analytical controls; empirical instrument and assessment/agreement qualification remains open, so no device qualification is promoted."
+
+[[evidence]]
+subfamily = "force_platform.dual"
+dimension = "F"
+kind = "test"
+ref = "repo:tests/test_force_platform_engine.py"
+issue = "RES-670"
+rationale = "Working production processing independently compared against RES-669 analytical controls; empirical instrument and assessment/agreement qualification remains open, so no device qualification is promoted."
+
+[[evidence]]
+subfamily = "force_platform.dual"
+dimension = "I"
+kind = "doc"
+ref = "repo:docs/force-platform-verification.md"
+issue = "RES-670"
+rationale = "Working production processing independently compared against RES-669 analytical controls; empirical instrument and assessment/agreement qualification remains open, so no device qualification is promoted."
+
+[[evidence]]
+subfamily = "force_platform.dual"
+dimension = "J"
+kind = "test"
+ref = "repo:tests/test_force_platform_engine.py"
+issue = "RES-670"
+rationale = "Working production processing independently compared against RES-669 analytical controls; empirical instrument and assessment/agreement qualification remains open, so no device qualification is promoted."
+
+[[evidence]]
+subfamily = "force_platform.dual"
+dimension = "K"
+kind = "test"
+ref = "repo:tests/test_force_platform_engine.py"
+issue = "RES-670"
+rationale = "Working production processing independently compared against RES-669 analytical controls; empirical instrument and assessment/agreement qualification remains open, so no device qualification is promoted."
+
+[[evidence]]
+subfamily = "force_platform.dual"
+dimension = "M"
+kind = "code"
+ref = "repo:src/dynamisbench_soccer/engines/force_platform.py"
+issue = "RES-670"
+rationale = "Working production processing independently compared against RES-669 analytical controls; empirical instrument and assessment/agreement qualification remains open, so no device qualification is promoted."
+
+[[evidence]]
+subfamily = "force_platform.dual"
+dimension = "O"
+kind = "doc"
+ref = "repo:docs/force-platform-engine.md"
+issue = "RES-670"
+rationale = "Working production processing independently compared against RES-669 analytical controls; empirical instrument and assessment/agreement qualification remains open, so no device qualification is promoted."
