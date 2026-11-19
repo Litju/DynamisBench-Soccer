@@ -10,10 +10,13 @@ from pathlib import Path
 
 from pydantic import BaseModel, ConfigDict, Field
 
+from dynamisbench_soccer.assessment import isometric
 from dynamisbench_soccer.assessment.jumps import JumpSignal, JumpSpec, assess
 from dynamisbench_soccer.engines.force_platform import MethodSpec as ForceMethod
 from dynamisbench_soccer.engines.force_platform import process as force_process
 from dynamisbench_soccer.engines.force_platform_acquisition import PlateSpec
+from dynamisbench_soccer.engines.load_cell import MethodSpec as CellMethod
+from dynamisbench_soccer.engines.load_cell_acquisition import CellSpec
 from dynamisbench_soccer.signals import io
 
 
@@ -22,6 +25,13 @@ class JumpConfig(BaseModel):
     jump: JumpSpec
     method: ForceMethod = Field(default_factory=ForceMethod)
     plates: tuple[PlateSpec, ...] = ()
+
+
+class IsometricConfig(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    isometric: isometric.IsoSpec
+    method: CellMethod = Field(default_factory=CellMethod)
+    cell: CellSpec = Field(default_factory=CellSpec)
 
 
 def _emit(args: argparse.Namespace, run: Callable[[], tuple[str, int]]) -> int:
@@ -69,6 +79,29 @@ def _jump(args: argparse.Namespace) -> int:
     return _emit(args, run)
 
 
+def _isometric(args: argparse.Namespace) -> int:
+    inputs = [Path(name) for name in args.inputs]
+    if not _guard(args, inputs):
+        print("FAIL output path must not overwrite inputs/configuration", file=sys.stderr)
+        return 2
+
+    def run() -> tuple[str, int]:
+        config = IsometricConfig.model_validate(json.loads(args.config.read_text()))
+        bundles = [io.read(p) for p in inputs]
+        results = isometric.run_trials(bundles, config.cell, config.method)
+        result = isometric.assess(
+            results,
+            config.isometric,
+            geometry=bundles[0].meta.geometry,
+            bundles=bundles,
+            cell=config.cell,
+            method=config.method,
+        )
+        return result.report_json(), 0 if result.eligible else 1
+
+    return _emit(args, run)
+
+
 def register(sub: argparse._SubParsersAction) -> None:  # type: ignore[type-arg]
     assess_parser = sub.add_parser("assess", help="protocol-level assessment science")
     commands = assess_parser.add_subparsers(dest="assess_command", required=True)
@@ -78,3 +111,8 @@ def register(sub: argparse._SubParsersAction) -> None:  # type: ignore[type-arg]
     jump.add_argument("--weighing", type=Path, help="independent quiet weighing bundle")
     jump.add_argument("--out", type=Path)
     jump.set_defaults(handler=_jump)
+    iso = commands.add_parser("isometric", help="IMTP, hamstring and hip isometric protocols")
+    iso.add_argument("inputs", nargs="+", help="one bundle stem per trial")
+    iso.add_argument("--config", type=Path, required=True, help="JSON: isometric, method, cell")
+    iso.add_argument("--out", type=Path)
+    iso.set_defaults(handler=_isometric)
