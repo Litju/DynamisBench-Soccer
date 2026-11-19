@@ -53,7 +53,7 @@ paradigm = "continuous_signal"
 issue = "RES-696"
 engine_id = "load_cell"
 methods = ["calibrate"]
-ratings = { A = "specified", B = "specified", C = "specified", D = "absent", E = "absent", F = "absent", G = "absent", H = "absent", I = "absent", J = "partial", K = "partial", L = "absent", M = "absent", N = "absent", O = "absent" }
+ratings = { A = "specified", B = "specified", C = "specified", D = "absent", E = "absent", F = "absent", G = "partial", H = "partial", I = "absent", J = "partial", K = "partial", L = "absent", M = "absent", N = "absent", O = "absent" }
 blockers = ["Raw voltage/calibration contract specified; rig compliance unverified (RES-694/696)"]
 
 [[subfamily]]
@@ -64,7 +64,7 @@ paradigm = "continuous_signal"
 issue = "RES-696"
 engine_id = "iso_rig"
 methods = ["calibrate"]
-ratings = { A = "specified", B = "specified", C = "specified", D = "absent", E = "absent", F = "absent", G = "absent", H = "absent", I = "absent", J = "partial", K = "partial", L = "absent", M = "absent", N = "absent", O = "absent" }
+ratings = { A = "specified", B = "specified", C = "specified", D = "absent", E = "absent", F = "absent", G = "partial", H = "partial", I = "absent", J = "partial", K = "partial", L = "absent", M = "absent", N = "absent", O = "absent" }
 blockers = ["No isometric rig compliance or validity source (RES-694)"]
 
 [[subfamily]]
@@ -75,7 +75,7 @@ paradigm = "continuous_signal"
 issue = "RES-697"
 engine_id = "nordic"
 methods = ["filter"]
-ratings = { A = "specified", B = "specified", C = "specified", D = "partial", E = "partial", F = "partial", G = "absent", H = "absent", I = "partial", J = "partial", K = "partial", L = "absent", M = "partial", N = "absent", O = "partial" }
+ratings = { A = "specified", B = "specified", C = "specified", D = "partial", E = "partial", F = "partial", G = "partial", H = "partial", I = "partial", J = "partial", K = "partial", L = "absent", M = "partial", N = "absent", O = "partial" }
 blockers = ["Engine verified on analytical eccentric controls (RES-697); athlete-level validity, strap/lever geometry measurements and vendor-corrected versus raw agreement remain unqualified (RES-694/703)", "G/H assessment qualification remains RES-672"]
 
 [[subfamily]]
@@ -86,7 +86,7 @@ paradigm = "continuous_signal"
 issue = "RES-697"
 engine_id = "hip"
 methods = ["filter"]
-ratings = { A = "specified", B = "specified", C = "specified", D = "partial", E = "partial", F = "partial", G = "absent", H = "absent", I = "partial", J = "partial", K = "partial", L = "absent", M = "partial", N = "absent", O = "partial" }
+ratings = { A = "specified", B = "specified", C = "specified", D = "partial", E = "partial", F = "partial", G = "partial", H = "partial", I = "partial", J = "partial", K = "partial", L = "absent", M = "partial", N = "absent", O = "partial" }
 blockers = ["Engine verified on analytical isometric controls (RES-697); squeeze protocol geometry validity and device metrology remain unqualified (RES-694)", "G/H assessment qualification remains RES-672"]
 
 [[subfamily]]
@@ -2962,3 +2962,67 @@ kind = "doc"
 ref = "repo:docs/jump-assessment.md"
 issue = "RES-671"
 rationale = "IMU flights enter the jump layer as separately labelled estimands. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "load_cell_isometric.load_cell"
+dimension = "G"
+kind = "independent_test"
+ref = "repo:tests/test_isometric_assessment.py"
+issue = "RES-672"
+rationale = "Onset variants, trial validity and protocol eligibility checked against the RES-669 ramp. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "load_cell_isometric.load_cell"
+dimension = "H"
+kind = "doc"
+ref = "repo:docs/isometric-assessment.md"
+issue = "RES-672"
+rationale = "Named RFD, impulse, peak, torque and repetition-policy definitions. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "load_cell_isometric.isometric_rig"
+dimension = "G"
+kind = "independent_test"
+ref = "repo:tests/test_isometric_assessment.py"
+issue = "RES-672"
+rationale = "Onset variants, trial validity and protocol eligibility checked against the RES-669 ramp. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "load_cell_isometric.isometric_rig"
+dimension = "H"
+kind = "doc"
+ref = "repo:docs/isometric-assessment.md"
+issue = "RES-672"
+rationale = "Named RFD, impulse, peak, torque and repetition-policy definitions. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "nordic_hip.nordic"
+dimension = "G"
+kind = "independent_test"
+ref = "repo:tests/test_isometric_assessment.py"
+issue = "RES-672"
+rationale = "Onset variants, trial validity and protocol eligibility checked against the RES-669 ramp. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "nordic_hip.nordic"
+dimension = "H"
+kind = "doc"
+ref = "repo:docs/isometric-assessment.md"
+issue = "RES-672"
+rationale = "Named RFD, impulse, peak, torque and repetition-policy definitions. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "nordic_hip.hip"
+dimension = "G"
+kind = "independent_test"
+ref = "repo:tests/test_isometric_assessment.py"
+issue = "RES-672"
+rationale = "Onset variants, trial validity and protocol eligibility checked against the RES-669 ramp. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "nordic_hip.hip"
+dimension = "H"
+kind = "doc"
+ref = "repo:docs/isometric-assessment.md"
+issue = "RES-672"
+rationale = "Named RFD, impulse, peak, torque and repetition-policy definitions. Engineering calculation only; no empirical qualification."
