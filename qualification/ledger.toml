@@ -9,7 +9,7 @@ paradigm = "continuous_signal"
 issue = "RES-670"
 engine_id = "fp_single"
 methods = ["filter", "integrate"]
-ratings = { A = "specified", B = "specified", C = "specified", D = "partial", E = "partial", F = "partial", G = "absent", H = "absent", I = "partial", J = "partial", K = "partial", L = "absent", M = "partial", N = "absent", O = "partial" }
+ratings = { A = "specified", B = "specified", C = "specified", D = "partial", E = "partial", F = "partial", G = "partial", H = "partial", I = "partial", J = "partial", K = "partial", L = "absent", M = "partial", N = "absent", O = "partial" }
 blockers = ["Production engine and numerical checks available (RES-670); G/H assessment qualification remains RES-671/672", "Measured-device calibration/compliance/uncertainty and L agreement evidence remain open (RES-694/703/675)"]
 
 [[subfamily]]
@@ -20,7 +20,7 @@ paradigm = "continuous_signal"
 issue = "RES-670"
 engine_id = "fp_dual"
 methods = ["filter", "integrate"]
-ratings = { A = "specified", B = "specified", C = "specified", D = "partial", E = "partial", F = "partial", G = "absent", H = "absent", I = "partial", J = "partial", K = "partial", L = "absent", M = "partial", N = "absent", O = "partial" }
+ratings = { A = "specified", B = "specified", C = "specified", D = "partial", E = "partial", F = "partial", G = "partial", H = "partial", I = "partial", J = "partial", K = "partial", L = "absent", M = "partial", N = "absent", O = "partial" }
 blockers = ["Dual production processing verified on analytical controls (RES-670); actual bilateral calibration, cross-talk, assignment and timing remain unqualified", "G/H assessment and L agreement qualification remain open (RES-671/672/703/675)"]
 
 [[subfamily]]
@@ -108,7 +108,7 @@ paradigm = "discrete_event"
 issue = "RES-698"
 engine_id = "contact"
 methods = ["debounce", "pair_events", "trigger_latency_correction"]
-ratings = { A = "specified", B = "specified", C = "specified", D = "partial", E = "partial", F = "partial", G = "absent", H = "absent", I = "partial", J = "partial", K = "partial", L = "absent", M = "partial", N = "absent", O = "partial" }
+ratings = { A = "specified", B = "specified", C = "specified", D = "partial", E = "partial", F = "partial", G = "partial", H = "partial", I = "partial", J = "partial", K = "partial", L = "absent", M = "partial", N = "absent", O = "partial" }
 blockers = ["Contact-system switching thresholds and latency bounds need empirical metrology (RES-694)", "Assessment-specific validity and force-platform/IMU agreement remain open (RES-671/703)"]
 
 [[subfamily]]
@@ -163,7 +163,7 @@ paradigm = "inertial"
 issue = "RES-701"
 engine_id = "imu"
 methods = ["orientation_estimation", "gravity_removal"]
-ratings = { A = "specified", B = "specified", C = "specified", D = "partial", E = "partial", F = "partial", G = "absent", H = "absent", I = "partial", J = "partial", K = "partial", L = "absent", M = "partial", N = "absent", O = "partial" }
+ratings = { A = "specified", B = "specified", C = "specified", D = "partial", E = "partial", F = "partial", G = "partial", H = "partial", I = "partial", J = "partial", K = "partial", L = "absent", M = "partial", N = "absent", O = "partial" }
 blockers = ["Engine verified on analytical rigid-body and trajectory controls (RES-701); sensor placement, soft-tissue artefact, calibration and flight-time agreement with force plates remain unqualified (RES-694/703)", "G/H assessment qualification remains RES-671"]
 
 [[evidence]]
@@ -2898,3 +2898,67 @@ kind = "doc"
 ref = "repo:docs/imu-engine.md"
 issue = "RES-701"
 rationale = "Limitations: yaw unobservable, specific force vs free acceleration, drift, placement, slip. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "force_platform.single"
+dimension = "G"
+kind = "independent_test"
+ref = "repo:tests/test_jump_assessment.py"
+issue = "RES-671"
+rationale = "CMJ/SJ/DJ/hop phases, take-off and landing against closed forms; protocol eligibility both ways. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "force_platform.single"
+dimension = "H"
+kind = "doc"
+ref = "repo:docs/jump-assessment.md"
+issue = "RES-671"
+rationale = "Named height, RSI and phase definitions with explicit variants. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "force_platform.dual"
+dimension = "G"
+kind = "independent_test"
+ref = "repo:tests/test_jump_assessment.py"
+issue = "RES-671"
+rationale = "CMJ/SJ/DJ/hop phases, take-off and landing against closed forms; protocol eligibility both ways. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "force_platform.dual"
+dimension = "H"
+kind = "doc"
+ref = "repo:docs/jump-assessment.md"
+issue = "RES-671"
+rationale = "Named height, RSI and phase definitions with explicit variants. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "timing_contact.contact"
+dimension = "G"
+kind = "independent_test"
+ref = "repo:tests/test_jump_assessment.py"
+issue = "RES-671"
+rationale = "Contact-system flight times enter the jump layer as separately labelled estimands. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "timing_contact.contact"
+dimension = "H"
+kind = "doc"
+ref = "repo:docs/jump-assessment.md"
+issue = "RES-671"
+rationale = "Contact-system flight times enter the jump layer as separately labelled estimands. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "imu.inertial"
+dimension = "G"
+kind = "independent_test"
+ref = "repo:tests/test_jump_assessment.py"
+issue = "RES-671"
+rationale = "IMU flights enter the jump layer as separately labelled estimands. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "imu.inertial"
+dimension = "H"
+kind = "doc"
+ref = "repo:docs/jump-assessment.md"
+issue = "RES-671"
+rationale = "IMU flights enter the jump layer as separately labelled estimands. Engineering calculation only; no empirical qualification."

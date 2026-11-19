@@ -18,10 +18,10 @@ Specified is NOT verified. Analytical agreement is NOT empirical equivalence.
 
 ## Ratings and blockers
 
-- force_platform.single (RES-670): A:specified (RES-670), B:specified (RES-670), C:specified (RES-693), D:partial (RES-670), E:partial (RES-670), F:partial (RES-670), G:absent (RES-671), H:absent (RES-671), I:partial (RES-670), J:partial (RES-669), K:partial (RES-669), L:absent (RES-703), M:partial (RES-675), N:absent (RES-680), O:partial (RES-670)
+- force_platform.single (RES-670): A:specified (RES-670), B:specified (RES-670), C:specified (RES-693), D:partial (RES-670), E:partial (RES-670), F:partial (RES-670), G:partial (RES-671), H:partial (RES-671), I:partial (RES-670), J:partial (RES-669), K:partial (RES-669), L:absent (RES-703), M:partial (RES-675), N:absent (RES-680), O:partial (RES-670)
   - Production engine and numerical checks available (RES-670); G/H assessment qualification remains RES-671/672
   - Measured-device calibration/compliance/uncertainty and L agreement evidence remain open (RES-694/703/675)
-- force_platform.dual (RES-670): A:specified (RES-670), B:specified (RES-670), C:specified (RES-693), D:partial (RES-670), E:partial (RES-670), F:partial (RES-670), G:absent (RES-671), H:absent (RES-671), I:partial (RES-670), J:partial (RES-669), K:partial (RES-669), L:absent (RES-703), M:partial (RES-675), N:absent (RES-680), O:partial (RES-670)
+- force_platform.dual (RES-670): A:specified (RES-670), B:specified (RES-670), C:specified (RES-693), D:partial (RES-670), E:partial (RES-670), F:partial (RES-670), G:partial (RES-671), H:partial (RES-671), I:partial (RES-670), J:partial (RES-669), K:partial (RES-669), L:absent (RES-703), M:partial (RES-675), N:absent (RES-680), O:partial (RES-670)
   - Dual production processing verified on analytical controls (RES-670); actual bilateral calibration, cross-talk, assignment and timing remain unqualified
   - G/H assessment and L agreement qualification remain open (RES-671/672/703/675)
 - lpt_encoder.lpt (RES-695): A:specified (RES-693), B:specified (RES-695), C:specified (RES-693), D:absent (RES-695), E:absent (RES-695), F:absent (RES-695), G:absent (RES-671), H:absent (RES-671), I:absent (RES-695), J:partial (RES-669), K:partial (RES-669), L:absent (RES-703), M:absent (RES-695), N:absent (RES-704), O:absent (RES-695)
@@ -41,7 +41,7 @@ Specified is NOT verified. Analytical agreement is NOT empirical equivalence.
 - timing_contact.gates (RES-698): A:specified (RES-693), B:specified (RES-698), C:specified (RES-693), D:partial (RES-698), E:partial (RES-698), F:partial (RES-698), G:absent (RES-671), H:absent (RES-673), I:partial (RES-698), J:partial (RES-669), K:partial (RES-669), L:absent (RES-703), M:partial (RES-698), N:absent (RES-681), O:partial (RES-698)
   - Gate geometry, trigger validity and timing-error bounds need empirical metrology (RES-694)
   - Sprint assessment variants and cross-device agreement remain open (RES-673/703)
-- timing_contact.contact (RES-698): A:specified (RES-693), B:specified (RES-698), C:specified (RES-693), D:partial (RES-698), E:partial (RES-698), F:partial (RES-698), G:absent (RES-671), H:absent (RES-673), I:partial (RES-698), J:partial (RES-669), K:partial (RES-669), L:absent (RES-703), M:partial (RES-698), N:absent (RES-681), O:partial (RES-698)
+- timing_contact.contact (RES-698): A:specified (RES-693), B:specified (RES-698), C:specified (RES-693), D:partial (RES-698), E:partial (RES-698), F:partial (RES-698), G:partial (RES-671), H:partial (RES-673), I:partial (RES-698), J:partial (RES-669), K:partial (RES-669), L:absent (RES-703), M:partial (RES-698), N:absent (RES-681), O:partial (RES-698)
   - Contact-system switching thresholds and latency bounds need empirical metrology (RES-694)
   - Assessment-specific validity and force-platform/IMU agreement remain open (RES-671/703)
 - radar_laser.radar (RES-699): A:specified (RES-693), B:specified (RES-699), C:specified (RES-693), D:absent (RES-699), E:absent (RES-699), F:absent (RES-699), G:absent (RES-673), H:absent (RES-673), I:absent (RES-699), J:partial (RES-669), K:partial (RES-669), L:absent (RES-703), M:absent (RES-699), N:absent (RES-681), O:absent (RES-699)
@@ -54,7 +54,7 @@ Specified is NOT verified. Analytical agreement is NOT empirical equivalence.
 - gnss_lps.lps (RES-700): A:specified (RES-693), B:specified (RES-700), C:specified (RES-693), D:absent (RES-700), E:absent (RES-700), F:absent (RES-700), G:absent (RES-673), H:absent (RES-673), I:absent (RES-700), J:partial (RES-669), K:partial (RES-669), L:absent (RES-703), M:absent (RES-700), N:absent (RES-704), O:absent (RES-700)
   - RES-700 reference processing and synthetic checks implemented; independent acceptance, audited native LPS and empirical clock/latency and anchor survey evidence remain open
   - Sprint assessment (RES-673) and cross-device agreement (RES-703) remain open
-- imu.inertial (RES-701): A:specified (RES-693), B:specified (RES-701), C:specified (RES-693), D:partial (RES-701), E:partial (RES-701), F:partial (RES-701), G:absent (RES-671), H:absent (RES-671), I:partial (RES-701), J:partial (RES-669), K:partial (RES-669), L:absent (RES-703), M:partial (RES-701), N:absent (RES-704), O:partial (RES-701)
+- imu.inertial (RES-701): A:specified (RES-693), B:specified (RES-701), C:specified (RES-693), D:partial (RES-701), E:partial (RES-701), F:partial (RES-701), G:partial (RES-671), H:partial (RES-671), I:partial (RES-701), J:partial (RES-669), K:partial (RES-669), L:absent (RES-703), M:partial (RES-701), N:absent (RES-704), O:partial (RES-701)
   - Engine verified on analytical rigid-body and trajectory controls (RES-701); sensor placement, soft-tissue artefact, calibration and flight-time agreement with force plates remain unqualified (RES-694/703)
   - G/H assessment qualification remains RES-671
 
