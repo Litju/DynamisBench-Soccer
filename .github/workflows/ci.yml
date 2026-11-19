@@ -105,6 +105,11 @@ jobs:
           cd "$RUNNER_TEMP"
           "$wheel_bin/dbs" agreement run --out "$RUNNER_TEMP/agreement.json"
           "$wheel_bin/python" -m pytest "$GITHUB_WORKSPACE/tests/test_cross_device_agreement.py"
+      - name: RES-702 admission contract installed-wheel check
+        run: |
+          wheel_bin="$RUNNER_TEMP/wheel-venv/bin"
+          cd "$GITHUB_WORKSPACE"
+          "$wheel_bin/dbs" qualification admit tests/fixtures/admission/candidate.toml
       - name: RES-700 GNSS and LPS installed-wheel processing
         run: |
           wheel_bin="$RUNNER_TEMP/wheel-venv/bin"

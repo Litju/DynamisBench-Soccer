@@ -1,0 +1,38 @@
+# TEST FIXTURE ONLY: a hypothetical family used to exercise the admission contract.
+family = "fixture_candidate"
+subfamilies = ["fixture_candidate.sensor"]
+paradigm = "continuous_signal"
+engine_id = "fixture_engine"
+methods = ["filter", "calibrate"]
+registry_claims = ["DEV-006"]
+registry_gaps = ["iso_ham"]
+data_rights_statement = "Project-authored synthetic fixtures only; no participant data; internal verification use."
+scope_impact = "none"
+
+[owners]
+A = "RES-702"
+B = "RES-702"
+C = "RES-702"
+D = "RES-702"
+E = "RES-702"
+F = "RES-702"
+G = "RES-702"
+H = "RES-702"
+I = "RES-702"
+J = "RES-702"
+K = "RES-702"
+L = "RES-703"
+M = "RES-702"
+N = "RES-704"
+O = "RES-702"
+
+[[references]]
+dimension = "J"
+kind = "analytical_reference"
+implementation = "closed-form fixture trajectory in tests"
+independent_of = "fixture_engine"
+
+[[non_equivalences]]
+against = "force_platform.single"
+quantity = "vertical_force"
+study_plan = "paired analytical study then empirical protocol before any interchangeability claim"
