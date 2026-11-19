@@ -110,6 +110,18 @@ jobs:
           wheel_bin="$RUNNER_TEMP/wheel-venv/bin"
           cd "$GITHUB_WORKSPACE"
           "$wheel_bin/dbs" qualification admit tests/fixtures/admission/candidate.toml
+      - name: RES-675 end-to-end matrix from the installed wheel (all eight device families)
+        run: |
+          wheel_bin="$RUNNER_TEMP/wheel-venv/bin"
+          cd "$RUNNER_TEMP"
+          "$wheel_bin/python" -m pytest "$GITHUB_WORKSPACE/tests/test_end_to_end_qualification.py" -q
+      - name: RES-675 computed gate, frozen interface and report freshness
+        run: |
+          uv run dbs qualification validate
+          uv run dbs qualification ledger --check
+          uv run dbs qualification interface
+          uv run python scripts/build_verification.py --check
+          uv run dbs qualification states > "$RUNNER_TEMP/states.json" || test $? -eq 1
       - name: RES-700 GNSS and LPS installed-wheel processing
         run: |
           wheel_bin="$RUNNER_TEMP/wheel-venv/bin"

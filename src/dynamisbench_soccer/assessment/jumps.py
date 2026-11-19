@@ -80,6 +80,9 @@ class JumpSignal:
     mass_kg: float
     plate_force_n: dict[int, FloatArray] = field(default_factory=dict)
     device_verdict: str = "unknown"
+    raw_force_n: FloatArray | None = (
+        None  # unfiltered force: contact events never use filtered data
+    )
 
     @classmethod
     def from_engine(cls, result: ForceProcessed) -> JumpSignal:
@@ -92,6 +95,7 @@ class JumpSignal:
             result.mass_kg,
             dict(result.plate_force_n),
             result.verdict,
+            result.raw_force_n,
         )
 
 
@@ -171,7 +175,8 @@ def _unweight(sig: JumpSignal, onset: int, takeoff: int) -> tuple[float, int]:
 def assess(signal: JumpSignal, spec: JumpSpec) -> Assessment:
     time, force = signal.time_s, signal.force_n
     dt = float(np.median(np.diff(time)))
-    contact = force > spec.contact_threshold_n
+    event_force = signal.raw_force_n if signal.raw_force_n is not None else force
+    contact = event_force > spec.contact_threshold_n
     flights = _flights(contact, time, spec.min_flight_s)
     segments = _segments(contact)
     bw = signal.body_weight_n
@@ -407,7 +412,7 @@ def assess(signal: JumpSignal, spec: JumpSpec) -> Assessment:
     }
     by_threshold: dict[str, object] = {}
     for threshold in spec.sensitivity_thresholds_n:
-        alt = _flights(force > threshold, time, spec.min_flight_s)
+        alt = _flights(event_force > threshold, time, spec.min_flight_s)
         by_threshold[f"{threshold:g}_n"] = [float(time[b] - time[a]) for a, b in alt]
     uncertainty["flight_time_by_contact_threshold_s"] = by_threshold
     if estimands.get("takeoff_velocity_m_s") is not None:
@@ -545,3 +550,44 @@ def compare_sources(estimates: list[SourceEstimate]) -> dict[str, object]:
         "pairs": pairs,
         "merged_value": None,
     }
+
+
+@dataclass(frozen=True)
+class LptHeights:
+    """LPT attachment-motion quantities; each is its own named estimand."""
+
+    estimand: str
+    height_peak_displacement_above_start_m: float
+    height_peak_velocity_m: float
+    peak_velocity_m_s: float
+    definitions: dict[str, str]
+    refusal: str | None = None
+
+
+def lpt_estimates(report: dict[str, object]) -> LptHeights:
+    """Attachment-motion heights from an LPT/encoder engine report (RES-695).
+
+    Refused for cable-length-only reports, because cable length is not vertical displacement.
+    """
+    estimand = report.get("estimand")
+    motion = report.get("motion")
+    if not isinstance(estimand, str) or not isinstance(motion, dict):
+        raise ValueError("expected a processed LPT report with motion series")
+    if estimand == "cable_displacement":
+        raise ValueError("cable displacement is not vertical displacement: jump heights refused")
+    displacement = np.asarray(motion["displacement_m"], dtype=np.float64)
+    velocity = np.asarray(motion["velocity_m_s"], dtype=np.float64)
+    peak_v = float(velocity.max())
+    return LptHeights(
+        estimand=estimand,
+        height_peak_displacement_above_start_m=float(displacement.max() - displacement[0]),
+        height_peak_velocity_m=_height_velocity(peak_v),
+        peak_velocity_m_s=peak_v,
+        definitions={
+            "height_peak_displacement_above_start_m": "peak attachment displacement minus the "
+            "first sample (includes any rise during the push-off)",
+            "height_peak_velocity_m": "v^2/2g of the peak upward attachment velocity "
+            "(an upper bound of take-off velocity while the attachment still accelerates)",
+            "comparability": "not comparable with force-platform heights without RES-703 evidence",
+        },
+    )

@@ -1,0 +1,3105 @@
+{
+  "agreement_counts": {
+    "analytical_model_agreement": 4,
+    "definition_mismatch": 7,
+    "unsupported_comparison": 1
+  },
+  "capability": {
+    "force_platform.dual": {
+      "Isometric (RES-672)": false,
+      "Jumps (RES-671)": true,
+      "Sprint/COD (RES-673)": false
+    },
+    "force_platform.single": {
+      "Isometric (RES-672)": false,
+      "Jumps (RES-671)": true,
+      "Sprint/COD (RES-673)": false
+    },
+    "gnss_lps.gnss": {
+      "Isometric (RES-672)": false,
+      "Jumps (RES-671)": false,
+      "Sprint/COD (RES-673)": true
+    },
+    "gnss_lps.lps": {
+      "Isometric (RES-672)": false,
+      "Jumps (RES-671)": false,
+      "Sprint/COD (RES-673)": true
+    },
+    "imu.inertial": {
+      "Isometric (RES-672)": false,
+      "Jumps (RES-671)": true,
+      "Sprint/COD (RES-673)": false
+    },
+    "load_cell_isometric.isometric_rig": {
+      "Isometric (RES-672)": true,
+      "Jumps (RES-671)": false,
+      "Sprint/COD (RES-673)": false
+    },
+    "load_cell_isometric.load_cell": {
+      "Isometric (RES-672)": true,
+      "Jumps (RES-671)": false,
+      "Sprint/COD (RES-673)": false
+    },
+    "lpt_encoder.encoder": {
+      "Isometric (RES-672)": false,
+      "Jumps (RES-671)": true,
+      "Sprint/COD (RES-673)": false
+    },
+    "lpt_encoder.lpt": {
+      "Isometric (RES-672)": false,
+      "Jumps (RES-671)": true,
+      "Sprint/COD (RES-673)": false
+    },
+    "nordic_hip.hip": {
+      "Isometric (RES-672)": true,
+      "Jumps (RES-671)": false,
+      "Sprint/COD (RES-673)": false
+    },
+    "nordic_hip.nordic": {
+      "Isometric (RES-672)": true,
+      "Jumps (RES-671)": false,
+      "Sprint/COD (RES-673)": false
+    },
+    "radar_laser.laser": {
+      "Isometric (RES-672)": false,
+      "Jumps (RES-671)": false,
+      "Sprint/COD (RES-673)": true
+    },
+    "radar_laser.radar": {
+      "Isometric (RES-672)": false,
+      "Jumps (RES-671)": false,
+      "Sprint/COD (RES-673)": true
+    },
+    "timing_contact.contact": {
+      "Isometric (RES-672)": false,
+      "Jumps (RES-671)": true,
+      "Sprint/COD (RES-673)": false
+    },
+    "timing_contact.gates": {
+      "Isometric (RES-672)": false,
+      "Jumps (RES-671)": false,
+      "Sprint/COD (RES-673)": true
+    }
+  },
+  "case_totals": {
+    "failed": [],
+    "passed": 83,
+    "total": 83
+  },
+  "cases": [
+    {
+      "axes": {
+        "calibration_geometry": "single plate, declared field axes",
+        "diff_integ": "trapezoid",
+        "rate_hz": "500"
+      },
+      "case": "cmj_height_500hz",
+      "chain": "native force -> engine -> jump assessment",
+      "detail": "",
+      "expected": 0.37169,
+      "family": "force_platform",
+      "observed": 0.36899,
+      "passed": true,
+      "subfamily": "force_platform.single",
+      "tolerance": 0.006
+    },
+    {
+      "axes": {
+        "calibration_geometry": "single plate, declared field axes",
+        "diff_integ": "trapezoid",
+        "rate_hz": "1000"
+      },
+      "case": "cmj_height_1000hz",
+      "chain": "native force -> engine -> jump assessment",
+      "detail": "",
+      "expected": 0.37169,
+      "family": "force_platform",
+      "observed": 0.37034,
+      "passed": true,
+      "subfamily": "force_platform.single",
+      "tolerance": 0.006
+    },
+    {
+      "axes": {
+        "calibration_geometry": "single plate, declared field axes",
+        "diff_integ": "trapezoid",
+        "rate_hz": "2000"
+      },
+      "case": "cmj_height_2000hz",
+      "chain": "native force -> engine -> jump assessment",
+      "detail": "",
+      "expected": 0.37169,
+      "family": "force_platform",
+      "observed": 0.37101,
+      "passed": true,
+      "subfamily": "force_platform.single",
+      "tolerance": 0.006
+    },
+    {
+      "axes": {
+        "diff_integ": "simpson",
+        "rate_hz": "1000"
+      },
+      "case": "cmj_height_simpson",
+      "chain": "native force -> engine -> jump assessment",
+      "detail": "",
+      "expected": 0.37169,
+      "family": "force_platform",
+      "observed": 0.37079,
+      "passed": true,
+      "subfamily": "force_platform.single",
+      "tolerance": 0.006
+    },
+    {
+      "axes": {
+        "diff_integ": "trapezoid",
+        "filter": "butterworth_50hz",
+        "rate_hz": "1000"
+      },
+      "case": "cmj_height_butterworth_50hz",
+      "chain": "native force -> engine -> jump assessment",
+      "detail": "",
+      "expected": 0.3717,
+      "family": "force_platform",
+      "observed": 0.3662,
+      "passed": true,
+      "subfamily": "force_platform.single",
+      "tolerance": 0.02
+    },
+    {
+      "axes": {
+        "event_method": "5sd",
+        "rate_hz": "1000"
+      },
+      "case": "onset_5sd",
+      "chain": "native force -> engine onset",
+      "detail": "",
+      "expected": 1.0,
+      "family": "force_platform",
+      "observed": 0.999,
+      "passed": true,
+      "subfamily": "force_platform.single",
+      "tolerance": 0.01
+    },
+    {
+      "axes": {
+        "event_method": "reverse_scan",
+        "rate_hz": "1000"
+      },
+      "case": "onset_reverse_scan",
+      "chain": "native force -> engine onset",
+      "detail": "",
+      "expected": 1.0,
+      "family": "force_platform",
+      "observed": 0.999,
+      "passed": true,
+      "subfamily": "force_platform.single",
+      "tolerance": 0.01
+    },
+    {
+      "axes": {
+        "event_method": "first_derivative",
+        "rate_hz": "1000"
+      },
+      "case": "onset_first_derivative",
+      "chain": "native force -> engine onset",
+      "detail": "",
+      "expected": 1.0,
+      "family": "force_platform",
+      "observed": 0.979,
+      "passed": true,
+      "subfamily": "force_platform.single",
+      "tolerance": 0.031831
+    },
+    {
+      "axes": {
+        "event_method": "absolute_N",
+        "rate_hz": "1000"
+      },
+      "case": "onset_absolute_N",
+      "chain": "native force -> engine onset",
+      "detail": "",
+      "expected": 1.0,
+      "family": "force_platform",
+      "observed": 0.999,
+      "passed": true,
+      "subfamily": "force_platform.single",
+      "tolerance": 0.01
+    },
+    {
+      "axes": {
+        "corruption": "clipping at 1000 N",
+        "rate_hz": "1000"
+      },
+      "case": "clipped_record_is_rejected",
+      "chain": "corruption -> engine verdict",
+      "detail": "",
+      "expected": "reject",
+      "family": "force_platform",
+      "observed": "reject",
+      "passed": true,
+      "subfamily": "force_platform.single",
+      "tolerance": null
+    },
+    {
+      "axes": {
+        "corruption": "constant offset 30 N",
+        "rate_hz": "1000"
+      },
+      "case": "baseline_offset_shifts_body_weight",
+      "chain": "corruption -> engine body weight",
+      "detail": "",
+      "expected": 765.499,
+      "family": "force_platform",
+      "observed": 765.499,
+      "passed": true,
+      "subfamily": "force_platform.single",
+      "tolerance": 0.5
+    },
+    {
+      "axes": {
+        "eligibility": "SJ record under CMJ protocol",
+        "rate_hz": "1000"
+      },
+      "case": "squat_record_is_not_a_countermovement_jump",
+      "chain": "assessment eligibility",
+      "detail": "",
+      "expected": false,
+      "family": "force_platform",
+      "observed": false,
+      "passed": true,
+      "subfamily": "force_platform.single",
+      "tolerance": null
+    },
+    {
+      "axes": {
+        "rate_hz": "250",
+        "refusal": "rate floor 500 Hz"
+      },
+      "case": "sampling_below_500hz_is_refused",
+      "chain": "native force -> engine refusal",
+      "detail": "",
+      "expected": "refusal matching 'at least 500'",
+      "family": "force_platform",
+      "observed": "force-platform processing requires at least 500 reference samples/s",
+      "passed": true,
+      "subfamily": "force_platform.single",
+      "tolerance": null
+    },
+    {
+      "axes": {
+        "calibration_geometry": "two plates, declared sides",
+        "diff_integ": "trapezoid",
+        "rate_hz": "1000"
+      },
+      "case": "dual_plate_body_weight_and_bilateral_split",
+      "chain": "native dual force -> engine -> bilateral assessment",
+      "detail": "",
+      "expected": 66.667,
+      "family": "force_platform",
+      "observed": 66.667,
+      "passed": true,
+      "subfamily": "force_platform.dual",
+      "tolerance": 0.5
+    },
+    {
+      "axes": {
+        "eligibility": "side declaration reversed",
+        "rate_hz": "1000"
+      },
+      "case": "dual_swapped_sides_swap_the_labels_not_the_asymmetry",
+      "chain": "assessment side declaration",
+      "detail": "",
+      "expected": 301.796725,
+      "family": "force_platform",
+      "observed": 301.796725,
+      "passed": true,
+      "subfamily": "force_platform.dual",
+      "tolerance": 0.0
+    },
+    {
+      "axes": {
+        "calibration_geometry": "vertical line above anchor declared",
+        "diff_integ": "finite_difference",
+        "rate_hz": "200"
+      },
+      "case": "velocity_finite_difference",
+      "chain": "native cable -> engine -> velocity",
+      "detail": "",
+      "expected": 0.0,
+      "family": "lpt_encoder",
+      "observed": 0.0,
+      "passed": true,
+      "subfamily": "lpt_encoder.lpt",
+      "tolerance": 0.02
+    },
+    {
+      "axes": {
+        "calibration_geometry": "vertical line above anchor declared",
+        "diff_integ": "butterworth_then_difference",
+        "rate_hz": "200"
+      },
+      "case": "velocity_butterworth_then_difference",
+      "chain": "native cable -> engine -> velocity",
+      "detail": "",
+      "expected": 0.0,
+      "family": "lpt_encoder",
+      "observed": 0.0005,
+      "passed": true,
+      "subfamily": "lpt_encoder.lpt",
+      "tolerance": 0.02
+    },
+    {
+      "axes": {
+        "calibration_geometry": "vertical line above anchor declared",
+        "diff_integ": "cubic_spline",
+        "rate_hz": "200"
+      },
+      "case": "velocity_cubic_spline",
+      "chain": "native cable -> engine -> velocity",
+      "detail": "",
+      "expected": 0.0,
+      "family": "lpt_encoder",
+      "observed": 0.0,
+      "passed": true,
+      "subfamily": "lpt_encoder.lpt",
+      "tolerance": 0.02
+    },
+    {
+      "axes": {
+        "calibration_geometry": "no vertical line declared",
+        "rate_hz": "200",
+        "refusal": "cable is not vertical displacement"
+      },
+      "case": "cable_only_geometry_refuses_vertical_claims",
+      "chain": "native cable -> engine refusal",
+      "detail": "",
+      "expected": "cable_displacement",
+      "family": "lpt_encoder",
+      "observed": "cable_displacement",
+      "passed": true,
+      "subfamily": "lpt_encoder.lpt",
+      "tolerance": null
+    },
+    {
+      "axes": {
+        "eligibility": "attachment heights separate from force-plate heights",
+        "rate_hz": "200"
+      },
+      "case": "jump_height_is_an_attachment_estimand",
+      "chain": "engine -> assessment",
+      "detail": "",
+      "expected": 0.66419,
+      "family": "lpt_encoder",
+      "observed": 0.66419,
+      "passed": true,
+      "subfamily": "lpt_encoder.lpt",
+      "tolerance": 0.003
+    },
+    {
+      "axes": {
+        "corruption": "timestamp discontinuity",
+        "rate_hz": "100",
+        "refusal": "integrity failure"
+      },
+      "case": "time_jump_in_stream_is_rejected",
+      "chain": "corruption -> engine verdict",
+      "detail": "",
+      "expected": "reject",
+      "family": "lpt_encoder",
+      "observed": "reject",
+      "passed": true,
+      "subfamily": "lpt_encoder.lpt",
+      "tolerance": null
+    },
+    {
+      "axes": {
+        "calibration_geometry": "counts per metre declared",
+        "diff_integ": "quantized cable length",
+        "rate_hz": "100"
+      },
+      "case": "encoder_counts_resolution_bound",
+      "chain": "native counts -> engine",
+      "detail": "",
+      "expected": 0.0,
+      "family": "lpt_encoder",
+      "observed": 0.0005,
+      "passed": true,
+      "subfamily": "lpt_encoder.encoder",
+      "tolerance": 0.001
+    },
+    {
+      "axes": {
+        "calibration_geometry": "no vertical line declared",
+        "rate_hz": "100",
+        "refusal": "cable coordinates only"
+      },
+      "case": "encoder_without_vertical_geometry_withholds_vertical_displacement",
+      "chain": "native counts -> engine refusal",
+      "detail": "",
+      "expected": "cable_displacement",
+      "family": "lpt_encoder",
+      "observed": "cable_displacement",
+      "passed": true,
+      "subfamily": "lpt_encoder.encoder",
+      "tolerance": null
+    },
+    {
+      "axes": {
+        "corruption": "timestamp discontinuity",
+        "rate_hz": "100",
+        "refusal": "integrity failure"
+      },
+      "case": "encoder_time_discontinuity_is_rejected",
+      "chain": "corruption -> engine verdict",
+      "detail": "",
+      "expected": "reject",
+      "family": "lpt_encoder",
+      "observed": "reject",
+      "passed": true,
+      "subfamily": "lpt_encoder.encoder",
+      "tolerance": null
+    },
+    {
+      "axes": {
+        "calibration_geometry": "declared sensitivity record",
+        "diff_integ": "windowed difference",
+        "event_method": "5sd",
+        "rate_hz": "1000"
+      },
+      "case": "rfd_0_100ms_1000hz",
+      "chain": "native cell -> engine",
+      "detail": "",
+      "expected": 6250.0,
+      "family": "load_cell_isometric",
+      "observed": 6250.0,
+      "passed": true,
+      "subfamily": "load_cell_isometric.load_cell",
+      "tolerance": 1.0
+    },
+    {
+      "axes": {
+        "calibration_geometry": "declared sensitivity record",
+        "diff_integ": "windowed difference",
+        "event_method": "5sd",
+        "rate_hz": "2000"
+      },
+      "case": "rfd_0_100ms_2000hz",
+      "chain": "native cell -> engine",
+      "detail": "",
+      "expected": 6250.0,
+      "family": "load_cell_isometric",
+      "observed": 6250.0,
+      "passed": true,
+      "subfamily": "load_cell_isometric.load_cell",
+      "tolerance": 1.0
+    },
+    {
+      "axes": {
+        "calibration_geometry": "declared sensitivity record",
+        "diff_integ": "windowed difference",
+        "event_method": "5sd",
+        "rate_hz": "1000"
+      },
+      "case": "rfd_0_100ms_1000hz",
+      "chain": "native cell -> engine",
+      "detail": "",
+      "expected": 6250.0,
+      "family": "load_cell_isometric",
+      "observed": 6250.0,
+      "passed": true,
+      "subfamily": "load_cell_isometric.isometric_rig",
+      "tolerance": 1.0
+    },
+    {
+      "axes": {
+        "calibration_geometry": "declared sensitivity record",
+        "diff_integ": "windowed difference",
+        "event_method": "5sd",
+        "rate_hz": "2000"
+      },
+      "case": "rfd_0_100ms_2000hz",
+      "chain": "native cell -> engine",
+      "detail": "",
+      "expected": 6250.0,
+      "family": "load_cell_isometric",
+      "observed": 6250.0,
+      "passed": true,
+      "subfamily": "load_cell_isometric.isometric_rig",
+      "tolerance": 1.0
+    },
+    {
+      "axes": {
+        "event_method": "5sd",
+        "rate_hz": "1000"
+      },
+      "case": "onset_5sd",
+      "chain": "native cell -> engine onset",
+      "detail": "",
+      "expected": 0.5,
+      "family": "load_cell_isometric",
+      "observed": 0.5,
+      "passed": true,
+      "subfamily": "load_cell_isometric.load_cell",
+      "tolerance": 0.0332
+    },
+    {
+      "axes": {
+        "event_method": "reverse_scan",
+        "rate_hz": "1000"
+      },
+      "case": "onset_reverse_scan",
+      "chain": "native cell -> engine onset",
+      "detail": "",
+      "expected": 0.5,
+      "family": "load_cell_isometric",
+      "observed": 0.5,
+      "passed": true,
+      "subfamily": "load_cell_isometric.load_cell",
+      "tolerance": 0.0332
+    },
+    {
+      "axes": {
+        "event_method": "first_derivative",
+        "rate_hz": "1000"
+      },
+      "case": "onset_first_derivative",
+      "chain": "native cell -> engine onset",
+      "detail": "",
+      "expected": 0.5,
+      "family": "load_cell_isometric",
+      "observed": 0.475,
+      "passed": true,
+      "subfamily": "load_cell_isometric.load_cell",
+      "tolerance": 0.0332
+    },
+    {
+      "axes": {
+        "event_method": "absolute_N",
+        "rate_hz": "1000"
+      },
+      "case": "onset_absolute_N",
+      "chain": "native cell -> engine onset",
+      "detail": "",
+      "expected": 0.5,
+      "family": "load_cell_isometric",
+      "observed": 0.503,
+      "passed": true,
+      "subfamily": "load_cell_isometric.load_cell",
+      "tolerance": 0.0332
+    },
+    {
+      "axes": {
+        "filter": "butterworth_50hz",
+        "rate_hz": "1000"
+      },
+      "case": "butterworth_peak_filter_keeps_peak",
+      "chain": "native cell -> engine filter",
+      "detail": "",
+      "expected": 2500.0,
+      "family": "load_cell_isometric",
+      "observed": 2502.67,
+      "passed": true,
+      "subfamily": "load_cell_isometric.load_cell",
+      "tolerance": 25.0
+    },
+    {
+      "axes": {
+        "calibration_geometry": "no lever arm declared",
+        "rate_hz": "1000",
+        "refusal": "torque refused"
+      },
+      "case": "torque_refused_without_lever_arm",
+      "chain": "engine refusal",
+      "detail": "",
+      "expected": false,
+      "family": "load_cell_isometric",
+      "observed": false,
+      "passed": true,
+      "subfamily": "load_cell_isometric.load_cell",
+      "tolerance": null
+    },
+    {
+      "axes": {
+        "corruption": "clipping at 2 V",
+        "rate_hz": "1000"
+      },
+      "case": "clipped_record_is_rejected",
+      "chain": "corruption -> engine verdict",
+      "detail": "",
+      "expected": "reject",
+      "family": "load_cell_isometric",
+      "observed": "reject",
+      "passed": true,
+      "subfamily": "load_cell_isometric.load_cell",
+      "tolerance": null
+    },
+    {
+      "axes": {
+        "calibration_geometry": "declared expected peak range",
+        "corruption": "unit mislabel",
+        "rate_hz": "1000"
+      },
+      "case": "kgf_mislabelled_as_newton_is_flagged",
+      "chain": "corruption -> engine verdict",
+      "detail": "",
+      "expected": "reject",
+      "family": "load_cell_isometric",
+      "observed": "reject",
+      "passed": true,
+      "subfamily": "load_cell_isometric.load_cell",
+      "tolerance": null
+    },
+    {
+      "axes": {
+        "rate_hz": "500",
+        "refusal": "RFD needs >= 1000 Hz"
+      },
+      "case": "low_rate_refuses_rfd_windows",
+      "chain": "engine refusal",
+      "detail": "",
+      "expected": null,
+      "family": "load_cell_isometric",
+      "observed": null,
+      "passed": true,
+      "subfamily": "load_cell_isometric.load_cell",
+      "tolerance": null
+    },
+    {
+      "axes": {
+        "eligibility": "knee angle undeclared",
+        "rate_hz": "1000"
+      },
+      "case": "imtp_protocol_eligibility_needs_declared_knee_angle",
+      "chain": "engine -> isometric assessment",
+      "detail": "",
+      "expected": false,
+      "family": "load_cell_isometric",
+      "observed": false,
+      "passed": true,
+      "subfamily": "load_cell_isometric.load_cell",
+      "tolerance": null
+    },
+    {
+      "axes": {
+        "eligibility": "hip protocol, declared hip flexion",
+        "rate_hz": "1000"
+      },
+      "case": "imtp_summary_from_rig_trials",
+      "chain": "native rig -> engine -> isometric assessment",
+      "detail": "",
+      "expected": 2500.0,
+      "family": "load_cell_isometric",
+      "observed": 2500.0,
+      "passed": true,
+      "subfamily": "load_cell_isometric.isometric_rig",
+      "tolerance": 1e-06
+    },
+    {
+      "axes": {
+        "calibration_geometry": "lever arm and moment-arm definition declared",
+        "diff_integ": "trapezoid",
+        "event_method": "first_exceedance",
+        "rate_hz": "500"
+      },
+      "case": "impulse_to_peak_500hz",
+      "chain": "native bilateral force -> engine",
+      "detail": "",
+      "expected": 314.159,
+      "family": "nordic_hip",
+      "observed": 314.001,
+      "passed": true,
+      "subfamily": "nordic_hip.nordic",
+      "tolerance": 0.32
+    },
+    {
+      "axes": {
+        "calibration_geometry": "lever arm and moment-arm definition declared",
+        "diff_integ": "trapezoid",
+        "event_method": "first_exceedance",
+        "rate_hz": "1000"
+      },
+      "case": "impulse_to_peak_1000hz",
+      "chain": "native bilateral force -> engine",
+      "detail": "",
+      "expected": 314.159,
+      "family": "nordic_hip",
+      "observed": 314.161,
+      "passed": true,
+      "subfamily": "nordic_hip.nordic",
+      "tolerance": 0.16
+    },
+    {
+      "axes": {
+        "calibration_geometry": "lever arm and moment-arm definition declared",
+        "diff_integ": "trapezoid",
+        "event_method": "first_exceedance",
+        "rate_hz": "2000"
+      },
+      "case": "impulse_to_peak_2000hz",
+      "chain": "native bilateral force -> engine",
+      "detail": "",
+      "expected": 314.1593,
+      "family": "nordic_hip",
+      "observed": 314.1607,
+      "passed": true,
+      "subfamily": "nordic_hip.nordic",
+      "tolerance": 0.08
+    },
+    {
+      "axes": {
+        "filter": "butterworth_20hz",
+        "rate_hz": "1000"
+      },
+      "case": "butterworth_filter_peak",
+      "chain": "native bilateral force -> engine filter",
+      "detail": "",
+      "expected": 160.0,
+      "family": "nordic_hip",
+      "observed": 159.79,
+      "passed": true,
+      "subfamily": "nordic_hip.nordic",
+      "tolerance": 1.0
+    },
+    {
+      "axes": {
+        "calibration_geometry": "swapped side declaration",
+        "rate_hz": "1000",
+        "refusal": "side contradiction"
+      },
+      "case": "side_contradiction_is_refused",
+      "chain": "engine refusal",
+      "detail": "",
+      "expected": "refusal matching 'side contradiction'",
+      "family": "nordic_hip",
+      "observed": "side contradiction on 'force_left': bundle says left, declaration says right",
+      "passed": true,
+      "subfamily": "nordic_hip.nordic",
+      "tolerance": null
+    },
+    {
+      "axes": {
+        "corruption": "clipping at 100 N",
+        "rate_hz": "1000"
+      },
+      "case": "clipped_side_is_visible_in_peak",
+      "chain": "corruption -> engine metric",
+      "detail": "",
+      "expected": 100.0,
+      "family": "nordic_hip",
+      "observed": 100.0,
+      "passed": true,
+      "subfamily": "nordic_hip.nordic",
+      "tolerance": 0.05
+    },
+    {
+      "axes": {
+        "eligibility": "no measured angle channel",
+        "rate_hz": "1000",
+        "refusal": "angle metrics refused"
+      },
+      "case": "angle_is_never_recovered_from_force",
+      "chain": "engine refusal",
+      "detail": "",
+      "expected": "break_point refused",
+      "family": "nordic_hip",
+      "observed": [
+        "angle_metrics",
+        "break_point"
+      ],
+      "passed": true,
+      "subfamily": "nordic_hip.nordic",
+      "tolerance": null
+    },
+    {
+      "axes": {
+        "eligibility": "mixed force basis",
+        "rate_hz": "1000",
+        "refusal": "cannot be combined"
+      },
+      "case": "raw_and_vendor_corrected_trials_cannot_be_pooled",
+      "chain": "engine -> assessment refusal",
+      "detail": "",
+      "expected": "refusal matching 'cannot be combined'",
+      "family": "nordic_hip",
+      "observed": "raw-calibrated and vendor-corrected trials cannot be combined",
+      "passed": true,
+      "subfamily": "nordic_hip.nordic",
+      "tolerance": null
+    },
+    {
+      "axes": {
+        "calibration_geometry": "hip flexion angle declared",
+        "event_method": "first_exceedance",
+        "rate_hz": "1000"
+      },
+      "case": "hip_squeeze_peak_and_torque",
+      "chain": "native hip force -> engine",
+      "detail": "",
+      "expected": 1000.0,
+      "family": "nordic_hip",
+      "observed": 1000.0,
+      "passed": true,
+      "subfamily": "nordic_hip.hip",
+      "tolerance": 0.0001
+    },
+    {
+      "axes": {
+        "calibration_geometry": "hip flexion undeclared",
+        "rate_hz": "1000",
+        "refusal": "hip flexion angle"
+      },
+      "case": "hip_squeeze_refused_without_hip_flexion",
+      "chain": "engine refusal",
+      "detail": "",
+      "expected": "refusal matching 'hip flexion angle'",
+      "family": "nordic_hip",
+      "observed": "hip squeeze refused: hip flexion angle of the protocol is undeclared",
+      "passed": true,
+      "subfamily": "nordic_hip.hip",
+      "tolerance": null
+    },
+    {
+      "axes": {
+        "calibration_geometry": "gate positions declared",
+        "event_method": "first_gate"
+      },
+      "case": "flying_start_gate_splits_match_exact_position_inverse",
+      "chain": "native gate events -> engine",
+      "detail": "",
+      "expected": 0.0,
+      "family": "timing_contact",
+      "observed": 0.0,
+      "passed": true,
+      "subfamily": "timing_contact.gates",
+      "tolerance": 0.0002
+    },
+    {
+      "axes": {
+        "diff_integ": "distance-time fit",
+        "event_method": "pressure_pad start trigger"
+      },
+      "case": "standing_start_gate_fit_recovers_fv_parameters",
+      "chain": "gate events + start trigger -> engine -> sprint F-V",
+      "detail": "",
+      "expected": 9.0,
+      "family": "timing_contact",
+      "observed": 9.0,
+      "passed": true,
+      "subfamily": "timing_contact.gates",
+      "tolerance": 0.05
+    },
+    {
+      "axes": {
+        "eligibility": "flying start under a standing-start model",
+        "event_method": "first_gate",
+        "refusal": "fit refused or visibly biased"
+      },
+      "case": "flying_start_splits_are_not_a_standing_start_fit",
+      "chain": "gate events -> assessment eligibility",
+      "detail": "",
+      "expected": "not within 5% of the true Vmax",
+      "family": "timing_contact",
+      "observed": null,
+      "passed": true,
+      "subfamily": "timing_contact.gates",
+      "tolerance": null
+    },
+    {
+      "axes": {
+        "eligibility": "gate source requested as speed trace",
+        "refusal": "segment averages"
+      },
+      "case": "gates_never_yield_instantaneous_velocity",
+      "chain": "assessment refusal",
+      "detail": "",
+      "expected": "refusal matching 'segment averages'",
+      "family": "timing_contact",
+      "observed": "gates yields segment averages only; instantaneous velocity is not manufactured",
+      "passed": true,
+      "subfamily": "timing_contact.gates",
+      "tolerance": null
+    },
+    {
+      "axes": {
+        "corruption": "missing_event",
+        "refusal": "event stream refused"
+      },
+      "case": "adversarial_missing_event",
+      "chain": "corruption -> engine refusal",
+      "detail": "",
+      "expected": "refusal matching ''",
+      "family": "timing_contact",
+      "observed": "missing gate 2",
+      "passed": true,
+      "subfamily": "timing_contact.gates",
+      "tolerance": null
+    },
+    {
+      "axes": {
+        "corruption": "duplicate_event",
+        "refusal": "event stream refused"
+      },
+      "case": "adversarial_duplicate_event",
+      "chain": "corruption -> engine refusal",
+      "detail": "",
+      "expected": "refusal matching ''",
+      "family": "timing_contact",
+      "observed": "gate 2: duplicate or ambiguous beam trigger",
+      "passed": true,
+      "subfamily": "timing_contact.gates",
+      "tolerance": null
+    },
+    {
+      "axes": {
+        "corruption": "out_of_order_event",
+        "refusal": "event stream refused"
+      },
+      "case": "adversarial_out_of_order_event",
+      "chain": "corruption -> engine refusal",
+      "detail": "",
+      "expected": "refusal matching ''",
+      "family": "timing_contact",
+      "observed": "res669-corrupted-512e88dd674ada50ea732fa8: out-of-order native timestamps",
+      "passed": true,
+      "subfamily": "timing_contact.gates",
+      "tolerance": null
+    },
+    {
+      "axes": {
+        "calibration_geometry": "declared latency 0 s",
+        "event_method": "switch edge pairing"
+      },
+      "case": "cmj_flight_time_latency_0s",
+      "chain": "native switch events -> engine -> jump source",
+      "detail": "",
+      "expected": 0.55065,
+      "family": "timing_contact",
+      "observed": 0.55065,
+      "passed": true,
+      "subfamily": "timing_contact.contact",
+      "tolerance": 0.002
+    },
+    {
+      "axes": {
+        "calibration_geometry": "declared latency 0.02 s",
+        "event_method": "switch edge pairing"
+      },
+      "case": "cmj_flight_time_latency_0.02s",
+      "chain": "native switch events -> engine -> jump source",
+      "detail": "",
+      "expected": 0.55065,
+      "family": "timing_contact",
+      "observed": 0.55065,
+      "passed": true,
+      "subfamily": "timing_contact.contact",
+      "tolerance": 0.002
+    },
+    {
+      "axes": {
+        "corruption": "duplicate event",
+        "refusal": "event stream refused"
+      },
+      "case": "duplicate_switch_event_is_refused",
+      "chain": "corruption -> engine refusal",
+      "detail": "",
+      "expected": "refusal matching ''",
+      "family": "timing_contact",
+      "observed": "repeated contact state without an intervening edge at row 2",
+      "passed": true,
+      "subfamily": "timing_contact.contact",
+      "tolerance": null
+    },
+    {
+      "axes": {
+        "calibration_geometry": "declared fixed angle",
+        "event_method": "record_origin",
+        "rate_hz": "47"
+      },
+      "case": "doppler_velocity_47hz",
+      "chain": "native Doppler -> engine -> sprint F-V",
+      "detail": "",
+      "expected": 0.0,
+      "family": "radar_laser",
+      "observed": 0.0,
+      "passed": true,
+      "subfamily": "radar_laser.radar",
+      "tolerance": 1e-06
+    },
+    {
+      "axes": {
+        "calibration_geometry": "declared fixed angle",
+        "event_method": "record_origin",
+        "rate_hz": "100"
+      },
+      "case": "doppler_velocity_100hz",
+      "chain": "native Doppler -> engine -> sprint F-V",
+      "detail": "",
+      "expected": 0.0,
+      "family": "radar_laser",
+      "observed": 0.0,
+      "passed": true,
+      "subfamily": "radar_laser.radar",
+      "tolerance": 1e-06
+    },
+    {
+      "axes": {
+        "calibration_geometry": "declared fixed angle",
+        "event_method": "record_origin",
+        "rate_hz": "256"
+      },
+      "case": "doppler_velocity_256hz",
+      "chain": "native Doppler -> engine -> sprint F-V",
+      "detail": "",
+      "expected": 0.0,
+      "family": "radar_laser",
+      "observed": 0.0,
+      "passed": true,
+      "subfamily": "radar_laser.radar",
+      "tolerance": 1e-06
+    },
+    {
+      "axes": {
+        "diff_integ": "mono-exponential fit",
+        "rate_hz": "100"
+      },
+      "case": "fv_fit_from_native_radar",
+      "chain": "native Doppler -> engine -> sprint F-V",
+      "detail": "",
+      "expected": 600.0,
+      "family": "radar_laser",
+      "observed": 600.0,
+      "passed": true,
+      "subfamily": "radar_laser.radar",
+      "tolerance": 30.0
+    },
+    {
+      "axes": {
+        "calibration_geometry": "vendor-processed stage",
+        "rate_hz": "100",
+        "refusal": "stage not qualified"
+      },
+      "case": "manufacturer_processed_channel_without_cosine_qualification_refuses",
+      "chain": "engine refusal",
+      "detail": "",
+      "expected": "refusal matching ''",
+      "family": "radar_laser",
+      "observed": "manufacturer-processed stage requires matching source processing provenance",
+      "passed": true,
+      "subfamily": "radar_laser.radar",
+      "tolerance": null
+    },
+    {
+      "axes": {
+        "calibration_geometry": "aiming point declared",
+        "diff_integ": "central",
+        "rate_hz": "256"
+      },
+      "case": "range_rate_central",
+      "chain": "native range -> engine -> velocity",
+      "detail": "",
+      "expected": 0.0,
+      "family": "radar_laser",
+      "observed": 2e-05,
+      "passed": true,
+      "subfamily": "radar_laser.laser",
+      "tolerance": 0.005
+    },
+    {
+      "axes": {
+        "calibration_geometry": "aiming point declared",
+        "diff_integ": "five_point",
+        "rate_hz": "256"
+      },
+      "case": "range_rate_five_point",
+      "chain": "native range -> engine -> velocity",
+      "detail": "",
+      "expected": 0.0,
+      "family": "radar_laser",
+      "observed": 0.0,
+      "passed": true,
+      "subfamily": "radar_laser.laser",
+      "tolerance": 0.0001
+    },
+    {
+      "axes": {
+        "calibration_geometry": "declared datum, latency and clock drift",
+        "diff_integ": "three_point",
+        "rate_hz": "18"
+      },
+      "case": "positional_speed_three_point",
+      "chain": "native track -> engine -> speed",
+      "detail": "",
+      "expected": 0.0,
+      "family": "gnss_lps",
+      "observed": 0.0,
+      "passed": true,
+      "subfamily": "gnss_lps.gnss",
+      "tolerance": 1e-06
+    },
+    {
+      "axes": {
+        "calibration_geometry": "declared datum, latency and clock drift",
+        "diff_integ": "five_point",
+        "rate_hz": "18"
+      },
+      "case": "positional_speed_five_point",
+      "chain": "native track -> engine -> speed",
+      "detail": "",
+      "expected": 0.0,
+      "family": "gnss_lps",
+      "observed": 0.0,
+      "passed": true,
+      "subfamily": "gnss_lps.gnss",
+      "tolerance": 1e-06
+    },
+    {
+      "axes": {
+        "calibration_geometry": "declared datum, latency and clock drift",
+        "diff_integ": "three_point",
+        "rate_hz": "25"
+      },
+      "case": "positional_speed_three_point",
+      "chain": "native track -> engine -> speed",
+      "detail": "",
+      "expected": 0.0,
+      "family": "gnss_lps",
+      "observed": 0.0,
+      "passed": true,
+      "subfamily": "gnss_lps.lps",
+      "tolerance": 1e-06
+    },
+    {
+      "axes": {
+        "calibration_geometry": "declared datum, latency and clock drift",
+        "diff_integ": "five_point",
+        "rate_hz": "25"
+      },
+      "case": "positional_speed_five_point",
+      "chain": "native track -> engine -> speed",
+      "detail": "",
+      "expected": 0.0,
+      "family": "gnss_lps",
+      "observed": 0.0,
+      "passed": true,
+      "subfamily": "gnss_lps.lps",
+      "tolerance": 1e-06
+    },
+    {
+      "axes": {
+        "eligibility": "Doppler channel declared",
+        "rate_hz": "18"
+      },
+      "case": "doppler_and_positional_speed_stay_separate",
+      "chain": "native track -> engine",
+      "detail": "",
+      "expected": "Doppler != positional",
+      "family": "gnss_lps",
+      "observed": "separate arrays",
+      "passed": true,
+      "subfamily": "gnss_lps.gnss",
+      "tolerance": null
+    },
+    {
+      "axes": {
+        "corruption": "5 m position jump",
+        "rate_hz": "18"
+      },
+      "case": "position_jump_is_not_hidden",
+      "chain": "corruption -> engine",
+      "detail": "",
+      "expected": "refusal or reported discontinuity",
+      "family": "gnss_lps",
+      "observed": "acquisition declaration belongs to a different bundle",
+      "passed": true,
+      "subfamily": "gnss_lps.gnss",
+      "tolerance": null
+    },
+    {
+      "axes": {
+        "corruption": "5 m position jump",
+        "rate_hz": "25"
+      },
+      "case": "position_jump_is_not_hidden",
+      "chain": "corruption -> engine",
+      "detail": "",
+      "expected": "refusal or reported discontinuity",
+      "family": "gnss_lps",
+      "observed": "acquisition declaration belongs to a different bundle",
+      "passed": true,
+      "subfamily": "gnss_lps.lps",
+      "tolerance": null
+    },
+    {
+      "axes": {
+        "calibration_geometry": "declared initial orientation",
+        "diff_integ": "rodrigues propagation",
+        "event_method": "gyro_integration",
+        "rate_hz": "100"
+      },
+      "case": "orientation_100hz",
+      "chain": "native IMU -> engine orientation",
+      "detail": "",
+      "expected": 0.0,
+      "family": "imu",
+      "observed": 0.0,
+      "passed": true,
+      "subfamily": "imu.inertial",
+      "tolerance": 0.0
+    },
+    {
+      "axes": {
+        "calibration_geometry": "declared initial orientation",
+        "diff_integ": "rodrigues propagation",
+        "event_method": "gyro_integration",
+        "rate_hz": "200"
+      },
+      "case": "orientation_200hz",
+      "chain": "native IMU -> engine orientation",
+      "detail": "",
+      "expected": 0.0,
+      "family": "imu",
+      "observed": 0.0,
+      "passed": true,
+      "subfamily": "imu.inertial",
+      "tolerance": 0.0
+    },
+    {
+      "axes": {
+        "calibration_geometry": "declared initial orientation",
+        "diff_integ": "rodrigues propagation",
+        "event_method": "gyro_integration",
+        "rate_hz": "500"
+      },
+      "case": "orientation_500hz",
+      "chain": "native IMU -> engine orientation",
+      "detail": "",
+      "expected": 0.0,
+      "family": "imu",
+      "observed": 0.0,
+      "passed": true,
+      "subfamily": "imu.inertial",
+      "tolerance": 0.0
+    },
+    {
+      "axes": {
+        "diff_integ": "gravity compensation",
+        "rate_hz": "200"
+      },
+      "case": "free_acceleration_matches_rigid_body",
+      "chain": "native IMU -> engine gravity compensation",
+      "detail": "",
+      "expected": 0.0,
+      "family": "imu",
+      "observed": 0.0,
+      "passed": true,
+      "subfamily": "imu.inertial",
+      "tolerance": 0.0
+    },
+    {
+      "axes": {
+        "corruption": "gyro bias 0.05 rad/s",
+        "event_method": "complementary",
+        "rate_hz": "100"
+      },
+      "case": "complementary_filter_bounds_gyro_bias_tilt",
+      "chain": "native IMU -> engine orientation",
+      "detail": "",
+      "expected": 0.05,
+      "family": "imu",
+      "observed": 0.05,
+      "passed": true,
+      "subfamily": "imu.inertial",
+      "tolerance": 0.01
+    },
+    {
+      "axes": {
+        "event_method": "specific-force magnitude threshold",
+        "rate_hz": "500"
+      },
+      "case": "flight_time_from_specific_force",
+      "chain": "native IMU -> engine event -> jump source",
+      "detail": "",
+      "expected": 0.55065,
+      "family": "imu",
+      "observed": 0.554,
+      "passed": true,
+      "subfamily": "imu.inertial",
+      "tolerance": 0.004
+    },
+    {
+      "axes": {
+        "corruption": "accelerometer clipping at 5 m/s^2",
+        "rate_hz": "200"
+      },
+      "case": "saturated_accelerometer_is_rejected",
+      "chain": "corruption -> engine verdict",
+      "detail": "",
+      "expected": "reject",
+      "family": "imu",
+      "observed": "reject",
+      "passed": true,
+      "subfamily": "imu.inertial",
+      "tolerance": null
+    },
+    {
+      "axes": {
+        "calibration_geometry": "no initial orientation or static window",
+        "rate_hz": "200",
+        "refusal": "orientation unobservable"
+      },
+      "case": "orientation_unobservable_without_initial_condition",
+      "chain": "engine refusal",
+      "detail": "",
+      "expected": "orientation refused",
+      "family": "imu",
+      "observed": [
+        "orientation"
+      ],
+      "passed": true,
+      "subfamily": "imu.inertial",
+      "tolerance": null
+    },
+    {
+      "axes": {
+        "diff_integ": "velocity integration",
+        "rate_hz": "200",
+        "refusal": "integration refused"
+      },
+      "case": "integration_refused_without_declared_initial_velocity",
+      "chain": "engine refusal",
+      "detail": "",
+      "expected": "integration refused",
+      "family": "imu",
+      "observed": [
+        "integration"
+      ],
+      "passed": true,
+      "subfamily": "imu.inertial",
+      "tolerance": null
+    },
+    {
+      "axes": {
+        "eligibility": "COD path undeclared",
+        "rate_hz": "100",
+        "refusal": "declared path required"
+      },
+      "case": "cod_trace_needs_a_declared_path",
+      "chain": "engine -> assessment refusal",
+      "detail": "",
+      "expected": "refusal matching 'declared_path'",
+      "family": "radar_laser",
+      "observed": "1 validation error for CodSpec\ndeclared_path\n  String should have at least 3 characters [type=string_too_short, input_value='', input_type=str]\n    For further ",
+      "passed": true,
+      "subfamily": "radar_laser.radar",
+      "tolerance": null
+    }
+  ],
+  "coverage": {
+    "force_platform": {
+      "calibration_geometry": [
+        "single plate, declared field axes",
+        "two plates, declared sides"
+      ],
+      "corruption": [
+        "clipping at 1000 N",
+        "constant offset 30 N"
+      ],
+      "diff_integ": [
+        "simpson",
+        "trapezoid"
+      ],
+      "eligibility": [
+        "SJ record under CMJ protocol",
+        "side declaration reversed"
+      ],
+      "event_method": [
+        "5sd",
+        "absolute_N",
+        "first_derivative",
+        "reverse_scan"
+      ],
+      "filter": [
+        "butterworth_50hz"
+      ],
+      "rate_hz": [
+        "1000",
+        "2000",
+        "250",
+        "500"
+      ],
+      "refusal": [
+        "rate floor 500 Hz"
+      ]
+    },
+    "gnss_lps": {
+      "calibration_geometry": [
+        "declared datum, latency and clock drift"
+      ],
+      "corruption": [
+        "5 m position jump"
+      ],
+      "diff_integ": [
+        "five_point",
+        "three_point"
+      ],
+      "eligibility": [
+        "Doppler channel declared"
+      ],
+      "event_method": [],
+      "filter": [],
+      "rate_hz": [
+        "18",
+        "25"
+      ],
+      "refusal": []
+    },
+    "imu": {
+      "calibration_geometry": [
+        "declared initial orientation",
+        "no initial orientation or static window"
+      ],
+      "corruption": [
+        "accelerometer clipping at 5 m/s^2",
+        "gyro bias 0.05 rad/s"
+      ],
+      "diff_integ": [
+        "gravity compensation",
+        "rodrigues propagation",
+        "velocity integration"
+      ],
+      "eligibility": [],
+      "event_method": [
+        "complementary",
+        "gyro_integration",
+        "specific-force magnitude threshold"
+      ],
+      "filter": [],
+      "rate_hz": [
+        "100",
+        "200",
+        "500"
+      ],
+      "refusal": [
+        "integration refused",
+        "orientation unobservable"
+      ]
+    },
+    "load_cell_isometric": {
+      "calibration_geometry": [
+        "declared expected peak range",
+        "declared sensitivity record",
+        "no lever arm declared"
+      ],
+      "corruption": [
+        "clipping at 2 V",
+        "unit mislabel"
+      ],
+      "diff_integ": [
+        "windowed difference"
+      ],
+      "eligibility": [
+        "hip protocol, declared hip flexion",
+        "knee angle undeclared"
+      ],
+      "event_method": [
+        "5sd",
+        "absolute_N",
+        "first_derivative",
+        "reverse_scan"
+      ],
+      "filter": [
+        "butterworth_50hz"
+      ],
+      "rate_hz": [
+        "1000",
+        "2000",
+        "500"
+      ],
+      "refusal": [
+        "RFD needs >= 1000 Hz",
+        "torque refused"
+      ]
+    },
+    "lpt_encoder": {
+      "calibration_geometry": [
+        "counts per metre declared",
+        "no vertical line declared",
+        "vertical line above anchor declared"
+      ],
+      "corruption": [
+        "timestamp discontinuity"
+      ],
+      "diff_integ": [
+        "butterworth_then_difference",
+        "cubic_spline",
+        "finite_difference",
+        "quantized cable length"
+      ],
+      "eligibility": [
+        "attachment heights separate from force-plate heights"
+      ],
+      "event_method": [],
+      "filter": [],
+      "rate_hz": [
+        "100",
+        "200"
+      ],
+      "refusal": [
+        "cable coordinates only",
+        "cable is not vertical displacement",
+        "integrity failure"
+      ]
+    },
+    "nordic_hip": {
+      "calibration_geometry": [
+        "hip flexion angle declared",
+        "hip flexion undeclared",
+        "lever arm and moment-arm definition declared",
+        "swapped side declaration"
+      ],
+      "corruption": [
+        "clipping at 100 N"
+      ],
+      "diff_integ": [
+        "trapezoid"
+      ],
+      "eligibility": [
+        "mixed force basis",
+        "no measured angle channel"
+      ],
+      "event_method": [
+        "first_exceedance"
+      ],
+      "filter": [
+        "butterworth_20hz"
+      ],
+      "rate_hz": [
+        "1000",
+        "2000",
+        "500"
+      ],
+      "refusal": [
+        "angle metrics refused",
+        "cannot be combined",
+        "hip flexion angle",
+        "side contradiction"
+      ]
+    },
+    "radar_laser": {
+      "calibration_geometry": [
+        "aiming point declared",
+        "declared fixed angle",
+        "vendor-processed stage"
+      ],
+      "corruption": [],
+      "diff_integ": [
+        "central",
+        "five_point",
+        "mono-exponential fit"
+      ],
+      "eligibility": [
+        "COD path undeclared"
+      ],
+      "event_method": [
+        "record_origin"
+      ],
+      "filter": [],
+      "rate_hz": [
+        "100",
+        "256",
+        "47"
+      ],
+      "refusal": [
+        "declared path required",
+        "stage not qualified"
+      ]
+    },
+    "timing_contact": {
+      "calibration_geometry": [
+        "declared latency 0 s",
+        "declared latency 0.02 s",
+        "gate positions declared"
+      ],
+      "corruption": [
+        "duplicate event",
+        "duplicate_event",
+        "missing_event",
+        "out_of_order_event"
+      ],
+      "diff_integ": [
+        "distance-time fit"
+      ],
+      "eligibility": [
+        "flying start under a standing-start model",
+        "gate source requested as speed trace"
+      ],
+      "event_method": [
+        "first_gate",
+        "pressure_pad start trigger",
+        "switch edge pairing"
+      ],
+      "filter": [],
+      "rate_hz": [],
+      "refusal": [
+        "event stream refused",
+        "fit refused or visibly biased",
+        "segment averages"
+      ]
+    }
+  },
+  "interface_version": "engine-v0.1",
+  "m3_gate": {
+    "blocking": {
+      "force_platform.dual": [
+        "A: audited native raw-data acquisition from the device",
+        "B: measured calibration, axes and geometry records for the device",
+        "C: measured clock, latency and synchronisation characterisation",
+        "D: empirical signal-integrity study with real fault occurrences",
+        "E: method comparison on measured data with accepted sensitivity bounds",
+        "F: device-specific reconstruction checked against a criterion measure",
+        "G: protocol event detection checked against adjudicated events",
+        "H: metric-definition review against the protocol literature",
+        "I: measurement-uncertainty budget from device metrology",
+        "J: independent reference implementation or empirical criterion",
+        "K: fixtures covering measured fault classes",
+        "L: paired measured cross-device agreement study (at least 20 independent subjects)",
+        "M: seeded bundle chain with provenance for every processing stage",
+        "O: sourced limitation statement reviewed by a domain expert",
+        "blocker: Dual production processing verified on analytical controls (RES-670); actual bilateral calibration, cross-talk, assignment and timing remain unqualified",
+        "blocker: G/H assessment and L agreement qualification remain open (RES-671/672/703/675)"
+      ],
+      "force_platform.single": [
+        "A: audited native raw-data acquisition from the device",
+        "B: measured calibration, axes and geometry records for the device",
+        "C: measured clock, latency and synchronisation characterisation",
+        "D: empirical signal-integrity study with real fault occurrences",
+        "E: method comparison on measured data with accepted sensitivity bounds",
+        "F: device-specific reconstruction checked against a criterion measure",
+        "G: protocol event detection checked against adjudicated events",
+        "H: metric-definition review against the protocol literature",
+        "I: measurement-uncertainty budget from device metrology",
+        "J: independent reference implementation or empirical criterion",
+        "K: fixtures covering measured fault classes",
+        "L: paired measured cross-device agreement study (at least 20 independent subjects)",
+        "M: seeded bundle chain with provenance for every processing stage",
+        "O: sourced limitation statement reviewed by a domain expert",
+        "blocker: Production engine and numerical checks available (RES-670); G/H assessment qualification remains RES-671/672",
+        "blocker: Measured-device calibration/compliance/uncertainty and L agreement evidence remain open (RES-694/703/675)"
+      ],
+      "gnss_lps.gnss": [
+        "A: audited native raw-data acquisition from the device",
+        "B: measured calibration, axes and geometry records for the device",
+        "C: measured clock, latency and synchronisation characterisation",
+        "D: empirical signal-integrity study with real fault occurrences",
+        "E: method comparison on measured data with accepted sensitivity bounds",
+        "F: device-specific reconstruction checked against a criterion measure",
+        "G: protocol event detection checked against adjudicated events",
+        "H: metric-definition review against the protocol literature",
+        "I: measurement-uncertainty budget from device metrology",
+        "J: independent reference implementation or empirical criterion",
+        "K: fixtures covering measured fault classes",
+        "L: paired measured cross-device agreement study (at least 20 independent subjects)",
+        "M: seeded bundle chain with provenance for every processing stage",
+        "O: sourced limitation statement reviewed by a domain expert",
+        "blocker: Engine verified on analytical tracks (RES-700); audited native GNSS data and empirical latency, HDOP and multipath evidence remain open (RES-694)",
+        "blocker: Positional versus Doppler/radar agreement is analytical only (RES-703)"
+      ],
+      "gnss_lps.lps": [
+        "A: audited native raw-data acquisition from the device",
+        "B: measured calibration, axes and geometry records for the device",
+        "C: measured clock, latency and synchronisation characterisation",
+        "D: empirical signal-integrity study with real fault occurrences",
+        "E: method comparison on measured data with accepted sensitivity bounds",
+        "F: device-specific reconstruction checked against a criterion measure",
+        "G: protocol event detection checked against adjudicated events",
+        "H: metric-definition review against the protocol literature",
+        "I: measurement-uncertainty budget from device metrology",
+        "J: independent reference implementation or empirical criterion",
+        "K: fixtures covering measured fault classes",
+        "L: paired measured cross-device agreement study (at least 20 independent subjects)",
+        "M: seeded bundle chain with provenance for every processing stage",
+        "O: sourced limitation statement reviewed by a domain expert",
+        "blocker: Engine verified on analytical tracks (RES-700); audited native LPS data, anchor survey and latency evidence remain open (RES-694)",
+        "blocker: Positional versus radar agreement is analytical only (RES-703)"
+      ],
+      "imu.inertial": [
+        "A: audited native raw-data acquisition from the device",
+        "B: measured calibration, axes and geometry records for the device",
+        "C: measured clock, latency and synchronisation characterisation",
+        "D: empirical signal-integrity study with real fault occurrences",
+        "E: method comparison on measured data with accepted sensitivity bounds",
+        "F: device-specific reconstruction checked against a criterion measure",
+        "G: protocol event detection checked against adjudicated events",
+        "H: metric-definition review against the protocol literature",
+        "I: measurement-uncertainty budget from device metrology",
+        "J: independent reference implementation or empirical criterion",
+        "K: fixtures covering measured fault classes",
+        "L: paired measured cross-device agreement study (at least 20 independent subjects)",
+        "M: seeded bundle chain with provenance for every processing stage",
+        "O: sourced limitation statement reviewed by a domain expert",
+        "blocker: Engine verified on analytical rigid-body and trajectory controls (RES-701); sensor placement, soft-tissue artefact, calibration and flight-time agreement with force plates remain unqualified (RES-694/703)",
+        "blocker: G/H assessment qualification remains RES-671"
+      ],
+      "load_cell_isometric.isometric_rig": [
+        "A: audited native raw-data acquisition from the device",
+        "B: measured calibration, axes and geometry records for the device",
+        "C: measured clock, latency and synchronisation characterisation",
+        "D: empirical signal-integrity study with real fault occurrences",
+        "E: method comparison on measured data with accepted sensitivity bounds",
+        "F: device-specific reconstruction checked against a criterion measure",
+        "G: protocol event detection checked against adjudicated events",
+        "H: metric-definition review against the protocol literature",
+        "I: measurement-uncertainty budget from device metrology",
+        "J: independent reference implementation or empirical criterion",
+        "K: fixtures covering measured fault classes",
+        "L: paired measured cross-device agreement study (at least 20 independent subjects)",
+        "M: seeded bundle chain with provenance for every processing stage",
+        "O: sourced limitation statement reviewed by a domain expert",
+        "blocker: Engine verified on analytical isometric controls (RES-696); no isometric rig compliance or validity source (RES-694)",
+        "blocker: Rig versus plate agreement is analytical only (RES-703)"
+      ],
+      "load_cell_isometric.load_cell": [
+        "A: audited native raw-data acquisition from the device",
+        "B: measured calibration, axes and geometry records for the device",
+        "C: measured clock, latency and synchronisation characterisation",
+        "D: empirical signal-integrity study with real fault occurrences",
+        "E: method comparison on measured data with accepted sensitivity bounds",
+        "F: device-specific reconstruction checked against a criterion measure",
+        "G: protocol event detection checked against adjudicated events",
+        "H: metric-definition review against the protocol literature",
+        "I: measurement-uncertainty budget from device metrology",
+        "J: independent reference implementation or empirical criterion",
+        "K: fixtures covering measured fault classes",
+        "L: paired measured cross-device agreement study (at least 20 independent subjects)",
+        "M: seeded bundle chain with provenance for every processing stage",
+        "O: sourced limitation statement reviewed by a domain expert",
+        "blocker: Engine verified on analytical isometric controls (RES-696); measured calibration, rig compliance and temperature behaviour remain unqualified (RES-694)",
+        "blocker: Load-cell versus force-plate IMTP agreement is analytical only (RES-703)"
+      ],
+      "lpt_encoder.encoder": [
+        "A: audited native raw-data acquisition from the device",
+        "B: measured calibration, axes and geometry records for the device",
+        "C: measured clock, latency and synchronisation characterisation",
+        "D: empirical signal-integrity study with real fault occurrences",
+        "E: method comparison on measured data with accepted sensitivity bounds",
+        "F: device-specific reconstruction checked against a criterion measure",
+        "G: protocol event detection checked against adjudicated events",
+        "H: metric-definition review against the protocol literature",
+        "I: measurement-uncertainty budget from device metrology",
+        "J: independent reference implementation or empirical criterion",
+        "K: fixtures covering measured fault classes",
+        "L: paired measured cross-device agreement study (at least 20 independent subjects)",
+        "M: seeded bundle chain with provenance for every processing stage",
+        "O: sourced limitation statement reviewed by a domain expert",
+        "blocker: Engine verified on analytical controls (RES-695); measured counts-per-metre, quantization and attachment validity remain unqualified (RES-694)",
+        "blocker: Cross-device agreement is analytical only (RES-703)"
+      ],
+      "lpt_encoder.lpt": [
+        "A: audited native raw-data acquisition from the device",
+        "B: measured calibration, axes and geometry records for the device",
+        "C: measured clock, latency and synchronisation characterisation",
+        "D: empirical signal-integrity study with real fault occurrences",
+        "E: method comparison on measured data with accepted sensitivity bounds",
+        "F: device-specific reconstruction checked against a criterion measure",
+        "G: protocol event detection checked against adjudicated events",
+        "H: metric-definition review against the protocol literature",
+        "I: measurement-uncertainty budget from device metrology",
+        "J: independent reference implementation or empirical criterion",
+        "K: fixtures covering measured fault classes",
+        "L: paired measured cross-device agreement study (at least 20 independent subjects)",
+        "M: seeded bundle chain with provenance for every processing stage",
+        "O: sourced limitation statement reviewed by a domain expert",
+        "blocker: Engine verified on analytical controls (RES-695); measured cable geometry, calibration and attachment-versus-COM validity remain unqualified (RES-694)",
+        "blocker: Cross-device agreement with force plates is analytical only (RES-703)"
+      ],
+      "nordic_hip.hip": [
+        "A: audited native raw-data acquisition from the device",
+        "B: measured calibration, axes and geometry records for the device",
+        "C: measured clock, latency and synchronisation characterisation",
+        "D: empirical signal-integrity study with real fault occurrences",
+        "E: method comparison on measured data with accepted sensitivity bounds",
+        "F: device-specific reconstruction checked against a criterion measure",
+        "G: protocol event detection checked against adjudicated events",
+        "H: metric-definition review against the protocol literature",
+        "I: measurement-uncertainty budget from device metrology",
+        "J: independent reference implementation or empirical criterion",
+        "K: fixtures covering measured fault classes",
+        "L: paired measured cross-device agreement study (at least 20 independent subjects)",
+        "M: seeded bundle chain with provenance for every processing stage",
+        "O: sourced limitation statement reviewed by a domain expert",
+        "blocker: Engine verified on analytical isometric controls (RES-697); squeeze protocol geometry validity and device metrology remain unqualified (RES-694)",
+        "blocker: G/H assessment qualification remains RES-672"
+      ],
+      "nordic_hip.nordic": [
+        "A: audited native raw-data acquisition from the device",
+        "B: measured calibration, axes and geometry records for the device",
+        "C: measured clock, latency and synchronisation characterisation",
+        "D: empirical signal-integrity study with real fault occurrences",
+        "E: method comparison on measured data with accepted sensitivity bounds",
+        "F: device-specific reconstruction checked against a criterion measure",
+        "G: protocol event detection checked against adjudicated events",
+        "H: metric-definition review against the protocol literature",
+        "I: measurement-uncertainty budget from device metrology",
+        "J: independent reference implementation or empirical criterion",
+        "K: fixtures covering measured fault classes",
+        "L: paired measured cross-device agreement study (at least 20 independent subjects)",
+        "M: seeded bundle chain with provenance for every processing stage",
+        "O: sourced limitation statement reviewed by a domain expert",
+        "blocker: Engine verified on analytical eccentric controls (RES-697); athlete-level validity, strap/lever geometry measurements and vendor-corrected versus raw agreement remain unqualified (RES-694/703)",
+        "blocker: G/H assessment qualification remains RES-672"
+      ],
+      "radar_laser.laser": [
+        "A: audited native raw-data acquisition from the device",
+        "B: measured calibration, axes and geometry records for the device",
+        "C: measured clock, latency and synchronisation characterisation",
+        "D: empirical signal-integrity study with real fault occurrences",
+        "E: method comparison on measured data with accepted sensitivity bounds",
+        "F: device-specific reconstruction checked against a criterion measure",
+        "G: protocol event detection checked against adjudicated events",
+        "H: metric-definition review against the protocol literature",
+        "I: measurement-uncertainty budget from device metrology",
+        "J: independent reference implementation or empirical criterion",
+        "K: fixtures covering measured fault classes",
+        "L: paired measured cross-device agreement study (at least 20 independent subjects)",
+        "M: seeded bundle chain with provenance for every processing stage",
+        "O: sourced limitation statement reviewed by a domain expert",
+        "blocker: Engine verified on analytical sprint controls (RES-699); no raw laser validity or range-noise study (RES-694)",
+        "blocker: Range-rate versus Doppler agreement is analytical only (RES-703)"
+      ],
+      "radar_laser.radar": [
+        "A: audited native raw-data acquisition from the device",
+        "B: measured calibration, axes and geometry records for the device",
+        "C: measured clock, latency and synchronisation characterisation",
+        "D: empirical signal-integrity study with real fault occurrences",
+        "E: method comparison on measured data with accepted sensitivity bounds",
+        "F: device-specific reconstruction checked against a criterion measure",
+        "G: protocol event detection checked against adjudicated events",
+        "H: metric-definition review against the protocol literature",
+        "I: measurement-uncertainty budget from device metrology",
+        "J: independent reference implementation or empirical criterion",
+        "K: fixtures covering measured fault classes",
+        "L: paired measured cross-device agreement study (at least 20 independent subjects)",
+        "M: seeded bundle chain with provenance for every processing stage",
+        "O: sourced limitation statement reviewed by a domain expert",
+        "blocker: Engine verified on analytical sprint controls (RES-699); no raw radar validity or latency study (RES-694)",
+        "blocker: Doppler versus positional/gate agreement is analytical only (RES-703)"
+      ],
+      "timing_contact.contact": [
+        "A: audited native raw-data acquisition from the device",
+        "B: measured calibration, axes and geometry records for the device",
+        "C: measured clock, latency and synchronisation characterisation",
+        "D: empirical signal-integrity study with real fault occurrences",
+        "E: method comparison on measured data with accepted sensitivity bounds",
+        "F: device-specific reconstruction checked against a criterion measure",
+        "G: protocol event detection checked against adjudicated events",
+        "H: metric-definition review against the protocol literature",
+        "I: measurement-uncertainty budget from device metrology",
+        "J: independent reference implementation or empirical criterion",
+        "K: fixtures covering measured fault classes",
+        "L: paired measured cross-device agreement study (at least 20 independent subjects)",
+        "M: seeded bundle chain with provenance for every processing stage",
+        "O: sourced limitation statement reviewed by a domain expert",
+        "blocker: Contact-system switching thresholds and latency bounds need empirical metrology (RES-694)",
+        "blocker: Assessment-specific validity and force-platform/IMU agreement remain open (RES-671/703)"
+      ],
+      "timing_contact.gates": [
+        "A: audited native raw-data acquisition from the device",
+        "B: measured calibration, axes and geometry records for the device",
+        "C: measured clock, latency and synchronisation characterisation",
+        "D: empirical signal-integrity study with real fault occurrences",
+        "E: method comparison on measured data with accepted sensitivity bounds",
+        "F: device-specific reconstruction checked against a criterion measure",
+        "G: protocol event detection checked against adjudicated events",
+        "H: metric-definition review against the protocol literature",
+        "I: measurement-uncertainty budget from device metrology",
+        "J: independent reference implementation or empirical criterion",
+        "K: fixtures covering measured fault classes",
+        "L: paired measured cross-device agreement study (at least 20 independent subjects)",
+        "M: seeded bundle chain with provenance for every processing stage",
+        "O: sourced limitation statement reviewed by a domain expert",
+        "blocker: Gate geometry, trigger validity and timing-error bounds need empirical metrology (RES-694)",
+        "blocker: Sprint assessment variants and cross-device agreement remain open (RES-673/703)"
+      ]
+    },
+    "by_state": {
+      "SPECIFIED": 15
+    },
+    "engineering_verified": 0,
+    "passed": false,
+    "structural_problems": [],
+    "total_subfamilies": 15
+  },
+  "states": [
+    {
+      "blockers": [
+        "Dual production processing verified on analytical controls (RES-670); actual bilateral calibration, cross-talk, assignment and timing remain unqualified",
+        "G/H assessment and L agreement qualification remain open (RES-671/672/703/675)"
+      ],
+      "family": "force_platform",
+      "independent_reference": true,
+      "non_analytical_reference": false,
+      "owners": {
+        "A": "RES-670",
+        "B": "RES-670",
+        "C": "RES-693",
+        "D": "RES-670",
+        "E": "RES-670",
+        "F": "RES-670",
+        "G": "RES-671",
+        "H": "RES-671",
+        "I": "RES-670",
+        "J": "RES-669",
+        "K": "RES-669",
+        "L": "RES-703",
+        "M": "RES-675",
+        "N": "RES-680",
+        "O": "RES-670"
+      },
+      "ratings": {
+        "A": "specified",
+        "B": "specified",
+        "C": "specified",
+        "D": "partial",
+        "E": "partial",
+        "F": "partial",
+        "G": "partial",
+        "H": "partial",
+        "I": "partial",
+        "J": "partial",
+        "K": "partial",
+        "L": "partial",
+        "M": "partial",
+        "N": "absent",
+        "O": "partial"
+      },
+      "required_experiments": {
+        "A": "audited native raw-data acquisition from the device",
+        "B": "measured calibration, axes and geometry records for the device",
+        "C": "measured clock, latency and synchronisation characterisation",
+        "D": "empirical signal-integrity study with real fault occurrences",
+        "E": "method comparison on measured data with accepted sensitivity bounds",
+        "F": "device-specific reconstruction checked against a criterion measure",
+        "G": "protocol event detection checked against adjudicated events",
+        "H": "metric-definition review against the protocol literature",
+        "I": "measurement-uncertainty budget from device metrology",
+        "J": "independent reference implementation or empirical criterion",
+        "K": "fixtures covering measured fault classes",
+        "L": "paired measured cross-device agreement study (at least 20 independent subjects)",
+        "M": "seeded bundle chain with provenance for every processing stage",
+        "O": "sourced limitation statement reviewed by a domain expert"
+      },
+      "state": "SPECIFIED",
+      "subfamily": "force_platform.dual",
+      "unverified_m3": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H",
+        "I",
+        "J",
+        "K",
+        "L",
+        "M",
+        "O"
+      ],
+      "verified_m3": []
+    },
+    {
+      "blockers": [
+        "Production engine and numerical checks available (RES-670); G/H assessment qualification remains RES-671/672",
+        "Measured-device calibration/compliance/uncertainty and L agreement evidence remain open (RES-694/703/675)"
+      ],
+      "family": "force_platform",
+      "independent_reference": true,
+      "non_analytical_reference": false,
+      "owners": {
+        "A": "RES-670",
+        "B": "RES-670",
+        "C": "RES-693",
+        "D": "RES-670",
+        "E": "RES-670",
+        "F": "RES-670",
+        "G": "RES-671",
+        "H": "RES-671",
+        "I": "RES-670",
+        "J": "RES-669",
+        "K": "RES-669",
+        "L": "RES-703",
+        "M": "RES-675",
+        "N": "RES-680",
+        "O": "RES-670"
+      },
+      "ratings": {
+        "A": "specified",
+        "B": "specified",
+        "C": "specified",
+        "D": "partial",
+        "E": "partial",
+        "F": "partial",
+        "G": "partial",
+        "H": "partial",
+        "I": "partial",
+        "J": "partial",
+        "K": "partial",
+        "L": "partial",
+        "M": "partial",
+        "N": "absent",
+        "O": "partial"
+      },
+      "required_experiments": {
+        "A": "audited native raw-data acquisition from the device",
+        "B": "measured calibration, axes and geometry records for the device",
+        "C": "measured clock, latency and synchronisation characterisation",
+        "D": "empirical signal-integrity study with real fault occurrences",
+        "E": "method comparison on measured data with accepted sensitivity bounds",
+        "F": "device-specific reconstruction checked against a criterion measure",
+        "G": "protocol event detection checked against adjudicated events",
+        "H": "metric-definition review against the protocol literature",
+        "I": "measurement-uncertainty budget from device metrology",
+        "J": "independent reference implementation or empirical criterion",
+        "K": "fixtures covering measured fault classes",
+        "L": "paired measured cross-device agreement study (at least 20 independent subjects)",
+        "M": "seeded bundle chain with provenance for every processing stage",
+        "O": "sourced limitation statement reviewed by a domain expert"
+      },
+      "state": "SPECIFIED",
+      "subfamily": "force_platform.single",
+      "unverified_m3": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H",
+        "I",
+        "J",
+        "K",
+        "L",
+        "M",
+        "O"
+      ],
+      "verified_m3": []
+    },
+    {
+      "blockers": [
+        "Engine verified on analytical tracks (RES-700); audited native GNSS data and empirical latency, HDOP and multipath evidence remain open (RES-694)",
+        "Positional versus Doppler/radar agreement is analytical only (RES-703)"
+      ],
+      "family": "gnss_lps",
+      "independent_reference": true,
+      "non_analytical_reference": false,
+      "owners": {
+        "A": "RES-693",
+        "B": "RES-700",
+        "C": "RES-693",
+        "D": "RES-700",
+        "E": "RES-700",
+        "F": "RES-700",
+        "G": "RES-673",
+        "H": "RES-673",
+        "I": "RES-700",
+        "J": "RES-669",
+        "K": "RES-669",
+        "L": "RES-703",
+        "M": "RES-700",
+        "N": "RES-704",
+        "O": "RES-700"
+      },
+      "ratings": {
+        "A": "specified",
+        "B": "specified",
+        "C": "specified",
+        "D": "partial",
+        "E": "partial",
+        "F": "partial",
+        "G": "partial",
+        "H": "partial",
+        "I": "partial",
+        "J": "partial",
+        "K": "partial",
+        "L": "partial",
+        "M": "partial",
+        "N": "absent",
+        "O": "partial"
+      },
+      "required_experiments": {
+        "A": "audited native raw-data acquisition from the device",
+        "B": "measured calibration, axes and geometry records for the device",
+        "C": "measured clock, latency and synchronisation characterisation",
+        "D": "empirical signal-integrity study with real fault occurrences",
+        "E": "method comparison on measured data with accepted sensitivity bounds",
+        "F": "device-specific reconstruction checked against a criterion measure",
+        "G": "protocol event detection checked against adjudicated events",
+        "H": "metric-definition review against the protocol literature",
+        "I": "measurement-uncertainty budget from device metrology",
+        "J": "independent reference implementation or empirical criterion",
+        "K": "fixtures covering measured fault classes",
+        "L": "paired measured cross-device agreement study (at least 20 independent subjects)",
+        "M": "seeded bundle chain with provenance for every processing stage",
+        "O": "sourced limitation statement reviewed by a domain expert"
+      },
+      "state": "SPECIFIED",
+      "subfamily": "gnss_lps.gnss",
+      "unverified_m3": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H",
+        "I",
+        "J",
+        "K",
+        "L",
+        "M",
+        "O"
+      ],
+      "verified_m3": []
+    },
+    {
+      "blockers": [
+        "Engine verified on analytical tracks (RES-700); audited native LPS data, anchor survey and latency evidence remain open (RES-694)",
+        "Positional versus radar agreement is analytical only (RES-703)"
+      ],
+      "family": "gnss_lps",
+      "independent_reference": true,
+      "non_analytical_reference": false,
+      "owners": {
+        "A": "RES-693",
+        "B": "RES-700",
+        "C": "RES-693",
+        "D": "RES-700",
+        "E": "RES-700",
+        "F": "RES-700",
+        "G": "RES-673",
+        "H": "RES-673",
+        "I": "RES-700",
+        "J": "RES-669",
+        "K": "RES-669",
+        "L": "RES-703",
+        "M": "RES-700",
+        "N": "RES-704",
+        "O": "RES-700"
+      },
+      "ratings": {
+        "A": "specified",
+        "B": "specified",
+        "C": "specified",
+        "D": "partial",
+        "E": "partial",
+        "F": "partial",
+        "G": "partial",
+        "H": "partial",
+        "I": "partial",
+        "J": "partial",
+        "K": "partial",
+        "L": "partial",
+        "M": "partial",
+        "N": "absent",
+        "O": "partial"
+      },
+      "required_experiments": {
+        "A": "audited native raw-data acquisition from the device",
+        "B": "measured calibration, axes and geometry records for the device",
+        "C": "measured clock, latency and synchronisation characterisation",
+        "D": "empirical signal-integrity study with real fault occurrences",
+        "E": "method comparison on measured data with accepted sensitivity bounds",
+        "F": "device-specific reconstruction checked against a criterion measure",
+        "G": "protocol event detection checked against adjudicated events",
+        "H": "metric-definition review against the protocol literature",
+        "I": "measurement-uncertainty budget from device metrology",
+        "J": "independent reference implementation or empirical criterion",
+        "K": "fixtures covering measured fault classes",
+        "L": "paired measured cross-device agreement study (at least 20 independent subjects)",
+        "M": "seeded bundle chain with provenance for every processing stage",
+        "O": "sourced limitation statement reviewed by a domain expert"
+      },
+      "state": "SPECIFIED",
+      "subfamily": "gnss_lps.lps",
+      "unverified_m3": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H",
+        "I",
+        "J",
+        "K",
+        "L",
+        "M",
+        "O"
+      ],
+      "verified_m3": []
+    },
+    {
+      "blockers": [
+        "Engine verified on analytical rigid-body and trajectory controls (RES-701); sensor placement, soft-tissue artefact, calibration and flight-time agreement with force plates remain unqualified (RES-694/703)",
+        "G/H assessment qualification remains RES-671"
+      ],
+      "family": "imu",
+      "independent_reference": true,
+      "non_analytical_reference": false,
+      "owners": {
+        "A": "RES-693",
+        "B": "RES-701",
+        "C": "RES-693",
+        "D": "RES-701",
+        "E": "RES-701",
+        "F": "RES-701",
+        "G": "RES-671",
+        "H": "RES-671",
+        "I": "RES-701",
+        "J": "RES-669",
+        "K": "RES-669",
+        "L": "RES-703",
+        "M": "RES-701",
+        "N": "RES-704",
+        "O": "RES-701"
+      },
+      "ratings": {
+        "A": "specified",
+        "B": "specified",
+        "C": "specified",
+        "D": "partial",
+        "E": "partial",
+        "F": "partial",
+        "G": "partial",
+        "H": "partial",
+        "I": "partial",
+        "J": "partial",
+        "K": "partial",
+        "L": "partial",
+        "M": "partial",
+        "N": "absent",
+        "O": "partial"
+      },
+      "required_experiments": {
+        "A": "audited native raw-data acquisition from the device",
+        "B": "measured calibration, axes and geometry records for the device",
+        "C": "measured clock, latency and synchronisation characterisation",
+        "D": "empirical signal-integrity study with real fault occurrences",
+        "E": "method comparison on measured data with accepted sensitivity bounds",
+        "F": "device-specific reconstruction checked against a criterion measure",
+        "G": "protocol event detection checked against adjudicated events",
+        "H": "metric-definition review against the protocol literature",
+        "I": "measurement-uncertainty budget from device metrology",
+        "J": "independent reference implementation or empirical criterion",
+        "K": "fixtures covering measured fault classes",
+        "L": "paired measured cross-device agreement study (at least 20 independent subjects)",
+        "M": "seeded bundle chain with provenance for every processing stage",
+        "O": "sourced limitation statement reviewed by a domain expert"
+      },
+      "state": "SPECIFIED",
+      "subfamily": "imu.inertial",
+      "unverified_m3": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H",
+        "I",
+        "J",
+        "K",
+        "L",
+        "M",
+        "O"
+      ],
+      "verified_m3": []
+    },
+    {
+      "blockers": [
+        "Engine verified on analytical isometric controls (RES-696); no isometric rig compliance or validity source (RES-694)",
+        "Rig versus plate agreement is analytical only (RES-703)"
+      ],
+      "family": "load_cell_isometric",
+      "independent_reference": true,
+      "non_analytical_reference": false,
+      "owners": {
+        "A": "RES-693",
+        "B": "RES-696",
+        "C": "RES-693",
+        "D": "RES-696",
+        "E": "RES-696",
+        "F": "RES-696",
+        "G": "RES-672",
+        "H": "RES-672",
+        "I": "RES-696",
+        "J": "RES-669",
+        "K": "RES-669",
+        "L": "RES-703",
+        "M": "RES-696",
+        "N": "RES-704",
+        "O": "RES-696"
+      },
+      "ratings": {
+        "A": "specified",
+        "B": "specified",
+        "C": "specified",
+        "D": "partial",
+        "E": "partial",
+        "F": "partial",
+        "G": "partial",
+        "H": "partial",
+        "I": "partial",
+        "J": "partial",
+        "K": "partial",
+        "L": "partial",
+        "M": "partial",
+        "N": "absent",
+        "O": "partial"
+      },
+      "required_experiments": {
+        "A": "audited native raw-data acquisition from the device",
+        "B": "measured calibration, axes and geometry records for the device",
+        "C": "measured clock, latency and synchronisation characterisation",
+        "D": "empirical signal-integrity study with real fault occurrences",
+        "E": "method comparison on measured data with accepted sensitivity bounds",
+        "F": "device-specific reconstruction checked against a criterion measure",
+        "G": "protocol event detection checked against adjudicated events",
+        "H": "metric-definition review against the protocol literature",
+        "I": "measurement-uncertainty budget from device metrology",
+        "J": "independent reference implementation or empirical criterion",
+        "K": "fixtures covering measured fault classes",
+        "L": "paired measured cross-device agreement study (at least 20 independent subjects)",
+        "M": "seeded bundle chain with provenance for every processing stage",
+        "O": "sourced limitation statement reviewed by a domain expert"
+      },
+      "state": "SPECIFIED",
+      "subfamily": "load_cell_isometric.isometric_rig",
+      "unverified_m3": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H",
+        "I",
+        "J",
+        "K",
+        "L",
+        "M",
+        "O"
+      ],
+      "verified_m3": []
+    },
+    {
+      "blockers": [
+        "Engine verified on analytical isometric controls (RES-696); measured calibration, rig compliance and temperature behaviour remain unqualified (RES-694)",
+        "Load-cell versus force-plate IMTP agreement is analytical only (RES-703)"
+      ],
+      "family": "load_cell_isometric",
+      "independent_reference": true,
+      "non_analytical_reference": false,
+      "owners": {
+        "A": "RES-693",
+        "B": "RES-696",
+        "C": "RES-693",
+        "D": "RES-696",
+        "E": "RES-696",
+        "F": "RES-696",
+        "G": "RES-672",
+        "H": "RES-672",
+        "I": "RES-696",
+        "J": "RES-669",
+        "K": "RES-669",
+        "L": "RES-703",
+        "M": "RES-696",
+        "N": "RES-704",
+        "O": "RES-696"
+      },
+      "ratings": {
+        "A": "specified",
+        "B": "specified",
+        "C": "specified",
+        "D": "partial",
+        "E": "partial",
+        "F": "partial",
+        "G": "partial",
+        "H": "partial",
+        "I": "partial",
+        "J": "partial",
+        "K": "partial",
+        "L": "partial",
+        "M": "partial",
+        "N": "absent",
+        "O": "partial"
+      },
+      "required_experiments": {
+        "A": "audited native raw-data acquisition from the device",
+        "B": "measured calibration, axes and geometry records for the device",
+        "C": "measured clock, latency and synchronisation characterisation",
+        "D": "empirical signal-integrity study with real fault occurrences",
+        "E": "method comparison on measured data with accepted sensitivity bounds",
+        "F": "device-specific reconstruction checked against a criterion measure",
+        "G": "protocol event detection checked against adjudicated events",
+        "H": "metric-definition review against the protocol literature",
+        "I": "measurement-uncertainty budget from device metrology",
+        "J": "independent reference implementation or empirical criterion",
+        "K": "fixtures covering measured fault classes",
+        "L": "paired measured cross-device agreement study (at least 20 independent subjects)",
+        "M": "seeded bundle chain with provenance for every processing stage",
+        "O": "sourced limitation statement reviewed by a domain expert"
+      },
+      "state": "SPECIFIED",
+      "subfamily": "load_cell_isometric.load_cell",
+      "unverified_m3": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H",
+        "I",
+        "J",
+        "K",
+        "L",
+        "M",
+        "O"
+      ],
+      "verified_m3": []
+    },
+    {
+      "blockers": [
+        "Engine verified on analytical controls (RES-695); measured counts-per-metre, quantization and attachment validity remain unqualified (RES-694)",
+        "Cross-device agreement is analytical only (RES-703)"
+      ],
+      "family": "lpt_encoder",
+      "independent_reference": true,
+      "non_analytical_reference": false,
+      "owners": {
+        "A": "RES-693",
+        "B": "RES-695",
+        "C": "RES-693",
+        "D": "RES-695",
+        "E": "RES-695",
+        "F": "RES-695",
+        "G": "RES-671",
+        "H": "RES-671",
+        "I": "RES-695",
+        "J": "RES-669",
+        "K": "RES-669",
+        "L": "RES-703",
+        "M": "RES-695",
+        "N": "RES-704",
+        "O": "RES-695"
+      },
+      "ratings": {
+        "A": "specified",
+        "B": "specified",
+        "C": "specified",
+        "D": "partial",
+        "E": "partial",
+        "F": "partial",
+        "G": "partial",
+        "H": "partial",
+        "I": "partial",
+        "J": "partial",
+        "K": "partial",
+        "L": "partial",
+        "M": "partial",
+        "N": "absent",
+        "O": "partial"
+      },
+      "required_experiments": {
+        "A": "audited native raw-data acquisition from the device",
+        "B": "measured calibration, axes and geometry records for the device",
+        "C": "measured clock, latency and synchronisation characterisation",
+        "D": "empirical signal-integrity study with real fault occurrences",
+        "E": "method comparison on measured data with accepted sensitivity bounds",
+        "F": "device-specific reconstruction checked against a criterion measure",
+        "G": "protocol event detection checked against adjudicated events",
+        "H": "metric-definition review against the protocol literature",
+        "I": "measurement-uncertainty budget from device metrology",
+        "J": "independent reference implementation or empirical criterion",
+        "K": "fixtures covering measured fault classes",
+        "L": "paired measured cross-device agreement study (at least 20 independent subjects)",
+        "M": "seeded bundle chain with provenance for every processing stage",
+        "O": "sourced limitation statement reviewed by a domain expert"
+      },
+      "state": "SPECIFIED",
+      "subfamily": "lpt_encoder.encoder",
+      "unverified_m3": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H",
+        "I",
+        "J",
+        "K",
+        "L",
+        "M",
+        "O"
+      ],
+      "verified_m3": []
+    },
+    {
+      "blockers": [
+        "Engine verified on analytical controls (RES-695); measured cable geometry, calibration and attachment-versus-COM validity remain unqualified (RES-694)",
+        "Cross-device agreement with force plates is analytical only (RES-703)"
+      ],
+      "family": "lpt_encoder",
+      "independent_reference": true,
+      "non_analytical_reference": false,
+      "owners": {
+        "A": "RES-693",
+        "B": "RES-695",
+        "C": "RES-693",
+        "D": "RES-695",
+        "E": "RES-695",
+        "F": "RES-695",
+        "G": "RES-671",
+        "H": "RES-671",
+        "I": "RES-695",
+        "J": "RES-669",
+        "K": "RES-669",
+        "L": "RES-703",
+        "M": "RES-695",
+        "N": "RES-704",
+        "O": "RES-695"
+      },
+      "ratings": {
+        "A": "specified",
+        "B": "specified",
+        "C": "specified",
+        "D": "partial",
+        "E": "partial",
+        "F": "partial",
+        "G": "partial",
+        "H": "partial",
+        "I": "partial",
+        "J": "partial",
+        "K": "partial",
+        "L": "partial",
+        "M": "partial",
+        "N": "absent",
+        "O": "partial"
+      },
+      "required_experiments": {
+        "A": "audited native raw-data acquisition from the device",
+        "B": "measured calibration, axes and geometry records for the device",
+        "C": "measured clock, latency and synchronisation characterisation",
+        "D": "empirical signal-integrity study with real fault occurrences",
+        "E": "method comparison on measured data with accepted sensitivity bounds",
+        "F": "device-specific reconstruction checked against a criterion measure",
+        "G": "protocol event detection checked against adjudicated events",
+        "H": "metric-definition review against the protocol literature",
+        "I": "measurement-uncertainty budget from device metrology",
+        "J": "independent reference implementation or empirical criterion",
+        "K": "fixtures covering measured fault classes",
+        "L": "paired measured cross-device agreement study (at least 20 independent subjects)",
+        "M": "seeded bundle chain with provenance for every processing stage",
+        "O": "sourced limitation statement reviewed by a domain expert"
+      },
+      "state": "SPECIFIED",
+      "subfamily": "lpt_encoder.lpt",
+      "unverified_m3": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H",
+        "I",
+        "J",
+        "K",
+        "L",
+        "M",
+        "O"
+      ],
+      "verified_m3": []
+    },
+    {
+      "blockers": [
+        "Engine verified on analytical isometric controls (RES-697); squeeze protocol geometry validity and device metrology remain unqualified (RES-694)",
+        "G/H assessment qualification remains RES-672"
+      ],
+      "family": "nordic_hip",
+      "independent_reference": true,
+      "non_analytical_reference": false,
+      "owners": {
+        "A": "RES-697",
+        "B": "RES-697",
+        "C": "RES-693",
+        "D": "RES-697",
+        "E": "RES-697",
+        "F": "RES-697",
+        "G": "RES-672",
+        "H": "RES-672",
+        "I": "RES-697",
+        "J": "RES-669",
+        "K": "RES-669",
+        "L": "RES-703",
+        "M": "RES-697",
+        "N": "RES-681",
+        "O": "RES-697"
+      },
+      "ratings": {
+        "A": "specified",
+        "B": "specified",
+        "C": "specified",
+        "D": "partial",
+        "E": "partial",
+        "F": "partial",
+        "G": "partial",
+        "H": "partial",
+        "I": "partial",
+        "J": "partial",
+        "K": "partial",
+        "L": "partial",
+        "M": "partial",
+        "N": "absent",
+        "O": "partial"
+      },
+      "required_experiments": {
+        "A": "audited native raw-data acquisition from the device",
+        "B": "measured calibration, axes and geometry records for the device",
+        "C": "measured clock, latency and synchronisation characterisation",
+        "D": "empirical signal-integrity study with real fault occurrences",
+        "E": "method comparison on measured data with accepted sensitivity bounds",
+        "F": "device-specific reconstruction checked against a criterion measure",
+        "G": "protocol event detection checked against adjudicated events",
+        "H": "metric-definition review against the protocol literature",
+        "I": "measurement-uncertainty budget from device metrology",
+        "J": "independent reference implementation or empirical criterion",
+        "K": "fixtures covering measured fault classes",
+        "L": "paired measured cross-device agreement study (at least 20 independent subjects)",
+        "M": "seeded bundle chain with provenance for every processing stage",
+        "O": "sourced limitation statement reviewed by a domain expert"
+      },
+      "state": "SPECIFIED",
+      "subfamily": "nordic_hip.hip",
+      "unverified_m3": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H",
+        "I",
+        "J",
+        "K",
+        "L",
+        "M",
+        "O"
+      ],
+      "verified_m3": []
+    },
+    {
+      "blockers": [
+        "Engine verified on analytical eccentric controls (RES-697); athlete-level validity, strap/lever geometry measurements and vendor-corrected versus raw agreement remain unqualified (RES-694/703)",
+        "G/H assessment qualification remains RES-672"
+      ],
+      "family": "nordic_hip",
+      "independent_reference": true,
+      "non_analytical_reference": false,
+      "owners": {
+        "A": "RES-697",
+        "B": "RES-697",
+        "C": "RES-693",
+        "D": "RES-697",
+        "E": "RES-697",
+        "F": "RES-697",
+        "G": "RES-672",
+        "H": "RES-672",
+        "I": "RES-697",
+        "J": "RES-669",
+        "K": "RES-669",
+        "L": "RES-703",
+        "M": "RES-697",
+        "N": "RES-681",
+        "O": "RES-697"
+      },
+      "ratings": {
+        "A": "specified",
+        "B": "specified",
+        "C": "specified",
+        "D": "partial",
+        "E": "partial",
+        "F": "partial",
+        "G": "partial",
+        "H": "partial",
+        "I": "partial",
+        "J": "partial",
+        "K": "partial",
+        "L": "partial",
+        "M": "partial",
+        "N": "absent",
+        "O": "partial"
+      },
+      "required_experiments": {
+        "A": "audited native raw-data acquisition from the device",
+        "B": "measured calibration, axes and geometry records for the device",
+        "C": "measured clock, latency and synchronisation characterisation",
+        "D": "empirical signal-integrity study with real fault occurrences",
+        "E": "method comparison on measured data with accepted sensitivity bounds",
+        "F": "device-specific reconstruction checked against a criterion measure",
+        "G": "protocol event detection checked against adjudicated events",
+        "H": "metric-definition review against the protocol literature",
+        "I": "measurement-uncertainty budget from device metrology",
+        "J": "independent reference implementation or empirical criterion",
+        "K": "fixtures covering measured fault classes",
+        "L": "paired measured cross-device agreement study (at least 20 independent subjects)",
+        "M": "seeded bundle chain with provenance for every processing stage",
+        "O": "sourced limitation statement reviewed by a domain expert"
+      },
+      "state": "SPECIFIED",
+      "subfamily": "nordic_hip.nordic",
+      "unverified_m3": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H",
+        "I",
+        "J",
+        "K",
+        "L",
+        "M",
+        "O"
+      ],
+      "verified_m3": []
+    },
+    {
+      "blockers": [
+        "Engine verified on analytical sprint controls (RES-699); no raw laser validity or range-noise study (RES-694)",
+        "Range-rate versus Doppler agreement is analytical only (RES-703)"
+      ],
+      "family": "radar_laser",
+      "independent_reference": true,
+      "non_analytical_reference": false,
+      "owners": {
+        "A": "RES-693",
+        "B": "RES-699",
+        "C": "RES-693",
+        "D": "RES-699",
+        "E": "RES-699",
+        "F": "RES-699",
+        "G": "RES-673",
+        "H": "RES-673",
+        "I": "RES-699",
+        "J": "RES-669",
+        "K": "RES-669",
+        "L": "RES-703",
+        "M": "RES-699",
+        "N": "RES-681",
+        "O": "RES-699"
+      },
+      "ratings": {
+        "A": "specified",
+        "B": "specified",
+        "C": "specified",
+        "D": "partial",
+        "E": "partial",
+        "F": "partial",
+        "G": "partial",
+        "H": "partial",
+        "I": "partial",
+        "J": "partial",
+        "K": "partial",
+        "L": "partial",
+        "M": "partial",
+        "N": "absent",
+        "O": "partial"
+      },
+      "required_experiments": {
+        "A": "audited native raw-data acquisition from the device",
+        "B": "measured calibration, axes and geometry records for the device",
+        "C": "measured clock, latency and synchronisation characterisation",
+        "D": "empirical signal-integrity study with real fault occurrences",
+        "E": "method comparison on measured data with accepted sensitivity bounds",
+        "F": "device-specific reconstruction checked against a criterion measure",
+        "G": "protocol event detection checked against adjudicated events",
+        "H": "metric-definition review against the protocol literature",
+        "I": "measurement-uncertainty budget from device metrology",
+        "J": "independent reference implementation or empirical criterion",
+        "K": "fixtures covering measured fault classes",
+        "L": "paired measured cross-device agreement study (at least 20 independent subjects)",
+        "M": "seeded bundle chain with provenance for every processing stage",
+        "O": "sourced limitation statement reviewed by a domain expert"
+      },
+      "state": "SPECIFIED",
+      "subfamily": "radar_laser.laser",
+      "unverified_m3": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H",
+        "I",
+        "J",
+        "K",
+        "L",
+        "M",
+        "O"
+      ],
+      "verified_m3": []
+    },
+    {
+      "blockers": [
+        "Engine verified on analytical sprint controls (RES-699); no raw radar validity or latency study (RES-694)",
+        "Doppler versus positional/gate agreement is analytical only (RES-703)"
+      ],
+      "family": "radar_laser",
+      "independent_reference": true,
+      "non_analytical_reference": false,
+      "owners": {
+        "A": "RES-693",
+        "B": "RES-699",
+        "C": "RES-693",
+        "D": "RES-699",
+        "E": "RES-699",
+        "F": "RES-699",
+        "G": "RES-673",
+        "H": "RES-673",
+        "I": "RES-699",
+        "J": "RES-669",
+        "K": "RES-669",
+        "L": "RES-703",
+        "M": "RES-699",
+        "N": "RES-681",
+        "O": "RES-699"
+      },
+      "ratings": {
+        "A": "specified",
+        "B": "specified",
+        "C": "specified",
+        "D": "partial",
+        "E": "partial",
+        "F": "partial",
+        "G": "partial",
+        "H": "partial",
+        "I": "partial",
+        "J": "partial",
+        "K": "partial",
+        "L": "partial",
+        "M": "partial",
+        "N": "absent",
+        "O": "partial"
+      },
+      "required_experiments": {
+        "A": "audited native raw-data acquisition from the device",
+        "B": "measured calibration, axes and geometry records for the device",
+        "C": "measured clock, latency and synchronisation characterisation",
+        "D": "empirical signal-integrity study with real fault occurrences",
+        "E": "method comparison on measured data with accepted sensitivity bounds",
+        "F": "device-specific reconstruction checked against a criterion measure",
+        "G": "protocol event detection checked against adjudicated events",
+        "H": "metric-definition review against the protocol literature",
+        "I": "measurement-uncertainty budget from device metrology",
+        "J": "independent reference implementation or empirical criterion",
+        "K": "fixtures covering measured fault classes",
+        "L": "paired measured cross-device agreement study (at least 20 independent subjects)",
+        "M": "seeded bundle chain with provenance for every processing stage",
+        "O": "sourced limitation statement reviewed by a domain expert"
+      },
+      "state": "SPECIFIED",
+      "subfamily": "radar_laser.radar",
+      "unverified_m3": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H",
+        "I",
+        "J",
+        "K",
+        "L",
+        "M",
+        "O"
+      ],
+      "verified_m3": []
+    },
+    {
+      "blockers": [
+        "Contact-system switching thresholds and latency bounds need empirical metrology (RES-694)",
+        "Assessment-specific validity and force-platform/IMU agreement remain open (RES-671/703)"
+      ],
+      "family": "timing_contact",
+      "independent_reference": true,
+      "non_analytical_reference": false,
+      "owners": {
+        "A": "RES-693",
+        "B": "RES-698",
+        "C": "RES-693",
+        "D": "RES-698",
+        "E": "RES-698",
+        "F": "RES-698",
+        "G": "RES-671",
+        "H": "RES-673",
+        "I": "RES-698",
+        "J": "RES-669",
+        "K": "RES-669",
+        "L": "RES-703",
+        "M": "RES-698",
+        "N": "RES-681",
+        "O": "RES-698"
+      },
+      "ratings": {
+        "A": "specified",
+        "B": "specified",
+        "C": "specified",
+        "D": "partial",
+        "E": "partial",
+        "F": "partial",
+        "G": "partial",
+        "H": "partial",
+        "I": "partial",
+        "J": "partial",
+        "K": "partial",
+        "L": "partial",
+        "M": "partial",
+        "N": "absent",
+        "O": "partial"
+      },
+      "required_experiments": {
+        "A": "audited native raw-data acquisition from the device",
+        "B": "measured calibration, axes and geometry records for the device",
+        "C": "measured clock, latency and synchronisation characterisation",
+        "D": "empirical signal-integrity study with real fault occurrences",
+        "E": "method comparison on measured data with accepted sensitivity bounds",
+        "F": "device-specific reconstruction checked against a criterion measure",
+        "G": "protocol event detection checked against adjudicated events",
+        "H": "metric-definition review against the protocol literature",
+        "I": "measurement-uncertainty budget from device metrology",
+        "J": "independent reference implementation or empirical criterion",
+        "K": "fixtures covering measured fault classes",
+        "L": "paired measured cross-device agreement study (at least 20 independent subjects)",
+        "M": "seeded bundle chain with provenance for every processing stage",
+        "O": "sourced limitation statement reviewed by a domain expert"
+      },
+      "state": "SPECIFIED",
+      "subfamily": "timing_contact.contact",
+      "unverified_m3": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H",
+        "I",
+        "J",
+        "K",
+        "L",
+        "M",
+        "O"
+      ],
+      "verified_m3": []
+    },
+    {
+      "blockers": [
+        "Gate geometry, trigger validity and timing-error bounds need empirical metrology (RES-694)",
+        "Sprint assessment variants and cross-device agreement remain open (RES-673/703)"
+      ],
+      "family": "timing_contact",
+      "independent_reference": true,
+      "non_analytical_reference": false,
+      "owners": {
+        "A": "RES-693",
+        "B": "RES-698",
+        "C": "RES-693",
+        "D": "RES-698",
+        "E": "RES-698",
+        "F": "RES-698",
+        "G": "RES-671",
+        "H": "RES-673",
+        "I": "RES-698",
+        "J": "RES-669",
+        "K": "RES-669",
+        "L": "RES-703",
+        "M": "RES-698",
+        "N": "RES-681",
+        "O": "RES-698"
+      },
+      "ratings": {
+        "A": "specified",
+        "B": "specified",
+        "C": "specified",
+        "D": "partial",
+        "E": "partial",
+        "F": "partial",
+        "G": "partial",
+        "H": "partial",
+        "I": "partial",
+        "J": "partial",
+        "K": "partial",
+        "L": "partial",
+        "M": "partial",
+        "N": "absent",
+        "O": "partial"
+      },
+      "required_experiments": {
+        "A": "audited native raw-data acquisition from the device",
+        "B": "measured calibration, axes and geometry records for the device",
+        "C": "measured clock, latency and synchronisation characterisation",
+        "D": "empirical signal-integrity study with real fault occurrences",
+        "E": "method comparison on measured data with accepted sensitivity bounds",
+        "F": "device-specific reconstruction checked against a criterion measure",
+        "G": "protocol event detection checked against adjudicated events",
+        "H": "metric-definition review against the protocol literature",
+        "I": "measurement-uncertainty budget from device metrology",
+        "J": "independent reference implementation or empirical criterion",
+        "K": "fixtures covering measured fault classes",
+        "L": "paired measured cross-device agreement study (at least 20 independent subjects)",
+        "M": "seeded bundle chain with provenance for every processing stage",
+        "O": "sourced limitation statement reviewed by a domain expert"
+      },
+      "state": "SPECIFIED",
+      "subfamily": "timing_contact.gates",
+      "unverified_m3": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H",
+        "I",
+        "J",
+        "K",
+        "L",
+        "M",
+        "O"
+      ],
+      "verified_m3": []
+    }
+  ]
+}

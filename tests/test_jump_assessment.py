@@ -319,3 +319,49 @@ def test_latency_bias_shows_up_as_a_difference_not_a_correction() -> None:
         jumps.contact_system_estimates(object())
     with pytest.raises(ValueError, match="finite, positive and ordered"):
         jumps._flight_estimate("x", "y", 0.5, 0.6, 0.7)
+
+
+def _lpt_report(trajectory, hz: int = 200) -> dict:
+    from test_lpt_acquisition import LINE, LPT
+
+    from dynamisbench_soccer.engines.lpt import MethodSpec as LptMethod
+    from dynamisbench_soccer.engines.lpt import process as lpt_process
+
+    case = export_case("lpt_encoder.lpt", trajectory, test_id="cmj", hz=hz)
+    return lpt_process(case.observation, (LPT,), LINE, LptMethod(name="cubic_spline"))
+
+
+def test_lpt_heights_are_attachment_estimands_with_own_definitions() -> None:
+    motion = cmj()
+    heights = jumps.lpt_estimates(_lpt_report(motion))
+    apex_t = motion.takeoff_s() + motion.takeoff_velocity_m_s() / G
+    apex = motion.state(apex_t).displacement_m
+    assert heights.height_peak_displacement_above_start_m == pytest.approx(apex, abs=0.003)
+    assert heights.peak_velocity_m_s == pytest.approx(motion.takeoff_velocity_m_s(), abs=0.05)
+    assert heights.height_peak_velocity_m == pytest.approx(
+        motion.takeoff_velocity_m_s() ** 2 / (2 * G), abs=0.01
+    )
+    assert "not comparable" in heights.definitions["comparability"]
+    force = assess(_signal(cmj()), JumpSpec(protocol="cmj")).estimands["height_flight_time_m"]
+    assert heights.height_peak_displacement_above_start_m != pytest.approx(force, abs=1e-3)
+
+
+def test_lpt_cable_only_reports_refuse_jump_heights() -> None:
+    with pytest.raises(ValueError, match="cable displacement is not vertical"):
+        jumps.lpt_estimates({"estimand": "cable_displacement", "motion": {}})
+    with pytest.raises(ValueError, match="processed LPT report"):
+        jumps.lpt_estimates({"estimand": None})
+
+
+def test_filtered_engine_force_never_moves_contact_events() -> None:
+    raw = _signal(cmj())
+    filtered = _signal(cmj(), filter="butterworth", cutoff_hz=50)
+    a = assess(raw, JumpSpec(protocol="cmj"))
+    b = assess(filtered, JumpSpec(protocol="cmj"))
+    assert filtered.raw_force_n is not None
+    assert b.events["takeoff_s"] == a.events["takeoff_s"]
+    assert b.estimands["flight_time_s"] == a.estimands["flight_time_s"]
+    # The filtered kinetics change the take-off velocity only by the filter's edge smearing.
+    assert b.estimands["takeoff_velocity_m_s"] == pytest.approx(
+        a.estimands["takeoff_velocity_m_s"], abs=0.05
+    )
