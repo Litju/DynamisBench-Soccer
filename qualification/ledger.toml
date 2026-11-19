@@ -142,7 +142,7 @@ issue = "RES-700"
 engine_id = "gnss"
 methods = ["resample", "smooth"]
 ratings = { A = "specified", B = "specified", C = "specified", D = "absent", E = "absent", F = "absent", G = "absent", H = "absent", I = "absent", J = "partial", K = "partial", L = "absent", M = "absent", N = "absent", O = "absent" }
-blockers = ["Raw GNSS contract specified; no audited raw data or verified reconstruction"]
+blockers = ["RES-700 reference processing and synthetic checks implemented; independent acceptance, audited native GNSS and empirical clock/latency and signal-integrity evidence remain open", "Sprint assessment (RES-673) and cross-device agreement (RES-703) remain open"]
 
 [[subfamily]]
 id = "gnss_lps.lps"
@@ -153,7 +153,7 @@ issue = "RES-700"
 engine_id = "lps"
 methods = ["resample", "smooth"]
 ratings = { A = "specified", B = "specified", C = "specified", D = "absent", E = "absent", F = "absent", G = "absent", H = "absent", I = "absent", J = "partial", K = "partial", L = "absent", M = "absent", N = "absent", O = "absent" }
-blockers = ["LPS position/anchor contract specified; no audited raw data"]
+blockers = ["RES-700 reference processing and synthetic checks implemented; independent acceptance, audited native LPS and empirical clock/latency and anchor survey evidence remain open", "Sprint assessment (RES-673) and cross-device agreement (RES-703) remain open"]
 
 [[subfamily]]
 id = "imu.inertial"
@@ -1630,6 +1630,24 @@ rationale = "Device/protocol-scoped literature or unresolved metrology gap; not 
 [[evidence]]
 subfamily = "gnss_lps.gnss"
 dimension = "J"
+kind = "independent_test"
+ref = "repo:tests/test_gnss_lps_processing.py"
+issue = "RES-700"
+rationale = "RES-669 observations are compared with closed-form kinematics and separate analytical truth."
+independence_from = "gnss"
+implementation = "res669-spatial-and-closed-form"
+
+[[evidence]]
+subfamily = "gnss_lps.gnss"
+dimension = "K"
+kind = "test"
+ref = "repo:tests/test_gnss_lps_acquisition.py"
+issue = "RES-700"
+rationale = "RES-669 position faults and per-sample integrity controls are exercised at engine admission."
+
+[[evidence]]
+subfamily = "gnss_lps.gnss"
+dimension = "J"
 kind = "registry_claim"
 ref = "DEV-005"
 issue = "RES-694"
@@ -1714,6 +1732,24 @@ kind = "registry_gap"
 ref = "metrology.gnss_lps.lps"
 issue = "RES-694"
 rationale = "Device/protocol-scoped literature or unresolved metrology gap; not implementation verification or an interchangeability verdict."
+
+[[evidence]]
+subfamily = "gnss_lps.lps"
+dimension = "J"
+kind = "independent_test"
+ref = "repo:tests/test_gnss_lps_processing.py"
+issue = "RES-700"
+rationale = "RES-669 observations are compared with closed-form kinematics and separate analytical truth."
+independence_from = "lps"
+implementation = "res669-spatial-and-closed-form"
+
+[[evidence]]
+subfamily = "gnss_lps.lps"
+dimension = "K"
+kind = "test"
+ref = "repo:tests/test_gnss_lps_acquisition.py"
+issue = "RES-700"
+rationale = "RES-669 position faults and per-sample integrity controls are exercised at engine admission."
 
 [[evidence]]
 subfamily = "gnss_lps.lps"

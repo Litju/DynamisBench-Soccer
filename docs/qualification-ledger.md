@@ -45,9 +45,11 @@ Specified is NOT verified. Analytical agreement is NOT empirical equivalence.
 - radar_laser.laser (RES-699): A:specified (RES-693), B:specified (RES-699), C:specified (RES-693), D:absent (RES-699), E:absent (RES-699), F:absent (RES-699), G:absent (RES-673), H:absent (RES-673), I:absent (RES-699), J:partial (RES-669), K:partial (RES-669), L:absent (RES-703), M:absent (RES-699), N:absent (RES-681), O:absent (RES-699)
   - No raw laser validity study (RES-694)
 - gnss_lps.gnss (RES-700): A:specified (RES-693), B:specified (RES-700), C:specified (RES-693), D:absent (RES-700), E:absent (RES-700), F:absent (RES-700), G:absent (RES-673), H:absent (RES-673), I:absent (RES-700), J:partial (RES-669), K:partial (RES-669), L:absent (RES-703), M:absent (RES-700), N:absent (RES-704), O:absent (RES-700)
-  - Raw GNSS contract specified; no audited raw data or verified reconstruction
+  - RES-700 reference processing and synthetic checks implemented; independent acceptance, audited native GNSS and empirical clock/latency and signal-integrity evidence remain open
+  - Sprint assessment (RES-673) and cross-device agreement (RES-703) remain open
 - gnss_lps.lps (RES-700): A:specified (RES-693), B:specified (RES-700), C:specified (RES-693), D:absent (RES-700), E:absent (RES-700), F:absent (RES-700), G:absent (RES-673), H:absent (RES-673), I:absent (RES-700), J:partial (RES-669), K:partial (RES-669), L:absent (RES-703), M:absent (RES-700), N:absent (RES-704), O:absent (RES-700)
-  - LPS position/anchor contract specified; no audited raw data
+  - RES-700 reference processing and synthetic checks implemented; independent acceptance, audited native LPS and empirical clock/latency and anchor survey evidence remain open
+  - Sprint assessment (RES-673) and cross-device agreement (RES-703) remain open
 - imu.inertial (RES-701): A:specified (RES-693), B:specified (RES-701), C:specified (RES-693), D:absent (RES-701), E:absent (RES-701), F:absent (RES-701), G:absent (RES-671), H:absent (RES-671), I:absent (RES-701), J:partial (RES-669), K:partial (RES-669), L:absent (RES-703), M:absent (RES-701), N:absent (RES-704), O:absent (RES-701)
   - Raw inertial contract specified; no audited raw data
 
