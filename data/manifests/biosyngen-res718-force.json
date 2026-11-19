@@ -1,0 +1,69 @@
+{
+  "audit_ref": "docs/data-audit.md#biosyngen-res718-force",
+  "data_category": "synthetic",
+  "dataset_id": "biosyngen-res718-force",
+  "files": [
+    {
+      "path": "trial-00000718-0000/capture_authority.json",
+      "sha256": "87ebc90d9c3c7413e58943e3269be4f261440c0ab09e7fc908a71c565a3ef27b",
+      "size_bytes": 1249,
+      "url": null
+    },
+    {
+      "path": "trial-00000718-0000/manifest.json",
+      "sha256": "d4da7101d29e41815e440c5df918e135308190db0d97c54bd85d1ad97e77795b",
+      "size_bytes": 8177,
+      "url": null
+    },
+    {
+      "path": "trial-00000718-0000/source-verification.json",
+      "sha256": "d76358d1cd8dc8ad1ee83a2df930b84e674f276a6ac04ae324f1f587b6185c19",
+      "size_bytes": 989,
+      "url": null
+    },
+    {
+      "path": "trial-00000718-0000/streams/force.csv",
+      "sha256": "0c8b9a3d0605d3d5cf964f0408a4de7d5b9941944b2c0ec31b140b959822b288",
+      "size_bytes": 156065,
+      "url": null
+    },
+    {
+      "path": "trial-00000718-0001/capture_authority.json",
+      "sha256": "64be306631e830f3837b62aec2892755b09f2bca2e39e00b11c074f78a2d5c6b",
+      "size_bytes": 1250,
+      "url": null
+    },
+    {
+      "path": "trial-00000718-0001/manifest.json",
+      "sha256": "1f5b4e5069774946af8d1560b624406f0b5ac99c879ed53bbc1cb8acca057e09",
+      "size_bytes": 8176,
+      "url": null
+    },
+    {
+      "path": "trial-00000718-0001/source-verification.json",
+      "sha256": "e9e6a6aa2336417b50fa6c5ac5bf5eb949f34ae2ce94412ed6861180d9e1539b",
+      "size_bytes": 989,
+      "url": null
+    },
+    {
+      "path": "trial-00000718-0001/streams/force.csv",
+      "sha256": "89638fc8a8db06232f2e425379910ac6b1a24e55ce54250ad4f24760d0e5872e",
+      "size_bytes": 156069,
+      "url": null
+    }
+  ],
+  "handling_notes": "Hash-pinned FORCE-only projection and source-verification evidence. Keep TRUTH physically out of processing.",
+  "license": "Apache-2.0 upstream software and project-authored manufactured source; internal research pilot",
+  "privacy_notes": "Manufactured only; no participant data.",
+  "redistribution_allowed": false,
+  "schema_version": 1,
+  "source": {
+    "citation": "BioSynGenBenchmark PR #8, RES-524 cumulative reviewed candidate",
+    "doi": null,
+    "kind": "generated",
+    "location": "https://github.com/Litju/BioSynGenBenchmark/tree/e74fc7cc188f9fcdea5e745244c21186b8699903"
+  },
+  "title": "RES-718 two-case BioSynGen FORCE pilot",
+  "usage": "cross-validation-only",
+  "version": "e74fc7cc188f9fcdea5e745244c21186b8699903"
+}

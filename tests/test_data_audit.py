@@ -3,7 +3,7 @@
 import re
 from pathlib import Path
 
-from dynamisbench_soccer.data.manifest import DatasetManifest, Usage
+from dynamisbench_soccer.data.manifest import DataCategory, DatasetManifest, Usage
 
 
 def _manifests(repo_root: Path) -> list[DatasetManifest]:
@@ -29,6 +29,11 @@ def test_usage_decisions_are_justified(repo_root: Path) -> None:
         if m.usage is Usage.EXCLUDED:
             assert m.handling_notes.startswith("EXCLUDED:")
             assert m.files == []
+        elif m.source.kind == "generated":
+            assert m.data_category is DataCategory.SYNTHETIC
+            assert m.usage is Usage.CROSS_VALIDATION_ONLY
+            assert m.files and all(f.url is None for f in m.files)
+            assert m.privacy_notes and not m.redistribution_allowed
         else:
             assert m.files and all(f.url for f in m.files)
             assert m.privacy_notes
@@ -45,8 +50,8 @@ def test_pickle_risk_is_recorded(repo_root: Path) -> None:
     assert "NEVER unpickle" in white.handling_notes
 
 
-def test_accepted_datasets_are_open_licensed(repo_root: Path) -> None:
+def test_accepted_public_datasets_are_open_licensed(repo_root: Path) -> None:
     for m in _manifests(repo_root):
-        if m.usage is not Usage.EXCLUDED:
+        if m.usage is not Usage.EXCLUDED and m.source.kind != "generated":
             assert m.license == "CC-BY-4.0"
             assert m.source.doi
