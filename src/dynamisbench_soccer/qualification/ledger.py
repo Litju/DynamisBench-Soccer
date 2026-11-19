@@ -44,7 +44,14 @@ SUBFAMILIES = frozenset(
 )
 METHODS = {
     "continuous_signal": {"filter", "integrate", "differentiate", "calibrate", "start_detection"},
-    "discrete_event": {"count_unwrap", "event_rate", "debounce", "pair_events"},
+    "discrete_event": {
+        "count_unwrap",
+        "event_rate",
+        "debounce",
+        "pair_events",
+        "multi_beam_voting",
+        "trigger_latency_correction",
+    },
     "position_track": {"resample", "smooth"},
     "inertial": {"orientation_estimation", "gravity_removal"},
 }

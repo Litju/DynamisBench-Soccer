@@ -133,10 +133,10 @@ def test_circular_or_wrong_reference_rejected(ledger: Ledger, field: str, value:
 
 
 @pytest.mark.parametrize("method", ["butterworth", "moving_average", "filter", "magic"])
-def test_discrete_processing_restricted(ledger: Ledger, method: str) -> None:
+@pytest.mark.parametrize("subfamily", ["timing_contact.gates", "timing_contact.contact"])
+def test_discrete_processing_restricted(ledger: Ledger, method: str, subfamily: str) -> None:
     subs = tuple(
-        replace(s, methods=(method,)) if s.id == "timing_contact.gates" else s
-        for s in ledger.subfamilies
+        replace(s, methods=(method,)) if s.id == subfamily else s for s in ledger.subfamilies
     )
     assert validate(replace(ledger, subfamilies=subs))
 
