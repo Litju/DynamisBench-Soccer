@@ -1366,9 +1366,13 @@ def run_all() -> list[dict[str, Any]]:
         except Exception as exc:  # a crash is a failed case, recorded verbatim
             out = Outcome(False, f"{type(exc).__name__}: {exc}"[:200], "no exception", None)
 
-        def plain(value: Any) -> Any:
+        def plain(value: Any, tolerance: Any = None) -> Any:
             if isinstance(value, np.floating | np.integer):
-                return float(value)
+                value = float(value)
+            if isinstance(value, float) and isinstance(tolerance, int | float) and tolerance > 0:
+                # Report two digits beyond the tolerance so floating-point noise at the 1e-13
+                # level cannot make the committed report platform dependent.
+                value = round(value, min(12, max(2, math.ceil(-math.log10(tolerance)) + 2)))
             return value
 
         rows.append(
@@ -1379,8 +1383,8 @@ def run_all() -> list[dict[str, Any]]:
                 "chain": c.chain,
                 "axes": c.axes,
                 "passed": out.passed,
-                "observed": plain(out.observed),
-                "expected": plain(out.expected),
+                "observed": plain(out.observed, out.tolerance),
+                "expected": plain(out.expected, out.tolerance),
                 "tolerance": plain(out.tolerance),
                 "detail": out.detail,
             }

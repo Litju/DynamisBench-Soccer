@@ -369,11 +369,11 @@ Entries come from G/H ledger evidence pointing at each assessment document.
 
 | Subfamily | Case | Chain | Observed | Expected | Tolerance | Result |
 | -- | -- | -- | -- | -- | -- | -- |
-| force_platform.single | cmj_height_500hz | native force -> engine -> jump assessment | 0.368991 | 0.371687 | 0.006 | pass |
-| force_platform.single | cmj_height_1000hz | native force -> engine -> jump assessment | 0.370338 | 0.371687 | 0.006 | pass |
-| force_platform.single | cmj_height_2000hz | native force -> engine -> jump assessment | 0.371012 | 0.371687 | 0.006 | pass |
-| force_platform.single | cmj_height_simpson | native force -> engine -> jump assessment | 0.370787 | 0.371687 | 0.006 | pass |
-| force_platform.single | cmj_height_butterworth_50hz | native force -> engine -> jump assessment | 0.36618 | 0.371687 | 0.02 | pass |
+| force_platform.single | cmj_height_500hz | native force -> engine -> jump assessment | 0.36899 | 0.37169 | 0.006 | pass |
+| force_platform.single | cmj_height_1000hz | native force -> engine -> jump assessment | 0.37034 | 0.37169 | 0.006 | pass |
+| force_platform.single | cmj_height_2000hz | native force -> engine -> jump assessment | 0.37101 | 0.37169 | 0.006 | pass |
+| force_platform.single | cmj_height_simpson | native force -> engine -> jump assessment | 0.37079 | 0.37169 | 0.006 | pass |
+| force_platform.single | cmj_height_butterworth_50hz | native force -> engine -> jump assessment | 0.3662 | 0.3717 | 0.02 | pass |
 | force_platform.single | onset_5sd | native force -> engine onset | 0.999 | 1 | 0.01 | pass |
 | force_platform.single | onset_reverse_scan | native force -> engine onset | 0.999 | 1 | 0.01 | pass |
 | force_platform.single | onset_first_derivative | native force -> engine onset | 0.979 | 1 | 0.031831 | pass |
@@ -382,15 +382,15 @@ Entries come from G/H ledger evidence pointing at each assessment document.
 | force_platform.single | baseline_offset_shifts_body_weight | corruption -> engine body weight | 765.499 | 765.499 | 0.5 | pass |
 | force_platform.single | squat_record_is_not_a_countermovement_jump | assessment eligibility | False | False |  | pass |
 | force_platform.single | sampling_below_500hz_is_refused | native force -> engine refusal | force-platform processing requires at least 500 reference samples/s | refusal matching 'at least 500' |  | pass |
-| force_platform.dual | dual_plate_body_weight_and_bilateral_split | native dual force -> engine -> bilateral assessment | 66.6667 | 66.6667 | 0.5 | pass |
+| force_platform.dual | dual_plate_body_weight_and_bilateral_split | native dual force -> engine -> bilateral assessment | 66.667 | 66.667 | 0.5 | pass |
 | force_platform.dual | dual_swapped_sides_swap_the_labels_not_the_asymmetry | assessment side declaration | 301.797 | 301.797 | 1e-09 | pass |
-| lpt_encoder.lpt | velocity_finite_difference | native cable -> engine -> velocity | 2.14273e-13 | 0 | 0.02 | pass |
-| lpt_encoder.lpt | velocity_butterworth_then_difference | native cable -> engine -> velocity | 0.000529137 | 0 | 0.02 | pass |
-| lpt_encoder.lpt | velocity_cubic_spline | native cable -> engine -> velocity | 3.68372e-13 | 0 | 0.02 | pass |
+| lpt_encoder.lpt | velocity_finite_difference | native cable -> engine -> velocity | 0 | 0 | 0.02 | pass |
+| lpt_encoder.lpt | velocity_butterworth_then_difference | native cable -> engine -> velocity | 0.0005 | 0 | 0.02 | pass |
+| lpt_encoder.lpt | velocity_cubic_spline | native cable -> engine -> velocity | 0 | 0 | 0.02 | pass |
 | lpt_encoder.lpt | cable_only_geometry_refuses_vertical_claims | native cable -> engine refusal | cable_displacement | cable_displacement |  | pass |
-| lpt_encoder.lpt | jump_height_is_an_attachment_estimand | engine -> assessment | 0.664186 | 0.664187 | 0.003 | pass |
+| lpt_encoder.lpt | jump_height_is_an_attachment_estimand | engine -> assessment | 0.66419 | 0.66419 | 0.003 | pass |
 | lpt_encoder.lpt | time_jump_in_stream_is_rejected | corruption -> engine verdict | reject | reject |  | pass |
-| lpt_encoder.encoder | encoder_counts_resolution_bound | native counts -> engine | 0.000496433 | 0 | 0.001 | pass |
+| lpt_encoder.encoder | encoder_counts_resolution_bound | native counts -> engine | 0.0005 | 0 | 0.001 | pass |
 | lpt_encoder.encoder | encoder_without_vertical_geometry_withholds_vertical_displacement | native counts -> engine refusal | cable_displacement | cable_displacement |  | pass |
 | lpt_encoder.encoder | encoder_time_discontinuity_is_rejected | corruption -> engine verdict | reject | reject |  | pass |
 | load_cell_isometric.load_cell | rfd_0_100ms_1000hz | native cell -> engine | 6250 | 6250 | 1 | pass |
@@ -411,7 +411,7 @@ Entries come from G/H ledger evidence pointing at each assessment document.
 | nordic_hip.nordic | impulse_to_peak_500hz | native bilateral force -> engine | 314.001 | 314.159 | 0.32 | pass |
 | nordic_hip.nordic | impulse_to_peak_1000hz | native bilateral force -> engine | 314.161 | 314.159 | 0.16 | pass |
 | nordic_hip.nordic | impulse_to_peak_2000hz | native bilateral force -> engine | 314.161 | 314.159 | 0.08 | pass |
-| nordic_hip.nordic | butterworth_filter_peak | native bilateral force -> engine filter | 159.788 | 160 | 1 | pass |
+| nordic_hip.nordic | butterworth_filter_peak | native bilateral force -> engine filter | 159.79 | 160 | 1 | pass |
 | nordic_hip.nordic | side_contradiction_is_refused | engine refusal | side contradiction on 'force_left': bundle says left, declaration says right | refusal matching 'side contradiction' |  | pass |
 | nordic_hip.nordic | clipped_side_is_visible_in_peak | corruption -> engine metric | 100 | 100 | 0.05 | pass |
 | nordic_hip.nordic | angle_is_never_recovered_from_force | engine refusal | ['angle_metrics', 'break_point'] | break_point refused |  | pass |
@@ -425,29 +425,29 @@ Entries come from G/H ledger evidence pointing at each assessment document.
 | timing_contact.gates | adversarial_missing_event | corruption -> engine refusal | missing gate 2 | refusal matching '' |  | pass |
 | timing_contact.gates | adversarial_duplicate_event | corruption -> engine refusal | gate 2: duplicate or ambiguous beam trigger | refusal matching '' |  | pass |
 | timing_contact.gates | adversarial_out_of_order_event | corruption -> engine refusal | res669-corrupted-512e88dd674ada50ea732fa8: out-of-order native timestamps | refusal matching '' |  | pass |
-| timing_contact.contact | cmj_flight_time_latency_0s | native switch events -> engine -> jump source | 0.550647 | 0.550647 | 0.002 | pass |
-| timing_contact.contact | cmj_flight_time_latency_0.02s | native switch events -> engine -> jump source | 0.550647 | 0.550647 | 0.002 | pass |
+| timing_contact.contact | cmj_flight_time_latency_0s | native switch events -> engine -> jump source | 0.55065 | 0.55065 | 0.002 | pass |
+| timing_contact.contact | cmj_flight_time_latency_0.02s | native switch events -> engine -> jump source | 0.55065 | 0.55065 | 0.002 | pass |
 | timing_contact.contact | duplicate_switch_event_is_refused | corruption -> engine refusal | repeated contact state without an intervening edge at row 2 | refusal matching '' |  | pass |
-| radar_laser.radar | doppler_velocity_47hz | native Doppler -> engine -> sprint F-V | 1.77636e-15 | 0 | 1e-06 | pass |
-| radar_laser.radar | doppler_velocity_100hz | native Doppler -> engine -> sprint F-V | 1.77636e-15 | 0 | 1e-06 | pass |
-| radar_laser.radar | doppler_velocity_256hz | native Doppler -> engine -> sprint F-V | 1.77636e-15 | 0 | 1e-06 | pass |
+| radar_laser.radar | doppler_velocity_47hz | native Doppler -> engine -> sprint F-V | 0 | 0 | 1e-06 | pass |
+| radar_laser.radar | doppler_velocity_100hz | native Doppler -> engine -> sprint F-V | 0 | 0 | 1e-06 | pass |
+| radar_laser.radar | doppler_velocity_256hz | native Doppler -> engine -> sprint F-V | 0 | 0 | 1e-06 | pass |
 | radar_laser.radar | fv_fit_from_native_radar | native Doppler -> engine -> sprint F-V | 600 | 600 | 30 | pass |
 | radar_laser.radar | manufacturer_processed_channel_without_cosine_qualification_refuses | engine refusal | manufacturer-processed stage requires matching source processing provenance | refusal matching '' |  | pass |
-| radar_laser.laser | range_rate_central | native range -> engine -> velocity | 1.5638e-05 | 0 | 0.005 | pass |
-| radar_laser.laser | range_rate_five_point | native range -> engine -> velocity | 3.31429e-11 | 0 | 0.0001 | pass |
-| gnss_lps.gnss | positional_speed_three_point | native track -> engine -> speed | 8.78633e-10 | 0 | 1e-06 | pass |
-| gnss_lps.gnss | positional_speed_five_point | native track -> engine -> speed | 9.69338e-10 | 0 | 1e-06 | pass |
-| gnss_lps.lps | positional_speed_three_point | native track -> engine -> speed | 3.37508e-14 | 0 | 1e-06 | pass |
-| gnss_lps.lps | positional_speed_five_point | native track -> engine -> speed | 6.03961e-14 | 0 | 1e-06 | pass |
+| radar_laser.laser | range_rate_central | native range -> engine -> velocity | 2e-05 | 0 | 0.005 | pass |
+| radar_laser.laser | range_rate_five_point | native range -> engine -> velocity | 0 | 0 | 0.0001 | pass |
+| gnss_lps.gnss | positional_speed_three_point | native track -> engine -> speed | 0 | 0 | 1e-06 | pass |
+| gnss_lps.gnss | positional_speed_five_point | native track -> engine -> speed | 0 | 0 | 1e-06 | pass |
+| gnss_lps.lps | positional_speed_three_point | native track -> engine -> speed | 0 | 0 | 1e-06 | pass |
+| gnss_lps.lps | positional_speed_five_point | native track -> engine -> speed | 0 | 0 | 1e-06 | pass |
 | gnss_lps.gnss | doppler_and_positional_speed_stay_separate | native track -> engine | separate arrays | Doppler != positional |  | pass |
 | gnss_lps.gnss | position_jump_is_not_hidden | corruption -> engine | acquisition declaration belongs to a different bundle | refusal or reported discontinuity |  | pass |
 | gnss_lps.lps | position_jump_is_not_hidden | corruption -> engine | acquisition declaration belongs to a different bundle | refusal or reported discontinuity |  | pass |
-| imu.inertial | orientation_100hz | native IMU -> engine orientation | 3.37763e-14 | 0 | 1e-08 | pass |
-| imu.inertial | orientation_200hz | native IMU -> engine orientation | 5.21499e-14 | 0 | 1e-08 | pass |
-| imu.inertial | orientation_500hz | native IMU -> engine orientation | 1.28419e-13 | 0 | 1e-08 | pass |
-| imu.inertial | free_acceleration_matches_rigid_body | native IMU -> engine gravity compensation | 2.32593e-13 | 0 | 1e-07 | pass |
-| imu.inertial | complementary_filter_bounds_gyro_bias_tilt | native IMU -> engine orientation | 0.0500187 | 0.05 | 0.01 | pass |
-| imu.inertial | flight_time_from_specific_force | native IMU -> engine event -> jump source | 0.554 | 0.550647 | 0.004 | pass |
+| imu.inertial | orientation_100hz | native IMU -> engine orientation | 0 | 0 | 1e-08 | pass |
+| imu.inertial | orientation_200hz | native IMU -> engine orientation | 0 | 0 | 1e-08 | pass |
+| imu.inertial | orientation_500hz | native IMU -> engine orientation | 0 | 0 | 1e-08 | pass |
+| imu.inertial | free_acceleration_matches_rigid_body | native IMU -> engine gravity compensation | 0 | 0 | 1e-07 | pass |
+| imu.inertial | complementary_filter_bounds_gyro_bias_tilt | native IMU -> engine orientation | 0.05 | 0.05 | 0.01 | pass |
+| imu.inertial | flight_time_from_specific_force | native IMU -> engine event -> jump source | 0.554 | 0.55065 | 0.004 | pass |
 | imu.inertial | saturated_accelerometer_is_rejected | corruption -> engine verdict | reject | reject |  | pass |
 | imu.inertial | orientation_unobservable_without_initial_condition | engine refusal | ['orientation'] | orientation refused |  | pass |
 | imu.inertial | integration_refused_without_declared_initial_velocity | engine refusal | ['integration'] | integration refused |  | pass |
