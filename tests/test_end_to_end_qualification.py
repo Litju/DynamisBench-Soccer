@@ -159,14 +159,18 @@ def test_every_unverified_subfamily_names_its_owner_blocker_and_required_experim
         assert all(s.owners[d].startswith("RES-") for d in s.unverified_m3)
 
 
-def test_cli_states_reports_the_computed_gate(capsys: pytest.CaptureFixture[str]) -> None:
+def test_cli_states_reports_the_computed_gate(
+    capsys: pytest.CaptureFixture[str], monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.chdir(ROOT)
     code = main(["qualification", "states"])
     payload = json.loads(capsys.readouterr().out)
     assert code == 1 and payload["m3_gate"]["passed"] is False
     assert len(payload["subfamilies"]) == 15
 
 
-def test_frozen_interface_matches_the_live_interface() -> None:
+def test_frozen_interface_matches_the_live_interface(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.chdir(ROOT)
     frozen = json.loads((ROOT / "docs/verification/engine-v0.1-interface.json").read_text())
     assert frozen == json.loads(interface.snapshot_json())
     assert frozen["interface_version"] == "engine-v0.1"
