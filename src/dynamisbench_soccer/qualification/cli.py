@@ -56,6 +56,27 @@ def _ledger(args: argparse.Namespace) -> int:
     return 0
 
 
+def _admit(args: argparse.Namespace) -> int:
+    import json
+
+    from dynamisbench_soccer.qualification import admission
+    from dynamisbench_soccer.registry.models import load as load_registry
+
+    try:
+        proposal = admission.load(Path(args.proposal))
+    except (ValueError, OSError) as exc:
+        print(f"FAIL {exc}", file=sys.stderr)
+        return 2
+    registry = load_registry(Path("registry"))
+    result = admission.evaluate(
+        proposal,
+        registry_claim_ids={c.id for c in registry.claims},
+        registry_gap_subjects={g.subject for g in registry.gaps},
+    )
+    print(json.dumps(result.report(), indent=2, sort_keys=True))
+    return 0 if result.decision == "ADMISSION_READY" else 1
+
+
 def register(sub: argparse._SubParsersAction) -> None:  # type: ignore[type-arg]
     qual = sub.add_parser("qualification", help="scientific device quality-parity ledger")
     q = qual.add_subparsers(dest="qual_command", required=True)
@@ -74,3 +95,6 @@ def register(sub: argparse._SubParsersAction) -> None:  # type: ignore[type-arg]
     mode.add_argument("--write", action="store_true")
     mode.add_argument("--check", action="store_true")
     report.set_defaults(handler=_ledger)
+    admit = q.add_parser("admit", help="evaluate a new-device-family admission proposal")
+    admit.add_argument("proposal", help="proposal TOML")
+    admit.set_defaults(handler=_admit)
