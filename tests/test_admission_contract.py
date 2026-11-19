@@ -101,12 +101,6 @@ def test_admission_cannot_alter_the_qualified_scope() -> None:
 def test_each_missing_or_invalid_requirement_is_rejected(
     changes: dict, expected: str | None
 ) -> None:
-    if (
-        "family" in changes
-        and "force_platform" not in changes["family"]
-        and "Bad" not in changes["family"]
-    ):
-        pytest.skip("shape")
     result = _evaluate(**changes)
     if expected is None:
         assert result.decision == "ADMISSION_READY"  # a valid discrete-event method set is fine
