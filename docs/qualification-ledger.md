@@ -34,10 +34,12 @@ Specified is NOT verified. Analytical agreement is NOT empirical equivalence.
   - Isometric hamstring test is a declared evidence gap; no engine
 - nordic_hip.hip (RES-697): A:specified (RES-697), B:specified (RES-697), C:specified (RES-693), D:absent (RES-697), E:absent (RES-697), F:absent (RES-697), G:absent (RES-672), H:absent (RES-672), I:absent (RES-697), J:partial (RES-669), K:partial (RES-669), L:absent (RES-703), M:absent (RES-697), N:absent (RES-681), O:absent (RES-697)
   - Unqualified geometry and metrology; no engine
-- timing_contact.gates (RES-698): A:specified (RES-693), B:specified (RES-698), C:specified (RES-693), D:absent (RES-698), E:absent (RES-698), F:absent (RES-698), G:absent (RES-671), H:absent (RES-673), I:absent (RES-698), J:partial (RES-669), K:partial (RES-669), L:absent (RES-703), M:absent (RES-698), N:absent (RES-681), O:absent (RES-698)
-  - No gate trigger-validity source (RES-694)
-- timing_contact.contact (RES-698): A:specified (RES-693), B:specified (RES-698), C:specified (RES-693), D:absent (RES-698), E:absent (RES-698), F:absent (RES-698), G:absent (RES-671), H:absent (RES-673), I:absent (RES-698), J:partial (RES-669), K:partial (RES-669), L:absent (RES-703), M:absent (RES-698), N:absent (RES-681), O:absent (RES-698)
-  - Contact contract specified; latency/trigger evidence missing (RES-694)
+- timing_contact.gates (RES-698): A:specified (RES-693), B:specified (RES-698), C:specified (RES-693), D:partial (RES-698), E:partial (RES-698), F:partial (RES-698), G:absent (RES-671), H:absent (RES-673), I:partial (RES-698), J:partial (RES-669), K:partial (RES-669), L:absent (RES-703), M:partial (RES-698), N:absent (RES-681), O:partial (RES-698)
+  - Gate geometry, trigger validity and timing-error bounds need empirical metrology (RES-694)
+  - Sprint assessment variants and cross-device agreement remain open (RES-673/703)
+- timing_contact.contact (RES-698): A:specified (RES-693), B:specified (RES-698), C:specified (RES-693), D:partial (RES-698), E:partial (RES-698), F:partial (RES-698), G:absent (RES-671), H:absent (RES-673), I:partial (RES-698), J:partial (RES-669), K:partial (RES-669), L:absent (RES-703), M:partial (RES-698), N:absent (RES-681), O:partial (RES-698)
+  - Contact-system switching thresholds and latency bounds need empirical metrology (RES-694)
+  - Assessment-specific validity and force-platform/IMU agreement remain open (RES-671/703)
 - radar_laser.radar (RES-699): A:specified (RES-693), B:specified (RES-699), C:specified (RES-693), D:absent (RES-699), E:absent (RES-699), F:absent (RES-699), G:absent (RES-673), H:absent (RES-673), I:absent (RES-699), J:partial (RES-669), K:partial (RES-669), L:absent (RES-703), M:absent (RES-699), N:absent (RES-681), O:absent (RES-699)
   - No raw radar validity study (RES-694)
 - radar_laser.laser (RES-699): A:specified (RES-693), B:specified (RES-699), C:specified (RES-693), D:absent (RES-699), E:absent (RES-699), F:absent (RES-699), G:absent (RES-673), H:absent (RES-673), I:absent (RES-699), J:partial (RES-669), K:partial (RES-669), L:absent (RES-703), M:absent (RES-699), N:absent (RES-681), O:absent (RES-699)

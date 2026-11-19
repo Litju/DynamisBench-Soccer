@@ -56,6 +56,18 @@ jobs:
         run: uv run pytest
       - name: Build
         run: uv build
+      - name: Verify timing engines from the installed wheel
+        run: |
+          uv export --frozen --no-emit-project --quiet -o "$RUNNER_TEMP/wheel-requirements.txt"
+          uv venv "$RUNNER_TEMP/wheel-venv"
+          wheel_bin="$RUNNER_TEMP/wheel-venv/bin"
+          uv pip install --python "$wheel_bin/python" --require-hashes -r "$RUNNER_TEMP/wheel-requirements.txt"
+          uv pip install --python "$wheel_bin/python" --no-deps dist/*.whl
+          cd "$RUNNER_TEMP"
+          "$wheel_bin/python" -c 'import sys; from pathlib import Path; from dynamisbench_soccer import engines; assert Path(engines.__file__).is_relative_to(sys.prefix)'
+          "$wheel_bin/dbs" timing gates --help
+          "$wheel_bin/dbs" timing contact --help
+          "$wheel_bin/python" -m pytest "$GITHUB_WORKSPACE/tests/test_timing_gates.py" "$GITHUB_WORKSPACE/tests/test_timing_contact.py"
       - name: RES-699 installed-wheel processing
         run: |
           uv run python - <<'PY'

@@ -96,9 +96,9 @@ owners = { A = "RES-693", B = "RES-698", C = "RES-693", D = "RES-698", E = "RES-
 paradigm = "discrete_event"
 issue = "RES-698"
 engine_id = "gates"
-methods = ["debounce", "pair_events"]
-ratings = { A = "specified", B = "specified", C = "specified", D = "absent", E = "absent", F = "absent", G = "absent", H = "absent", I = "absent", J = "partial", K = "partial", L = "absent", M = "absent", N = "absent", O = "absent" }
-blockers = ["No gate trigger-validity source (RES-694)"]
+methods = ["debounce", "multi_beam_voting", "trigger_latency_correction"]
+ratings = { A = "specified", B = "specified", C = "specified", D = "partial", E = "partial", F = "partial", G = "absent", H = "absent", I = "partial", J = "partial", K = "partial", L = "absent", M = "partial", N = "absent", O = "partial" }
+blockers = ["Gate geometry, trigger validity and timing-error bounds need empirical metrology (RES-694)", "Sprint assessment variants and cross-device agreement remain open (RES-673/703)"]
 
 [[subfamily]]
 id = "timing_contact.contact"
@@ -107,9 +107,9 @@ owners = { A = "RES-693", B = "RES-698", C = "RES-693", D = "RES-698", E = "RES-
 paradigm = "discrete_event"
 issue = "RES-698"
 engine_id = "contact"
-methods = ["debounce", "pair_events"]
-ratings = { A = "specified", B = "specified", C = "specified", D = "absent", E = "absent", F = "absent", G = "absent", H = "absent", I = "absent", J = "partial", K = "partial", L = "absent", M = "absent", N = "absent", O = "absent" }
-blockers = ["Contact contract specified; latency/trigger evidence missing (RES-694)"]
+methods = ["debounce", "pair_events", "trigger_latency_correction"]
+ratings = { A = "specified", B = "specified", C = "specified", D = "partial", E = "partial", F = "partial", G = "absent", H = "absent", I = "partial", J = "partial", K = "partial", L = "absent", M = "partial", N = "absent", O = "partial" }
+blockers = ["Contact-system switching thresholds and latency bounds need empirical metrology (RES-694)", "Assessment-specific validity and force-platform/IMU agreement remain open (RES-671/703)"]
 
 [[subfamily]]
 id = "radar_laser.radar"
@@ -2426,3 +2426,135 @@ kind = "test"
 ref = "repo:tests/test_reference_acceptance.py"
 issue = "RES-669"
 rationale = "Analytical equations, serialized observations and typed deterministic fault/negative controls are available; this does not verify the future device engine or establish empirical validity."
+
+[[evidence]]
+subfamily = "timing_contact.gates"
+dimension = "D"
+kind = "independent_test"
+ref = "repo:tests/test_timing_gates.py"
+issue = "RES-698"
+rationale = "Independent RES-669 artifacts and deliberately misleading native event streams."
+
+[[evidence]]
+subfamily = "timing_contact.gates"
+dimension = "E"
+kind = "code"
+ref = "repo:src/dynamisbench_soccer/engines/timing_gates.py"
+issue = "RES-698"
+rationale = "Declared rules adjudicate discrete events and record discarded row identifiers."
+
+[[evidence]]
+subfamily = "timing_contact.gates"
+dimension = "F"
+kind = "independent_test"
+ref = "repo:tests/test_timing_gates.py"
+issue = "RES-698"
+rationale = "Engine metrics are compared with the corresponding estimands from prescribed observations."
+
+[[evidence]]
+subfamily = "timing_contact.gates"
+dimension = "I"
+kind = "independent_test"
+ref = "repo:tests/test_timing_gates.py"
+issue = "RES-698"
+rationale = "Declared timing and event-definition variants expose analytical sensitivity and misleading biases."
+
+[[evidence]]
+subfamily = "timing_contact.gates"
+dimension = "J"
+kind = "analytical_reference"
+ref = "repo:tests/test_timing_gates.py"
+issue = "RES-698"
+rationale = "RES-669 independently supplies prescribed crossings or flight endpoints for the observation contract."
+independence_from = "gates"
+implementation = "RES-669 analytical and observation models"
+
+[[evidence]]
+subfamily = "timing_contact.gates"
+dimension = "K"
+kind = "independent_test"
+ref = "repo:tests/test_timing_gates.py"
+issue = "RES-698"
+rationale = "RES-669 supplies clean inputs and adversarial faults with analytically known effects."
+
+[[evidence]]
+subfamily = "timing_contact.gates"
+dimension = "M"
+kind = "code"
+ref = "repo:src/dynamisbench_soccer/engines/timing_cli.py"
+issue = "RES-698"
+rationale = "Verified bundle reads, explicit configuration, native event rows and sensitivity results."
+
+[[evidence]]
+subfamily = "timing_contact.gates"
+dimension = "O"
+kind = "doc"
+ref = "repo:docs/timing-contact-engine.md"
+issue = "RES-698"
+rationale = "Explains event semantics, conditional derived measures and device-specific limits."
+
+[[evidence]]
+subfamily = "timing_contact.contact"
+dimension = "D"
+kind = "independent_test"
+ref = "repo:tests/test_timing_contact.py"
+issue = "RES-698"
+rationale = "Independent RES-669 artifacts and deliberately misleading native event streams."
+
+[[evidence]]
+subfamily = "timing_contact.contact"
+dimension = "E"
+kind = "code"
+ref = "repo:src/dynamisbench_soccer/engines/contact.py"
+issue = "RES-698"
+rationale = "Declared rules adjudicate discrete events and record discarded row identifiers."
+
+[[evidence]]
+subfamily = "timing_contact.contact"
+dimension = "F"
+kind = "independent_test"
+ref = "repo:tests/test_timing_contact.py"
+issue = "RES-698"
+rationale = "Engine metrics are compared with the corresponding estimands from prescribed observations."
+
+[[evidence]]
+subfamily = "timing_contact.contact"
+dimension = "I"
+kind = "independent_test"
+ref = "repo:tests/test_timing_contact.py"
+issue = "RES-698"
+rationale = "Declared timing and event-definition variants expose analytical sensitivity and misleading biases."
+
+[[evidence]]
+subfamily = "timing_contact.contact"
+dimension = "J"
+kind = "analytical_reference"
+ref = "repo:tests/test_timing_contact.py"
+issue = "RES-698"
+rationale = "RES-669 independently supplies prescribed crossings or flight endpoints for the observation contract."
+independence_from = "contact"
+implementation = "RES-669 analytical and observation models"
+
+[[evidence]]
+subfamily = "timing_contact.contact"
+dimension = "K"
+kind = "independent_test"
+ref = "repo:tests/test_timing_contact.py"
+issue = "RES-698"
+rationale = "RES-669 supplies clean inputs and adversarial faults with analytically known effects."
+
+[[evidence]]
+subfamily = "timing_contact.contact"
+dimension = "M"
+kind = "code"
+ref = "repo:src/dynamisbench_soccer/engines/timing_cli.py"
+issue = "RES-698"
+rationale = "Verified bundle reads, explicit configuration, native event rows and sensitivity results."
+
+[[evidence]]
+subfamily = "timing_contact.contact"
+dimension = "O"
+kind = "doc"
+ref = "repo:docs/timing-contact-engine.md"
+issue = "RES-698"
+rationale = "Explains event semantics, conditional derived measures and device-specific limits."
