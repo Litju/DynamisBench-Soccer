@@ -13,6 +13,7 @@ from typing import Literal
 
 import numpy as np
 
+from dynamisbench_soccer.engines.filtering import FilterMethod, smooth_samples
 from dynamisbench_soccer.engines.radar_laser_acquisition import (
     AcquisitionRefusal,
     AdmittedTrace,
@@ -21,7 +22,6 @@ from dynamisbench_soccer.engines.radar_laser_acquisition import (
 )
 from dynamisbench_soccer.signals.schema import DeviceClass, FloatArray, SignalBundle
 
-FilterMethod = Literal["none", "boxcar5", "binomial5"]
 DerivativeMethod = Literal["central", "five_point"]
 StartMethod = Literal["record_origin", "velocity_threshold", "range_change", "external_trigger"]
 CorrectionMethod = Literal["none", "declared_fixed_angle"]
@@ -67,27 +67,6 @@ class VelocityResult:
     mounting_distance_behind_start_m: float | None
     sensitivity: dict[str, float | str]
     limitations: tuple[str, ...]
-
-
-def _filtered(signal: FloatArray, method: FilterMethod) -> FloatArray:
-    if method == "none":
-        return signal.copy()
-    if method == "boxcar5":
-        weights = np.full(5, 0.2)
-    elif method == "binomial5":
-        weights = np.array([1, 4, 6, 4, 1], dtype=np.float64) / 16
-    else:
-        raise AcquisitionRefusal("unsupported named filter")
-    # Linear extension preserves the local boundary slope. Reflecting the
-    # range reverses the slope and manufactures a spurious braking event
-    # when differentiating filtered laser distance. These edge values are
-    # extrapolated analysis support points, not device measurements.
-    left_slope = signal[1] - signal[0]
-    right_slope = signal[-1] - signal[-2]
-    left = signal[0] - left_slope * np.array([2.0, 1.0])
-    right = signal[-1] + right_slope * np.array([1.0, 2.0])
-    extended = np.concatenate((left, signal, right))
-    return np.convolve(extended, weights, mode="valid")
 
 
 def _laser_derivative(
@@ -240,7 +219,9 @@ def process(bundle: SignalBundle, options: ProcessingOptions) -> VelocityResult:
         )
     if options.correction_method not in {"none", "declared_fixed_angle"}:
         raise AcquisitionRefusal("unsupported cosine correction")
-    line = _filtered(trace.values, options.filter_method)
+    if options.filter_method not in {"none", "boxcar5", "binomial5"}:
+        raise AcquisitionRefusal("unsupported named filter")
+    line = smooth_samples(trace.values, options.filter_method)
     derivative_method: str | None = None
     if trace.device is DeviceClass.LASER:
         line = _laser_derivative(line, trace.reference_time_s, options.derivative_method)
@@ -282,7 +263,7 @@ def process(bundle: SignalBundle, options: ProcessingOptions) -> VelocityResult:
     sensitivity = _sensitivity(trace, line, start, options)
     alternate_peaks: list[float] = []
     for variant in ("none", "boxcar5", "binomial5"):
-        alternative = _filtered(trace.values, variant)
+        alternative = smooth_samples(trace.values, variant)
         if trace.device is DeviceClass.LASER:
             alternative = _laser_derivative(
                 alternative, trace.reference_time_s, options.derivative_method
