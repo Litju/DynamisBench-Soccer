@@ -68,3 +68,23 @@ jobs:
           "$wheel_bin/dbs" timing gates --help
           "$wheel_bin/dbs" timing contact --help
           "$wheel_bin/python" -m pytest "$GITHUB_WORKSPACE/tests/test_timing_gates.py" "$GITHUB_WORKSPACE/tests/test_timing_contact.py"
+      - name: RES-699 installed-wheel processing
+        run: |
+          uv run python - <<'PY'
+          from pathlib import Path
+          from dynamisbench_soccer.reference.exporters import export_case
+          export_case("radar_laser.radar", hz=47).write(Path("/tmp/res699-wheel-radar"))
+          export_case("radar_laser.laser", hz=256).write(Path("/tmp/res699-wheel-laser"))
+          PY
+          uv venv .wheel-venv
+          uv pip install --python .wheel-venv/bin/python dist/*.whl
+          .wheel-venv/bin/dbs radar-laser process /tmp/res699-wheel-radar/observation --stage native --correction declared_fixed_angle --out /tmp/res699-wheel-radar/result.json
+          .wheel-venv/bin/dbs radar-laser process /tmp/res699-wheel-laser/observation --stage native --derivative five_point --out /tmp/res699-wheel-laser/result.json
+          .wheel-venv/bin/python - <<'PY'
+          import json
+          from pathlib import Path
+          for kind, quantity in (("radar", "velocity"), ("laser", "distance")):
+              report = json.loads(Path(f"/tmp/res699-wheel-{kind}/result.json").read_text())
+              assert report["native_quantity"] == quantity
+              assert report["peak_velocity_m_s"] > 0
+          PY
