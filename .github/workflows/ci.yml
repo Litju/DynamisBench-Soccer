@@ -68,6 +68,12 @@ jobs:
           "$wheel_bin/dbs" timing gates --help
           "$wheel_bin/dbs" timing contact --help
           "$wheel_bin/python" -m pytest "$GITHUB_WORKSPACE/tests/test_timing_gates.py" "$GITHUB_WORKSPACE/tests/test_timing_contact.py"
+      - name: RES-697 Nordic and hip installed-wheel processing
+        run: |
+          wheel_bin="$RUNNER_TEMP/wheel-venv/bin"
+          cd "$RUNNER_TEMP"
+          "$wheel_bin/dbs" nordic-hip process --help
+          "$wheel_bin/python" -m pytest "$GITHUB_WORKSPACE/tests/test_nordic_hip.py"
       - name: RES-700 GNSS and LPS installed-wheel processing
         run: |
           wheel_bin="$RUNNER_TEMP/wheel-venv/bin"
