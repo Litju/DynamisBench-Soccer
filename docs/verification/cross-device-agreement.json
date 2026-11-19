@@ -1,0 +1,752 @@
+{
+  "classification_counts": {
+    "analytical_model_agreement": 4,
+    "definition_mismatch": 7,
+    "unsupported_comparison": 1
+  },
+  "empirical_device_agreement_studies": 0,
+  "engine": "cross-device-agreement.v1",
+  "interchangeable_claims": 0,
+  "statement": "analytical study only: idealised observation models of one truth; no measured paired data exist, so empirical agreement and interchangeability are not established",
+  "studies": [
+    {
+      "assumptions": [
+        "rigid ideal switch",
+        "declared symmetric latency",
+        "1 kHz force sampling"
+      ],
+      "classification": "analytical_model_agreement",
+      "definitions": {
+        "contact_system": "time between switch-off and switch-on, with declared latency model",
+        "force_platform": "time between force dropping below and rising above the contact threshold"
+      },
+      "empirical_status": "missing_evidence: analytical study only: idealised observation models of one truth; no measured paired data exist, so empirical agreement and interchangeability are not established",
+      "id": "force_vs_contact_flight_time",
+      "interchangeable": "unknown",
+      "left": "force_platform.single",
+      "pairs": [
+        [
+          0.4079999999999999,
+          0.40788648519117143
+        ],
+        [
+          0.47,
+          0.4690694579698469
+        ],
+        [
+          0.5309999999999999,
+          0.5302524307485228
+        ],
+        [
+          0.5920000000000001,
+          0.5914354035271983
+        ],
+        [
+          0.653,
+          0.6526183763058742
+        ]
+      ],
+      "quantity": "flight_time",
+      "reason": "agreement of idealised observation models; says nothing about real devices",
+      "right": "timing_contact.contact",
+      "sensitivities": {
+        "error_vs_truth_s": {
+          "symmetric_latency_0.01_s_undeclared": 0.0,
+          "symmetric_latency_0.02_s_undeclared": 0.0,
+          "symmetric_latency_0_s_undeclared": 0.0
+        },
+        "truth_flight_time_s": [
+          0.40788648519117143,
+          0.4690694579698469,
+          0.5302524307485228,
+          0.5914354035271983,
+          0.6526183763058742
+        ]
+      },
+      "statistics": {
+        "bias": -0.0005475692514772757,
+        "expanded_uncertainty_of_difference": null,
+        "limits_of_agreement": [
+          -0.0011696064140323344,
+          7.446791107778303e-05
+        ],
+        "n": 5,
+        "proportional_bias_p": 0.8900562604319634,
+        "proportional_bias_slope": -0.0002836018350733867,
+        "proportional_bias_slope_se": 0.0018867605101758988,
+        "ratio_bias_percent": -0.10315924104696227,
+        "sd_difference": 0.0003173717310428193,
+        "tolerance": 0.004,
+        "typical_error": 0.00022441570317729065,
+        "within_tolerance": true
+      }
+    },
+    {
+      "assumptions": [
+        "sensor rigidly at COM",
+        "no soft-tissue artefact",
+        "ideal flight specific force of zero"
+      ],
+      "classification": "analytical_model_agreement",
+      "definitions": {
+        "force_platform": "force below the contact threshold",
+        "imu": "specific-force magnitude below a declared threshold for a minimum duration"
+      },
+      "empirical_status": "missing_evidence: analytical study only: idealised observation models of one truth; no measured paired data exist, so empirical agreement and interchangeability are not established",
+      "id": "force_vs_imu_flight_time",
+      "interchangeable": "unknown",
+      "left": "force_platform.single",
+      "pairs": [
+        [
+          0.4079999999999999,
+          0.4099999999999999
+        ],
+        [
+          0.47,
+          0.472
+        ],
+        [
+          0.5309999999999999,
+          0.534
+        ],
+        [
+          0.5920000000000001,
+          0.5940000000000001
+        ],
+        [
+          0.653,
+          0.6559999999999999
+        ]
+      ],
+      "quantity": "flight_time",
+      "reason": "agreement of idealised observation models; says nothing about real devices",
+      "right": "imu.inertial",
+      "sensitivities": {
+        "error_vs_truth_by_threshold_s": {
+          "threshold_1": 0.003747569251477234,
+          "threshold_3": 0.003747569251477234,
+          "threshold_6": 0.003747569251477234
+        }
+      },
+      "statistics": {
+        "bias": 0.002400000000000002,
+        "expanded_uncertainty_of_difference": null,
+        "limits_of_agreement": [
+          0.0013264835137697065,
+          0.0034735164862302976
+        ],
+        "n": 5,
+        "proportional_bias_p": 0.3061161350690755,
+        "proportional_bias_slope": 0.0032732353136846895,
+        "proportional_bias_slope_se": 0.0026595697422446287,
+        "ratio_bias_percent": 0.4521477015825174,
+        "sd_difference": 0.0005477225575051665,
+        "tolerance": 0.006,
+        "typical_error": 0.000387298334620742,
+        "within_tolerance": true
+      }
+    },
+    {
+      "assumptions": [
+        "rigid zero-compliance rig",
+        "perfectly aligned axes",
+        "ideal calibration"
+      ],
+      "classification": "analytical_model_agreement",
+      "definitions": {
+        "force_platform": "vertical ground reaction force of the whole system on the plate",
+        "load_cell": "uniaxial force at the cell, with rig compliance and line of action unmodelled"
+      },
+      "empirical_status": "missing_evidence: analytical study only: idealised observation models of one truth; no measured paired data exist, so empirical agreement and interchangeability are not established",
+      "id": "force_vs_load_cell_isometric_force",
+      "interchangeable": "unknown",
+      "left": "force_platform.single",
+      "pairs": [
+        [
+          1500.0,
+          1500.0
+        ],
+        [
+          2000.0,
+          2000.0
+        ],
+        [
+          2500.0,
+          2500.0
+        ],
+        [
+          3000.0,
+          3000.0
+        ]
+      ],
+      "quantity": "isometric_force",
+      "reason": "agreement of idealised observation models; says nothing about real devices",
+      "right": "load_cell_isometric.load_cell",
+      "sensitivities": {
+        "rig_compliance": "not modelled; delays and attenuates early RFD"
+      },
+      "statistics": {
+        "bias": 0.0,
+        "expanded_uncertainty_of_difference": null,
+        "limits_of_agreement": [
+          0.0,
+          0.0
+        ],
+        "n": 4,
+        "proportional_bias_p": null,
+        "proportional_bias_slope": 0.0,
+        "proportional_bias_slope_se": null,
+        "ratio_bias_percent": 0.0,
+        "sd_difference": 0.0,
+        "tolerance": 0.01,
+        "typical_error": 0.0,
+        "within_tolerance": true
+      }
+    },
+    {
+      "assumptions": [
+        "ideal noise-free observations",
+        "declared fixed angle for radar",
+        "aiming point on the laser axis"
+      ],
+      "classification": "definition_mismatch",
+      "definitions": {
+        "laser": "derivative of measured distance (noise amplified by 1/dt)",
+        "radar": "Doppler radial speed (direct measurement of velocity)"
+      },
+      "empirical_status": "missing_evidence: analytical study only: idealised observation models of one truth; no measured paired data exist, so empirical agreement and interchangeability are not established",
+      "id": "radar_vs_laser_velocity",
+      "interchangeable": "no",
+      "left": "radar_laser.radar",
+      "pairs": [
+        [
+          8.860465317608917,
+          8.860480135530906
+        ],
+        [
+          8.860465317608917,
+          8.860468567843782
+        ],
+        [
+          8.860465317608917,
+          8.8604658116692
+        ]
+      ],
+      "quantity": "doppler_vs_differentiated_velocity",
+      "reason": "the estimands differ by definition; the numerical difference is diagnostic only",
+      "right": "radar_laser.laser",
+      "sensitivities": {
+        "five_point_derivative_noise_sd_m_s_at_256hz_for_0.01m_range_noise": 2.432,
+        "note": "range noise of 1 cm at 256 Hz gives ~2.4 m/s of velocity noise before filtering"
+      },
+      "statistics": {
+        "bias": 6.187405713120597e-06,
+        "expanded_uncertainty_of_difference": null,
+        "limits_of_agreement": [
+          -8.708769675817386e-06,
+          2.108358110205858e-05
+        ],
+        "n": 3,
+        "proportional_bias_p": 9.00316316157106e-11,
+        "proportional_bias_slope": 2.0,
+        "proportional_bias_slope_se": 0.0,
+        "ratio_bias_percent": 6.983161144848688e-05,
+        "sd_difference": 7.600229140145998e-06,
+        "tolerance": null,
+        "typical_error": 5.374173563568838e-06,
+        "within_tolerance": null
+      }
+    },
+    {
+      "assumptions": [
+        "declared latency of 0.1 s modelled as a pure delay",
+        "no smoothing",
+        "no multipath"
+      ],
+      "classification": "definition_mismatch",
+      "definitions": {
+        "gnss_lps": "horizontal speed differentiated from reported positions, with processing latency",
+        "radar": "Doppler radial speed along the beam"
+      },
+      "empirical_status": "missing_evidence: analytical study only: idealised observation models of one truth; no measured paired data exist, so empirical agreement and interchangeability are not established",
+      "id": "radar_vs_positional_speed",
+      "interchangeable": "no",
+      "left": "radar_laser.radar",
+      "pairs": [
+        [
+          5.088616123436296,
+          4.748701025330868
+        ],
+        [
+          6.421456828258289,
+          6.197370984768622
+        ],
+        [
+          7.300119574461944,
+          7.152393081780817
+        ],
+        [
+          7.879369757002893,
+          7.781982450870486
+        ],
+        [
+          8.261235012384912,
+          8.197033343316658
+        ],
+        [
+          8.512976103994605,
+          8.470651755218132
+        ],
+        [
+          8.678934059874729,
+          8.651032129514501
+        ],
+        [
+          8.788340287295918,
+          8.769946201141433
+        ],
+        [
+          8.860465317608917,
+          8.848339188660471
+        ],
+        [
+          8.908013068045683,
+          8.90001903115582
+        ]
+      ],
+      "quantity": "running_speed",
+      "reason": "the estimands differ by definition; the numerical difference is diagnostic only",
+      "right": "gnss_lps.gnss",
+      "sensitivities": {
+        "closed_form": "bias ~ acceleration x latency while accelerating",
+        "latency_bias_at_t_s": {
+          "1": 0.3399150981054282,
+          "2": 0.14772649268112747,
+          "4": 0.027901930360227922
+        }
+      },
+      "statistics": {
+        "bias": -0.09820569406063787,
+        "expanded_uncertainty_of_difference": null,
+        "limits_of_agreement": [
+          -0.3127713505158407,
+          0.11635996239456498
+        ],
+        "n": 10,
+        "proportional_bias_p": 1.0636951842421539e-62,
+        "proportional_bias_slope": 0.08328514149097156,
+        "proportional_bias_slope_se": 6.205226592046884e-10,
+        "ratio_bias_percent": -1.24785623099517,
+        "sd_difference": 0.1094742853173167,
+        "tolerance": null,
+        "typical_error": 0.07741000951342553,
+        "within_tolerance": null
+      }
+    },
+    {
+      "assumptions": [
+        "declared latency of 0.1 s modelled as a pure delay",
+        "no smoothing",
+        "no multipath"
+      ],
+      "classification": "definition_mismatch",
+      "definitions": {
+        "gnss_lps": "horizontal speed differentiated from reported positions, with processing latency",
+        "radar": "Doppler radial speed along the beam"
+      },
+      "empirical_status": "missing_evidence: analytical study only: idealised observation models of one truth; no measured paired data exist, so empirical agreement and interchangeability are not established",
+      "id": "radar_vs_lps_speed",
+      "interchangeable": "no",
+      "left": "radar_laser.radar",
+      "pairs": [
+        [
+          5.088616123436296,
+          4.922198844478479
+        ],
+        [
+          6.421456828258289,
+          6.311747796401894
+        ],
+        [
+          7.300119574461944,
+          7.227794923162254
+        ],
+        [
+          7.879369757002893,
+          7.831690408301059
+        ],
+        [
+          8.261235012384912,
+          8.229802848499167
+        ],
+        [
+          8.512976103994605,
+          8.492254744466004
+        ],
+        [
+          8.678934059874729,
+          8.665273697760483
+        ],
+        [
+          8.788340287295918,
+          8.779334821566957
+        ],
+        [
+          8.860465317608917,
+          8.854528548706506
+        ],
+        [
+          8.908013068045683,
+          8.904099308773105
+        ]
+      ],
+      "quantity": "running_speed",
+      "reason": "the estimands differ by definition; the numerical difference is diagnostic only",
+      "right": "gnss_lps.lps",
+      "sensitivities": {
+        "closed_form": "bias ~ acceleration x latency while accelerating",
+        "latency_bias_at_t_s": {
+          "1": 0.16641727895781688,
+          "2": 0.07232465129969068,
+          "4": 0.013660362114245928
+        }
+      },
+      "statistics": {
+        "bias": -0.048080019024827704,
+        "expanded_uncertainty_of_difference": null,
+        "limits_of_agreement": [
+          -0.15312811163411125,
+          0.05696807358445583
+        ],
+        "n": 10,
+        "proportional_bias_p": 4.374999999999999e-80,
+        "proportional_bias_slope": 0.04166063954945879,
+        "proportional_bias_slope_se": 0.0,
+        "ratio_bias_percent": -0.6109314933353253,
+        "sd_difference": 0.05359695047352373,
+        "tolerance": null,
+        "typical_error": 0.03789876713074817,
+        "within_tolerance": null
+      }
+    },
+    {
+      "assumptions": [
+        "exact crossing times",
+        "radar compared at the segment time midpoint"
+      ],
+      "classification": "definition_mismatch",
+      "definitions": {
+        "gates": "segment-average velocity over a distance interval",
+        "radar": "instantaneous Doppler speed at a time"
+      },
+      "empirical_status": "missing_evidence: analytical study only: idealised observation models of one truth; no measured paired data exist, so empirical agreement and interchangeability are not established",
+      "id": "radar_vs_gates_velocity",
+      "interchangeable": "no",
+      "left": "radar_laser.radar",
+      "pairs": [
+        [
+          3.922007668562912,
+          3.6402271746596764
+        ],
+        [
+          6.885932043417832,
+          6.853220404883259
+        ],
+        [
+          8.071613150179525,
+          8.029381638760105
+        ],
+        [
+          8.658765730405943,
+          8.645401282123641
+        ],
+        [
+          8.868300968631406,
+          8.863396341167505
+        ]
+      ],
+      "quantity": "sprint_velocity",
+      "reason": "the estimands differ by definition; the numerical difference is diagnostic only",
+      "right": "timing_contact.gates",
+      "sensitivities": {
+        "note": "average over distance differs from speed at the time midpoint by a curvature term"
+      },
+      "statistics": {
+        "bias": -0.07499854392068625,
+        "expanded_uncertainty_of_difference": null,
+        "limits_of_agreement": [
+          -0.3034259233611188,
+          0.1534288355197463
+        ],
+        "n": 5,
+        "proportional_bias_p": 0.011893026348904344,
+        "proportional_bias_slope": 0.053297368310793874,
+        "proportional_bias_slope_se": 0.009709077845491762,
+        "ratio_bias_percent": -1.0300124651042872,
+        "sd_difference": 0.11654672292054269,
+        "tolerance": null,
+        "typical_error": 0.08241097810218535,
+        "within_tolerance": null
+      }
+    },
+    {
+      "assumptions": [
+        "vertical cable",
+        "attachment moves with the COM",
+        "standing start declared"
+      ],
+      "classification": "definition_mismatch",
+      "definitions": {
+        "force_platform": "centre-of-mass rise after take-off, v^2 / 2g from the impulse",
+        "lpt": "peak attachment displacement above the declared standing start"
+      },
+      "empirical_status": "missing_evidence: analytical study only: idealised observation models of one truth; no measured paired data exist, so empirical agreement and interchangeability are not established",
+      "id": "force_vs_lpt_jump_height",
+      "interchangeable": "no",
+      "left": "force_platform.single",
+      "pairs": [
+        [
+          0.20394324259558566,
+          0.5039432425955856
+        ],
+        [
+          0.26971493833266197,
+          0.614714938332662
+        ],
+        [
+          0.3446640799865398,
+          0.7346640799865398
+        ],
+        [
+          0.42879066755721884,
+          0.8637906675572188
+        ],
+        [
+          0.5220947010446993,
+          1.0020947010446994
+        ]
+      ],
+      "quantity": "jump_height",
+      "reason": "the estimands differ by definition; the numerical difference is diagnostic only",
+      "right": "lpt_encoder.lpt",
+      "sensitivities": {
+        "take_off_height_above_start_m": {
+          "takeoff_speed_2": 0.3,
+          "takeoff_speed_2.3": 0.345,
+          "takeoff_speed_2.6": 0.39,
+          "takeoff_speed_2.9": 0.43499999999999994,
+          "takeoff_speed_3.2": 0.48000000000000004
+        }
+      },
+      "statistics": {
+        "bias": 0.39,
+        "expanded_uncertainty_of_difference": null,
+        "limits_of_agreement": [
+          0.2505461177314736,
+          0.5294538822685264
+        ],
+        "n": 5,
+        "proportional_bias_p": 6.37233738713986e-05,
+        "proportional_bias_slope": 0.4397676340965171,
+        "proportional_bias_slope_se": 0.01351005541539934,
+        "ratio_bias_percent": 110.21883285302593,
+        "sd_difference": 0.07115124735378855,
+        "tolerance": null,
+        "typical_error": 0.05031152949374528,
+        "within_tolerance": null
+      }
+    },
+    {
+      "assumptions": [
+        "anchor at the same height as the start point",
+        "rigid attachment point"
+      ],
+      "classification": "definition_mismatch",
+      "definitions": {
+        "force_platform": "vertical centre-of-mass displacement",
+        "lpt": "change of cable length, equal to vertical displacement only for a vertical cable"
+      },
+      "empirical_status": "missing_evidence: analytical study only: idealised observation models of one truth; no measured paired data exist, so empirical agreement and interchangeability are not established",
+      "id": "cable_vs_vertical_displacement",
+      "interchangeable": "no",
+      "left": "force_platform.single",
+      "pairs": [
+        [
+          0.1,
+          0.016227766016837952
+        ],
+        [
+          0.2,
+          0.06055512754639891
+        ],
+        [
+          0.30000000000000004,
+          0.12426406871192858
+        ],
+        [
+          0.4,
+          0.2
+        ],
+        [
+          0.5,
+          0.2830951894845301
+        ],
+        [
+          0.6,
+          0.37082039324993693
+        ]
+      ],
+      "quantity": "cable_vs_vertical_displacement",
+      "reason": "the estimands differ by definition; the numerical difference is diagnostic only",
+      "right": "lpt_encoder.lpt",
+      "sensitivities": {
+        "error_at_h_0.5_m_by_anchor_offset": {
+          "anchor_offset_0.1_m": -0.09009804864072146,
+          "anchor_offset_0.3_m": -0.2169048105154699,
+          "anchor_offset_0.5_m": -0.2928932188134524,
+          "anchor_offset_0_m": 0.0
+        }
+      },
+      "statistics": {
+        "bias": -0.17417290916506126,
+        "expanded_uncertainty_of_difference": null,
+        "limits_of_agreement": [
+          -0.28116451363895706,
+          -0.06718130469116546
+        ],
+        "n": 6,
+        "proportional_bias_p": 0.003694176352143833,
+        "proportional_bias_slope": -0.32217065789110605,
+        "proportional_bias_slope_se": 0.052972265613667996,
+        "ratio_bias_percent": -49.763688332874636,
+        "sd_difference": 0.054588556380541636,
+        "tolerance": null,
+        "typical_error": 0.038599938391865166,
+        "within_tolerance": null
+      }
+    },
+    {
+      "assumptions": [
+        "rigid vertical translation",
+        "declared 20 kg bar added to 75 kg body"
+      ],
+      "classification": "definition_mismatch",
+      "definitions": {
+        "force_platform": "power of ground reaction force on the whole-body COM velocity",
+        "lpt": "vertical mass-model power of the attachment point with declared system mass"
+      },
+      "empirical_status": "missing_evidence: analytical study only: idealised observation models of one truth; no measured paired data exist, so empirical agreement and interchangeability are not established",
+      "id": "attachment_vs_com_power",
+      "interchangeable": "no",
+      "left": "force_platform.single",
+      "pairs": [
+        [
+          885.49875,
+          1121.63175
+        ],
+        [
+          1770.9975,
+          2243.2635
+        ],
+        [
+          2656.49625,
+          3364.89525
+        ]
+      ],
+      "quantity": "attachment_vs_com_power",
+      "reason": "the estimands differ by definition; the numerical difference is diagnostic only",
+      "right": "lpt_encoder.lpt",
+      "sensitivities": {
+        "note": "attachment velocity differs from COM velocity under any joint motion"
+      },
+      "statistics": {
+        "bias": 472.266,
+        "expanded_uncertainty_of_difference": null,
+        "limits_of_agreement": [
+          9.453824438603476,
+          935.0781755613966
+        ],
+        "n": 3,
+        "proportional_bias_p": 9.00316316157106e-11,
+        "proportional_bias_slope": 0.2352941176470588,
+        "proportional_bias_slope_se": 0.0,
+        "ratio_bias_percent": 26.666666666666664,
+        "sd_difference": 236.13299999999992,
+        "tolerance": null,
+        "typical_error": 166.97124556192296,
+        "within_tolerance": null
+      }
+    },
+    {
+      "assumptions": [],
+      "classification": "unsupported_comparison",
+      "definitions": {
+        "raw": "calibrated force at the strap",
+        "vendor_corrected": "vendor-defined correction (undisclosed algorithm)"
+      },
+      "empirical_status": "missing_evidence: analytical study only: idealised observation models of one truth; no measured paired data exist, so empirical agreement and interchangeability are not established",
+      "id": "nordic_raw_vs_vendor_corrected",
+      "interchangeable": "unknown",
+      "left": "nordic_hip.nordic",
+      "pairs": [],
+      "quantity": "force_basis",
+      "reason": "no vendor-corrected data or algorithm is available; the engine refuses to pool or convert the two bases",
+      "right": "nordic_hip.nordic",
+      "sensitivities": {},
+      "statistics": null
+    },
+    {
+      "assumptions": [
+        "radar start equals gate start",
+        "integration of an exact speed trace",
+        "no start-definition bias"
+      ],
+      "classification": "analytical_model_agreement",
+      "definitions": {
+        "gates": "time of a beam interruption at a fixed position",
+        "radar": "time at which integrated Doppler speed reaches the distance"
+      },
+      "empirical_status": "missing_evidence: analytical study only: idealised observation models of one truth; no measured paired data exist, so empirical agreement and interchangeability are not established",
+      "id": "gates_vs_radar_laser_timing",
+      "interchangeable": "unknown",
+      "left": "radar_laser.radar",
+      "pairs": [
+        [
+          2.1031246565401025,
+          2.1031297245323044
+        ],
+        [
+          3.3485505747362385,
+          3.3485571820221027
+        ],
+        [
+          4.50523488280616,
+          4.505241578033881
+        ]
+      ],
+      "quantity": "sprint_split_time",
+      "reason": "agreement of idealised observation models; says nothing about real devices",
+      "right": "timing_contact.gates",
+      "sensitivities": {
+        "start_offset_effect": "a start offset adds directly to every split"
+      },
+      "statistics": {
+        "bias": 6.123501928930371e-06,
+        "expanded_uncertainty_of_difference": null,
+        "limits_of_agreement": [
+          4.3298307070186594e-06,
+          7.917173150842082e-06
+        ],
+        "n": 3,
+        "proportional_bias_p": 0.28915694465855263,
+        "proportional_bias_slope": 6.845479110035262e-07,
+        "proportional_bias_slope_se": 3.3423320095433927e-07,
+        "ratio_bias_percent": 0.00018450006654985155,
+        "sd_difference": 9.151551947178424e-07,
+        "tolerance": 0.01,
+        "typical_error": 6.471124440230816e-07,
+        "within_tolerance": true
+      }
+    }
+  ]
+}

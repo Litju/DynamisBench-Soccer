@@ -99,6 +99,12 @@ jobs:
           "$wheel_bin/dbs" assess sprint-fv --help
           "$wheel_bin/dbs" assess cod --help
           "$wheel_bin/python" -m pytest "$GITHUB_WORKSPACE/tests/test_sprint_cod_assessment.py"
+      - name: RES-703 cross-device agreement installed-wheel processing
+        run: |
+          wheel_bin="$RUNNER_TEMP/wheel-venv/bin"
+          cd "$RUNNER_TEMP"
+          "$wheel_bin/dbs" agreement run --out "$RUNNER_TEMP/agreement.json"
+          "$wheel_bin/python" -m pytest "$GITHUB_WORKSPACE/tests/test_cross_device_agreement.py"
       - name: RES-700 GNSS and LPS installed-wheel processing
         run: |
           wheel_bin="$RUNNER_TEMP/wheel-venv/bin"
