@@ -1,0 +1,11 @@
+{
+  "description": "RES-669 fixed Linux lockfile: GNSS default common rigid trajectory at 10 native Hz; metre-space Gaussian noise SD0.03 seed17 on all fixes. Six actual v2 files; changing model/serialization requires review.",
+  "sha256": {
+    "corrupted.json": "b6e92b7995e0fd44640ce9eeb13cd6598cdb32a2f0fb3e2c7ab53161b754a672",
+    "corrupted.parquet": "95d2ef99fd57ec7e1d8aa73a9126e1a129612e8105454e9aac3fb9ed976198d3",
+    "observation.json": "69746f906b1cc94d9b2be21d558250f75ba0714cf9a7b0480fa97792241859e4",
+    "observation.parquet": "698a6405dfd610c1bc9f1766b73df8c31173c957123c517780e8041acc761446",
+    "truth.json": "95047031d6669501ba709a20ccca4523b6edde67c05f4daf52aa0eff86ad2c5d",
+    "truth.parquet": "907cd3c2a24fc06e5376387b95d476852761e2c7b3eb26cdbdd9426c0f767791"
+  }
+}
