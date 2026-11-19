@@ -75,8 +75,8 @@ paradigm = "continuous_signal"
 issue = "RES-697"
 engine_id = "nordic"
 methods = ["filter"]
-ratings = { A = "specified", B = "specified", C = "specified", D = "absent", E = "absent", F = "absent", G = "absent", H = "absent", I = "absent", J = "partial", K = "partial", L = "absent", M = "absent", N = "absent", O = "absent" }
-blockers = ["Isometric hamstring test is a declared evidence gap; no engine"]
+ratings = { A = "specified", B = "specified", C = "specified", D = "partial", E = "partial", F = "partial", G = "absent", H = "absent", I = "partial", J = "partial", K = "partial", L = "absent", M = "partial", N = "absent", O = "partial" }
+blockers = ["Engine verified on analytical eccentric controls (RES-697); athlete-level validity, strap/lever geometry measurements and vendor-corrected versus raw agreement remain unqualified (RES-694/703)", "G/H assessment qualification remains RES-672"]
 
 [[subfamily]]
 id = "nordic_hip.hip"
@@ -86,8 +86,8 @@ paradigm = "continuous_signal"
 issue = "RES-697"
 engine_id = "hip"
 methods = ["filter"]
-ratings = { A = "specified", B = "specified", C = "specified", D = "absent", E = "absent", F = "absent", G = "absent", H = "absent", I = "absent", J = "partial", K = "partial", L = "absent", M = "absent", N = "absent", O = "absent" }
-blockers = ["Unqualified geometry and metrology; no engine"]
+ratings = { A = "specified", B = "specified", C = "specified", D = "partial", E = "partial", F = "partial", G = "absent", H = "absent", I = "partial", J = "partial", K = "partial", L = "absent", M = "partial", N = "absent", O = "partial" }
+blockers = ["Engine verified on analytical isometric controls (RES-697); squeeze protocol geometry validity and device metrology remain unqualified (RES-694)", "G/H assessment qualification remains RES-672"]
 
 [[subfamily]]
 id = "timing_contact.gates"
@@ -2754,3 +2754,99 @@ kind = "doc"
 ref = "repo:docs/force-platform-engine.md"
 issue = "RES-670"
 rationale = "Working production processing independently compared against RES-669 analytical controls; empirical instrument and assessment/agreement qualification remains open, so no device qualification is promoted."
+
+[[evidence]]
+subfamily = "nordic_hip.nordic"
+dimension = "D"
+kind = "independent_test"
+ref = "repo:tests/test_nordic_hip.py"
+issue = "RES-697"
+rationale = "Clipping and dropped-sample corruption, side and force-basis negative controls. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "nordic_hip.nordic"
+dimension = "E"
+kind = "independent_test"
+ref = "repo:tests/test_nordic_hip.py"
+issue = "RES-697"
+rationale = "Onset, repetition and break-point variants checked against independent closed forms. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "nordic_hip.nordic"
+dimension = "F"
+kind = "independent_test"
+ref = "repo:tests/test_nordic_hip.py"
+issue = "RES-697"
+rationale = "Peak, impulse, torque, work and asymmetry compared with closed-form eccentric ramp values. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "nordic_hip.nordic"
+dimension = "I"
+kind = "code"
+ref = "repo:src/dynamisbench_soccer/engines/nordic_hip.py"
+issue = "RES-697"
+rationale = "Gain, cutoff and lever-arm sensitivity are reported; no complete uncertainty budget. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "nordic_hip.nordic"
+dimension = "M"
+kind = "code"
+ref = "repo:src/dynamisbench_soccer/engines/nordic_hip.py"
+issue = "RES-697"
+rationale = "Method specification and declarations are echoed in every report; no seeded bundle chain yet. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "nordic_hip.nordic"
+dimension = "O"
+kind = "doc"
+ref = "repo:docs/nordic-hip-engine.md"
+issue = "RES-697"
+rationale = "Limitations: strap force is not muscle force, torque and angle refusals, raw versus vendor-corrected. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "nordic_hip.hip"
+dimension = "D"
+kind = "independent_test"
+ref = "repo:tests/test_nordic_hip.py"
+issue = "RES-697"
+rationale = "Clipping and dropped-sample corruption, side and force-basis negative controls. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "nordic_hip.hip"
+dimension = "E"
+kind = "independent_test"
+ref = "repo:tests/test_nordic_hip.py"
+issue = "RES-697"
+rationale = "Onset, repetition and break-point variants checked against independent closed forms. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "nordic_hip.hip"
+dimension = "F"
+kind = "independent_test"
+ref = "repo:tests/test_nordic_hip.py"
+issue = "RES-697"
+rationale = "Peak, impulse, torque, work and asymmetry compared with closed-form eccentric ramp values. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "nordic_hip.hip"
+dimension = "I"
+kind = "code"
+ref = "repo:src/dynamisbench_soccer/engines/nordic_hip.py"
+issue = "RES-697"
+rationale = "Gain, cutoff and lever-arm sensitivity are reported; no complete uncertainty budget. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "nordic_hip.hip"
+dimension = "M"
+kind = "code"
+ref = "repo:src/dynamisbench_soccer/engines/nordic_hip.py"
+issue = "RES-697"
+rationale = "Method specification and declarations are echoed in every report; no seeded bundle chain yet. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "nordic_hip.hip"
+dimension = "O"
+kind = "doc"
+ref = "repo:docs/nordic-hip-engine.md"
+issue = "RES-697"
+rationale = "Limitations: strap force is not muscle force, torque and angle refusals, raw versus vendor-corrected. Engineering calculation only; no empirical qualification."

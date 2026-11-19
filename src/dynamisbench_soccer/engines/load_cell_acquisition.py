@@ -257,8 +257,17 @@ def input_digest(record: RawRecord) -> str:
     return digest.hexdigest()
 
 
-def from_bundle(bundle: SignalBundle, channel: str | None = None) -> RawRecord:
-    """Select one raw load-cell channel, its declared calibration records and geometry."""
+def from_bundle(
+    bundle: SignalBundle,
+    channel: str | None = None,
+    *,
+    admitted_classes: frozenset[DeviceClass] = LOAD_CELL_CLASSES,
+) -> RawRecord:
+    """Select one raw load-cell channel, its declared calibration records and geometry.
+
+    ``admitted_classes`` lets a wrapping engine (for example Nordic/hip) admit its own device
+    classes explicitly; the default keeps the load-cell engine closed to them.
+    """
     meta = BundleMeta.model_validate(bundle.meta.model_dump())
     SignalBundle(meta, bundle.data)  # Revalidate (including finiteness) at the trust boundary.
     if meta.kind is not BundleKind.TIMESERIES or meta.sampling is None:
@@ -273,7 +282,7 @@ def from_bundle(bundle: SignalBundle, channel: str | None = None) -> RawRecord:
     if meta.acquisition is not None:
         source = next(s for s in meta.acquisition.sources if spec.name in s.channels)
     device = source.device.device_class if source is not None else meta.device.device_class
-    if device not in LOAD_CELL_CLASSES:
+    if device not in admitted_classes:
         raise ValueError(f"load-cell engine does not accept device class {device.value!r}")
     records = [*meta.calibration, *(source.calibration if source is not None else [])]
     unique: list[Calibration] = []

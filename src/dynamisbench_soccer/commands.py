@@ -20,6 +20,7 @@ def registrars() -> list[Registrar]:
         gnss_lps_cli,
         load_cell_cli,
         lpt_cli,
+        nordic_hip_cli,
         radar_laser_cli,
         timing_cli,
     )
@@ -43,4 +44,5 @@ def registrars() -> list[Registrar]:
         engines_cli.register,
         load_cell_cli.register,
         lpt_cli.register,
+        nordic_hip_cli.register,
     ]
