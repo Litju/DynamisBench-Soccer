@@ -27,7 +27,7 @@ Source = Literal["radar", "laser", "gnss_doppler", "gnss_position", "lps_positio
 
 SOURCE_ESTIMANDS: dict[str, dict[str, object]] = {
     "radar": {
-        "estimand": "doppler radial speed along the beam, corrected by a declared fixed angle",
+        "estimand": "Doppler radial speed along the beam, corrected by a declared fixed angle",
         "instantaneous": True,
     },
     "laser": {

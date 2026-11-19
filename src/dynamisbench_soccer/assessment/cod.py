@@ -65,7 +65,10 @@ def assess_trace(
     if distance[-1] < spec.path_length_m:
         raise ValueError("trace ends before the declared path length")
     refusals: dict[str, str] = {}
-    at = lambda d: float(np.interp(d, distance, t))  # noqa: E731
+
+    def at(d: float) -> float:
+        return float(np.interp(d, distance, t))
+
     turn_idx = np.flatnonzero(
         (distance >= spec.turn_distance_m - spec.turn_window_m / 2)
         & (distance <= spec.turn_distance_m + spec.turn_window_m / 2)
