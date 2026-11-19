@@ -43,9 +43,9 @@ def _process(args: argparse.Namespace) -> int:
         content = json.dumps(asdict(result), default=_json_value, allow_nan=False, sort_keys=True)
         if args.out:
             target = Path(args.out)
-            if target.resolve() in {
-                path.resolve() for path in (*io.paths_for(stem), declaration_path)
-            }:
+            if target.exists() and any(
+                target.samefile(path) for path in (*io.paths_for(stem), declaration_path)
+            ):
                 raise ValueError("output path overlaps an input")
             target.parent.mkdir(parents=True, exist_ok=True)
             target.write_text(content + "\n", encoding="utf-8")

@@ -65,6 +65,7 @@ def track_case(
             options["doppler_basis"] = "horizontal"
             add("doppler_speed", Quantity.VELOCITY, 3)
     else:
+        options["lps_z_up_frame"] = "field"
         visibility = {anchor: f"visible_{anchor}" for anchor in meta.geometry.lps_anchors_m}
         options["anchor_visibility"] = visibility
         for name in visibility.values():
@@ -222,3 +223,20 @@ def test_drift_needs_bracketing_sync_pulses() -> None:
     acquisition.alignments[0].sync_events.pop()
     with pytest.raises(AcquisitionRefusal, match="bracketing"):
         admit(case.observation, declaration)
+
+
+@pytest.mark.parametrize("source_format", ["Vendor Re-Sampled Export", "vendor up-sampled track"])
+def test_resampling_provenance_refuses_even_when_rates_agree(source_format: str) -> None:
+    case, declaration = track_case("gnss")
+    acquisition = case.observation.meta.acquisition
+    assert acquisition is not None
+    acquisition.sources[0].raw_format = source_format
+    with pytest.raises(AcquisitionRefusal, match="resampled"):
+        admit(case.observation, declaration)
+
+
+@pytest.mark.parametrize("frame", [None, "wrong-frame"])
+def test_lps_field_axes_require_an_explicit_z_up_frame(frame: str | None) -> None:
+    case, declaration = track_case("lps")
+    with pytest.raises(AcquisitionRefusal, match="declared Z-up field frame"):
+        admit(case.observation, declaration.model_copy(update={"lps_z_up_frame": frame}))

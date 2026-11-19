@@ -11,6 +11,7 @@ import numpy as np
 import pytest
 from test_gnss_lps_acquisition import track_case
 
+from dynamisbench_soccer.cli import main
 from dynamisbench_soccer.engines.gnss_lps import ProcessingOptions, SpeedThreshold, process
 from dynamisbench_soccer.engines.gnss_lps_acquisition import AcquisitionRefusal
 from dynamisbench_soccer.reference.clocks import DeviceClock
@@ -193,3 +194,55 @@ def test_cli_roundtrip_and_refusal(kind: str, tmp_path: Path) -> None:
     assert refusal.returncode == 2
     assert "resampled" in refusal.stderr
     assert output.read_text() == data
+
+
+@pytest.mark.parametrize(
+    "deviations",
+    [
+        [-0.9] * 4 + [0] + [0.9] * 4,  # Cropping shifts the median interval.
+        [-0.99, -0.99, -0.99, 0, 0, 0, 0.99, 0.99],  # Half-rate median shifts.
+    ],
+)
+def test_five_point_retains_native_result_when_rate_comparison_is_unavailable(
+    deviations: list[float],
+) -> None:
+    duration = (len(deviations) + 0.25) / 10
+    raw = export_case(
+        "gnss_lps.lps", RigidBody(PlanarTrajectory((PlanarPhase(duration, (1, 0)),))), hz=10
+    )
+    case, declaration = track_case("lps", hz=10, latency=0, raw=raw)
+    t = np.r_[0.0, np.cumsum(0.1 * (1 + 1e-5 * np.array(deviations)))]
+    case.observation["time"][:] = t
+    case.observation["position_x"][:] = 2 * t + t**2
+    result = process(case.observation, declaration, ProcessingOptions(derivative="five_point"))
+    assert result.sensitivity.every_second_sample is None
+    assert result.sensitivity.rate_unavailable_reason
+    assert result.sensitivity.comparison_duration_s == pytest.approx(t[-1])
+    assert len(result.kinematics.position_m) == len(t)
+    assert result.thresholds
+
+
+@pytest.mark.parametrize("source", ["observation.parquet", "observation.json", "acquisition.json"])
+def test_cli_refuses_hard_link_to_input(source: str, tmp_path: Path, capsys) -> None:
+    case, declaration = track_case("lps")
+    case.write(tmp_path)
+    contract = tmp_path / "acquisition.json"
+    contract.write_text(declaration.model_dump_json())
+    protected = tmp_path / source
+    original = protected.read_bytes()
+    alias = tmp_path / "output.json"
+    alias.hardlink_to(protected)
+    status = main(
+        [
+            "gnss-lps",
+            "process",
+            str(tmp_path / "observation"),
+            "--declaration",
+            str(contract),
+            "--out",
+            str(alias),
+        ]
+    )
+    assert status == 2
+    assert "output path overlaps an input" in capsys.readouterr().err
+    assert protected.read_bytes() == original

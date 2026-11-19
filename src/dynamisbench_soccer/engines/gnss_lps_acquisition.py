@@ -46,6 +46,7 @@ class AcquisitionDeclaration(BaseModel):
     latency_uncertainty_s: float = Field(ge=0)
     maximum_hdop: float = Field(default=3.0, gt=0)
     enu_origin: EnuOrigin | None = None
+    lps_z_up_frame: str | None = Field(default=None, min_length=1)
     anchor_visibility: dict[str, str] = Field(default_factory=dict)
     doppler_basis: Literal["horizontal", "three_dimensional"] | None = None
     minimum_satellites: int = Field(default=4, ge=4)
@@ -212,8 +213,8 @@ def _lps_position(
     channels = bundle.channels_where(Quantity.POSITION)
     frame_id = channels[0].frame
     frame = next((f for f in acquisition.frames if f.id == frame_id), None)
-    if frame is None or frame.kind != "field":
-        raise AcquisitionRefusal("LPS positions require a declared field frame")
+    if frame is None or frame.kind != "field" or frame.id != declaration.lps_z_up_frame:
+        raise AcquisitionRefusal("LPS positions require a declared Z-up field frame")
     anchors = bundle.meta.geometry.lps_anchors_m
     if (
         "lps_anchors_m" in bundle.meta.geometry.unknown
@@ -266,17 +267,17 @@ def admit(bundle: SignalBundle, declaration: AcquisitionDeclaration) -> Admitted
         raise AcquisitionRefusal("source and trial device or geometry disagree")
     provenance = [source.raw_format, meta.provenance.created_by, *meta.provenance.transforms]
     markers = (
-        "vendor_processed",
-        "manufacturer_processed",
+        "vendorprocessed",
+        "manufacturerprocessed",
         "resampl",
         "upsampl",
         "interpolat",
         "downsampl",
         "decimat",
-        "vendor_smoothed",
-        "manufacturer_smoothed",
+        "vendorsmoothed",
+        "manufacturersmoothed",
     )
-    normalized = [re.sub(r"[^a-z0-9]+", "_", item.lower()) for item in provenance]
+    normalized = [re.sub(r"[^a-z0-9]+", "", item.lower()) for item in provenance]
     if declaration.stage != "native" or any(
         marker in item for item in normalized for marker in markers
     ):
@@ -295,8 +296,8 @@ def admit(bundle: SignalBundle, declaration: AcquisitionDeclaration) -> Admitted
             or ("geodetic_datum" in meta.geometry.unknown)
         ):
             raise AcquisitionRefusal("WGS84 fixes and an explicit ENU origin are required")
-        if declaration.anchor_visibility:
-            raise AcquisitionRefusal("anchor visibility is only defined for LPS")
+        if declaration.anchor_visibility or declaration.lps_z_up_frame is not None:
+            raise AcquisitionRefusal("anchor visibility and Z-up field declarations are LPS only")
         fix_frames = {
             meta.channel(c).frame for c in ("latitude", "longitude", "height") if c in bundle.data
         }

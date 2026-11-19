@@ -81,6 +81,7 @@ class Sensitivity:
     native: Peaks
     alternate_filter: Peaks
     every_second_sample: Peaks | None
+    rate_unavailable_reason: str | None
 
 
 @dataclass(frozen=True)
@@ -93,14 +94,19 @@ class TrackResult:
     limitations: tuple[str, ...]
 
 
+def _uniform_step(time: FloatArray) -> float | None:
+    intervals = np.diff(time)
+    step = float(np.median(intervals))
+    return step if np.max(np.abs(intervals / step - 1)) <= 1e-5 else None
+
+
 def _differentiate(values: FloatArray, time: FloatArray, method: DerivativeMethod) -> FloatArray:
     # Subtract the first value to minimize cancellation in large-offset coordinates.
     values = values - values[0]
     result = np.asarray(np.gradient(values, time, edge_order=2, axis=0))
     if method == "five_point":
-        intervals = np.diff(time)
-        step = float(np.median(intervals))
-        if np.max(np.abs(intervals / step - 1)) > 1e-5:
+        step = _uniform_step(time)
+        if step is None:
             raise AcquisitionRefusal("five_point differentiation requires a uniform time grid")
         result[2:-2] = (values[:-4] - 8 * values[1:-3] + 8 * values[3:-1] - values[4:]) / (
             12 * step
@@ -208,11 +214,29 @@ def _sensitivity(
     track: AdmittedTrack, options: ProcessingOptions, native: Kinematics
 ) -> Sensitivity:
     time, position, doppler = track.clock.elapsed_s, track.position_m, track.doppler_speed_m_s
-    # Equal start and end timestamps keep the comparison on the same part of the trial.
-    if len(time) >= 9 and len(time) % 2 == 0:
-        time, position = time[:-1], position[:-1]
-        doppler = None if doppler is None else doppler[:-1]
-        native = _kinematics(position, time, doppler, options)
+    decimated = None
+    rate_unavailable_reason: str | None = "At least nine observations required"
+    if len(time) >= 9:
+        # Compare algorithms over the same start and end timestamps.
+        stop = len(time) - (len(time) % 2 == 0)
+        common_time = time[:stop]
+        half_time = common_time[::2]
+        if options.derivative == "five_point" and (
+            _uniform_step(common_time) is None or _uniform_step(half_time) is None
+        ):
+            rate_unavailable_reason = (
+                "Five-point comparison requires uniform cropped and half-rate grids"
+            )
+        else:
+            half_doppler = None if doppler is None else doppler[:stop:2]
+            decimated = _peaks(
+                _kinematics(position[:stop:2], half_time, half_doppler, options), half_time, options
+            )
+            rate_unavailable_reason = None
+            if stop != len(time):
+                time, position = common_time, position[:stop]
+                doppler = None if doppler is None else doppler[:stop]
+                native = _kinematics(position, time, doppler, options)
     alternate = options.model_copy(
         update={
             "position_filter": "binomial5" if options.position_filter == "none" else "none",
@@ -221,18 +245,12 @@ def _sensitivity(
             else "none",
         }
     )
-    decimated = None
-    if len(time) >= 9:
-        half_time, half_position = time[::2], position[::2]
-        half_doppler = None if doppler is None else doppler[::2]
-        decimated = _peaks(
-            _kinematics(half_position, half_time, half_doppler, options), half_time, options
-        )
     return Sensitivity(
         float(time[-1]),
         _peaks(native, time, options),
         _peaks(_kinematics(position, time, doppler, alternate), time, alternate),
         decimated,
+        rate_unavailable_reason,
     )
 
 

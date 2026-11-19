@@ -36,6 +36,8 @@ time interval. These limits are engineering options.
   summaries in the v2 vendor-reported field play no role in computation.
 - **LPS.** Position has one `x`, `y` and `z` component in one declared
   field frame, with metres along two orthogonal horizontal axes and local up.
+  Set `lps_z_up_frame` to that frame ID to declare the axis convention
+  for both positions and anchors.
   Supply at least three horizontally distinct, noncollinear anchors in that
   same frame. `anchor_visibility` maps each anchor ID to a distinct binary
   channel. Each anchor must be visible for every admitted fix. The engine works
@@ -51,7 +53,8 @@ upstream interpolation or resampling declared in bundle provenance. Native
 status depends on the producer preserving provenance. A regular clock and
 plausible positions cannot establish that undocumented interpolation is absent.
 
-For receipt timestamps, the engine applies the declared affine clock mapping
+All admitted channels share the same time column and latency declaration. For
+receipt timestamps, the engine applies the declared affine clock mapping
 and then subtracts the constant receipt latency in reference-clock seconds.
 For measurement timestamps, use zero latency correction. Clock drift above
 1,000 ppm by default, conflicting drift declarations, and nonzero drift
@@ -89,7 +92,10 @@ accuracy, and sensor-to-body offsets remain unresolved by this calculation.
   and last timestamps by dropping the final odd-index sample from all
   sensitivity variants when needed. Decimation is a stress test without
   anti-aliasing. It describes rate sensitivity for this record and is available
-  with at least nine samples. Acceleration peaks include one-sided boundary
+  with at least nine samples. Five-point rate sensitivity also requires
+  uniform grids at both rates over the comparison span. The native result
+  and filter comparison remain available if either grid falls outside that
+  limit. Acceleration peaks include one-sided boundary
   estimates and can move materially with filtering, sampling, or noise.
 
 For example, an acquisition declaration for a GNSS observation with a receipt
