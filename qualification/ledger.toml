@@ -163,8 +163,8 @@ paradigm = "inertial"
 issue = "RES-701"
 engine_id = "imu"
 methods = ["orientation_estimation", "gravity_removal"]
-ratings = { A = "specified", B = "specified", C = "specified", D = "absent", E = "absent", F = "absent", G = "absent", H = "absent", I = "absent", J = "partial", K = "partial", L = "absent", M = "absent", N = "absent", O = "absent" }
-blockers = ["Raw inertial contract specified; no audited raw data"]
+ratings = { A = "specified", B = "specified", C = "specified", D = "partial", E = "partial", F = "partial", G = "absent", H = "absent", I = "partial", J = "partial", K = "partial", L = "absent", M = "partial", N = "absent", O = "partial" }
+blockers = ["Engine verified on analytical rigid-body and trajectory controls (RES-701); sensor placement, soft-tissue artefact, calibration and flight-time agreement with force plates remain unqualified (RES-694/703)", "G/H assessment qualification remains RES-671"]
 
 [[evidence]]
 subfamily = "force_platform.single"
@@ -2850,3 +2850,51 @@ kind = "doc"
 ref = "repo:docs/nordic-hip-engine.md"
 issue = "RES-697"
 rationale = "Limitations: strap force is not muscle force, torque and angle refusals, raw versus vendor-corrected. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "imu.inertial"
+dimension = "D"
+kind = "independent_test"
+ref = "repo:tests/test_imu_engine.py"
+issue = "RES-701"
+rationale = "Injected gaps, saturation, spikes, rate error, gyro bias and slip are detected. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "imu.inertial"
+dimension = "E"
+kind = "independent_test"
+ref = "repo:tests/test_imu_engine.py"
+issue = "RES-701"
+rationale = "Orientation variants checked against rigid-body truth and hand-derived bias bounds. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "imu.inertial"
+dimension = "F"
+kind = "independent_test"
+ref = "repo:tests/test_imu_engine.py"
+issue = "RES-701"
+rationale = "Free acceleration, integrated velocity/position and flight time compared with analytical truth. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "imu.inertial"
+dimension = "I"
+kind = "code"
+ref = "repo:src/dynamisbench_soccer/engines/imu.py"
+issue = "RES-701"
+rationale = "Threshold, bias-growth and tilt-leakage sensitivity reported; no complete budget. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "imu.inertial"
+dimension = "M"
+kind = "code"
+ref = "repo:src/dynamisbench_soccer/engines/imu.py"
+issue = "RES-701"
+rationale = "Method specification and declarations are echoed in every report; no seeded bundle chain yet. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "imu.inertial"
+dimension = "O"
+kind = "doc"
+ref = "repo:docs/imu-engine.md"
+issue = "RES-701"
+rationale = "Limitations: yaw unobservable, specific force vs free acceleration, drift, placement, slip. Engineering calculation only; no empirical qualification."
