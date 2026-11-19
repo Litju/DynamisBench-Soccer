@@ -56,6 +56,39 @@ def _ledger(args: argparse.Namespace) -> int:
     return 0
 
 
+def _states(args: argparse.Namespace) -> int:
+    import json
+    from dataclasses import asdict
+
+    from dynamisbench_soccer.qualification.state import computed_states, m3_gate
+
+    model = load(Path(args.ledger))
+    gate_result = m3_gate(model, Path("."))
+    payload = {
+        "m3_gate": asdict(gate_result),
+        "subfamilies": [asdict(s) for s in computed_states(model)],
+    }
+    print(json.dumps(payload, indent=2, sort_keys=True))
+    return 0 if gate_result.passed else 1
+
+
+def _interface(args: argparse.Namespace) -> int:
+    from dynamisbench_soccer.qualification import interface
+
+    rendered = interface.snapshot_json()
+    target = Path(args.file)
+    if args.write:
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(rendered, encoding="utf-8")
+        print(f"wrote {target}")
+        return 0
+    if not target.is_file() or target.read_text(encoding="utf-8") != rendered:
+        print(f"FAIL interface differs from the frozen snapshot {target}", file=sys.stderr)
+        return 1
+    print(f"{target} matches the live interface ({interface.INTERFACE_VERSION})")
+    return 0
+
+
 def _admit(args: argparse.Namespace) -> int:
     import json
 
@@ -98,3 +131,10 @@ def register(sub: argparse._SubParsersAction) -> None:  # type: ignore[type-arg]
     admit = q.add_parser("admit", help="evaluate a new-device-family admission proposal")
     admit.add_argument("proposal", help="proposal TOML")
     admit.set_defaults(handler=_admit)
+    states = q.add_parser("states", help="computed per-subfamily states and the M3 gate")
+    states.add_argument("--ledger", default="qualification/ledger.toml")
+    states.set_defaults(handler=_states)
+    iface = q.add_parser("interface", help="check or write the frozen engine-v0.1 interface")
+    iface.add_argument("--file", default="docs/verification/engine-v0.1-interface.json")
+    iface.add_argument("--write", action="store_true")
+    iface.set_defaults(handler=_interface)
