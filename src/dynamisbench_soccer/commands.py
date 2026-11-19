@@ -18,6 +18,7 @@ def registrars() -> list[Registrar]:
     from dynamisbench_soccer.engines import cli as engines_cli
     from dynamisbench_soccer.engines import (
         gnss_lps_cli,
+        imu_cli,
         load_cell_cli,
         lpt_cli,
         nordic_hip_cli,
@@ -43,6 +44,7 @@ def registrars() -> list[Registrar]:
         timing_cli.register,
         engines_cli.register,
         load_cell_cli.register,
+        imu_cli.register,
         lpt_cli.register,
         nordic_hip_cli.register,
     ]
