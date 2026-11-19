@@ -438,3 +438,110 @@ def assess(signal: JumpSignal, spec: JumpSpec) -> Assessment:
 
 
 __all__ = ["Assessment", "JumpSignal", "JumpSpec", "asdict", "assess"]
+
+
+@dataclass(frozen=True)
+class SourceEstimate:
+    """One device's flight-time estimand, labelled with its own definition and resolution."""
+
+    source: str
+    definition: str
+    flight_time_s: float
+    flight_time_low_s: float
+    flight_time_high_s: float
+    height_flight_time_m: float
+    height_low_m: float
+    height_high_m: float
+
+
+def _flight_estimate(
+    source: str, definition: str, value: float, low: float, high: float
+) -> SourceEstimate:
+    if not all(math.isfinite(v) for v in (value, low, high)) or not 0 < low <= value <= high:
+        raise ValueError("flight time and its bounds must be finite, positive and ordered")
+    return SourceEstimate(
+        source,
+        definition,
+        value,
+        low,
+        high,
+        _height_flight(value),
+        _height_flight(low),
+        _height_flight(high),
+    )
+
+
+def contact_system_estimates(result: object) -> list[SourceEstimate]:
+    """Flight-time heights from a contact-system result (switch-state flight time)."""
+    flights = getattr(result, "flights", None)
+    if flights is None:
+        raise ValueError("expected a contact-system result")
+    definition = getattr(result, "estimand", "contact_system_switch_flight_time")
+    return [
+        _flight_estimate(
+            f"contact_system:{getattr(result, 'system', 'unknown')}",
+            definition,
+            f.flight_s.value,
+            f.flight_s.low,
+            f.flight_s.high,
+        )
+        for f in flights
+    ]
+
+
+def imu_estimates(result: object) -> list[SourceEstimate]:
+    """Flight-time heights from IMU specific-force-magnitude flights."""
+    flights = getattr(result, "flights", None)
+    if flights is None:
+        raise ValueError("expected an IMU result")
+    return [
+        _flight_estimate(
+            "imu:specific_force_magnitude",
+            "specific-force magnitude below threshold for the minimum duration",
+            f.duration_s,
+            max(f.duration_s - f.resolution_s, 1e-9),
+            f.duration_s + f.resolution_s,
+        )
+        for f in flights
+    ]
+
+
+def force_platform_estimate(assessment: Assessment) -> SourceEstimate:
+    value = assessment.estimands.get("flight_time_s")
+    if value is None:
+        raise ValueError("force-platform assessment has no flight time")
+    resolution = float(assessment.uncertainty["flight_time_resolution_s"])  # type: ignore[arg-type]
+    return _flight_estimate(
+        "force_platform:contact_threshold",
+        "force below the declared contact threshold",
+        value,
+        max(value - resolution, 1e-9),
+        value + resolution,
+    )
+
+
+def compare_sources(estimates: list[SourceEstimate]) -> dict[str, object]:
+    """Pairwise numerical differences; interval overlap is NOT interchangeability."""
+    pairs = []
+    for i, a in enumerate(estimates):
+        for b in estimates[i + 1 :]:
+            overlap = (
+                a.flight_time_low_s <= b.flight_time_high_s
+                and b.flight_time_low_s <= a.flight_time_high_s
+            )
+            pairs.append(
+                {
+                    "a": a.source,
+                    "b": b.source,
+                    "flight_time_difference_s": b.flight_time_s - a.flight_time_s,
+                    "height_difference_m": b.height_flight_time_m - a.height_flight_time_m,
+                    "resolution_intervals_overlap": overlap,
+                    "empirical_agreement": "not established (RES-703)",
+                    "scope": "single-trial analytical/model comparison; not an agreement study",
+                }
+            )
+    return {
+        "estimates": [asdict(e) for e in estimates],
+        "pairs": pairs,
+        "merged_value": None,
+    }

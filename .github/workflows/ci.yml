@@ -80,6 +80,12 @@ jobs:
           cd "$RUNNER_TEMP"
           "$wheel_bin/dbs" imu process --help
           "$wheel_bin/python" -m pytest "$GITHUB_WORKSPACE/tests/test_imu_engine.py"
+      - name: RES-671 jump assessment installed-wheel processing
+        run: |
+          wheel_bin="$RUNNER_TEMP/wheel-venv/bin"
+          cd "$RUNNER_TEMP"
+          "$wheel_bin/dbs" assess jump --help
+          "$wheel_bin/python" -m pytest "$GITHUB_WORKSPACE/tests/test_jump_assessment.py"
       - name: RES-700 GNSS and LPS installed-wheel processing
         run: |
           wheel_bin="$RUNNER_TEMP/wheel-venv/bin"
