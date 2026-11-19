@@ -94,3 +94,35 @@ jobs:
               assert report["native_quantity"] == quantity
               assert report["peak_velocity_m_s"] > 0
           PY
+      - name: Installed wheel force-platform processing
+        run: |
+          uv run python -I - <<'PYCODE'
+          import os
+          import tempfile
+          from pathlib import Path
+          import sys
+          import numpy as np
+          wheel = next(Path("dist").glob("*.whl")).resolve()
+          sys.path.insert(0, str(wheel))
+          from dynamisbench_soccer.engines.force_platform import process
+          from dynamisbench_soccer.engines.force_platform_acquisition import PlateSpec
+          from dynamisbench_soccer.signals.schema import BundleMeta, ChannelSpec, Device, Geometry
+          from dynamisbench_soccer.signals.schema import Protocol, Provenance, Sampling, Session
+          from dynamisbench_soccer.signals.schema import SignalBundle, Subject
+          from dynamisbench_soccer.data.manifest import DataCategory
+          assert str(wheel) in process.__code__.co_filename
+          meta = BundleMeta(bundle_id="wheel-smoke", kind="timeseries", test_id="imtp",
+              data_category=DataCategory.SYNTHETIC, subject=Subject(pseudonym="SYNTHETIC"),
+              session=Session(session_id="wheel", date="2000-01-01"),
+              device=Device(device_class="force_plate"), protocol=Protocol(protocol_id="wheel.imtp"),
+              sampling=Sampling(nominal_hz=1000), n_rows=1501,
+              channels=[ChannelSpec(name="fz", quantity="force", unit="N", plate=1, axis="z")],
+              geometry=Geometry(plate_layout="single"), provenance=Provenance(created_by="wheel-check"))
+          with tempfile.TemporaryDirectory() as directory:
+              os.chdir(directory)
+              result = process(SignalBundle(meta, {"fz": np.full(1501, 75*9.80665)}),
+                  plates=(PlateSpec(plate=1, assume_field_axes=True),))
+              assert abs(result.mass_kg-75)<1e-10
+              assert len(result.qc)>0
+              assert result.onset.index is None
+          PYCODE

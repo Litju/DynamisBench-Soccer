@@ -18,10 +18,12 @@ Specified is NOT verified. Analytical agreement is NOT empirical equivalence.
 
 ## Ratings and blockers
 
-- force_platform.single (RES-670): A:specified (RES-670), B:specified (RES-670), C:specified (RES-693), D:partial (RES-670), E:absent (RES-670), F:absent (RES-670), G:absent (RES-671), H:absent (RES-671), I:absent (RES-670), J:partial (RES-669), K:partial (RES-669), L:absent (RES-703), M:absent (RES-675), N:absent (RES-680), O:partial (RES-670)
-  - Reference engine and independent numerical checks absent
-- force_platform.dual (RES-670): A:specified (RES-670), B:specified (RES-670), C:specified (RES-693), D:partial (RES-670), E:absent (RES-670), F:absent (RES-670), G:absent (RES-671), H:absent (RES-671), I:absent (RES-670), J:partial (RES-669), K:partial (RES-669), L:absent (RES-703), M:absent (RES-675), N:absent (RES-680), O:partial (RES-670)
-  - Bilateral calibration and timing unqualified
+- force_platform.single (RES-670): A:specified (RES-670), B:specified (RES-670), C:specified (RES-693), D:partial (RES-670), E:partial (RES-670), F:partial (RES-670), G:absent (RES-671), H:absent (RES-671), I:partial (RES-670), J:partial (RES-669), K:partial (RES-669), L:absent (RES-703), M:partial (RES-675), N:absent (RES-680), O:partial (RES-670)
+  - Production engine and numerical checks available (RES-670); G/H assessment qualification remains RES-671/672
+  - Measured-device calibration/compliance/uncertainty and L agreement evidence remain open (RES-694/703/675)
+- force_platform.dual (RES-670): A:specified (RES-670), B:specified (RES-670), C:specified (RES-693), D:partial (RES-670), E:partial (RES-670), F:partial (RES-670), G:absent (RES-671), H:absent (RES-671), I:partial (RES-670), J:partial (RES-669), K:partial (RES-669), L:absent (RES-703), M:partial (RES-675), N:absent (RES-680), O:partial (RES-670)
+  - Dual production processing verified on analytical controls (RES-670); actual bilateral calibration, cross-talk, assignment and timing remain unqualified
+  - G/H assessment and L agreement qualification remain open (RES-671/672/703/675)
 - lpt_encoder.lpt (RES-695): A:specified (RES-693), B:specified (RES-695), C:specified (RES-693), D:absent (RES-695), E:absent (RES-695), F:absent (RES-695), G:absent (RES-671), H:absent (RES-671), I:absent (RES-695), J:partial (RES-669), K:partial (RES-669), L:absent (RES-703), M:absent (RES-695), N:absent (RES-704), O:absent (RES-695)
   - Acquisition specified; geometry/calibration measurements and validity claims unverified (RES-694/695)
 - lpt_encoder.encoder (RES-695): A:specified (RES-693), B:specified (RES-695), C:specified (RES-693), D:absent (RES-695), E:absent (RES-695), F:absent (RES-695), G:absent (RES-671), H:absent (RES-671), I:absent (RES-695), J:partial (RES-669), K:partial (RES-669), L:absent (RES-703), M:absent (RES-695), N:absent (RES-704), O:absent (RES-695)
