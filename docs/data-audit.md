@@ -1,6 +1,6 @@
 # Public dataset audit v0.1
 
-Issue RES-666. Audit date: 2026-11-14. Manifests: `data/manifests/*.json`. Policy:
+Issue RES-666. Public audit date: 2026-11-14. Manifests: `data/manifests/*.json`. Policy:
 [data-policy.md](data-policy.md).
 
 ## Method
@@ -99,6 +99,15 @@ from **take-off velocity and from flight time**, push-off impulses, and eccentri
   (registry FP-003), and plausibility ranges. The values are software-derived, so
   they are never reference truth (DB-07).
 
+## Internal synthetic challenge
+
+### biosyngen-res718-force
+
+RES-718 uses one manufactured CMJ and one SJ from a reviewed BioSynGenBenchmark
+software revision. The hash-pinned FORCE-only projection is for internal
+cross-validation. Raw source and protected model reference stay outside Git.
+See the [pilot report and scope](res718/README.md).
+
 ## Excluded
 
 ### jass2026-sampling-article
@@ -142,7 +151,7 @@ streaming extraction of selected trials.
 4. **Minimum cohort size of 10** for any squad-level task built on empirical data.
 5. **Minors.** Youth datasets are used only in aggregate or as plausibility ranges, and
    no individual minor's record becomes a published task.
-6. **Licenses are honoured.** All accepted datasets are CC BY 4.0 and are cited in any
+6. **Licenses are honoured.** All accepted public empirical datasets are CC BY 4.0 and are cited in any
    derived task or report. Data is never committed to Git (`dbs repo-check`).
 
 ## Gaps found
