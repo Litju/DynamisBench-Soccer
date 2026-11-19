@@ -1,0 +1,274 @@
+{
+  "cli": {
+    "adapters": [],
+    "adapters import": [
+      "<adapter>",
+      "<csv>",
+      "<out>"
+    ],
+    "adapters list": [
+      "--json"
+    ],
+    "agreement": [],
+    "agreement run": [
+      "--out"
+    ],
+    "assess": [],
+    "assess cod": [
+      "--config",
+      "--out",
+      "<input>"
+    ],
+    "assess isometric": [
+      "--config",
+      "--out",
+      "<inputs>"
+    ],
+    "assess jump": [
+      "--config",
+      "--out",
+      "--weighing",
+      "<inputs>"
+    ],
+    "assess sprint-fv": [
+      "--config",
+      "--out",
+      "<input>"
+    ],
+    "clean": [
+      "--artifacts",
+      "--caches",
+      "--dry-run",
+      "--older-than-hours",
+      "--repo-root",
+      "--workspaces"
+    ],
+    "data": [],
+    "data fetch": [
+      "<manifest>"
+    ],
+    "data ingest": [
+      "<manifest>",
+      "<source_dir>"
+    ],
+    "data manifest-create": [
+      "--category",
+      "--dataset-id",
+      "--license",
+      "--output",
+      "--redistributable",
+      "--source-kind",
+      "--source-location",
+      "--title",
+      "--usage",
+      "--version",
+      "<directory>"
+    ],
+    "data stage": [
+      "<manifest>"
+    ],
+    "data validate": [
+      "<manifests>"
+    ],
+    "data verify": [
+      "<manifest>"
+    ],
+    "dbs": [
+      "--version"
+    ],
+    "env-check": [
+      "--repo-root"
+    ],
+    "force-platform": [],
+    "force-platform process": [
+      "--config",
+      "--csv",
+      "--out",
+      "--qc-rules",
+      "--traces",
+      "--weighing",
+      "<inputs>"
+    ],
+    "gnss-lps": [],
+    "gnss-lps process": [
+      "--declaration",
+      "--derivative",
+      "--doppler-filter",
+      "--out",
+      "--position-filter",
+      "--threshold",
+      "<bundle>"
+    ],
+    "imu": [],
+    "imu process": [
+      "--config",
+      "--out",
+      "<input>"
+    ],
+    "load-cell": [],
+    "load-cell process": [
+      "--config",
+      "--out",
+      "--sensitivity",
+      "<input>"
+    ],
+    "lpt-encoder": [],
+    "lpt-encoder process": [
+      "--config",
+      "--out",
+      "<input>"
+    ],
+    "nordic-hip": [],
+    "nordic-hip process": [
+      "--config",
+      "--out",
+      "<input>"
+    ],
+    "ontology": [],
+    "ontology matrix": [
+      "--check",
+      "--doc",
+      "--root",
+      "--write"
+    ],
+    "ontology screen": [
+      "--file",
+      "--root"
+    ],
+    "ontology validate": [
+      "--registry",
+      "--root"
+    ],
+    "qc": [],
+    "qc rules": [
+      "--check",
+      "--doc",
+      "--rules",
+      "--write"
+    ],
+    "qc run": [
+      "--reference",
+      "--rules",
+      "<stem>"
+    ],
+    "qc validate": [
+      "--registry",
+      "--rules"
+    ],
+    "qualification": [],
+    "qualification admit": [
+      "<proposal>"
+    ],
+    "qualification gate": [
+      "--ledger",
+      "--stage",
+      "--verbose"
+    ],
+    "qualification interface": [
+      "--file",
+      "--write"
+    ],
+    "qualification ledger": [
+      "--check",
+      "--doc",
+      "--ledger",
+      "--write"
+    ],
+    "qualification states": [
+      "--ledger"
+    ],
+    "qualification validate": [
+      "--ledger"
+    ],
+    "radar-laser": [],
+    "radar-laser process": [
+      "--correction",
+      "--cosine-perturbation-deg",
+      "--derivative",
+      "--external-trigger-reference-s",
+      "--filter",
+      "--mount-distance-m",
+      "--out",
+      "--range-change-m",
+      "--stage",
+      "--start",
+      "--threshold-m-s",
+      "--timing-perturbation-s",
+      "<bundle>"
+    ],
+    "registry": [],
+    "registry contested": [
+      "--check",
+      "--doc",
+      "--root",
+      "--write"
+    ],
+    "registry coverage": [
+      "--root"
+    ],
+    "registry validate": [
+      "--root"
+    ],
+    "registry verify-dois": [
+      "--delay",
+      "--root"
+    ],
+    "repo-check": [
+      "--repo-root"
+    ],
+    "signals": [],
+    "signals inspect": [
+      "<stem>"
+    ],
+    "signals schema": [
+      "--check",
+      "--out",
+      "--write"
+    ],
+    "timing": [],
+    "timing contact": [
+      "--policy",
+      "--sensitivity",
+      "<bundles>"
+    ],
+    "timing gates": [
+      "--policy",
+      "--sensitivity",
+      "<bundles>"
+    ]
+  },
+  "engine_ids": {
+    "imu": "imu.v1",
+    "isometric_assessment": "isometric-assessment.v1",
+    "jump_assessment": "jump-assessment.v1",
+    "load_cell": "load-cell.v1",
+    "lpt": "lpt-encoder@1",
+    "nordic_hip": "nordic-hip.v1",
+    "sprint_assessment": "sprint-assessment.v1"
+  },
+  "interface_version": "engine-v0.1",
+  "specifications": {
+    "admission.Proposal": "89e809a761a9a1812fc2595d39b3fcfde1cd4b52bd2123f52487f82b61fe85e3",
+    "agreement.PairedAgreement": "5a0fe483e0068655cbd7c65a39a8e649c43ab656eb606c5b2d18e7303d948c7a",
+    "assessment.CodSpec": "364880bb9e72ccf0ca4ad94196062b94fb28fdaa2d312cdfe5dff310463d1200",
+    "assessment.FvSpec": "28db69359dd057e883a679b81240e0e36d32c7ee8504b83658620c125f9fc806",
+    "assessment.IsoSpec": "3c75af9891fcff491761dc7db7056ffe2c5c68406e3ddab37faf79e7db4702b7",
+    "assessment.JumpSpec": "87d1921d07eb35c242bbfccce179a7b17b477bf74f3ea879c495813a8d758afd",
+    "assessment.StartSpec": "c9e027715ee1a90f8eeaef441b27706959ad15d0ca578eb464a728875fb315e9",
+    "contact.ContactPolicy": "695de952815d6f91bc020eaec619efc67b1d9e6449262365f778abf7c5178fd6",
+    "force_platform.MethodSpec": "c3e47d543668d8662793f00c855f2f0f4dc6fe5ae71599b305aa8ad52f1e637a",
+    "force_platform.PlateSpec": "6e68f2838adb3f790d9bd5e1b513e33b5e3bd59367b51330d7126a44ba20865c",
+    "gnss_lps.ProcessingOptions": "36ae2ebe5ff680d06f6acd2c18c5b139de6886d1b6fec7a34ace6d6697cca28a",
+    "imu.ImuSpec": "c8d52da2ffa519dd58598d6880d8e97e9e76bf835d5e26cdb1638b03af510032",
+    "imu.MethodSpec": "c6279087e1f9837e30a89ea294c851de5a569382e9f8f131178d26229ac3a94b",
+    "load_cell.CellSpec": "dc47acb4ab1bea26d9ef51ce4f836d5fba5e45d14aba393b207cb58bc2b0ffc4",
+    "load_cell.MethodSpec": "2ea147e2fefc0b1e9b6c2ee37faf0d6106745a06e3ca6ac911216e88b9a3e508",
+    "lpt.MethodSpec": "a58a8a1a538a74aac27532c54f065a6164d05c65cc07dd6e0d51e8269dfabd51",
+    "lpt.PowerSpec": "a6ef692c1621a530c7f41f5f37fd054e9f7933547cb6186d4e493753e7cbb5d1",
+    "nordic_hip.MethodSpec": "412482cd33fccf02cc0f9d3ae2c1a174e1e682770416ab94bb8f1a2e517d0dc4",
+    "nordic_hip.NordicSpec": "ec4487664e7349f54c840fa32056b15cf8798c70390b35075b261d387e49a5e1",
+    "radar_laser.ProcessingOptions": "bbe97874d49cbca0e21f60162d1aef4ce6642b28ff3dcea842e8e65869a4f247",
+    "timing_gates.GatePolicy": "50e59dcb231408461762ad23e3ac0dd2efa1e1eddd6f9730f9a1fbf3df642a98"
+  },
+  "statement": "software interface freeze for review; not a qualification"
+}

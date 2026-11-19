@@ -31,8 +31,8 @@ paradigm = "continuous_signal"
 issue = "RES-695"
 engine_id = "lpt"
 methods = ["differentiate"]
-ratings = { A = "specified", B = "specified", C = "specified", D = "absent", E = "absent", F = "absent", G = "absent", H = "absent", I = "absent", J = "partial", K = "partial", L = "partial", M = "absent", N = "absent", O = "absent" }
-blockers = ["Acquisition specified; geometry/calibration measurements and validity claims unverified (RES-694/695)"]
+ratings = { A = "specified", B = "specified", C = "specified", D = "partial", E = "partial", F = "partial", G = "partial", H = "partial", I = "partial", J = "partial", K = "partial", L = "partial", M = "partial", N = "absent", O = "partial" }
+blockers = ["Engine verified on analytical controls (RES-695); measured cable geometry, calibration and attachment-versus-COM validity remain unqualified (RES-694)", "Cross-device agreement with force plates is analytical only (RES-703)"]
 
 [[subfamily]]
 id = "lpt_encoder.encoder"
@@ -42,8 +42,8 @@ paradigm = "discrete_event"
 issue = "RES-695"
 engine_id = "encoder"
 methods = ["count_unwrap", "event_rate"]
-ratings = { A = "specified", B = "specified", C = "specified", D = "absent", E = "absent", F = "absent", G = "absent", H = "absent", I = "absent", J = "partial", K = "partial", L = "partial", M = "absent", N = "absent", O = "absent" }
-blockers = ["Counts/timestamp contract specified; reconstruction not verified (RES-695)"]
+ratings = { A = "specified", B = "specified", C = "specified", D = "partial", E = "partial", F = "partial", G = "partial", H = "partial", I = "partial", J = "partial", K = "partial", L = "partial", M = "partial", N = "absent", O = "partial" }
+blockers = ["Engine verified on analytical controls (RES-695); measured counts-per-metre, quantization and attachment validity remain unqualified (RES-694)", "Cross-device agreement is analytical only (RES-703)"]
 
 [[subfamily]]
 id = "load_cell_isometric.load_cell"
@@ -53,8 +53,8 @@ paradigm = "continuous_signal"
 issue = "RES-696"
 engine_id = "load_cell"
 methods = ["calibrate"]
-ratings = { A = "specified", B = "specified", C = "specified", D = "absent", E = "absent", F = "absent", G = "partial", H = "partial", I = "absent", J = "partial", K = "partial", L = "partial", M = "absent", N = "absent", O = "absent" }
-blockers = ["Raw voltage/calibration contract specified; rig compliance unverified (RES-694/696)"]
+ratings = { A = "specified", B = "specified", C = "specified", D = "partial", E = "partial", F = "partial", G = "partial", H = "partial", I = "partial", J = "partial", K = "partial", L = "partial", M = "partial", N = "absent", O = "partial" }
+blockers = ["Engine verified on analytical isometric controls (RES-696); measured calibration, rig compliance and temperature behaviour remain unqualified (RES-694)", "Load-cell versus force-plate IMTP agreement is analytical only (RES-703)"]
 
 [[subfamily]]
 id = "load_cell_isometric.isometric_rig"
@@ -64,8 +64,8 @@ paradigm = "continuous_signal"
 issue = "RES-696"
 engine_id = "iso_rig"
 methods = ["calibrate"]
-ratings = { A = "specified", B = "specified", C = "specified", D = "absent", E = "absent", F = "absent", G = "partial", H = "partial", I = "absent", J = "partial", K = "partial", L = "partial", M = "absent", N = "absent", O = "absent" }
-blockers = ["No isometric rig compliance or validity source (RES-694)"]
+ratings = { A = "specified", B = "specified", C = "specified", D = "partial", E = "partial", F = "partial", G = "partial", H = "partial", I = "partial", J = "partial", K = "partial", L = "partial", M = "partial", N = "absent", O = "partial" }
+blockers = ["Engine verified on analytical isometric controls (RES-696); no isometric rig compliance or validity source (RES-694)", "Rig versus plate agreement is analytical only (RES-703)"]
 
 [[subfamily]]
 id = "nordic_hip.nordic"
@@ -119,8 +119,8 @@ paradigm = "continuous_signal"
 issue = "RES-699"
 engine_id = "radar"
 methods = ["filter", "start_detection"]
-ratings = { A = "specified", B = "specified", C = "specified", D = "absent", E = "absent", F = "absent", G = "partial", H = "partial", I = "absent", J = "partial", K = "partial", L = "partial", M = "absent", N = "absent", O = "absent" }
-blockers = ["No raw radar validity study (RES-694)"]
+ratings = { A = "specified", B = "specified", C = "specified", D = "partial", E = "partial", F = "partial", G = "partial", H = "partial", I = "partial", J = "partial", K = "partial", L = "partial", M = "partial", N = "absent", O = "partial" }
+blockers = ["Engine verified on analytical sprint controls (RES-699); no raw radar validity or latency study (RES-694)", "Doppler versus positional/gate agreement is analytical only (RES-703)"]
 
 [[subfamily]]
 id = "radar_laser.laser"
@@ -130,8 +130,8 @@ paradigm = "continuous_signal"
 issue = "RES-699"
 engine_id = "laser"
 methods = ["differentiate", "filter"]
-ratings = { A = "specified", B = "specified", C = "specified", D = "absent", E = "absent", F = "absent", G = "partial", H = "partial", I = "absent", J = "partial", K = "partial", L = "partial", M = "absent", N = "absent", O = "absent" }
-blockers = ["No raw laser validity study (RES-694)"]
+ratings = { A = "specified", B = "specified", C = "specified", D = "partial", E = "partial", F = "partial", G = "partial", H = "partial", I = "partial", J = "partial", K = "partial", L = "partial", M = "partial", N = "absent", O = "partial" }
+blockers = ["Engine verified on analytical sprint controls (RES-699); no raw laser validity or range-noise study (RES-694)", "Range-rate versus Doppler agreement is analytical only (RES-703)"]
 
 [[subfamily]]
 id = "gnss_lps.gnss"
@@ -141,8 +141,8 @@ paradigm = "position_track"
 issue = "RES-700"
 engine_id = "gnss"
 methods = ["resample", "smooth"]
-ratings = { A = "specified", B = "specified", C = "specified", D = "absent", E = "absent", F = "absent", G = "partial", H = "partial", I = "absent", J = "partial", K = "partial", L = "partial", M = "absent", N = "absent", O = "absent" }
-blockers = ["RES-700 reference processing and synthetic checks implemented; independent acceptance, audited native GNSS and empirical clock/latency and signal-integrity evidence remain open", "Sprint assessment (RES-673) and cross-device agreement (RES-703) remain open"]
+ratings = { A = "specified", B = "specified", C = "specified", D = "partial", E = "partial", F = "partial", G = "partial", H = "partial", I = "partial", J = "partial", K = "partial", L = "partial", M = "partial", N = "absent", O = "partial" }
+blockers = ["Engine verified on analytical tracks (RES-700); audited native GNSS data and empirical latency, HDOP and multipath evidence remain open (RES-694)", "Positional versus Doppler/radar agreement is analytical only (RES-703)"]
 
 [[subfamily]]
 id = "gnss_lps.lps"
@@ -152,8 +152,8 @@ paradigm = "position_track"
 issue = "RES-700"
 engine_id = "lps"
 methods = ["resample", "smooth"]
-ratings = { A = "specified", B = "specified", C = "specified", D = "absent", E = "absent", F = "absent", G = "partial", H = "partial", I = "absent", J = "partial", K = "partial", L = "partial", M = "absent", N = "absent", O = "absent" }
-blockers = ["RES-700 reference processing and synthetic checks implemented; independent acceptance, audited native LPS and empirical clock/latency and anchor survey evidence remain open", "Sprint assessment (RES-673) and cross-device agreement (RES-703) remain open"]
+ratings = { A = "specified", B = "specified", C = "specified", D = "partial", E = "partial", F = "partial", G = "partial", H = "partial", I = "partial", J = "partial", K = "partial", L = "partial", M = "partial", N = "absent", O = "partial" }
+blockers = ["Engine verified on analytical tracks (RES-700); audited native LPS data, anchor survey and latency evidence remain open (RES-694)", "Positional versus radar agreement is analytical only (RES-703)"]
 
 [[subfamily]]
 id = "imu.inertial"
@@ -3360,3 +3360,529 @@ kind = "doc"
 ref = "repo:docs/cross-device-agreement.md"
 issue = "RES-703"
 rationale = "Declared non-equivalences are studied analytically and stay unknown without measured paired data. Analytical study only; no empirical agreement."
+
+[[evidence]]
+subfamily = "lpt_encoder.lpt"
+dimension = "D"
+kind = "independent_test"
+ref = "repo:tests/test_lpt_acquisition.py"
+issue = "RES-695"
+rationale = "Dropped samples, jitter, slack and saturation diagnostics refuse reconstruction. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "lpt_encoder.lpt"
+dimension = "E"
+kind = "independent_test"
+ref = "repo:tests/test_lpt_engine.py"
+issue = "RES-695"
+rationale = "Three differentiation variants against an independent analytic irregular motion. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "lpt_encoder.lpt"
+dimension = "F"
+kind = "independent_test"
+ref = "repo:tests/test_lpt_engine.py"
+issue = "RES-695"
+rationale = "Attachment displacement, velocity, acceleration and conditional power against closed forms. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "lpt_encoder.lpt"
+dimension = "I"
+kind = "test"
+ref = "repo:tests/test_lpt_engine.py"
+issue = "RES-695"
+rationale = "Geometry, clock and cutoff sensitivities are reported. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "lpt_encoder.lpt"
+dimension = "M"
+kind = "code"
+ref = "repo:src/dynamisbench_soccer/engines/lpt.py"
+issue = "RES-695"
+rationale = "Reports carry bundle id, data hash, geometry, method and power model; no seeded chain yet. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "lpt_encoder.lpt"
+dimension = "O"
+kind = "doc"
+ref = "repo:docs/lpt-encoder-engine.md"
+issue = "RES-695"
+rationale = "Limitations: cable length is not vertical displacement; attachment is not the COM. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "lpt_encoder.encoder"
+dimension = "D"
+kind = "independent_test"
+ref = "repo:tests/test_lpt_acquisition.py"
+issue = "RES-695"
+rationale = "Count quantization and timing diagnostics. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "lpt_encoder.encoder"
+dimension = "E"
+kind = "independent_test"
+ref = "repo:tests/test_lpt_engine.py"
+issue = "RES-695"
+rationale = "Encoder counts through the three differentiation variants. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "lpt_encoder.encoder"
+dimension = "F"
+kind = "independent_test"
+ref = "repo:tests/test_lpt_engine.py"
+issue = "RES-695"
+rationale = "Quantized encoder motion against closed forms. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "lpt_encoder.encoder"
+dimension = "I"
+kind = "test"
+ref = "repo:tests/test_lpt_engine.py"
+issue = "RES-695"
+rationale = "Resolution and sensitivity are reported. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "lpt_encoder.encoder"
+dimension = "M"
+kind = "code"
+ref = "repo:src/dynamisbench_soccer/engines/lpt.py"
+issue = "RES-695"
+rationale = "Reports carry bundle id, data hash and method; no seeded chain yet. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "lpt_encoder.encoder"
+dimension = "O"
+kind = "doc"
+ref = "repo:docs/lpt-encoder-engine.md"
+issue = "RES-695"
+rationale = "Limitations: counts resolution and cable-only coordinates. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "load_cell_isometric.load_cell"
+dimension = "D"
+kind = "independent_test"
+ref = "repo:tests/test_load_cell_engine.py"
+issue = "RES-696"
+rationale = "Unzeroed, clipped, mislabelled and dropped-sample records are flagged. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "load_cell_isometric.load_cell"
+dimension = "E"
+kind = "independent_test"
+ref = "repo:tests/test_load_cell_engine.py"
+issue = "RES-696"
+rationale = "Onset and filter variants against the isometric ramp. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "load_cell_isometric.load_cell"
+dimension = "F"
+kind = "independent_test"
+ref = "repo:tests/test_load_cell_engine.py"
+issue = "RES-696"
+rationale = "Peak, RFD, impulse and torque against closed forms. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "load_cell_isometric.load_cell"
+dimension = "I"
+kind = "test"
+ref = "repo:tests/test_load_cell_engine.py"
+issue = "RES-696"
+rationale = "Gain, cutoff and onset sensitivity reported; rig compliance not modelled. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "load_cell_isometric.load_cell"
+dimension = "M"
+kind = "code"
+ref = "repo:src/dynamisbench_soccer/engines/load_cell.py"
+issue = "RES-696"
+rationale = "Reports carry input digest, method spec and calibration; no seeded chain yet. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "load_cell_isometric.load_cell"
+dimension = "O"
+kind = "doc"
+ref = "repo:docs/load-cell-engine.md"
+issue = "RES-696"
+rationale = "Limitations: compliance, uniaxial blindness, heuristic unit checks. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "load_cell_isometric.isometric_rig"
+dimension = "D"
+kind = "independent_test"
+ref = "repo:tests/test_load_cell_engine.py"
+issue = "RES-696"
+rationale = "Same integrity checks apply to isometric dynamometer records. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "load_cell_isometric.isometric_rig"
+dimension = "E"
+kind = "independent_test"
+ref = "repo:tests/test_load_cell_engine.py"
+issue = "RES-696"
+rationale = "Onset and filter variants against the isometric ramp. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "load_cell_isometric.isometric_rig"
+dimension = "F"
+kind = "independent_test"
+ref = "repo:tests/test_load_cell_engine.py"
+issue = "RES-696"
+rationale = "Peak, RFD, impulse and torque against closed forms. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "load_cell_isometric.isometric_rig"
+dimension = "I"
+kind = "test"
+ref = "repo:tests/test_load_cell_engine.py"
+issue = "RES-696"
+rationale = "Sensitivity reported; rig compliance recorded but not modelled. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "load_cell_isometric.isometric_rig"
+dimension = "M"
+kind = "code"
+ref = "repo:src/dynamisbench_soccer/engines/load_cell.py"
+issue = "RES-696"
+rationale = "Reports carry input digest and method spec; no seeded chain yet. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "load_cell_isometric.isometric_rig"
+dimension = "O"
+kind = "doc"
+ref = "repo:docs/load-cell-engine.md"
+issue = "RES-696"
+rationale = "Limitations: compliance and line of action. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "radar_laser.radar"
+dimension = "D"
+kind = "independent_test"
+ref = "repo:tests/test_radar_laser_acquisition.py"
+issue = "RES-699"
+rationale = "Rate, jitter, stage and range refusals. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "radar_laser.radar"
+dimension = "E"
+kind = "independent_test"
+ref = "repo:tests/test_radar_laser_processing.py"
+issue = "RES-699"
+rationale = "Filter and start-method variants against the sprint closed form. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "radar_laser.radar"
+dimension = "F"
+kind = "independent_test"
+ref = "repo:tests/test_radar_laser_processing.py"
+issue = "RES-699"
+rationale = "Doppler velocity with declared fixed-angle correction against closed form. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "radar_laser.radar"
+dimension = "I"
+kind = "test"
+ref = "repo:tests/test_radar_laser_processing.py"
+issue = "RES-699"
+rationale = "Timing and cosine-angle sensitivity reported. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "radar_laser.radar"
+dimension = "M"
+kind = "code"
+ref = "repo:src/dynamisbench_soccer/engines/radar_laser.py"
+issue = "RES-699"
+rationale = "Results carry source id, stage and processing options; no seeded chain yet. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "radar_laser.radar"
+dimension = "O"
+kind = "doc"
+ref = "repo:docs/radar-laser-engine.md"
+issue = "RES-699"
+rationale = "Limitations: Doppler speed is not positional speed; manufacturer-processed channels are separated. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "radar_laser.laser"
+dimension = "D"
+kind = "independent_test"
+ref = "repo:tests/test_radar_laser_acquisition.py"
+issue = "RES-699"
+rationale = "Rate, jitter, stage and range refusals. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "radar_laser.laser"
+dimension = "E"
+kind = "independent_test"
+ref = "repo:tests/test_radar_laser_processing.py"
+issue = "RES-699"
+rationale = "Central and five-point derivative variants against the sprint closed form. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "radar_laser.laser"
+dimension = "F"
+kind = "independent_test"
+ref = "repo:tests/test_radar_laser_processing.py"
+issue = "RES-699"
+rationale = "Range-rate velocity against closed form. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "radar_laser.laser"
+dimension = "I"
+kind = "test"
+ref = "repo:tests/test_radar_laser_processing.py"
+issue = "RES-699"
+rationale = "Timing sensitivity and derivative noise amplification reported. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "radar_laser.laser"
+dimension = "M"
+kind = "code"
+ref = "repo:src/dynamisbench_soccer/engines/radar_laser.py"
+issue = "RES-699"
+rationale = "Results carry source id, stage and processing options; no seeded chain yet. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "radar_laser.laser"
+dimension = "O"
+kind = "doc"
+ref = "repo:docs/radar-laser-engine.md"
+issue = "RES-699"
+rationale = "Limitations: range-rate is not Doppler velocity; aiming point is declared. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "gnss_lps.gnss"
+dimension = "D"
+kind = "independent_test"
+ref = "repo:tests/test_gnss_lps_acquisition.py"
+issue = "RES-700"
+rationale = "Signal validity, HDOP, satellites and discontinuity refusals. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "gnss_lps.gnss"
+dimension = "E"
+kind = "independent_test"
+ref = "repo:tests/test_gnss_lps_processing.py"
+issue = "RES-700"
+rationale = "Smoothing and derivative variants against closed forms. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "gnss_lps.gnss"
+dimension = "F"
+kind = "independent_test"
+ref = "repo:tests/test_gnss_lps_processing.py"
+issue = "RES-700"
+rationale = "Position-derived speed and acceleration and Doppler speed kept separate. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "gnss_lps.gnss"
+dimension = "I"
+kind = "test"
+ref = "repo:tests/test_gnss_lps_processing.py"
+issue = "RES-700"
+rationale = "Filter and rate sensitivities reported. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "gnss_lps.gnss"
+dimension = "M"
+kind = "code"
+ref = "repo:src/dynamisbench_soccer/engines/gnss_lps.py"
+issue = "RES-700"
+rationale = "Results link the admitted acquisition and options; no seeded chain yet. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "gnss_lps.gnss"
+dimension = "O"
+kind = "doc"
+ref = "repo:docs/gnss-lps-engine.md"
+issue = "RES-700"
+rationale = "Limitations: native versus interpolated rate, latency, datum. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "gnss_lps.lps"
+dimension = "D"
+kind = "independent_test"
+ref = "repo:tests/test_gnss_lps_acquisition.py"
+issue = "RES-700"
+rationale = "Anchor visibility and discontinuity refusals. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "gnss_lps.lps"
+dimension = "E"
+kind = "independent_test"
+ref = "repo:tests/test_gnss_lps_processing.py"
+issue = "RES-700"
+rationale = "Derivative variants against closed forms. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "gnss_lps.lps"
+dimension = "F"
+kind = "independent_test"
+ref = "repo:tests/test_gnss_lps_processing.py"
+issue = "RES-700"
+rationale = "Positional speed, acceleration and chord distance against closed forms. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "gnss_lps.lps"
+dimension = "I"
+kind = "test"
+ref = "repo:tests/test_gnss_lps_processing.py"
+issue = "RES-700"
+rationale = "Filter and rate sensitivities reported. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "gnss_lps.lps"
+dimension = "M"
+kind = "code"
+ref = "repo:src/dynamisbench_soccer/engines/gnss_lps.py"
+issue = "RES-700"
+rationale = "Results link the admitted acquisition and options; no seeded chain yet. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "gnss_lps.lps"
+dimension = "O"
+kind = "doc"
+ref = "repo:docs/gnss-lps-engine.md"
+issue = "RES-700"
+rationale = "Limitations: anchor survey, latency, local frame. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "lpt_encoder.lpt"
+dimension = "G"
+kind = "independent_test"
+ref = "repo:tests/test_jump_assessment.py"
+issue = "RES-671"
+rationale = "LPT attachment heights enter the jump layer as separately defined estimands. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "lpt_encoder.lpt"
+dimension = "H"
+kind = "doc"
+ref = "repo:docs/jump-assessment.md"
+issue = "RES-671"
+rationale = "Displacement- and velocity-based LPT height definitions are named and kept apart from force-plate heights. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "lpt_encoder.encoder"
+dimension = "G"
+kind = "independent_test"
+ref = "repo:tests/test_jump_assessment.py"
+issue = "RES-671"
+rationale = "LPT attachment heights enter the jump layer as separately defined estimands. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "lpt_encoder.encoder"
+dimension = "H"
+kind = "doc"
+ref = "repo:docs/jump-assessment.md"
+issue = "RES-671"
+rationale = "Displacement- and velocity-based LPT height definitions are named and kept apart from force-plate heights. Engineering calculation only; no empirical qualification."
+
+[[evidence]]
+subfamily = "force_platform.single"
+dimension = "J"
+kind = "analytical_reference"
+ref = "repo:tests/test_force_platform_engine.py"
+issue = "RES-669"
+independence_from = "fp_single"
+implementation = "dynamisbench_soccer.reference (RES-669 closed-form substrate; imported only by tests, import boundary enforced)"
+rationale = "Engine outputs are compared with closed forms derived outside the engine; analytical only, no empirical criterion."
+
+[[evidence]]
+subfamily = "force_platform.dual"
+dimension = "J"
+kind = "analytical_reference"
+ref = "repo:tests/test_force_platform_engine.py"
+issue = "RES-669"
+independence_from = "fp_dual"
+implementation = "dynamisbench_soccer.reference (RES-669 closed-form substrate; imported only by tests, import boundary enforced)"
+rationale = "Engine outputs are compared with closed forms derived outside the engine; analytical only, no empirical criterion."
+
+[[evidence]]
+subfamily = "lpt_encoder.lpt"
+dimension = "J"
+kind = "analytical_reference"
+ref = "repo:tests/test_lpt_engine.py"
+issue = "RES-669"
+independence_from = "lpt"
+implementation = "dynamisbench_soccer.reference (RES-669 closed-form substrate; imported only by tests, import boundary enforced)"
+rationale = "Engine outputs are compared with closed forms derived outside the engine; analytical only, no empirical criterion."
+
+[[evidence]]
+subfamily = "lpt_encoder.encoder"
+dimension = "J"
+kind = "analytical_reference"
+ref = "repo:tests/test_lpt_engine.py"
+issue = "RES-669"
+independence_from = "encoder"
+implementation = "dynamisbench_soccer.reference (RES-669 closed-form substrate; imported only by tests, import boundary enforced)"
+rationale = "Engine outputs are compared with closed forms derived outside the engine; analytical only, no empirical criterion."
+
+[[evidence]]
+subfamily = "load_cell_isometric.load_cell"
+dimension = "J"
+kind = "analytical_reference"
+ref = "repo:tests/test_load_cell_engine.py"
+issue = "RES-669"
+independence_from = "load_cell"
+implementation = "dynamisbench_soccer.reference (RES-669 closed-form substrate; imported only by tests, import boundary enforced)"
+rationale = "Engine outputs are compared with closed forms derived outside the engine; analytical only, no empirical criterion."
+
+[[evidence]]
+subfamily = "load_cell_isometric.isometric_rig"
+dimension = "J"
+kind = "analytical_reference"
+ref = "repo:tests/test_load_cell_engine.py"
+issue = "RES-669"
+independence_from = "iso_rig"
+implementation = "dynamisbench_soccer.reference (RES-669 closed-form substrate; imported only by tests, import boundary enforced)"
+rationale = "Engine outputs are compared with closed forms derived outside the engine; analytical only, no empirical criterion."
+
+[[evidence]]
+subfamily = "nordic_hip.nordic"
+dimension = "J"
+kind = "analytical_reference"
+ref = "repo:tests/test_nordic_hip.py"
+issue = "RES-669"
+independence_from = "nordic"
+implementation = "dynamisbench_soccer.reference (RES-669 closed-form substrate; imported only by tests, import boundary enforced)"
+rationale = "Engine outputs are compared with closed forms derived outside the engine; analytical only, no empirical criterion."
+
+[[evidence]]
+subfamily = "nordic_hip.hip"
+dimension = "J"
+kind = "analytical_reference"
+ref = "repo:tests/test_nordic_hip.py"
+issue = "RES-669"
+independence_from = "hip"
+implementation = "dynamisbench_soccer.reference (RES-669 closed-form substrate; imported only by tests, import boundary enforced)"
+rationale = "Engine outputs are compared with closed forms derived outside the engine; analytical only, no empirical criterion."
+
+[[evidence]]
+subfamily = "radar_laser.radar"
+dimension = "J"
+kind = "analytical_reference"
+ref = "repo:tests/test_radar_laser_processing.py"
+issue = "RES-669"
+independence_from = "radar"
+implementation = "dynamisbench_soccer.reference (RES-669 closed-form substrate; imported only by tests, import boundary enforced)"
+rationale = "Engine outputs are compared with closed forms derived outside the engine; analytical only, no empirical criterion."
+
+[[evidence]]
+subfamily = "radar_laser.laser"
+dimension = "J"
+kind = "analytical_reference"
+ref = "repo:tests/test_radar_laser_processing.py"
+issue = "RES-669"
+independence_from = "laser"
+implementation = "dynamisbench_soccer.reference (RES-669 closed-form substrate; imported only by tests, import boundary enforced)"
+rationale = "Engine outputs are compared with closed forms derived outside the engine; analytical only, no empirical criterion."
+
+[[evidence]]
+subfamily = "imu.inertial"
+dimension = "J"
+kind = "analytical_reference"
+ref = "repo:tests/test_imu_engine.py"
+issue = "RES-669"
+independence_from = "imu"
+implementation = "dynamisbench_soccer.reference (RES-669 closed-form substrate; imported only by tests, import boundary enforced)"
+rationale = "Engine outputs are compared with closed forms derived outside the engine; analytical only, no empirical criterion."
