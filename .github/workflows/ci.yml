@@ -2,7 +2,7 @@ name: ci
 
 on:
   push:
-    branches: [main, codex/res-718-biosyngen-challenge]
+    branches: [main]
   pull_request:
 
 permissions:
@@ -56,6 +56,75 @@ jobs:
         run: uv run pytest
       - name: Build
         run: uv build
+      - name: Verify timing engines from the installed wheel
+        run: |
+          uv export --frozen --no-emit-project --quiet -o "$RUNNER_TEMP/wheel-requirements.txt"
+          uv venv "$RUNNER_TEMP/wheel-venv"
+          wheel_bin="$RUNNER_TEMP/wheel-venv/bin"
+          uv pip install --python "$wheel_bin/python" --require-hashes -r "$RUNNER_TEMP/wheel-requirements.txt"
+          uv pip install --python "$wheel_bin/python" --no-deps dist/*.whl
+          cd "$RUNNER_TEMP"
+          "$wheel_bin/python" -c 'import sys; from pathlib import Path; from dynamisbench_soccer import engines; assert Path(engines.__file__).is_relative_to(sys.prefix)'
+          "$wheel_bin/dbs" timing gates --help
+          "$wheel_bin/dbs" timing contact --help
+          "$wheel_bin/python" -m pytest "$GITHUB_WORKSPACE/tests/test_timing_gates.py" "$GITHUB_WORKSPACE/tests/test_timing_contact.py"
+      - name: RES-697 Nordic and hip installed-wheel processing
+        run: |
+          wheel_bin="$RUNNER_TEMP/wheel-venv/bin"
+          cd "$RUNNER_TEMP"
+          "$wheel_bin/dbs" nordic-hip process --help
+          "$wheel_bin/python" -m pytest "$GITHUB_WORKSPACE/tests/test_nordic_hip.py"
+      - name: RES-701 IMU installed-wheel processing
+        run: |
+          wheel_bin="$RUNNER_TEMP/wheel-venv/bin"
+          cd "$RUNNER_TEMP"
+          "$wheel_bin/dbs" imu process --help
+          "$wheel_bin/python" -m pytest "$GITHUB_WORKSPACE/tests/test_imu_engine.py"
+      - name: RES-671 jump assessment installed-wheel processing
+        run: |
+          wheel_bin="$RUNNER_TEMP/wheel-venv/bin"
+          cd "$RUNNER_TEMP"
+          "$wheel_bin/dbs" assess jump --help
+          "$wheel_bin/python" -m pytest "$GITHUB_WORKSPACE/tests/test_jump_assessment.py"
+      - name: RES-672 isometric assessment installed-wheel processing
+        run: |
+          wheel_bin="$RUNNER_TEMP/wheel-venv/bin"
+          cd "$RUNNER_TEMP"
+          "$wheel_bin/dbs" assess isometric --help
+          "$wheel_bin/python" -m pytest "$GITHUB_WORKSPACE/tests/test_isometric_assessment.py"
+      - name: RES-673 sprint and COD assessment installed-wheel processing
+        run: |
+          wheel_bin="$RUNNER_TEMP/wheel-venv/bin"
+          cd "$RUNNER_TEMP"
+          "$wheel_bin/dbs" assess sprint-fv --help
+          "$wheel_bin/dbs" assess cod --help
+          "$wheel_bin/python" -m pytest "$GITHUB_WORKSPACE/tests/test_sprint_cod_assessment.py"
+      - name: RES-700 GNSS and LPS installed-wheel processing
+        run: |
+          wheel_bin="$RUNNER_TEMP/wheel-venv/bin"
+          cd "$RUNNER_TEMP"
+          "$wheel_bin/dbs" gnss-lps process --help
+          "$wheel_bin/python" -m pytest "$GITHUB_WORKSPACE/tests/test_gnss_lps_acquisition.py" "$GITHUB_WORKSPACE/tests/test_gnss_lps_processing.py"
+      - name: RES-699 installed-wheel processing
+        run: |
+          uv run python - <<'PY'
+          from pathlib import Path
+          from dynamisbench_soccer.reference.exporters import export_case
+          export_case("radar_laser.radar", hz=47).write(Path("/tmp/res699-wheel-radar"))
+          export_case("radar_laser.laser", hz=256).write(Path("/tmp/res699-wheel-laser"))
+          PY
+          uv venv .wheel-venv
+          uv pip install --python .wheel-venv/bin/python dist/*.whl
+          .wheel-venv/bin/dbs radar-laser process /tmp/res699-wheel-radar/observation --stage native --correction declared_fixed_angle --out /tmp/res699-wheel-radar/result.json
+          .wheel-venv/bin/dbs radar-laser process /tmp/res699-wheel-laser/observation --stage native --derivative five_point --out /tmp/res699-wheel-laser/result.json
+          .wheel-venv/bin/python - <<'PY'
+          import json
+          from pathlib import Path
+          for kind, quantity in (("radar", "velocity"), ("laser", "distance")):
+              report = json.loads(Path(f"/tmp/res699-wheel-{kind}/result.json").read_text())
+              assert report["native_quantity"] == quantity
+              assert report["peak_velocity_m_s"] > 0
+          PY
       - name: Installed wheel force-platform processing
         run: |
           uv run python -I - <<'PYCODE'
@@ -87,4 +156,20 @@ jobs:
               assert abs(result.mass_kg-75)<1e-10
               assert len(result.qc)>0
               assert result.onset.index is None
+          PYCODE
+      - name: Built wheel LPT/encoder registration and QC rules
+        run: |
+          uv run python -I - <<'PYCODE'
+          from pathlib import Path
+          import sys
+          from zipfile import ZipFile
+
+          wheel = next(Path("dist").glob("*.whl")).resolve()
+          assert "dynamisbench_soccer/qc/rules.toml" in ZipFile(wheel).namelist()
+          sys.path.insert(0, str(wheel))
+          from dynamisbench_soccer.cli import build_parser
+          from dynamisbench_soccer.engines.lpt import process
+
+          assert str(wheel) in process.__code__.co_filename
+          assert "lpt-encoder" in build_parser().format_help()
           PYCODE
