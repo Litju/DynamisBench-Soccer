@@ -531,7 +531,8 @@ def rj_10_5_selection(
             "selected_hop_indices": [order[0]],
         },
         "all_hops_mean_rsi_m_s": float(np.mean([h["rsi_m_s"] for h in hops_])),
-        "rsi_height_basis": assessment.method_spec.get("rsi_height_basis"),
+        "rsi_height_basis": "flight_time",  # per-hop RSI is always flight-time based
+        "contact_time_criterion": "not applied (RJ-003 variants rank by RSI only)",
         "device_verdict": assessment.device_verdict,
         "variants_are_not_interchangeable": True,
     }
@@ -549,7 +550,8 @@ class SourceEstimate:
     height_flight_time_m: float
     height_low_m: float
     height_high_m: float
-    # Eligibility and QC context travels with the number (RES-671); it cannot be stripped.
+    # Eligibility and QC context travels with the number (RES-671); the comparison gate
+    # refuses rejected or ineligible estimates even if diagnostic_only is cleared.
     qc_verdict: str = "unreported"
     protocol: str | None = None
     protocol_eligible: bool | None = None
@@ -690,8 +692,14 @@ def compare_sources(
     Diagnostic-only estimates are refused unless explicitly allowed, and then mark every pair
     they enter. Estimates from different declared protocols are never compared.
     """
-    if not allow_diagnostic and any(e.diagnostic_only for e in estimates):
-        raise ValueError("diagnostic-only estimates cannot enter an accepted comparison")
+    if not allow_diagnostic and any(
+        e.diagnostic_only or e.qc_verdict == "reject" or e.protocol_eligible is False
+        for e in estimates
+    ):
+        raise ValueError(
+            "diagnostic-only, QC-rejected or protocol-ineligible estimates cannot enter an "
+            "accepted comparison"
+        )
     declared = {e.protocol for e in estimates if e.protocol is not None}
     if len(declared) > 1:
         raise ValueError(f"estimates come from different protocols: {sorted(declared)}")

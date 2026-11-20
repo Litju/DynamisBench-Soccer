@@ -138,3 +138,34 @@ def test_ten_five_refuses_other_protocols_and_rejected_sources() -> None:
     assert rejected.device_verdict == "reject"
     with pytest.raises(ValueError, match="no accepted 10/5"):
         jumps.rj_10_5_selection(rejected)
+
+
+def test_a_stripped_diagnostic_flag_cannot_bypass_the_comparison_gate() -> None:
+    accepted = jumps.force_platform_estimate(
+        assess(_accepted_signal(cmj()), JumpSpec(protocol="cmj"))
+    )
+    contact = jumps.contact_system_estimates(_contact_result())[0]
+    stripped = dataclasses.replace(accepted, qc_verdict="reject", diagnostic_only=False)
+    with pytest.raises(ValueError, match="QC-rejected"):
+        jumps.compare_sources([stripped, contact])
+    ineligible = dataclasses.replace(accepted, protocol_eligible=False)
+    with pytest.raises(ValueError, match="protocol-ineligible"):
+        jumps.compare_sources([ineligible, contact])
+    assert jumps.compare_sources([accepted, contact])["merged_value"] is None
+
+
+def test_ten_five_selection_picks_the_best_five_and_reports_flight_time_basis() -> None:
+    result = assess(
+        _rj_signal(10), JumpSpec(protocol="repeated_hops", rsi_height_basis="impulse_momentum")
+    )
+    rsi = [0.30, 0.55, 0.20, 0.60, 0.25, 0.58, 0.35, 0.57, 0.22, 0.56]
+    varied = dataclasses.replace(
+        result, contacts=[{**c, "rsi_m_s": r} for c, r in zip(result.contacts, rsi, strict=True)]
+    )
+    summary = jumps.rj_10_5_selection(varied)
+    assert summary["best_5_of_10_mean"]["selected_hop_indices"] == [1, 3, 5, 7, 9]  # type: ignore[index]
+    assert summary["best_5_of_10_mean"]["rsi_m_s"] == pytest.approx(
+        np.mean([0.55, 0.60, 0.58, 0.57, 0.56])
+    )  # type: ignore[index]
+    assert summary["peak_single_rsi"]["selected_hop_indices"] == [3]  # type: ignore[index]
+    assert summary["rsi_height_basis"] == "flight_time"
