@@ -76,3 +76,8 @@ ripple and the squat-jump protocol, the trials are accepted, and `accepted_force
 rejected control, which classifies as `DIAGNOSTIC_ONLY` with no statistics. Numerical pairs are unchanged
 in meaning; all empirical interchangeability conclusions remain unknown. Tests:
 `tests/test_agreement_evidence_integrity.py`.
+
+Caveat recorded in each force evidence row (`fixture_note`): the analytical force has a flat maximum, so
+"accepted" means the engine QC passed a synthetic fixture tuned with a 0.1 N contact-only ripple, not that a
+real device record was accepted. The contact engine emits no verdict (it refuses by raising), so its
+rows read `unreported`.

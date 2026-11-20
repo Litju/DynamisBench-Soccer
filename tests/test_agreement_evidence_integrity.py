@@ -82,3 +82,14 @@ def test_execution_basis_and_evidence_class_agree_for_every_study() -> None:
     }
     for s in studies.run_all()["studies"]:
         assert s["evidence_class"] in expected[tuple(s["execution_basis"])], s["id"]
+
+
+def test_accepted_means_tuned_synthetic_fixture_and_the_evidence_says_so() -> None:
+    study = studies.force_vs_contact_flight_time()
+    force = [e for e in study.source_evidence if e["source"] == "force_platform.single"]
+    assert all("tuned synthetic fixture" in e["fixture_note"] for e in force)
+    contact = [e for e in study.source_evidence if e["source"] == "timing_contact.contact"]
+    assert all(
+        e["qc_verdict"] == "unreported" and "refuses by raising" in e["fixture_note"]
+        for e in contact
+    )

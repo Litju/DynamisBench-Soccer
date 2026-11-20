@@ -136,6 +136,11 @@ def _force_evidence(index: int, a: jumps.Assessment) -> dict[str, Any]:
         "qc_verdict": a.device_verdict,
         "diagnostic_only": a.device_verdict == "reject" or not a.eligible,
         "estimand": "flight_time (force below contact threshold)",
+        "fixture_note": (
+            "analytical flat-top force trips the clipping rule (QC-S03); acceptance uses a 0.1 N "
+            "contact-only ripple, so 'accepted' means the engine QC passed this tuned synthetic "
+            "fixture, not that a real device record was accepted"
+        ),
     }
 
 
@@ -160,6 +165,7 @@ def _contact_evidence(index: int) -> dict[str, Any]:
         "qc_verdict": "unreported",
         "diagnostic_only": False,
         "estimand": "flight_time (switch-state)",
+        "fixture_note": "contact engine emits no QC verdict (it refuses by raising); unreported",
     }
 
 
