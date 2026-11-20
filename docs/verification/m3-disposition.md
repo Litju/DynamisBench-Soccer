@@ -26,8 +26,9 @@ No dimension of any subfamily is rated `verified` or `not_applicable`. The ledge
 | Paired empirical agreement | Absent; all agreement studies are analytical or diagnostic; every interchangeability verdict is `unknown` |
 | Scientific review | Absent (M8) |
 
-Subfamilies with an independent reference: 15 of 15 (J). Force-platform subfamilies and timing/contact
-subfamilies additionally lack engine-level D/E partial computational evidence in the ledger.
+Subfamilies with an independent J reference: 15 of 15. In the ledger, the two force-platform subfamilies
+have no independent-test or analytical-reference evidence tagged on D, E or F, and the two timing/contact
+subfamilies have none on E.
 
 ## What would change the outcome
 
