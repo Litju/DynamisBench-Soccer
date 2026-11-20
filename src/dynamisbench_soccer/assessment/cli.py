@@ -8,10 +8,9 @@ import sys
 from collections.abc import Callable
 from pathlib import Path
 
-import numpy as np
 from pydantic import BaseModel, ConfigDict, Field
 
-from dynamisbench_soccer.assessment import cod, isometric, sprint
+from dynamisbench_soccer.assessment import cod, handoff, isometric, sprint
 from dynamisbench_soccer.assessment.jumps import DropEvidence, JumpSignal, JumpSpec, assess
 from dynamisbench_soccer.engines.force_platform import MethodSpec as ForceMethod
 from dynamisbench_soccer.engines.force_platform import process as force_process
@@ -41,24 +40,21 @@ class SprintConfig(BaseModel):
     source: sprint.Source
     fv: sprint.FvSpec
     start: sprint.StartSpec = Field(default_factory=sprint.StartSpec)
+    allow_vendor_processed: bool = False
+    milestone_distances_m: tuple[float, ...] = ()
 
 
 class CodConfig(BaseModel):
     model_config = ConfigDict(extra="forbid")
     cod: cod.CodSpec
     start: sprint.StartSpec = Field(default_factory=sprint.StartSpec)
+    allow_vendor_processed: bool = False
 
 
-def _trace(path: Path) -> tuple[np.ndarray, np.ndarray]:
-    report = json.loads(path.read_text())
-    try:
-        time = np.asarray(report["time_from_start_s"], dtype=np.float64)
-        speed = np.asarray(report["velocity_m_s"], dtype=np.float64)
-    except KeyError as exc:
-        raise ValueError(f"engine report lacks {exc.args[0]!r}: not a velocity result") from exc
-    if time.shape != speed.shape or time.ndim != 1:
-        raise ValueError("time and velocity must be equal-length one-dimensional arrays")
-    return time, np.abs(speed)
+def _load(path: Path, source: str, allow_vendor_processed: bool) -> handoff.SpeedHandoff:
+    return handoff.load_speed_report(
+        path, declared_source=source, allow_vendor_processed=allow_vendor_processed
+    )
 
 
 def _emit(args: argparse.Namespace, run: Callable[[], tuple[str, int]]) -> int:
@@ -102,6 +98,10 @@ def _jump(args: argparse.Namespace) -> int:
         )
         report = result.report()
         report["device"] = {"engine": "force-platform.v1", "verdict": device.verdict}
+        report["input"] = [
+            {"stem": p.name, "bundle_id": b.meta.bundle_id}
+            for p, b in zip(inputs, bundles, strict=True)
+        ]
         text = json.dumps(report, sort_keys=True, indent=2, allow_nan=False) + "\n"
         return text, 0 if result.eligible and device.verdict != "reject" else 1
 
@@ -121,7 +121,7 @@ def _isometric(args: argparse.Namespace) -> int:
         result = isometric.assess(
             results,
             config.isometric,
-            geometry=bundles[0].meta.geometry,
+            geometries=[b.meta.geometry for b in bundles],
             bundles=bundles,
             cell=config.cell,
             method=config.method,
@@ -138,9 +138,24 @@ def _sprint(args: argparse.Namespace) -> int:
 
     def run() -> tuple[str, int]:
         config = SprintConfig.model_validate(json.loads(args.config.read_text()))
-        time, speed = _trace(args.input)
-        fit = sprint.fit_velocity_trace(time, speed, config.fv, config.start, source=config.source)
-        return sprint.report(fit, source=config.source), 0 if fit.identifiable else 1
+        speed_in = _load(args.input, config.source, config.allow_vendor_processed)
+        fit = sprint.fit_velocity_trace(
+            speed_in.time_s, speed_in.speed_m_s, config.fv, config.start, source=config.source
+        )
+        marks = (
+            sprint.milestones(
+                speed_in.time_s,
+                speed_in.speed_m_s,
+                list(config.milestone_distances_m),
+                config.start,
+            )
+            if config.milestone_distances_m
+            else None
+        )
+        text = sprint.report(
+            fit, source=config.source, input_record=speed_in.input_record(), milestones_s=marks
+        )
+        return text, 0 if fit.identifiable else 1
 
     return _emit(args, run)
 
@@ -152,8 +167,9 @@ def _cod(args: argparse.Namespace) -> int:
 
     def run() -> tuple[str, int]:
         config = CodConfig.model_validate(json.loads(args.config.read_text()))
-        time, speed = _trace(args.input)
-        result = cod.assess_trace(time, speed, config.cod, config.start)
+        speed_in = _load(args.input, config.cod.source, config.allow_vendor_processed)
+        result = cod.assess_trace(speed_in.time_s, speed_in.speed_m_s, config.cod, config.start)
+        result["input"] = speed_in.input_record()
         return json.dumps(result, indent=2, sort_keys=True, allow_nan=False) + "\n", 0
 
     return _emit(args, run)

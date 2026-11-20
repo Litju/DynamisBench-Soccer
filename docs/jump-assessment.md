@@ -66,3 +66,18 @@ empty accepted estimands and contacts.
 The engine-v0.1 snapshot covers the registered method specification schemas and CLI
 arguments. The jump CLI configuration envelope carries contextual `drop_evidence`
 separately from the frozen `JumpSpec` method declaration.
+
+## Eligibility and QC provenance on exported estimates (RES-671 correction)
+
+`SourceEstimate` and `LptHeights` carry `qc_verdict`, `protocol`, `protocol_eligible`,
+`diagnostic_only`, `basis` and `uncertainty_assumptions`. The export helpers refuse a rejected or
+protocol-ineligible source unless the caller passes `allow_diagnostic=True`; the estimate is then
+flagged diagnostic and `compare_sources` refuses it (and refuses mixing declared protocols).
+`rj_10_5_selection` reports the `best_5_of_10_mean` and `peak_single_rsi` variants (RJ-003) only
+from an eligible, accepted `repeated_hops` assessment with exactly ten valid hops. The CLI report
+adds an `input` record (bundle stem and id). Estimand differences between force-plate, contact-mat,
+IMU and LPT sources are unchanged and remain unestablished (RES-703).
+
+Test finding: the synthetic CMJ fixture trips the clipping rule (QC-S03) and was previously compared as
+an accepted source. Tests now use a device-accepted fixture (`_accepted_signal`) and keep the rejected
+fixture as the negative control.

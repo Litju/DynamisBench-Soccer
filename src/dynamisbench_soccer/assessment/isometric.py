@@ -42,6 +42,10 @@ LIMITATIONS: tuple[str, ...] = (
     "Engineering calculations only: no scientific qualification of any isometric metric.",
 )
 
+# Trials pooled into one summary must share one protocol geometry. This is an assessment
+# constant, not part of the frozen IsoSpec schema (adding a field would re-version engine-v0.1).
+ANGLE_TOLERANCE_DEG = 1.0
+
 _ANGLE_REQUIREMENTS: dict[str, tuple[str, ...]] = {
     "imtp": ("knee_angle_deg",),
     "isometric_hamstring": ("knee_angle_deg",),
@@ -73,7 +77,7 @@ class IsoResult:
     trials: list[dict[str, Any]]
     summary: dict[str, float | None]
     consistency: dict[str, object]
-    onset_variants: dict[str, dict[str, float | None]]
+    onset_variants: dict[str, dict[str, Any]]
     uncertainty: dict[str, object]
     refusals: dict[str, str]
     limitations: tuple[str, ...]
@@ -123,6 +127,48 @@ def _geometry_checks(geometry: Geometry | None, spec: IsoSpec) -> list[dict[str,
     return out
 
 
+def _trial_geometry_exclusions(
+    geometry: Geometry | None, spec: IsoSpec, lever_arm_m: float | None
+) -> list[str]:
+    """Reasons a single trial's own declared geometry makes it ineligible (empty = eligible)."""
+    reasons = [
+        f"{c['check']}: {c['detail']}" for c in _geometry_checks(geometry, spec) if not c["passed"]
+    ]
+    if (
+        geometry is not None
+        and lever_arm_m is not None
+        and geometry.lever_arm_m is not None
+        and "lever_arm_m" not in geometry.unknown
+        and abs(geometry.lever_arm_m - lever_arm_m) > 1e-9 * max(1.0, lever_arm_m)
+    ):
+        reasons.append(
+            f"lever_arm_conflict: trial geometry {geometry.lever_arm_m} m vs cell {lever_arm_m} m"
+        )
+    return reasons
+
+
+def _geometry_consistency(
+    geometries: list[Geometry | None], indices: list[int], spec: IsoSpec
+) -> list[dict[str, object]]:
+    out: list[dict[str, object]] = []
+    for field_name in _ANGLE_REQUIREMENTS[spec.protocol]:
+        values = [
+            float(getattr(geometries[i], field_name))
+            for i in indices
+            if geometries[i] is not None and getattr(geometries[i], field_name) is not None
+        ]
+        if len(values) >= 2:
+            spread = max(values) - min(values)
+            out.append(
+                _check(
+                    f"{field_name}_consistent_across_pooled_trials",
+                    spread <= ANGLE_TOLERANCE_DEG,
+                    f"spread {spread:.3f} deg vs tolerance {ANGLE_TOLERANCE_DEG} deg",
+                )
+            )
+    return out
+
+
 def run_trials(bundles: list[SignalBundle], cell: CellSpec, method: MethodSpec) -> list[Processed]:
     return [process(b, cell, method) for b in bundles]
 
@@ -165,27 +211,55 @@ def assess(
     spec: IsoSpec,
     *,
     geometry: Geometry | None = None,
+    geometries: list[Geometry | None] | None = None,
     bundles: list[SignalBundle] | None = None,
     cell: CellSpec | None = None,
     method: MethodSpec | None = None,
 ) -> IsoResult:
     if not results:
         raise ValueError("at least one processed trial is required")
-    checks = _geometry_checks(geometry, spec)
+    if bundles is not None and len(bundles) != len(results):
+        raise ValueError("bundles must correspond one-to-one with processed trials")
+    if geometries is None:
+        # Each trial is bound to its own declared geometry. The single ``geometry`` argument is
+        # used only when no bundles are supplied; with bundles it is ignored on purpose, so a
+        # later trial can never borrow another trial's geometry.
+        geometries = (
+            [b.meta.geometry for b in bundles] if bundles is not None else [geometry] * len(results)
+        )
+    if len(geometries) != len(results):
+        raise ValueError("geometries must correspond one-to-one with processed trials")
+    checks: list[dict[str, object]] = []
     trials = [_trial(r, spec, i) for i, r in enumerate(results)]
     refusals: dict[str, str] = {}
+    lever = None if cell is None else cell.lever_arm_m
+    for t, g in zip(trials, geometries, strict=True):
+        reasons = _trial_geometry_exclusions(g, spec, lever)
+        t["geometry"] = {
+            f: (None if g is None else getattr(g, f)) for f in _ANGLE_REQUIREMENTS[spec.protocol]
+        }
+        t["geometry_exclusions"] = reasons
+        for c in _geometry_checks(g, spec):
+            checks.append({**c, "trial": t["index"], "scope": "trial"})
+        t["diagnostic_only"] = bool(reasons)
+        if reasons:
+            t["valid"] = False
     for t in trials:
         if spec.max_baseline_n is not None and t["baseline_n"] is not None:
-            checks.append(
-                _check(
-                    f"baseline_within_limit_trial_{t['index']}",
-                    abs(float(t["baseline_n"])) <= spec.max_baseline_n,
-                    f"baseline {t['baseline_n']} N vs limit {spec.max_baseline_n} N",
-                )
+            base_check = _check(
+                f"baseline_within_limit_trial_{t['index']}",
+                abs(float(t["baseline_n"])) <= spec.max_baseline_n,
+                f"baseline {t['baseline_n']} N vs limit {spec.max_baseline_n} N",
             )
+            if t["diagnostic_only"]:  # already excluded: a diagnostic trial cannot sink the record
+                base_check["scope"] = "trial"
+            checks.append(base_check)
             if abs(float(t["baseline_n"])) > spec.max_baseline_n:
                 t["valid"] = False
+    chosen: list[dict[str, Any]] = []
     valid = [t for t in trials if t["valid"]]
+    if spec.policy in {"mean_peak", "all_valid"}:  # only these policies pool several trials
+        checks.extend(_geometry_consistency(geometries, [int(t["index"]) for t in valid], spec))
     checks.append(
         _check(
             "enough_valid_trials",
@@ -237,21 +311,33 @@ def assess(
             refusals["relative_force"] = "no declared body mass: relative force refused"
     else:
         refusals["summary"] = "no valid trial: protocol quantities refused"
-    # Onset-variant sensitivity of the headline quantities (needs the raw bundles).
-    onset_variants: dict[str, dict[str, float | None]] = {}
-    if bundles is not None and cell is not None and method is not None and bundles:
+    # Onset-variant sensitivity is computed on the trial(s) the headline actually uses.
+    onset_variants: dict[str, dict[str, Any]] = {}
+    if valid and bundles is not None and cell is not None and method is not None:
+        source = [int(t["index"]) for t in chosen]
+        window = spec.headline_window_ms
         for name in ONSET_METHODS:
             try:
-                alt = process(bundles[0], cell, method.model_copy(update={"onset": name}))
+                alts = [
+                    process(bundles[i], cell, method.model_copy(update={"onset": name}))
+                    for i in source
+                ]
             except ValueError as exc:
-                onset_variants[name] = {"error_refused": None}
+                onset_variants[name] = {"error_refused": None, "source_trial_indices": source}
                 refusals[f"onset_{name}"] = str(exc)
                 continue
-            window = spec.headline_window_ms
+
+            def mean(values: list[float | None]) -> float | None:
+                real = [v for v in values if v is not None]
+                return float(np.mean(real)) if len(real) == len(values) and real else None
+
             onset_variants[name] = {
-                "onset_s": alt.onset.time_s,
-                "rfd_headline_n_s": alt.metrics.get(f"rfd_0_{window}ms_n_s"),
-                "impulse_headline_n_s": alt.metrics.get(f"net_impulse_0_{window}ms_n_s"),
+                "source_trial_indices": source,
+                "onset_s": mean([a.onset.time_s for a in alts]),
+                "rfd_headline_n_s": mean([a.metrics.get(f"rfd_0_{window}ms_n_s") for a in alts]),
+                "impulse_headline_n_s": mean(
+                    [a.metrics.get(f"net_impulse_0_{window}ms_n_s") for a in alts]
+                ),
             }
     uncertainty: dict[str, object] = {
         "calibration_gain_sensitivity": {
@@ -266,7 +352,7 @@ def assess(
     }
     return IsoResult(
         protocol=spec.protocol,
-        eligible=all(bool(c["passed"]) for c in checks),
+        eligible=all(bool(c["passed"]) for c in checks if c.get("scope") != "trial"),
         eligibility=checks,
         trials=trials,
         summary=summary,
