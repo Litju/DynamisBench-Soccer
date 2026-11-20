@@ -68,6 +68,16 @@ class JumpSpec(BaseModel):
     body_weight_error_fraction: float = Field(default=0.01, ge=0, lt=0.5)
 
 
+class DropEvidence(BaseModel):
+    """Touchdown velocity established independently of the declared drop height."""
+
+    model_config = ConfigDict(
+        extra="forbid", frozen=True, allow_inf_nan=False, str_strip_whitespace=True
+    )
+    touchdown_velocity_m_s: float = Field(lt=0)
+    source: str = Field(min_length=1)
+
+
 @dataclass(frozen=True)
 class JumpSignal:
     """Force-platform quantities the assessment needs; build one from the device engine."""
@@ -114,6 +124,7 @@ class Assessment:
     uncertainty: dict[str, object]
     limitations: tuple[str, ...]
     method_spec: dict[str, object]
+    diagnostics: dict[str, object] = field(default_factory=dict)
 
     def report(self) -> dict[str, object]:
         return {
@@ -126,6 +137,7 @@ class Assessment:
             "events": self.events,
             "phases": self.phases,
             "estimands": self.estimands,
+            "diagnostics": self.diagnostics,
             "contacts": self.contacts,
             "bilateral": self.bilateral,
             "refusals": self.refusals,
@@ -172,7 +184,9 @@ def _unweight(sig: JumpSignal, onset: int, takeoff: int) -> tuple[float, int]:
     return float(sig.velocity_m_s[index]), index
 
 
-def assess(signal: JumpSignal, spec: JumpSpec) -> Assessment:
+def assess(
+    signal: JumpSignal, spec: JumpSpec, *, drop_evidence: DropEvidence | None = None
+) -> Assessment:
     time, force = signal.time_s, signal.force_n
     dt = float(np.median(np.diff(time)))
     event_force = signal.raw_force_n if signal.raw_force_n is not None else force
@@ -295,14 +309,25 @@ def assess(signal: JumpSignal, spec: JumpSpec) -> Assessment:
         refusals["jump"] = "no complete flight: take-off, landing and jump heights refused"
 
     if spec.protocol == "dj":
-        if not segments:
-            refusals["dj"] = "no ground contact found"
+        if not segments or segments[0][1] == len(time):
+            checks.append(_check("complete_rebound", False, "no complete initial contact"))
+            refusals["dj"] = "no complete initial contact"
         else:
             first_start, first_end = segments[0]
             gct = float(time[first_end] - time[first_start])
             contacts.append({"start_s": float(time[first_start]), "contact_time_s": gct})
             estimands["ground_contact_time_s"] = gct
-            if first_end < len(time) and flights and flights[0][0] == first_end:
+            rebound = bool(
+                flights and flights[0][0] == first_end and signal.velocity_m_s[first_end] > 0
+            )
+            checks.append(
+                _check(
+                    "complete_rebound",
+                    rebound,
+                    "initial contact followed by upward take-off and landing",
+                )
+            )
+            if rebound:
                 takeoff_i, landing_i = flights[0]
                 flight_s = float(time[landing_i] - time[takeoff_i])
                 v_to = float(signal.velocity_m_s[takeoff_i])
@@ -325,21 +350,40 @@ def assess(signal: JumpSignal, spec: JumpSpec) -> Assessment:
                 refusals["rsi"] = "no complete rebound flight after the first contact"
             checks.append(
                 _check(
-                    "starts_from_flight_or_contact_at_record_start",
-                    first_start >= 0,
-                    "first contact located",
+                    "drop_landing",
+                    signal.velocity_m_s[first_start] < 0
+                    and (first_start > 0 or event_force[0] > 1.05 * bw)
+                    and not quiet_ok(),
+                    "descending first landing without a quiet standing baseline",
                 )
             )
+            checks.append(
+                _check(
+                    "drop_evidence",
+                    spec.drop_height_m is not None and drop_evidence is not None,
+                    "requires declared drop height and independently sourced touchdown velocity",
+                )
+            )
+            if drop_evidence is None:
+                refusals["touchdown_velocity"] = "no independently sourced touchdown velocity"
             if spec.drop_height_m is None:
                 refusals["drop_height"] = "no declared drop height: drop-speed check refused"
-            else:
+            elif drop_evidence is not None:
                 expected = math.sqrt(2 * GRAVITY_M_S2 * spec.drop_height_m)
-                measured = float(-signal.velocity_m_s[first_start])
+                measured = -drop_evidence.touchdown_velocity_m_s
+                integrated = float(-signal.velocity_m_s[first_start])
                 checks.append(
                     _check(
                         "impact_speed_matches_drop_height",
                         abs(measured - expected) <= spec.drop_speed_tolerance_m_s,
-                        f"measured {measured:.3f} vs declared-drop {expected:.3f} m/s",
+                        f"independent touchdown {measured:.3f} vs declared-drop {expected:.3f} m/s",
+                    )
+                )
+                checks.append(
+                    _check(
+                        "integration_matches_touchdown",
+                        abs(integrated - measured) <= spec.drop_speed_tolerance_m_s,
+                        f"integrated {integrated:.3f} vs independent touchdown {measured:.3f} m/s",
                     )
                 )
                 estimands["drop_height_declared_m"] = spec.drop_height_m
@@ -425,6 +469,13 @@ def assess(signal: JumpSignal, spec: JumpSpec) -> Assessment:
         ]
 
     eligible = all(bool(c["passed"]) for c in checks)
+    diagnostics: dict[str, object] = {}
+    method_spec = spec.model_dump(mode="json")
+    if spec.protocol == "dj":
+        method_spec["drop_evidence"] = drop_evidence.model_dump() if drop_evidence else None
+        if not eligible or signal.device_verdict == "reject":
+            diagnostics = {"estimands": estimands, "contacts": contacts, "bilateral": bilateral}
+            estimands, contacts, bilateral = {}, [], {"available": False}
     return Assessment(
         protocol=spec.protocol,
         eligible=eligible,
@@ -438,7 +489,8 @@ def assess(signal: JumpSignal, spec: JumpSpec) -> Assessment:
         refusals=refusals,
         uncertainty=uncertainty,
         limitations=LIMITATIONS,
-        method_spec=spec.model_dump(mode="json"),
+        method_spec=method_spec,
+        diagnostics=diagnostics,
     )
 
 

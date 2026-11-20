@@ -12,7 +12,7 @@ import numpy as np
 from pydantic import BaseModel, ConfigDict, Field
 
 from dynamisbench_soccer.assessment import cod, isometric, sprint
-from dynamisbench_soccer.assessment.jumps import JumpSignal, JumpSpec, assess
+from dynamisbench_soccer.assessment.jumps import DropEvidence, JumpSignal, JumpSpec, assess
 from dynamisbench_soccer.engines.force_platform import MethodSpec as ForceMethod
 from dynamisbench_soccer.engines.force_platform import process as force_process
 from dynamisbench_soccer.engines.force_platform_acquisition import PlateSpec
@@ -24,6 +24,7 @@ from dynamisbench_soccer.signals import io
 class JumpConfig(BaseModel):
     model_config = ConfigDict(extra="forbid")
     jump: JumpSpec
+    drop_evidence: DropEvidence | None = None
     method: ForceMethod = Field(default_factory=ForceMethod)
     plates: tuple[PlateSpec, ...] = ()
 
@@ -96,7 +97,9 @@ def _jump(args: argparse.Namespace) -> int:
             plates=config.plates,
             weighing=io.read(args.weighing) if args.weighing else None,
         )
-        result = assess(JumpSignal.from_engine(device), config.jump)
+        result = assess(
+            JumpSignal.from_engine(device), config.jump, drop_evidence=config.drop_evidence
+        )
         report = result.report()
         report["device"] = {"engine": "force-platform.v1", "verdict": device.verdict}
         text = json.dumps(report, sort_keys=True, indent=2, allow_nan=False) + "\n"
