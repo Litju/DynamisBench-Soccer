@@ -115,3 +115,34 @@ def test_mismatched_bundle_count_is_refused() -> None:
     results = run_trials([_bundle(), _bundle()], CELL, method)
     with pytest.raises(ValueError, match="one-to-one"):
         assess(results, IsoSpec(protocol="imtp"), bundles=[_bundle()], cell=CELL, method=method)
+
+
+def test_cli_binds_geometry_per_trial_and_reports_the_diagnostic_trial(tmp_path) -> None:
+    import json
+
+    from test_isometric_assessment import CELL as CELL_
+
+    from dynamisbench_soccer.cli import main
+    from dynamisbench_soccer.signals import io
+
+    stems = []
+    for i, (peak, knee) in enumerate(((2400.0, 130.0), (2900.0, 70.0))):
+        stem = tmp_path / f"trial{i}"
+        io.write(_bundle(peak, knee=knee), stem)
+        stems.append(str(stem))
+    config = tmp_path / "config.json"
+    config.write_text(
+        json.dumps(
+            {
+                "isometric": {"protocol": "imtp", "angle_range_deg": [125, 145], "min_trials": 1},
+                "method": {"windows_ms": [50, 100, 200]},
+                "cell": json.loads(CELL_.model_dump_json()),
+            }
+        )
+    )
+    out = tmp_path / "report.json"
+    assert main(["assess", "isometric", *stems, "--config", str(config), "--out", str(out)]) == 0
+    report = json.loads(out.read_text())
+    assert report["summary"]["peak_force_n"] == pytest.approx(2400)
+    assert report["trials"][1]["diagnostic_only"] is True
+    assert all(v["source_trial_indices"] == [0] for v in report["onset_variants"].values())

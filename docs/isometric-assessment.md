@@ -11,7 +11,12 @@ declarations). One bundle stem per trial. Nordic eccentric trials go through the
 `imtp`, `isometric_hamstring`, `hip_adduction`, `hip_abduction` (load-cell core, RES-696)
 and `nordic_eccentric` (Nordic engine). Required joint angles come from the bundle geometry
 (`knee_angle_deg` for IMTP and hamstring, `hip_flexion_deg` for hip tests). An undeclared
-angle, or one outside the declared protocol range, makes the record ineligible.
+angle, or one outside the declared protocol range, makes that trial ineligible.
+
+Geometry is bound to every trial (RES-672 correction). A trial whose own geometry is missing,
+outside the range, or in conflict with the cell lever arm is kept as a diagnostic record
+(`diagnostic_only`, `geometry_exclusions`) and never enters headline selection. Pooled valid
+trials must agree on each protocol angle within 1 degree; otherwise the record is ineligible.
 
 ## Quantities and variants
 
@@ -28,7 +33,7 @@ been cut off). Invalid trials never enter a summary.
 ## Uncertainty and sensitivity
 
 Calibration gain perturbations scale force, RFD and impulse; headline RFD and impulse are
-recomputed under every onset variant and reported next to the declared one; rig compliance
+recomputed, for the trial(s) the headline actually uses (`source_trial_indices`), under every onset variant and reported next to the declared one; rig compliance
 is recorded as not modelled.
 
 ## Verification

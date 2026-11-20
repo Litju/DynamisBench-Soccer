@@ -42,6 +42,9 @@ LIMITATIONS: tuple[str, ...] = (
     "Engineering calculations only: no scientific qualification of any isometric metric.",
 )
 
+# Pooled trials must share one protocol geometry (module constant: frozen engine-v0.1 spec).
+ANGLE_TOLERANCE_DEG = 1.0
+
 _ANGLE_REQUIREMENTS: dict[str, tuple[str, ...]] = {
     "imtp": ("knee_angle_deg",),
     "isometric_hamstring": ("knee_angle_deg",),
@@ -63,7 +66,6 @@ class IsoSpec(BaseModel):
     body_mass_kg: float | None = Field(default=None, gt=0)
     headline_window_ms: int = 200
     calibration_gain_errors: tuple[float, ...] = (-0.01, 0.01)
-    angle_tolerance_deg: float = Field(default=1.0, ge=0)
 
 
 @dataclass(frozen=True)
@@ -159,8 +161,8 @@ def _geometry_consistency(
             out.append(
                 _check(
                     f"{field_name}_consistent_across_pooled_trials",
-                    spread <= spec.angle_tolerance_deg,
-                    f"spread {spread:.3f} deg vs tolerance {spec.angle_tolerance_deg} deg",
+                    spread <= ANGLE_TOLERANCE_DEG,
+                    f"spread {spread:.3f} deg vs tolerance {ANGLE_TOLERANCE_DEG} deg",
                 )
             )
     return out
