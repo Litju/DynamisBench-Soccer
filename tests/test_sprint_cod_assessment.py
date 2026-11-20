@@ -429,3 +429,18 @@ def test_cod_accepts_fractional_start_with_finish_at_last_observed_sample() -> N
     longer = spec.model_copy(update={"path_length_m": 7.375001})
     with pytest.raises(ValueError, match="trace ends"):
         cod.assess_trace(time, speed, longer, start)
+
+
+def test_cod_ends_at_first_arrival_before_stationary_tail() -> None:
+    time = np.arange(126) / 25
+    speed = 2.5 * np.clip(3 - time, 0, 1)
+    spec = CodSpec(
+        declared_path="finish then stand",
+        path_length_m=6.125,
+        turn_distance_m=3.5,
+        entry_distance_m=1,
+        turn_angle_deg=90,
+        source="radar",
+    )
+    start = StartSpec(kind="external_trigger", trigger_s=0.05)
+    assert cod.assess_trace(time, speed, spec, start)["total_time_s"] == pytest.approx(2.95)
