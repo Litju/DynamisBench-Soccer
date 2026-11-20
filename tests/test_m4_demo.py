@@ -105,7 +105,8 @@ def test_defended_method_requires_matching_formula_for_either_variant():
     episode = episodes()[1]
     key = demo_key(episode)
     for method, formula, expected in (
-        ("flight_time", "g * t**2 / 8", True),
+        ("flight_time", "(g * t**2) / 8", True),
+        ("flight_time", "g/8*t**2 +", False),
         ("velocity_energy", "v**2/(2*g)", True),
         ("velocity_energy", "g*t**2/8", False),
         ("flight_time", None, False),

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import ast
 import json
 import math
 from typing import Literal
@@ -68,6 +69,17 @@ def _unique_object(pairs: list[tuple[str, JsonValue]]) -> dict[str, JsonValue]:
     return result
 
 
+def _matches_formula(actual: str | None, expected: str | None) -> bool:
+    if actual is None or expected is None:
+        return actual == expected
+    try:
+        return ast.dump(ast.parse(actual.strip(), mode="eval")) == ast.dump(
+            ast.parse(expected, mode="eval")
+        )
+    except (SyntaxError, ValueError, RecursionError):
+        return False
+
+
 def grade(
     episode: Episode,
     output: bytes,
@@ -91,11 +103,10 @@ def grade(
         for name, value in key.metrics.items()
     )
     allowed_formulas = {key.method: key.formula, **(alternative_formulas or {})}
-    declared_formula = "".join(answer.formula.split()) if answer.formula is not None else None
     methodological = (
         answer.decision == key.decision
         and answer.method in allowed_formulas
-        and declared_formula == allowed_formulas[answer.method]
+        and _matches_formula(answer.formula, allowed_formulas[answer.method])
         and answer.reason == key.reason
         and answer.estimand == episode.task.estimand == key.estimand
         and answer.unit == episode.task.unit == key.unit

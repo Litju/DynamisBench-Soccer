@@ -19,7 +19,8 @@ the declared estimand and unit, the decision, method and reason, and the full
 metric set. Refusals give an empty metric set and an evidence-specific reason.
 The demo uses exact declared model assumptions and a deterministic absolute
 numerical tolerance. The defended ballistic variant admits two equivalent
-formulas and requires the corresponding symbolic formula in the answer. Graders score numerical and methodological criteria independently.
+formulas and requires the corresponding symbolic formula in the answer. Formula checks compare
+Python expression structure and permit whitespace and redundant parentheses. Graders score numerical and methodological criteria independently.
 
 | DEVELOPMENT_ONLY_NOT_QUALIFIED task | Evidence | Oracle | Naive | Null | Random |
 | --- | --- | --- | --- | --- | --- |
