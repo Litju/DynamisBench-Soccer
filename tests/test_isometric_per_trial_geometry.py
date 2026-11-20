@@ -146,3 +146,38 @@ def test_cli_binds_geometry_per_trial_and_reports_the_diagnostic_trial(tmp_path)
     assert report["summary"]["peak_force_n"] == pytest.approx(2400)
     assert report["trials"][1]["diagnostic_only"] is True
     assert all(v["source_trial_indices"] == [0] for v in report["onset_variants"].values())
+
+
+def test_baseline_failure_of_a_geometry_excluded_trial_does_not_sink_the_record() -> None:
+    method = _methods()
+    bundles = [_bundle(2400, knee=130), _bundle(2600, baseline=50, knee=90)]
+    results = run_trials(bundles, CELL, method)
+    spec = IsoSpec(protocol="imtp", angle_range_deg=RANGE, min_trials=1, max_baseline_n=10)
+    r = assess(results, spec, bundles=bundles, cell=CELL, method=method)
+    assert r.eligible and r.summary["peak_force_n"] == pytest.approx(2400)
+    # negative control: the same baseline failure on a geometry-valid trial still fails the record
+    both = [_bundle(2400, knee=130), _bundle(2600, baseline=50, knee=130)]
+    results = run_trials(both, CELL, method)
+    assert not assess(results, spec, bundles=both, cell=CELL, method=method).eligible
+
+
+def test_geometry_argument_is_ignored_when_bundles_are_supplied() -> None:
+    method = _methods()
+    bundles = [_bundle(2400, knee=None)]
+    results = run_trials(bundles, CELL, method)
+    good = _bundle(2400, knee=130).meta.geometry
+    r = assess(
+        results,
+        IsoSpec(protocol="imtp", angle_range_deg=RANGE, min_trials=1),
+        geometry=good,
+        bundles=bundles,
+        cell=CELL,
+        method=method,
+    )
+    assert not r.eligible and r.trials[0]["diagnostic_only"]
+
+
+def test_angle_consistency_is_checked_only_for_pooling_policies() -> None:
+    wide = [_bundle(2400, knee=126), _bundle(2450, knee=144)]
+    assert _run(wide, policy="best_peak").eligible
+    assert not _run(wide, policy="all_valid").eligible

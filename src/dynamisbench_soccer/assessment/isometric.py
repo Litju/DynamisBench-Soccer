@@ -42,7 +42,8 @@ LIMITATIONS: tuple[str, ...] = (
     "Engineering calculations only: no scientific qualification of any isometric metric.",
 )
 
-# Pooled trials must share one protocol geometry (module constant: frozen engine-v0.1 spec).
+# Trials pooled into one summary must share one protocol geometry. This is an assessment
+# constant, not part of the frozen IsoSpec schema (adding a field would re-version engine-v0.1).
 ANGLE_TOLERANCE_DEG = 1.0
 
 _ANGLE_REQUIREMENTS: dict[str, tuple[str, ...]] = {
@@ -220,8 +221,9 @@ def assess(
     if bundles is not None and len(bundles) != len(results):
         raise ValueError("bundles must correspond one-to-one with processed trials")
     if geometries is None:
-        # Each trial is bound to its own declared geometry. The single ``geometry`` argument
-        # applies only to a trial that has no bundle of its own.
+        # Each trial is bound to its own declared geometry. The single ``geometry`` argument is
+        # used only when no bundles are supplied; with bundles it is ignored on purpose, so a
+        # later trial can never borrow another trial's geometry.
         geometries = (
             [b.meta.geometry for b in bundles] if bundles is not None else [geometry] * len(results)
         )
@@ -244,18 +246,20 @@ def assess(
             t["valid"] = False
     for t in trials:
         if spec.max_baseline_n is not None and t["baseline_n"] is not None:
-            checks.append(
-                _check(
-                    f"baseline_within_limit_trial_{t['index']}",
-                    abs(float(t["baseline_n"])) <= spec.max_baseline_n,
-                    f"baseline {t['baseline_n']} N vs limit {spec.max_baseline_n} N",
-                )
+            base_check = _check(
+                f"baseline_within_limit_trial_{t['index']}",
+                abs(float(t["baseline_n"])) <= spec.max_baseline_n,
+                f"baseline {t['baseline_n']} N vs limit {spec.max_baseline_n} N",
             )
+            if t["diagnostic_only"]:  # already excluded: a diagnostic trial cannot sink the record
+                base_check["scope"] = "trial"
+            checks.append(base_check)
             if abs(float(t["baseline_n"])) > spec.max_baseline_n:
                 t["valid"] = False
     chosen: list[dict[str, Any]] = []
     valid = [t for t in trials if t["valid"]]
-    checks.extend(_geometry_consistency(geometries, [int(t["index"]) for t in valid], spec))
+    if spec.policy in {"mean_peak", "all_valid"}:  # only these policies pool several trials
+        checks.extend(_geometry_consistency(geometries, [int(t["index"]) for t in valid], spec))
     checks.append(
         _check(
             "enough_valid_trials",
