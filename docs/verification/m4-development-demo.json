@@ -1,0 +1,188 @@
+{
+  "candidate_sha256": {
+    "naive": "d003a6a1928893855d7b1d61354fe82946d12bf292d97c14e96915780cd72e34",
+    "null": "eda4c48783269f7a5ad4be23b6c3a8a7dab36cd93c718979237a3e74433d53ba",
+    "oracle": "645647f648476e5a4d2e5ac838f5e76405e3f8bd05c678c95c1ac8cfa0dd316f",
+    "random": "14a70f5cc7cde8089e0ca9a138df1de1ccd6a9c8720bc7fd0bb6055aac2b8bb7"
+  },
+  "episodes": [
+    {
+      "episode_sha256": "5bf969a346688c41e7ec3c4800546372f7570b8a046d1ceeb9e5d27ed457d1ed",
+      "evidence": "analytical",
+      "scores": {
+        "naive": {
+          "episode_id": "demo-737-fractional_cod",
+          "methodological": false,
+          "numerical": false,
+          "outcome": "graded",
+          "passed": false,
+          "status": "DEVELOPMENT_ONLY_NOT_QUALIFIED",
+          "version": "m4.score.v1"
+        },
+        "null": {
+          "episode_id": "demo-737-fractional_cod",
+          "methodological": false,
+          "numerical": false,
+          "outcome": "invalid_answer",
+          "passed": false,
+          "status": "DEVELOPMENT_ONLY_NOT_QUALIFIED",
+          "version": "m4.score.v1"
+        },
+        "oracle": {
+          "episode_id": "demo-737-fractional_cod",
+          "methodological": true,
+          "numerical": true,
+          "outcome": "graded",
+          "passed": true,
+          "status": "DEVELOPMENT_ONLY_NOT_QUALIFIED",
+          "version": "m4.score.v1"
+        },
+        "random": {
+          "episode_id": "demo-737-fractional_cod",
+          "methodological": false,
+          "numerical": false,
+          "outcome": "graded",
+          "passed": false,
+          "status": "DEVELOPMENT_ONLY_NOT_QUALIFIED",
+          "version": "m4.score.v1"
+        }
+      },
+      "status": "DEVELOPMENT_ONLY_NOT_QUALIFIED",
+      "task_id": "fractional_cod"
+    },
+    {
+      "episode_sha256": "80abcd83e8a61d93809e03f4a04af9880dfceaacf70bb20450bd1ec4bdbd4141",
+      "evidence": "analytical",
+      "scores": {
+        "naive": {
+          "episode_id": "demo-737-ballistic_height",
+          "methodological": false,
+          "numerical": false,
+          "outcome": "graded",
+          "passed": false,
+          "status": "DEVELOPMENT_ONLY_NOT_QUALIFIED",
+          "version": "m4.score.v1"
+        },
+        "null": {
+          "episode_id": "demo-737-ballistic_height",
+          "methodological": false,
+          "numerical": false,
+          "outcome": "invalid_answer",
+          "passed": false,
+          "status": "DEVELOPMENT_ONLY_NOT_QUALIFIED",
+          "version": "m4.score.v1"
+        },
+        "oracle": {
+          "episode_id": "demo-737-ballistic_height",
+          "methodological": true,
+          "numerical": true,
+          "outcome": "graded",
+          "passed": true,
+          "status": "DEVELOPMENT_ONLY_NOT_QUALIFIED",
+          "version": "m4.score.v1"
+        },
+        "random": {
+          "episode_id": "demo-737-ballistic_height",
+          "methodological": false,
+          "numerical": false,
+          "outcome": "graded",
+          "passed": false,
+          "status": "DEVELOPMENT_ONLY_NOT_QUALIFIED",
+          "version": "m4.score.v1"
+        }
+      },
+      "status": "DEVELOPMENT_ONLY_NOT_QUALIFIED",
+      "task_id": "ballistic_height"
+    },
+    {
+      "episode_sha256": "dc370c39e32249cd5d41176e40978fb2f3ec92d4d652d27e9b9e9c35de890156",
+      "evidence": "synthetic",
+      "scores": {
+        "naive": {
+          "episode_id": "demo-737-gate_course",
+          "methodological": false,
+          "numerical": false,
+          "outcome": "graded",
+          "passed": false,
+          "status": "DEVELOPMENT_ONLY_NOT_QUALIFIED",
+          "version": "m4.score.v1"
+        },
+        "null": {
+          "episode_id": "demo-737-gate_course",
+          "methodological": false,
+          "numerical": false,
+          "outcome": "invalid_answer",
+          "passed": false,
+          "status": "DEVELOPMENT_ONLY_NOT_QUALIFIED",
+          "version": "m4.score.v1"
+        },
+        "oracle": {
+          "episode_id": "demo-737-gate_course",
+          "methodological": true,
+          "numerical": true,
+          "outcome": "graded",
+          "passed": true,
+          "status": "DEVELOPMENT_ONLY_NOT_QUALIFIED",
+          "version": "m4.score.v1"
+        },
+        "random": {
+          "episode_id": "demo-737-gate_course",
+          "methodological": false,
+          "numerical": false,
+          "outcome": "graded",
+          "passed": false,
+          "status": "DEVELOPMENT_ONLY_NOT_QUALIFIED",
+          "version": "m4.score.v1"
+        }
+      },
+      "status": "DEVELOPMENT_ONLY_NOT_QUALIFIED",
+      "task_id": "gate_course"
+    },
+    {
+      "episode_sha256": "297ad3934ef643721e558d7fa3e03d63a268014a2f3ddf294428daf46d6eb5c6",
+      "evidence": "synthetic",
+      "scores": {
+        "naive": {
+          "episode_id": "demo-737-drop_jump",
+          "methodological": false,
+          "numerical": false,
+          "outcome": "graded",
+          "passed": false,
+          "status": "DEVELOPMENT_ONLY_NOT_QUALIFIED",
+          "version": "m4.score.v1"
+        },
+        "null": {
+          "episode_id": "demo-737-drop_jump",
+          "methodological": false,
+          "numerical": false,
+          "outcome": "invalid_answer",
+          "passed": false,
+          "status": "DEVELOPMENT_ONLY_NOT_QUALIFIED",
+          "version": "m4.score.v1"
+        },
+        "oracle": {
+          "episode_id": "demo-737-drop_jump",
+          "methodological": true,
+          "numerical": true,
+          "outcome": "graded",
+          "passed": true,
+          "status": "DEVELOPMENT_ONLY_NOT_QUALIFIED",
+          "version": "m4.score.v1"
+        },
+        "random": {
+          "episode_id": "demo-737-drop_jump",
+          "methodological": false,
+          "numerical": false,
+          "outcome": "graded",
+          "passed": false,
+          "status": "DEVELOPMENT_ONLY_NOT_QUALIFIED",
+          "version": "m4.score.v1"
+        }
+      },
+      "status": "DEVELOPMENT_ONLY_NOT_QUALIFIED",
+      "task_id": "drop_jump"
+    }
+  ],
+  "status": "DEVELOPMENT_ONLY_NOT_QUALIFIED",
+  "version": "m4.demo.v1"
+}
