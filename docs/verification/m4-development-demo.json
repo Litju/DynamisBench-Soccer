@@ -2,7 +2,7 @@
   "candidate_sha256": {
     "naive": "d003a6a1928893855d7b1d61354fe82946d12bf292d97c14e96915780cd72e34",
     "null": "eda4c48783269f7a5ad4be23b6c3a8a7dab36cd93c718979237a3e74433d53ba",
-    "oracle": "57bbbef28d927b07b55148692ab522ffb2c12dfb7e4c71bc69d0165ec52f204b",
+    "oracle": "645647f648476e5a4d2e5ac838f5e76405e3f8bd05c678c95c1ac8cfa0dd316f",
     "random": "14a70f5cc7cde8089e0ca9a138df1de1ccd6a9c8720bc7fd0bb6055aac2b8bb7"
   },
   "episodes": [
@@ -51,7 +51,7 @@
       "task_id": "fractional_cod"
     },
     {
-      "episode_sha256": "b8f7cf2604f047ccbbbdaa587a2dfc3f67bcea73f5992cf42e6fd2da5b0acb2c",
+      "episode_sha256": "80abcd83e8a61d93809e03f4a04af9880dfceaacf70bb20450bd1ec4bdbd4141",
       "evidence": "analytical",
       "scores": {
         "naive": {

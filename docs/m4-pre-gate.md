@@ -19,7 +19,7 @@ the declared estimand and unit, the decision, method and reason, and the full
 metric set. Refusals give an empty metric set and an evidence-specific reason.
 The demo uses exact declared model assumptions and a deterministic absolute
 numerical tolerance. The defended ballistic variant admits two equivalent
-formulas. Graders score numerical and methodological criteria independently.
+formulas and requires the corresponding symbolic formula in the answer. Graders score numerical and methodological criteria independently.
 
 | DEVELOPMENT_ONLY_NOT_QUALIFIED task | Evidence | Oracle | Naive | Null | Random |
 | --- | --- | --- | --- | --- | --- |
@@ -36,7 +36,7 @@ methods, malformed and duplicate-key JSON, unsupported vendor claims and
 embedded prompt injection.
 
 The host grader generates its independent demo keys into a private temporary
-directory, checks the answer digest and public-episode binding, and scores
+directory, checks both against independently pinned digests, and scores
 after the candidate exits. Bubblewrap mounts the candidate source and trusted
 system Python runtime read-only. The public episode enters via stdin. The
 sandbox has a separate network and PID namespace, no host environment or

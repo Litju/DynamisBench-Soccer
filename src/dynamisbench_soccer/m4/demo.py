@@ -10,7 +10,7 @@ from typing import Any
 
 from dynamisbench_soccer.m4.contracts import STAMP
 from dynamisbench_soccer.m4.demo_fixtures import episodes
-from dynamisbench_soccer.m4.demo_keys import demo_key
+from dynamisbench_soccer.m4.demo_keys import KEY_DIGESTS, demo_key
 from dynamisbench_soccer.m4.key_store import digest, load_key
 from dynamisbench_soccer.m4.runner import MAX_SOURCE, execute, trial
 
@@ -39,7 +39,7 @@ if task["task_id"] == "fractional_cod":
 elif task["task_id"] == "ballistic_height" and x["equal_com_height"]:
     speed = x["gravity_m_s2"] * x["flight_s"] / 2
     height = speed**2 / (2 * x["gravity_m_s2"])
-    answer.update(method="velocity_energy", reason="equal_com_height",
+    answer.update(method="velocity_energy", reason="equal_com_height", formula="v**2/(2*g)",
                   metrics=dict(height_m=height, takeoff_speed_m_s=speed))
 elif task["task_id"] == "gate_course" and x["positions_m"][0] != 0:
     answer.update(decision="refuse", method="course_geometry", reason="missing_course_origin")
@@ -79,7 +79,7 @@ def run(candidate: bytes | None = None) -> dict[str, Any]:
             raw = demo_key(episode).model_dump_json().encode()
             path = Path(private) / f"{episode.episode_id}.json"
             path.write_bytes(raw)
-            key = load_key(path, digest(raw), episode)
+            key = load_key(path, KEY_DIGESTS[episode.task.task_id][1], episode)
             rows.append(
                 {
                     "status": STAMP,

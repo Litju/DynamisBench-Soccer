@@ -17,7 +17,7 @@ def digest(data: bytes) -> str:
 class PrivateKey(Contract):
     episode_sha256: str
     answer: Answer
-    alternative_methods: tuple[str, ...] = ()
+    alternative_formulas: dict[str, str] = Field(default_factory=dict)
     atol: float = Field(ge=0)
 
 

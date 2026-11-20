@@ -38,6 +38,9 @@ TASKS = (
         method_spec={
             "allowed_methods": ["flight_time", "velocity_energy"],
             "reason": "equal_com_height",
+            "formula_symbols": (
+                "g=gravity, t=flight time, v=inferred take-off speed; Python notation"
+            ),
             "output": "height_m and takeoff_speed_m_s",
             "assumptions": "constant gravity, equal take-off and landing COM height",
         },

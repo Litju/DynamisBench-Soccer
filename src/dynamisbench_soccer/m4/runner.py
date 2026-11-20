@@ -132,5 +132,5 @@ def trial(episode: Episode, source: bytes, key: PrivateKey) -> Score:
     if outcome != "graded":
         return Score(episode_id=episode.episode_id, outcome=outcome)
     return grade(
-        episode, output, key.answer, atol=key.atol, alternative_methods=key.alternative_methods
+        episode, output, key.answer, atol=key.atol, alternative_formulas=key.alternative_formulas
     )

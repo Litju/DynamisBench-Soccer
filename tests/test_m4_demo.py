@@ -91,3 +91,31 @@ print(json.dumps(answer))
     score = trial(ep, source.encode(), key)
     assert score.outcome == "graded" and not score.numerical and not score.methodological
     assert not score.passed
+
+
+def test_changed_episode_cannot_rebind_a_fixed_oracle_key():
+    episode = episodes()[1]
+    revised = episode.task.model_copy(update={"inputs": {**episode.task.inputs, "flight_s": 0.4}})
+    updated = episode.model_copy(update={"task": revised})
+    with pytest.raises(ValueError, match="reviewed demo fixture"):
+        demo_key(updated)
+
+
+def test_defended_method_requires_matching_formula_for_either_variant():
+    episode = episodes()[1]
+    key = demo_key(episode)
+    for method, formula, expected in (
+        ("flight_time", "g * t**2 / 8", True),
+        ("velocity_energy", "v**2/(2*g)", True),
+        ("velocity_energy", "g*t**2/8", False),
+        ("flight_time", None, False),
+    ):
+        answer = key.answer.model_copy(update={"method": method, "formula": formula})
+        result = grade(
+            episode,
+            answer.model_dump_json().encode(),
+            key.answer,
+            atol=key.atol,
+            alternative_formulas=key.alternative_formulas,
+        )
+        assert result.numerical and result.methodological is expected and result.passed is expected

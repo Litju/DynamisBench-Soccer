@@ -49,6 +49,7 @@ class Answer(Contract):
     estimand: str
     unit: str
     metrics: dict[str, float]
+    formula: str | None = None
 
 
 class Score(Contract):
@@ -73,7 +74,7 @@ def grade(
     key: Answer,
     *,
     atol: float,
-    alternative_methods: tuple[str, ...] = (),
+    alternative_formulas: dict[str, str] | None = None,
 ) -> Score:
     """Require the full metric set and the matching method, decision and reason."""
     if not math.isfinite(atol) or atol < 0:
@@ -89,9 +90,12 @@ def grade(
         math.isfinite(answer.metrics[name]) and abs(answer.metrics[name] - value) <= atol
         for name, value in key.metrics.items()
     )
+    allowed_formulas = {key.method: key.formula, **(alternative_formulas or {})}
+    declared_formula = "".join(answer.formula.split()) if answer.formula is not None else None
     methodological = (
         answer.decision == key.decision
-        and answer.method in (key.method, *alternative_methods)
+        and answer.method in allowed_formulas
+        and declared_formula == allowed_formulas[answer.method]
         and answer.reason == key.reason
         and answer.estimand == episode.task.estimand == key.estimand
         and answer.unit == episode.task.unit == key.unit
