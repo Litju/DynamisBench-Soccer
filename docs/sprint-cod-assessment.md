@@ -52,3 +52,28 @@ uncertainty coverage, short-window and over-parameterised refusals, start-defini
 sensitivity, milestone times against the exact position inverse, gate-split distance fit, a
 closed-form piecewise COD profile, refusals for gates, the native radar → engine → F-V
 pipeline through the real CLI, and the import boundary. Engineering calculations only.
+
+## Source-bound engine handoff (RES-673 correction)
+
+`dbs assess sprint-fv` and `dbs assess cod` read engine JSON through
+`assessment/handoff.py`. The instrument is identified from the report, not from the caller:
+
+| Report | Identified as | Speed used |
+| --- | --- | --- |
+| radar/laser (`native_quantity` velocity / distance) | `radar` / `laser` | `velocity_m_s` on `time_from_start_s` |
+| GNSS (`acquisition.device`) | `gnss_doppler` or `gnss_position` | `doppler_speed_m_s` or `horizontal_positional_speed_m_s` on `clock.elapsed_s` |
+| LPS | `lps_position` | `horizontal_positional_speed_m_s` on `clock.elapsed_s` |
+
+A declared `source` that disagrees with the report is refused. Non-native input (`manufacturer_processed`,
+`vendor_processed`) is refused unless the configuration sets `allow_vendor_processed`, and is then
+labelled in the output. Reports carrying a reject/failed verdict or `diagnostic_only` are refused. A trace
+with negative speed is refused; `abs()` is never applied. The output carries an `input` record with source,
+device, stage, estimand, clock origin and alignment uncertainty, and engine provenance.
+
+Optional `milestone_distances_m` reports the first physical arrival at each distance from the exact
+(fractional) declared start. Speed is piecewise linear and inverted exactly inside each interval;
+a stationary tail never moves an arrival and distances beyond the observed support return `null`.
+
+Not supported, and refused instead of invented: gate sources for speed fits, and 505, 30-15 IFT and RSA
+protocols as scored tests (only declared-path COD on a speed trace or gate segment times exist).
+Tests: `tests/test_assessment_handoff.py`, `tests/test_sprint_milestones.py`.
