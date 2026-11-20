@@ -264,3 +264,50 @@ def test_modules_keep_the_reference_substrate_out() -> None:
         n.module for n in ast.walk(ast.parse(text)) if isinstance(n, ast.ImportFrom) and n.module
     }
     assert not any("reference" in m for m in imported)
+
+
+def test_sub_tolerance_negative_rest_noise_is_clamped_explicitly_and_counted(
+    tmp_path: Path,
+) -> None:
+    path = _radar_like("radar", tmp_path)
+    report = json.loads(path.read_text())
+    report["velocity_m_s"][0] = -0.01
+    path.write_text(json.dumps(report))
+    h = handoff.load_speed_report(path, declared_source="radar")
+    assert (
+        float(h.speed_m_s.min()) == 0.0
+        and h.input_record()["clamped_sub_tolerance_negative_samples"] == 1
+    )
+    out = tmp_path / "cod_out.json"
+    cfg = tmp_path / "cod.json"
+    cfg.write_text(
+        json.dumps(
+            {
+                "cod": {
+                    "declared_path": "straight 30 m",
+                    "path_length_m": 30,
+                    "turn_distance_m": 20,
+                    "turn_angle_deg": 45,
+                    "source": "radar",
+                }
+            }
+        )
+    )
+    code, rep = _run("cod", path, cfg, out)
+    assert code == 0 and rep["input"]["clamped_sub_tolerance_negative_samples"] == 1  # type: ignore[index]
+
+
+def test_gnss_doppler_basis_and_timing_provenance_are_enforced(tmp_path: Path) -> None:
+    path = _track("gnss", tmp_path)
+    h = handoff.load_speed_report(path, declared_source="gnss_doppler")
+    assert h.provenance["doppler_basis"] == "horizontal" and h.provenance["latency_s"] is not None
+    assert "horizontal" in h.estimand
+    report = json.loads(path.read_text())
+    report["acquisition"]["declaration"]["doppler_basis"] = "three_dimensional"
+    path.write_text(json.dumps(report))
+    with pytest.raises(handoff.HandoffRefusal, match="not horizontal"):
+        handoff.load_speed_report(path, declared_source="gnss_doppler")
+    # the positional estimand of the same report is unaffected by the Doppler basis
+    assert (
+        handoff.load_speed_report(path, declared_source="gnss_position").source == "gnss_position"
+    )

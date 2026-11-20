@@ -9,6 +9,7 @@ nonnegative by taking an absolute value: a trace with reversed sign is refused.
 
 from __future__ import annotations
 
+import dataclasses
 import json
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -36,6 +37,7 @@ class SpeedHandoff:
     stage: str
     estimand: str
     provenance: dict[str, Any] = field(default_factory=dict)
+    clamped_sub_tolerance_samples: int = 0
 
     def input_record(self) -> dict[str, Any]:
         return {
@@ -44,6 +46,7 @@ class SpeedHandoff:
             "stage": self.stage,
             "estimand": self.estimand,
             "n_samples": len(self.time_s),
+            "clamped_sub_tolerance_negative_samples": self.clamped_sub_tolerance_samples,
             "provenance": self.provenance,
         }
 
@@ -64,10 +67,14 @@ def _arrays(time: object, speed: object) -> tuple[FloatArray, FloatArray]:
         raise HandoffRefusal(
             "negative speed: sign or beam direction unresolved; absolute value is never applied"
         )
-    return t, v
+    # Samples inside the engine's own sign tolerance are sensor noise at rest. They are set to
+    # zero explicitly (and counted in the provenance by the caller), never by abs().
+    return t, np.where(v < 0, 0.0, v)
 
 
 def _check_verdict(report: dict[str, Any]) -> None:
+    """Defence in depth for hand-edited or future reports. The current engines never emit a
+    verdict: they refuse by raising, so a report that exists was already admitted."""
     for key in ("verdict", "qc_verdict"):
         if str(report.get(key, "")).lower() in _REJECT_WORDS:
             raise HandoffRefusal(f"engine report carries a {report[key]!r} QC verdict")
@@ -140,7 +147,12 @@ def _track(report: dict[str, Any], declared: str, allow_vendor: bool) -> SpeedHa
         speed = kin.get("doppler_speed_m_s")
         if speed is None:
             raise HandoffRefusal("report carries no Doppler speed")
-        source, estimand = "gnss_doppler", "GNSS Doppler speed over ground"
+        basis = declaration.get("doppler_basis")
+        if basis != "horizontal":
+            raise HandoffRefusal(
+                f"Doppler basis {basis!r} is not horizontal speed over ground: refused"
+            )
+        source, estimand = "gnss_doppler", "GNSS horizontal Doppler speed over ground"
     elif declared in {"gnss_position", "lps_position"}:
         if declared != f"{device}_position":
             raise HandoffRefusal(f"declared {declared} but report is from {device}")
@@ -162,6 +174,10 @@ def _track(report: dict[str, Any], declared: str, allow_vendor: bool) -> SpeedHa
             "source_format": acq.get("source_format"),
             "data_sha256": acq.get("data_sha256"),
             "bundle_id": declaration.get("bundle_id"),
+            "doppler_basis": declaration.get("doppler_basis"),
+            "timestamp_basis": declaration.get("timestamp_basis"),
+            "latency_s": declaration.get("latency_s"),
+            "latency_uncertainty_s": declaration.get("latency_uncertainty_s"),
             "frame_id": acq.get("frame_id"),
             "sensor_placement": acq.get("sensor_placement"),
             "source_clock": clock.get("source_clock"),
@@ -192,6 +208,16 @@ def load_speed_report(
         handoff = _radar_laser(report, allow_vendor_processed)
     else:
         raise HandoffRefusal("not a recognised radar/laser or GNSS/LPS engine report")
+    raw = report.get("velocity_m_s") if "velocity_m_s" in report else None
+    if raw is None:
+        kin = report.get("kinematics", {})
+        raw = (
+            kin.get("doppler_speed_m_s")
+            if declared_source == "gnss_doppler"
+            else kin.get("horizontal_positional_speed_m_s")
+        )
+    clamped = int(np.sum(np.asarray(raw, dtype=np.float64) < 0)) if raw is not None else 0
+    handoff = dataclasses.replace(handoff, clamped_sub_tolerance_samples=clamped)
     if handoff.source != declared_source:
         raise HandoffRefusal(
             f"declared source {declared_source!r} but the report identifies {handoff.source!r}"

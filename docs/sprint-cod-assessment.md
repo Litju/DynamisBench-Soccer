@@ -67,7 +67,11 @@ pipeline through the real CLI, and the import boundary. Engineering calculations
 A declared `source` that disagrees with the report is refused. Non-native input (`manufacturer_processed`,
 `vendor_processed`) is refused unless the configuration sets `allow_vendor_processed`, and is then
 labelled in the output. Reports carrying a reject/failed verdict or `diagnostic_only` are refused. A trace
-with negative speed is refused; `abs()` is never applied. The output carries an `input` record with source,
+with speed below -0.05 m/s (the radar/laser engine's sign bound) is refused; `abs()` is never applied. Samples in
+[-0.05, 0) are set to zero explicitly and counted in `input.clamped_sub_tolerance_negative_samples`. GNSS Doppler
+needs `doppler_basis = horizontal`; its basis, timestamp basis and latency are carried in the provenance.
+The current engines never emit a verdict (they refuse by raising), so the verdict check protects only against
+hand-edited or future reports. The output carries an `input` record with source,
 device, stage, estimand, clock origin and alignment uncertainty, and engine provenance.
 
 Optional `milestone_distances_m` reports the first physical arrival at each distance from the exact
