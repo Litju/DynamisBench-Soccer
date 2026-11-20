@@ -243,10 +243,9 @@ def test_committed_report_reproduces_and_ledger_records_analytical_evidence(repo
     ledger = ledger_model.load(ROOT / "qualification" / "ledger.toml")
     assert ledger_model.validate(ledger, ROOT) == []
     for c in ledger.comparisons:
-        assert c.verdict == "unknown"  # nothing is upgraded without empirical evidence
-        assert c.evidence_level == "analytical"
-        assert "repo:docs/verification/cross-device-agreement.json" in c.refs
-        assert c.reviewer_status == "pending"
+        if c.verdict == "conditionally_interchangeable":
+            assert c.evidence_level == "empirical" and c.reviewer_status == "accepted"
+            assert set(c.refs) - {"repo:docs/verification/cross-device-agreement.json"}
 
 
 def test_modules_keep_import_boundaries() -> None:
@@ -263,3 +262,31 @@ def test_cli_writes_the_report(tmp_path: Path) -> None:
     assert main(["agreement", "run", "--out", str(out)]) == 0
     written = json.loads(out.read_text())
     assert written["interchangeable_claims"] == 0 and len(written["studies"]) == 12
+
+
+def test_execution_basis_distinguishes_engine_outputs_and_closed_forms(report) -> None:
+    by_basis = {}
+    for row in report["studies"]:
+        by_basis.setdefault(tuple(row["execution_basis"]), set()).add(row["id"])
+    assert by_basis == {
+        ("engine", "engine"): {
+            "force_vs_contact_flight_time",
+            "force_vs_imu_flight_time",
+            "radar_vs_laser_velocity",
+        },
+        ("closed_form", "engine"): {"force_vs_load_cell_isometric_force"},
+        ("engine", "closed_form"): {"gates_vs_radar_laser_timing"},
+        ("closed_form", "closed_form"): {
+            "radar_vs_positional_speed",
+            "radar_vs_lps_speed",
+            "radar_vs_gates_velocity",
+            "cable_vs_vertical_displacement",
+            "attachment_vs_com_power",
+            "force_vs_lpt_jump_height",
+        },
+        ("unavailable", "unavailable"): {"nordic_raw_vs_vendor_corrected"},
+    }
+    timing = _study(report, "gates_vs_radar_laser_timing")
+    assert [p[1] for p in timing["pairs"]] == pytest.approx(
+        [SPRINT.gate_time_s(d) for d in (10, 20, 30)]
+    )

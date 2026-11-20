@@ -58,6 +58,7 @@ class Study:
     statistics: dict[str, Any] | None
     assumptions: list[str]
     sensitivities: dict[str, Any] = field(default_factory=dict)
+    execution_basis: tuple[str, str] = ("unavailable", "unavailable")
     empirical_status: str = "missing_evidence: " + NOT_EMPIRICAL
 
     def to_dict(self) -> dict[str, Any]:
@@ -114,6 +115,7 @@ def _study(
     quantity: str,
     *,
     definitions: dict[str, str],
+    execution_basis: tuple[str, str],
     definitions_match: bool,
     pairs: list[tuple[float, float]],
     assumptions: list[str],
@@ -146,6 +148,7 @@ def _study(
         stats,
         assumptions,
         sensitivities or {},
+        execution_basis,
     )
 
 
@@ -167,6 +170,7 @@ def force_vs_contact_flight_time() -> Study:
         "force_platform.single",
         "timing_contact.contact",
         "flight_time",
+        execution_basis=("engine", "engine"),
         definitions={
             "force_platform": "time between force dropping below and rising above the contact threshold",  # noqa: E501
             "contact_system": "time between switch-off and switch-on, with declared latency model",
@@ -201,6 +205,7 @@ def force_vs_imu_flight_time() -> Study:
         "force_platform.single",
         "imu.inertial",
         "flight_time",
+        execution_basis=("engine", "engine"),
         definitions={
             "force_platform": "force below the contact threshold",
             "imu": "specific-force magnitude below a declared threshold for a minimum duration",
@@ -221,8 +226,7 @@ def force_vs_load_cell_isometric_force() -> Study:
     pairs = []
     for peak in (1500.0, 2000.0, 2500.0, 3000.0):
         ramp = IsometricRamp(peak_n=peak)
-        # The force-plate engine needs a quiet weighing; compare the isometric peak only
-        # through its own peak-force output on a vertical-load export of the same ramp.
+        # The plate-side comparator is the ideal vertical force from the closed form.
         cell = load_cell.process(
             export_case("load_cell_isometric.load_cell", ramp, hz=1000).observation,
             CellSpec(),
@@ -237,6 +241,7 @@ def force_vs_load_cell_isometric_force() -> Study:
         "force_platform.single",
         "load_cell_isometric.load_cell",
         "isometric_force",
+        execution_basis=("closed_form", "engine"),
         definitions={
             "force_platform": "vertical ground reaction force of the whole system on the plate",
             "load_cell": "uniaxial force at the cell, with rig compliance and line of action unmodelled",  # noqa: E501
@@ -274,6 +279,7 @@ def radar_vs_laser_velocity() -> Study:
         "radar_laser.radar",
         "radar_laser.laser",
         "doppler_vs_differentiated_velocity",
+        execution_basis=("engine", "engine"),
         definitions={
             "radar": "Doppler radial speed (direct measurement of velocity)",
             "laser": "derivative of measured distance (noise amplified by 1/dt)",
@@ -306,6 +312,7 @@ def radar_vs_gates_velocity() -> Study:
         "radar_laser.radar",
         "timing_contact.gates",
         "sprint_velocity",
+        execution_basis=("closed_form", "closed_form"),
         definitions={
             "radar": "instantaneous Doppler speed at a time",
             "gates": "segment-average velocity over a distance interval",
@@ -332,6 +339,7 @@ def radar_vs_positional_speed(
         "radar_laser.radar",
         right,
         "running_speed",
+        execution_basis=("closed_form", "closed_form"),
         definitions={
             "radar": "Doppler radial speed along the beam",
             "gnss_lps": "horizontal speed differentiated from reported positions, with processing latency",  # noqa: E501
@@ -370,6 +378,7 @@ def cable_vs_vertical_displacement() -> Study:
         "force_platform.single",
         "lpt_encoder.lpt",
         "cable_vs_vertical_displacement",
+        execution_basis=("closed_form", "closed_form"),
         definitions={
             "force_platform": "vertical centre-of-mass displacement",
             "lpt": "change of cable length, equal to vertical displacement only for a vertical cable",  # noqa: E501
@@ -393,6 +402,7 @@ def attachment_vs_com_power() -> Study:
         "force_platform.single",
         "lpt_encoder.lpt",
         "attachment_vs_com_power",
+        execution_basis=("closed_form", "closed_form"),
         definitions={
             "force_platform": "power of ground reaction force on the whole-body COM velocity",
             "lpt": "vertical mass-model power of the attachment point with declared system mass",
@@ -412,6 +422,7 @@ def nordic_raw_vs_vendor_corrected() -> Study:
         "nordic_hip.nordic",
         "nordic_hip.nordic",
         "force_basis",
+        execution_basis=("unavailable", "unavailable"),
         definitions={
             "raw": "calibrated force at the strap",
             "vendor_corrected": "vendor-defined correction (undisclosed algorithm)",
@@ -439,12 +450,13 @@ def gates_vs_radar_laser_timing() -> Study:
     t = np.asarray(radar.time_from_start_s)
     v = np.asarray(radar.velocity_m_s)
     x = np.concatenate(([0.0], np.cumsum(0.5 * (v[1:] + v[:-1]) * np.diff(t))))
-    pairs = [(sprint.gate_time_s(d), float(np.interp(d, x, t))) for d in distances]
+    pairs = [(float(np.interp(d, x, t)), sprint.gate_time_s(d)) for d in distances]
     return _study(
         "gates_vs_radar_laser_timing",
         "radar_laser.radar",
         "timing_contact.gates",
         "sprint_split_time",
+        execution_basis=("engine", "closed_form"),
         definitions={
             "gates": "time of a beam interruption at a fixed position",
             "radar": "time at which integrated Doppler speed reaches the distance",
@@ -454,7 +466,7 @@ def gates_vs_radar_laser_timing() -> Study:
         tolerance=0.01,
         assumptions=[
             "radar start equals gate start",
-            "integration of an exact speed trace",
+            "integration of a synthetic radar speed trace",
             "no start-definition bias",
         ],
         sensitivities={"start_offset_effect": "a start offset adds directly to every split"},
@@ -482,6 +494,7 @@ def force_vs_lpt_jump_height() -> Study:
         "force_platform.single",
         "lpt_encoder.lpt",
         "jump_height",
+        execution_basis=("closed_form", "closed_form"),
         definitions={
             "force_platform": "centre-of-mass rise after take-off, v^2 / 2g from the impulse",
             "lpt": "peak attachment displacement above the declared standing start",

@@ -15,18 +15,29 @@ import numpy as np
 import pytest
 
 from dynamisbench_soccer.assessment import jumps
-from dynamisbench_soccer.assessment.jumps import LIMITATIONS, JumpSignal, JumpSpec, assess
+from dynamisbench_soccer.assessment.jumps import (
+    LIMITATIONS,
+    DropEvidence,
+    JumpSignal,
+    JumpSpec,
+    assess,
+)
 from dynamisbench_soccer.cli import main
 from dynamisbench_soccer.engines.force_platform import MethodSpec, process
 from dynamisbench_soccer.engines.force_platform_acquisition import PlateSpec
 from dynamisbench_soccer.reference.exporters import export_case
 from dynamisbench_soccer.reference.faults import ContinuousFault, ContinuousKind, inject
-from dynamisbench_soccer.reference.kinematics import cmj, dj, hops, sj
+from dynamisbench_soccer.reference.kinematics import Phase, Trajectory, cmj, hops, sj
 from dynamisbench_soccer.signals import io
+from dynamisbench_soccer.signals.schema import SignalBundle
 
 G = 9.80665
 HZ = 1000
 MASS = 75.0
+DROP = DropEvidence(
+    touchdown_velocity_m_s=-2.4,
+    source="independent synthetic initial condition",
+)
 PLATE = (PlateSpec(plate=1, assume_field_axes=True),)
 
 
@@ -43,8 +54,37 @@ def _signal(trajectory, weigh: bool = False, **method: object) -> JumpSignal:
 
 
 def _dj_signal() -> JumpSignal:
-    drop = math.sqrt(2 * G * 0.30)
-    return _signal(dj(), True, integration_start="record_start", initial_velocity_m_s=-drop)
+    fall_s, contact_s, rebound = 0.075, 0.18, 2.6
+    initial = DROP.touchdown_velocity_m_s + G * fall_s
+    trajectory = Trajectory(
+        MASS,
+        initial,
+        (
+            Phase("initial_fall", fall_s, -G, False),
+            Phase(
+                "rebound_contact",
+                contact_s,
+                (rebound - DROP.touchdown_velocity_m_s) / contact_s,
+                True,
+            ),
+            Phase("rebound_flight", 2 * rebound / G, -G, False),
+            Phase("final_landing", 0.2, rebound / 0.2, True),
+        ),
+        assessment_id="dj",
+    )
+    observation = export_case("force_platform.single", trajectory, hz=HZ).observation
+    # A sub-newton contact-only ripple avoids the flat-maximum clipping heuristic.
+    force = observation["fz"]
+    data = {**observation.data, "fz": force + (force > 0) * np.sin(np.arange(len(force))) * 0.1}
+    weighing = export_case("force_platform.single", sj(), hz=HZ).observation
+    return JumpSignal.from_engine(
+        process(
+            SignalBundle(observation.meta, data),
+            plates=PLATE,
+            weighing=weighing,
+            method=MethodSpec(integration_start="record_start", initial_velocity_m_s=initial),
+        )
+    )
 
 
 def test_cmj_events_phases_and_estimands_match_closed_forms() -> None:
@@ -98,15 +138,18 @@ def test_squat_jump_values_and_countermovement_eligibility_both_ways() -> None:
 
 def test_drop_jump_contact_time_height_and_rsi_variants() -> None:
     signal = _dj_signal()
-    flight_basis = assess(signal, JumpSpec(protocol="dj", drop_height_m=0.30))
+    flight_basis = assess(signal, JumpSpec(protocol="dj", drop_height_m=0.30), drop_evidence=DROP)
     rebound = 2.6
     assert flight_basis.eligible
+    assert flight_basis.events["contact_start_s"] == pytest.approx(0.075, abs=2 / HZ)
     e = flight_basis.estimands
     assert e["ground_contact_time_s"] == pytest.approx(0.18, abs=2 / HZ)
     assert e["flight_time_s"] == pytest.approx(2 * rebound / G, abs=2 / HZ)
     assert e["rsi_m_s"] == pytest.approx(rebound**2 / (2 * G) / 0.18, rel=0.02)
     momentum = assess(
-        signal, JumpSpec(protocol="dj", drop_height_m=0.30, rsi_height_basis="impulse_momentum")
+        signal,
+        JumpSpec(protocol="dj", drop_height_m=0.30, rsi_height_basis="impulse_momentum"),
+        drop_evidence=DROP,
     )
     assert momentum.estimands["rsi_m_s"] == pytest.approx(
         momentum.estimands["height_impulse_momentum_m"]
@@ -117,13 +160,14 @@ def test_drop_jump_contact_time_height_and_rsi_variants() -> None:
 
 def test_drop_height_contradiction_and_missing_declaration() -> None:
     signal = _dj_signal()
-    wrong = assess(signal, JumpSpec(protocol="dj", drop_height_m=0.60))
+    wrong = assess(signal, JumpSpec(protocol="dj", drop_height_m=0.60), drop_evidence=DROP)
     assert not wrong.eligible
     assert any(
         c["check"] == "impact_speed_matches_drop_height" and not c["passed"]
         for c in wrong.eligibility
     )
     undeclared = assess(signal, JumpSpec(protocol="dj"))
+    assert not undeclared.eligible and not undeclared.estimands
     assert "no declared drop height" in undeclared.refusals["drop_height"]
 
 
@@ -248,6 +292,19 @@ def test_cli_end_to_end_and_exit_codes(tmp_path: Path) -> None:
     assert report["protocol"] == "cmj" and report["estimands"]["flight_time_s"] > 0.5
     assert report["device"]["engine"] == "force-platform.v1"
     assert code in {0, 1}
+    config.write_text(
+        json.dumps(
+            {
+                "jump": {"protocol": "dj", "drop_height_m": 0.3},
+                "drop_evidence": DROP.model_dump(),
+                "plates": [{"plate": 1, "assume_field_axes": True}],
+            }
+        )
+    )
+    assert main([*args, "--out", str(out)]) == 1
+    declined = json.loads(out.read_text())
+    assert declined["diagnostic_only"] and not declined["eligible"] and not declined["estimands"]
+    assert "rsi_m_s" in declined["diagnostics"]["estimands"]
     assert main([*args, "--out", str(config)]) == 2
     bad = tmp_path / "bad.json"
     bad.write_text(json.dumps({"jump": {"protocol": "unknown"}}))
@@ -364,4 +421,55 @@ def test_filtered_engine_force_never_moves_contact_events() -> None:
     # The filtered kinetics change the take-off velocity only by the filter's edge smearing.
     assert b.estimands["takeoff_velocity_m_s"] == pytest.approx(
         a.estimands["takeoff_velocity_m_s"], abs=0.05
+    )
+
+
+def test_cmj_and_unjustified_initial_velocity_cannot_be_accepted_as_drop_jumps() -> None:
+    spec = JumpSpec(protocol="dj", drop_height_m=0.30)
+    cmj_signal = _signal(cmj())
+    for signal, evidence in ((cmj_signal, DROP), (_dj_signal(), None)):
+        report = json.loads(assess(signal, spec, drop_evidence=evidence).report_json())
+        assert not report["eligible"] and report["diagnostic_only"]
+        assert report["estimands"] == {} and report["contacts"] == []
+        assert "rsi_m_s" in report["diagnostics"]["estimands"]
+    forged = replace(cmj_signal, velocity_m_s=cmj_signal.velocity_m_s + DROP.touchdown_velocity_m_s)
+    assert not assess(forged, spec, drop_evidence=DROP).eligible
+    spike = cmj_signal.force_n.copy()
+    spike[0] = 2 * cmj_signal.body_weight_n
+    forged_impact = replace(forged, raw_force_n=spike)
+    assert not assess(forged_impact, spec, drop_evidence=DROP).eligible
+    never_leaves = replace(
+        cmj_signal, raw_force_n=None, force_n=np.full_like(cmj_signal.force_n, MASS * G)
+    )
+    assert not assess(never_leaves, spec, drop_evidence=DROP).eligible
+
+
+def test_loaded_record_start_cannot_establish_touchdown_even_with_velocity_evidence() -> None:
+    full = _dj_signal()
+    cut = int(0.105 * HZ)  # 30 ms after the actual touchdown.
+    v = full.velocity_m_s[cut:]
+    assert full.raw_force_n is not None
+    cropped = replace(
+        full,
+        time_s=full.time_s[cut:],
+        force_n=full.force_n[cut:],
+        velocity_m_s=v - v[0] + DROP.touchdown_velocity_m_s,
+        displacement_m=full.displacement_m[cut:],
+        raw_force_n=full.raw_force_n[cut:],
+    )
+    result = assess(cropped, JumpSpec(protocol="dj", drop_height_m=0.30), drop_evidence=DROP)
+    assert not result.eligible and not result.estimands
+    assert any(c["check"] == "drop_landing" and not c["passed"] for c in result.eligibility)
+    report = result.report()
+    assert report["diagnostics"]["estimands"]["ground_contact_time_s"] < 0.18
+
+
+def test_valid_contact_refuses_integration_that_conflicts_with_touchdown_evidence() -> None:
+    full = _dj_signal()
+    shifted = replace(full, velocity_m_s=full.velocity_m_s - 0.5)
+    result = assess(shifted, JumpSpec(protocol="dj", drop_height_m=0.30), drop_evidence=DROP)
+    assert not result.eligible and not result.estimands
+    assert any(
+        c["check"] == "integration_matches_touchdown" and not c["passed"]
+        for c in result.eligibility
     )

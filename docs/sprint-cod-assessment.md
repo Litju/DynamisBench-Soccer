@@ -39,7 +39,11 @@ error is too large, the optimizer fails or the points cannot identify the parame
 A declared path is mandatory: description, length, turn distance and angle. Trace metrics:
 total time, turn time and position (minimum speed in the turn window), entry, minimum and exit
 peak speeds, deceleration and re-acceleration times, speed loss. The COD deficit needs an
-explicit straight-sprint reference time. Gate COD gives segment times only.
+explicit straight-sprint reference time. Trace COD interpolates velocity at the declared
+start, integrates piecewise-linear speed, and solves for distance crossings within each
+sample interval. Course metrics stop at the declared finish. Gate COD requires cumulative
+path positions increasing from zero to the full path length and elapsed times increasing from
+zero. It reports segment times and average speeds.
 
 ## Verification
 

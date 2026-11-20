@@ -325,3 +325,122 @@ def test_modules_never_import_reference_substrate() -> None:
             if isinstance(node, ast.ImportFrom):
                 assert not (node.module or "").startswith("dynamisbench_soccer.reference")
     assert math.isfinite(F0)
+
+
+@pytest.mark.parametrize(
+    "start",
+    [
+        StartSpec(kind="external_trigger", trigger_s=0.25),
+        StartSpec(kind="velocity_threshold", threshold_m_s=0.5),
+    ],
+)
+def test_cod_integrates_and_inverts_fractional_start(start) -> None:
+    # v=2t implies distance t²-0.25², independently of the coarse sample grid.
+    t = np.arange(0, 4, 0.5)
+    spec = CodSpec(
+        declared_path="graded turn",
+        path_length_m=6,
+        turn_distance_m=3,
+        entry_distance_m=1,
+        turn_window_m=6,
+        turn_angle_deg=90,
+        source="radar",
+    )
+    out = cod.assess_trace(t, 2 * t, spec, start)
+    assert out["total_time_s"] == pytest.approx(math.sqrt(6.0625) - 0.25)
+    assert out["milestones_s"] == pytest.approx(
+        {"3_m": 1.75 - 0.25, "6_m": math.sqrt(6.0625) - 0.25}
+    )
+    assert out["entry_speed_m_s"] == pytest.approx(2 * math.sqrt(2.0625))
+    assert out["post_turn_peak_speed_m_s"] == pytest.approx(2 * math.sqrt(6.0625))
+
+
+@pytest.mark.parametrize(
+    ("positions", "times", "reason"),
+    [
+        ([5, 10, 15], [0, 1, 2], "position zero"),
+        ([0, 10, 15], [1, 2, 3], "elapsed time zero"),
+        ([0, 12, 8, 15], [0, 1, 2, 3], "positions must increase"),
+        ([0, 8, 8, 15], [0, 1, 2, 3], "positions must increase"),
+        ([0, float("nan"), 15], [0, 1, 2], "finite"),
+    ],
+)
+def test_cod_refuses_invalid_full_course_gates(positions, times, reason) -> None:
+    spec = CodSpec(
+        declared_path="out and back",
+        path_length_m=15,
+        turn_distance_m=8,
+        turn_angle_deg=180,
+        source="radar",
+    )
+    with pytest.raises(ValueError, match=reason):
+        cod.assess_gates(positions, times, spec)
+
+
+@pytest.mark.parametrize("trigger", [0.0625, 0.125, 0.1875])
+def test_cod_constant_speed_does_not_add_remaining_sample_interval(trigger) -> None:
+    time = np.arange(0.0, 3.0, 0.25)
+    spec = CodSpec(
+        declared_path="constant-speed control",
+        path_length_m=5,
+        turn_distance_m=3,
+        entry_distance_m=1,
+        turn_window_m=2,
+        turn_angle_deg=90,
+        source="radar",
+        straight_reference_time_s=2.25,
+    )
+    result = cod.assess_trace(
+        time, np.full_like(time, 2), spec, StartSpec(kind="external_trigger", trigger_s=trigger)
+    )
+    assert result["total_time_s"] == pytest.approx(2.5)
+    assert result["milestones_s"] == pytest.approx({"3_m": 1.5, "5_m": 2.5})
+    assert result["cod_deficit_s"] == pytest.approx(0.25)
+
+
+def test_cod_turn_window_excludes_course_boundaries() -> None:
+    t = np.arange(0, 4, 0.25)
+    spec = CodSpec(
+        declared_path="broad turn window",
+        path_length_m=6,
+        turn_distance_m=3,
+        entry_distance_m=1,
+        turn_window_m=8,
+        turn_angle_deg=90,
+        source="radar",
+    )
+    out = cod.assess_trace(t, t, spec, StartSpec())
+    assert out["turn_time_s"] == 0.25
+    assert out["speed_loss_fraction"] == 0
+
+
+def test_cod_accepts_fractional_start_with_finish_at_last_observed_sample() -> None:
+    time = np.arange(31) / 10
+    speed = np.full_like(time, 2.5)
+    spec = CodSpec(
+        declared_path="observed endpoint",
+        path_length_m=7.375,
+        turn_distance_m=4,
+        turn_angle_deg=90,
+        source="radar",
+    )
+    start = StartSpec(kind="external_trigger", trigger_s=0.05)
+    assert cod.assess_trace(time, speed, spec, start)["total_time_s"] == pytest.approx(2.95)
+    longer = spec.model_copy(update={"path_length_m": 7.375001})
+    with pytest.raises(ValueError, match="trace ends"):
+        cod.assess_trace(time, speed, longer, start)
+
+
+def test_cod_ends_at_first_arrival_before_stationary_tail() -> None:
+    time = np.arange(126) / 25
+    speed = 2.5 * np.clip(3 - time, 0, 1)
+    spec = CodSpec(
+        declared_path="finish then stand",
+        path_length_m=6.125,
+        turn_distance_m=3.5,
+        entry_distance_m=1,
+        turn_angle_deg=90,
+        source="radar",
+    )
+    start = StartSpec(kind="external_trigger", trigger_s=0.05)
+    assert cod.assess_trace(time, speed, spec, start)["total_time_s"] == pytest.approx(2.95)

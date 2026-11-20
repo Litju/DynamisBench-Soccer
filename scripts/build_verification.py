@@ -102,8 +102,6 @@ def markdown(p: dict, agreement: dict) -> str:
         f"* Ledger structural problems: {len(gate['structural_problems'])}.",
         "* ENGINEERING_VERIFIED requires dimensions A-M and O verified, an independent reference",
         "  and no open blockers. N belongs to M4/M5 and independent scientific sign-off to M8.",
-        "* No dimension is rated `verified` in the ledger because A-C need audited native device records,",
-        "  measured calibration/geometry and clock characterisation, none of which exist in this repository.",
         "",
         "## 2. Subfamily states, blockers, owners and required experiments",
         "",
@@ -197,9 +195,16 @@ def markdown(p: dict, agreement: dict) -> str:
         f"interchangeable claims: {agreement['interchangeable_claims']}; empirical device agreement studies: "
         f"{agreement['empirical_device_agreement_studies']}."
     )
-    out += ["", "| Comparison | Quantity | Class |", "| -- | -- | -- |"]
+    out += [
+        "",
+        "| Comparison | Quantity | Left / right execution | Class |",
+        "| -- | -- | -- | -- |",
+    ]
     for s in agreement["studies"]:
-        out.append(f"| {s['left']} vs {s['right']} | {s['quantity']} | {s['classification']} |")
+        basis = " / ".join(s["execution_basis"])
+        out.append(
+            f"| {s['left']} vs {s['right']} | {s['quantity']} | {basis} | {s['classification']} |"
+        )
     out += [
         "",
         "Analytical model agreement, empirical device agreement, unsupported comparison, missing evidence and",
@@ -209,8 +214,9 @@ def markdown(p: dict, agreement: dict) -> str:
         "## 7. Frozen interface",
         "",
         f"`{p['interface_version']}`: `docs/verification/engine-v0.1-interface.json` records every CLI command path, option",
-        "and the JSON-schema digest of every specification. `dbs qualification interface` fails when the live",
-        "interface differs; changing it requires an explicit new version. The freeze covers the software interface",
+        "and JSON-schema digests for registered method and acquisition specifications.",
+        "`dbs qualification interface` fails when the live snapshot differs. Contextual runtime evidence is",
+        "declared separately. Changing the frozen snapshot requires an explicit new version. It covers software",
         "only and says nothing about qualification.",
         "",
         "## 8. Reproduce",
@@ -236,6 +242,9 @@ def main() -> int:
     payload, text = build()
     rendered = json.dumps(payload, indent=2, sort_keys=True, allow_nan=False) + "\n"
     if args.check:
+        if failed := payload["case_totals"]["failed"]:
+            print(f"FAIL verification matrix: {', '.join(failed)}", file=sys.stderr)
+            return 1
         committed = json.loads(JSON_PATH.read_text()) if JSON_PATH.exists() else None
         if committed != json.loads(rendered) or not MD_PATH.exists() or MD_PATH.read_text() != text:
             print("FAIL stale verification report", file=sys.stderr)

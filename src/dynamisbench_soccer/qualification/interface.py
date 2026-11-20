@@ -1,7 +1,7 @@
 """The frozen engine-v0.1 software interface snapshot (RES-675).
 
-The snapshot lists every CLI command path with its options and the JSON-schema digest of every
-declaration/method specification the engines accept. It freezes the *software interface*
+The snapshot lists every CLI command path with its options and the JSON-schema digests for
+registered declaration and method specifications. It freezes the *software interface*
 for review; it is independent of, and confers no, qualification. Changing any of it requires
 regenerating the snapshot under a new explicit version.
 """

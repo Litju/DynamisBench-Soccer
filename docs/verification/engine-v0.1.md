@@ -11,8 +11,6 @@ Engineering calculations only; no scientific qualification of any device or metr
 * Ledger structural problems: 0.
 * ENGINEERING_VERIFIED requires dimensions A-M and O verified, an independent reference
   and no open blockers. N belongs to M4/M5 and independent scientific sign-off to M8.
-* No dimension is rated `verified` in the ledger because A-C need audited native device records,
-  measured calibration/geometry and clock characterisation, none of which exist in this repository.
 
 ## 2. Subfamily states, blockers, owners and required experiments
 
@@ -362,7 +360,7 @@ Entries come from G/H ledger evidence pointing at each assessment document.
 | load_cell_isometric | 15 | 1000, 2000, 500 | butterworth_50hz | 5sd, absolute_N, first_derivative, reverse_scan | windowed difference | declared expected peak range, declared sensitivity record, no lever arm declared | clipping at 2 V, unit mislabel | hip protocol, declared hip flexion, knee angle undeclared | RFD needs >= 1000 Hz, torque refused |
 | lpt_encoder | 9 | 100, 200 | - | - | butterworth_then_difference, cubic_spline, finite_difference, quantized cable length | counts per metre declared, no vertical line declared, vertical line above anchor declared | timestamp discontinuity | attachment heights separate from force-plate heights | cable coordinates only, cable is not vertical displacement, integrity failure |
 | nordic_hip | 10 | 1000, 2000, 500 | butterworth_20hz | first_exceedance | trapezoid | hip flexion angle declared, hip flexion undeclared, lever arm and moment-arm definition declared, swapped side declaration | clipping at 100 N | mixed force basis, no measured angle channel | angle metrics refused, cannot be combined, hip flexion angle, side contradiction |
-| radar_laser | 8 | 100, 256, 47 | - | record_origin | central, five_point, mono-exponential fit | aiming point declared, declared fixed angle, vendor-processed stage | - | COD path undeclared | declared path required, stage not qualified |
+| radar_laser | 8 | 100, 256, 47 | - | record_origin | central, five_point, mono-exponential fit | aiming point declared, declared fixed angle, vendor-processed stage | - | COD path undeclared | declared path required, stage provenance missing |
 | timing_contact | 10 | - | - | first_gate, pressure_pad start trigger, switch edge pairing | distance-time fit | declared latency 0 s, declared latency 0.02 s, gate positions declared | duplicate event, duplicate_event, missing_event, out_of_order_event | flying start under a standing-start model, gate source requested as speed trace | event stream refused, fit refused or visibly biased, segment averages |
 
 ### Cases
@@ -381,7 +379,7 @@ Entries come from G/H ledger evidence pointing at each assessment document.
 | force_platform.single | clipped_record_is_rejected | corruption -> engine verdict | reject | reject |  | pass |
 | force_platform.single | baseline_offset_shifts_body_weight | corruption -> engine body weight | 765.499 | 765.499 | 0.5 | pass |
 | force_platform.single | squat_record_is_not_a_countermovement_jump | assessment eligibility | False | False |  | pass |
-| force_platform.single | sampling_below_500hz_is_refused | native force -> engine refusal | force-platform processing requires at least 500 reference samples/s | refusal matching 'at least 500' |  | pass |
+| force_platform.single | sampling_below_500hz_is_refused | native force -> engine refusal | ValueError: force-platform processing requires at least 500 reference samples/s | ValueError matching 'at least 500' |  | pass |
 | force_platform.dual | dual_plate_body_weight_and_bilateral_split | native dual force -> engine -> bilateral assessment | 66.667 | 66.667 | 0.5 | pass |
 | force_platform.dual | dual_swapped_sides_swap_the_labels_not_the_asymmetry | assessment side declaration | 301.797 | 301.797 | 1e-09 | pass |
 | lpt_encoder.lpt | velocity_finite_difference | native cable -> engine -> velocity | 0 | 0 | 0.02 | pass |
@@ -412,27 +410,27 @@ Entries come from G/H ledger evidence pointing at each assessment document.
 | nordic_hip.nordic | impulse_to_peak_1000hz | native bilateral force -> engine | 314.161 | 314.159 | 0.16 | pass |
 | nordic_hip.nordic | impulse_to_peak_2000hz | native bilateral force -> engine | 314.161 | 314.159 | 0.08 | pass |
 | nordic_hip.nordic | butterworth_filter_peak | native bilateral force -> engine filter | 159.79 | 160 | 1 | pass |
-| nordic_hip.nordic | side_contradiction_is_refused | engine refusal | side contradiction on 'force_left': bundle says left, declaration says right | refusal matching 'side contradiction' |  | pass |
+| nordic_hip.nordic | side_contradiction_is_refused | engine refusal | ValueError: side contradiction on 'force_left': bundle says left, declaration says right | ValueError matching 'side contradiction' |  | pass |
 | nordic_hip.nordic | clipped_side_is_visible_in_peak | corruption -> engine metric | 100 | 100 | 0.05 | pass |
 | nordic_hip.nordic | angle_is_never_recovered_from_force | engine refusal | ['angle_metrics', 'break_point'] | break_point refused |  | pass |
-| nordic_hip.nordic | raw_and_vendor_corrected_trials_cannot_be_pooled | engine -> assessment refusal | raw-calibrated and vendor-corrected trials cannot be combined | refusal matching 'cannot be combined' |  | pass |
+| nordic_hip.nordic | raw_and_vendor_corrected_trials_cannot_be_pooled | engine -> assessment refusal | ValueError: raw-calibrated and vendor-corrected trials cannot be combined | ValueError matching 'cannot be combined' |  | pass |
 | nordic_hip.hip | hip_squeeze_peak_and_torque | native hip force -> engine | 1000 | 1000 | 0.0001 | pass |
-| nordic_hip.hip | hip_squeeze_refused_without_hip_flexion | engine refusal | hip squeeze refused: hip flexion angle of the protocol is undeclared | refusal matching 'hip flexion angle' |  | pass |
+| nordic_hip.hip | hip_squeeze_refused_without_hip_flexion | engine refusal | ValueError: hip squeeze refused: hip flexion angle of the protocol is undeclared | ValueError matching 'hip flexion angle' |  | pass |
 | timing_contact.gates | flying_start_gate_splits_match_exact_position_inverse | native gate events -> engine | 0 | 0 | 0.0002 | pass |
 | timing_contact.gates | standing_start_gate_fit_recovers_fv_parameters | gate events + start trigger -> engine -> sprint F-V | 9 | 9 | 0.05 | pass |
 | timing_contact.gates | flying_start_splits_are_not_a_standing_start_fit | gate events -> assessment eligibility |  | not within 5% of the true Vmax |  | pass |
-| timing_contact.gates | gates_never_yield_instantaneous_velocity | assessment refusal | gates yields segment averages only; instantaneous velocity is not manufactured | refusal matching 'segment averages' |  | pass |
-| timing_contact.gates | adversarial_missing_event | corruption -> engine refusal | missing gate 2 | refusal matching '' |  | pass |
-| timing_contact.gates | adversarial_duplicate_event | corruption -> engine refusal | gate 2: duplicate or ambiguous beam trigger | refusal matching '' |  | pass |
-| timing_contact.gates | adversarial_out_of_order_event | corruption -> engine refusal | res669-corrupted-512e88dd674ada50ea732fa8: out-of-order native timestamps | refusal matching '' |  | pass |
+| timing_contact.gates | gates_never_yield_instantaneous_velocity | assessment refusal | ValueError: gates yields segment averages only; instantaneous velocity is not manufactured | ValueError matching 'segment averages' |  | pass |
+| timing_contact.gates | adversarial_missing_event | corruption -> engine refusal | EventRefusal: missing gate 2 | EventRefusal matching 'missing gate 2' |  | pass |
+| timing_contact.gates | adversarial_duplicate_event | corruption -> engine refusal | EventRefusal: gate 2: duplicate or ambiguous beam trigger | EventRefusal matching 'duplicate or ambiguous beam trigger' |  | pass |
+| timing_contact.gates | adversarial_out_of_order_event | corruption -> engine refusal | EventRefusal: res669-corrupted-512e88dd674ada50ea732fa8: out-of-order native timestamps | EventRefusal matching 'out-of-order native timestamps' |  | pass |
 | timing_contact.contact | cmj_flight_time_latency_0s | native switch events -> engine -> jump source | 0.55065 | 0.55065 | 0.002 | pass |
 | timing_contact.contact | cmj_flight_time_latency_0.02s | native switch events -> engine -> jump source | 0.55065 | 0.55065 | 0.002 | pass |
-| timing_contact.contact | duplicate_switch_event_is_refused | corruption -> engine refusal | repeated contact state without an intervening edge at row 2 | refusal matching '' |  | pass |
+| timing_contact.contact | duplicate_switch_event_is_refused | corruption -> engine refusal | EventRefusal: repeated contact state without an intervening edge at row 2 | EventRefusal matching 'repeated contact state without an intervening edge' |  | pass |
 | radar_laser.radar | doppler_velocity_47hz | native Doppler -> engine -> sprint F-V | 0 | 0 | 1e-06 | pass |
 | radar_laser.radar | doppler_velocity_100hz | native Doppler -> engine -> sprint F-V | 0 | 0 | 1e-06 | pass |
 | radar_laser.radar | doppler_velocity_256hz | native Doppler -> engine -> sprint F-V | 0 | 0 | 1e-06 | pass |
 | radar_laser.radar | fv_fit_from_native_radar | native Doppler -> engine -> sprint F-V | 600 | 600 | 30 | pass |
-| radar_laser.radar | manufacturer_processed_channel_without_cosine_qualification_refuses | engine refusal | manufacturer-processed stage requires matching source processing provenance | refusal matching '' |  | pass |
+| radar_laser.radar | manufacturer_processed_channel_without_stage_provenance_refuses | engine refusal | AcquisitionRefusal: manufacturer-processed stage requires matching source processing provenance | AcquisitionRefusal matching 'manufacturer-processed stage requires matching source processing provenance' |  | pass |
 | radar_laser.laser | range_rate_central | native range -> engine -> velocity | 2e-05 | 0 | 0.005 | pass |
 | radar_laser.laser | range_rate_five_point | native range -> engine -> velocity | 0 | 0 | 0.0001 | pass |
 | gnss_lps.gnss | positional_speed_three_point | native track -> engine -> speed | 0 | 0 | 1e-06 | pass |
@@ -440,8 +438,8 @@ Entries come from G/H ledger evidence pointing at each assessment document.
 | gnss_lps.lps | positional_speed_three_point | native track -> engine -> speed | 0 | 0 | 1e-06 | pass |
 | gnss_lps.lps | positional_speed_five_point | native track -> engine -> speed | 0 | 0 | 1e-06 | pass |
 | gnss_lps.gnss | doppler_and_positional_speed_stay_separate | native track -> engine | separate arrays | Doppler != positional |  | pass |
-| gnss_lps.gnss | position_jump_is_not_hidden | corruption -> engine | acquisition declaration belongs to a different bundle | refusal or reported discontinuity |  | pass |
-| gnss_lps.lps | position_jump_is_not_hidden | corruption -> engine | acquisition declaration belongs to a different bundle | refusal or reported discontinuity |  | pass |
+| gnss_lps.gnss | position_jump_is_not_hidden | corruption -> engine | AcquisitionRefusal: position jump exceeds declared 3D step-speed limit | AcquisitionRefusal matching 'position jump exceeds declared 3D step-speed limit' |  | pass |
+| gnss_lps.lps | position_jump_is_not_hidden | corruption -> engine | AcquisitionRefusal: position jump exceeds declared 3D step-speed limit | AcquisitionRefusal matching 'position jump exceeds declared 3D step-speed limit' |  | pass |
 | imu.inertial | orientation_100hz | native IMU -> engine orientation | 0 | 0 | 1e-08 | pass |
 | imu.inertial | orientation_200hz | native IMU -> engine orientation | 0 | 0 | 1e-08 | pass |
 | imu.inertial | orientation_500hz | native IMU -> engine orientation | 0 | 0 | 1e-08 | pass |
@@ -451,29 +449,29 @@ Entries come from G/H ledger evidence pointing at each assessment document.
 | imu.inertial | saturated_accelerometer_is_rejected | corruption -> engine verdict | reject | reject |  | pass |
 | imu.inertial | orientation_unobservable_without_initial_condition | engine refusal | ['orientation'] | orientation refused |  | pass |
 | imu.inertial | integration_refused_without_declared_initial_velocity | engine refusal | ['integration'] | integration refused |  | pass |
-| radar_laser.radar | cod_trace_needs_a_declared_path | engine -> assessment refusal | 1 validation error for CodSpec
+| radar_laser.radar | cod_trace_needs_a_declared_path | engine -> assessment refusal | ValidationError: 1 validation error for CodSpec
 declared_path
   String should have at least 3 characters [type=string_too_short, input_value='', input_type=str]
-    For further  | refusal matching 'declared_path' |  | pass |
+    For further  | ValidationError matching 'String should have at least 3 characters' |  | pass |
 
 ## 6. Cross-device comparisons and their evidence basis
 
 Classification counts: {"analytical_model_agreement": 4, "definition_mismatch": 7, "unsupported_comparison": 1}; interchangeable claims: 0; empirical device agreement studies: 0.
 
-| Comparison | Quantity | Class |
-| -- | -- | -- |
-| force_platform.single vs timing_contact.contact | flight_time | analytical_model_agreement |
-| force_platform.single vs imu.inertial | flight_time | analytical_model_agreement |
-| force_platform.single vs load_cell_isometric.load_cell | isometric_force | analytical_model_agreement |
-| radar_laser.radar vs radar_laser.laser | doppler_vs_differentiated_velocity | definition_mismatch |
-| radar_laser.radar vs gnss_lps.gnss | running_speed | definition_mismatch |
-| radar_laser.radar vs gnss_lps.lps | running_speed | definition_mismatch |
-| radar_laser.radar vs timing_contact.gates | sprint_velocity | definition_mismatch |
-| force_platform.single vs lpt_encoder.lpt | jump_height | definition_mismatch |
-| force_platform.single vs lpt_encoder.lpt | cable_vs_vertical_displacement | definition_mismatch |
-| force_platform.single vs lpt_encoder.lpt | attachment_vs_com_power | definition_mismatch |
-| nordic_hip.nordic vs nordic_hip.nordic | force_basis | unsupported_comparison |
-| radar_laser.radar vs timing_contact.gates | sprint_split_time | analytical_model_agreement |
+| Comparison | Quantity | Left / right execution | Class |
+| -- | -- | -- | -- |
+| force_platform.single vs timing_contact.contact | flight_time | engine / engine | analytical_model_agreement |
+| force_platform.single vs imu.inertial | flight_time | engine / engine | analytical_model_agreement |
+| force_platform.single vs load_cell_isometric.load_cell | isometric_force | closed_form / engine | analytical_model_agreement |
+| radar_laser.radar vs radar_laser.laser | doppler_vs_differentiated_velocity | engine / engine | definition_mismatch |
+| radar_laser.radar vs gnss_lps.gnss | running_speed | closed_form / closed_form | definition_mismatch |
+| radar_laser.radar vs gnss_lps.lps | running_speed | closed_form / closed_form | definition_mismatch |
+| radar_laser.radar vs timing_contact.gates | sprint_velocity | closed_form / closed_form | definition_mismatch |
+| force_platform.single vs lpt_encoder.lpt | jump_height | closed_form / closed_form | definition_mismatch |
+| force_platform.single vs lpt_encoder.lpt | cable_vs_vertical_displacement | closed_form / closed_form | definition_mismatch |
+| force_platform.single vs lpt_encoder.lpt | attachment_vs_com_power | closed_form / closed_form | definition_mismatch |
+| nordic_hip.nordic vs nordic_hip.nordic | force_basis | unavailable / unavailable | unsupported_comparison |
+| radar_laser.radar vs timing_contact.gates | sprint_split_time | engine / closed_form | analytical_model_agreement |
 
 Analytical model agreement, empirical device agreement, unsupported comparison, missing evidence and
 definition mismatch are separate states (docs/cross-device-agreement.md). Synthetic agreement never
@@ -482,8 +480,9 @@ establishes interchangeability.
 ## 7. Frozen interface
 
 `engine-v0.1`: `docs/verification/engine-v0.1-interface.json` records every CLI command path, option
-and the JSON-schema digest of every specification. `dbs qualification interface` fails when the live
-interface differs; changing it requires an explicit new version. The freeze covers the software interface
+and JSON-schema digests for registered method and acquisition specifications.
+`dbs qualification interface` fails when the live snapshot differs. Contextual runtime evidence is
+declared separately. Changing the frozen snapshot requires an explicit new version. It covers software
 only and says nothing about qualification.
 
 ## 8. Reproduce

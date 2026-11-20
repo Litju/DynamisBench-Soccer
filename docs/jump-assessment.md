@@ -16,7 +16,7 @@ and adds protocol logic. It does not re-calibrate or re-filter.
 | `cmj` | quiet standing, movement onset, unweighting depth ≥ declared fraction, one complete flight |
 | `sj` | quiet standing, onset, unweighting depth ≤ declared fraction, one flight |
 | `slcmj` | CMJ checks plus two plates with declared sides and unloaded-plate leakage ≤ limit |
-| `dj` | first contact located; declared drop height compared with measured impact speed |
+| `dj` | descending initial landing, complete rebound, declared drop height and independently sourced touchdown velocity |
 | `repeated_hops` | at least a declared number of complete hop cycles |
 
 An ineligible record still reports what it can, with `eligible: false` and
@@ -52,3 +52,17 @@ SJ, DJ and hops through the real force-platform engine, eligibility in both dire
 negative controls (no flight, non-uniform timing, wrong drop height, swapped sides, two-leg
 SL-CMJ), clipping corruption carried to `device_verdict`, cross-device source separation
 using the contact and IMU engines, and the CLI. Engineering calculations only.
+
+For DJ CLI runs, provide `drop_evidence` alongside `jump`, with a negative
+`touchdown_velocity_m_s` and a `source` identifying how it was established independently
+of drop height and force integration. Set `jump.drop_height_m` from the declared protocol.
+Force must bracket the initial touchdown with an airborne sample followed by contact.
+A record starting in contact cannot establish the start of ground contact.
+Use separately justified initial conditions in the force processing method. The assessment
+compares touchdown with both the declared drop model and the integrated touchdown state.
+Failed eligibility or device rejection places the DJ calculations under `diagnostics`, with
+empty accepted estimands and contacts.
+
+The engine-v0.1 snapshot covers the registered method specification schemas and CLI
+arguments. The jump CLI configuration envelope carries contextual `drop_evidence`
+separately from the frozen `JumpSpec` method declaration.

