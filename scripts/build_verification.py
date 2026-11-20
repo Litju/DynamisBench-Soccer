@@ -195,9 +195,16 @@ def markdown(p: dict, agreement: dict) -> str:
         f"interchangeable claims: {agreement['interchangeable_claims']}; empirical device agreement studies: "
         f"{agreement['empirical_device_agreement_studies']}."
     )
-    out += ["", "| Comparison | Quantity | Class |", "| -- | -- | -- |"]
+    out += [
+        "",
+        "| Comparison | Quantity | Left / right execution | Class |",
+        "| -- | -- | -- | -- |",
+    ]
     for s in agreement["studies"]:
-        out.append(f"| {s['left']} vs {s['right']} | {s['quantity']} | {s['classification']} |")
+        basis = " / ".join(s["execution_basis"])
+        out.append(
+            f"| {s['left']} vs {s['right']} | {s['quantity']} | {basis} | {s['classification']} |"
+        )
     out += [
         "",
         "Analytical model agreement, empirical device agreement, unsupported comparison, missing evidence and",

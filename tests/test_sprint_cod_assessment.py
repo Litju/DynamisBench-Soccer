@@ -375,3 +375,24 @@ def test_cod_refuses_invalid_full_course_gates(positions, times, reason) -> None
     )
     with pytest.raises(ValueError, match=reason):
         cod.assess_gates(positions, times, spec)
+
+
+@pytest.mark.parametrize("trigger", [0.0625, 0.125, 0.1875])
+def test_cod_constant_speed_does_not_add_remaining_sample_interval(trigger) -> None:
+    time = np.arange(0.0, 3.0, 0.25)
+    spec = CodSpec(
+        declared_path="constant-speed control",
+        path_length_m=5,
+        turn_distance_m=3,
+        entry_distance_m=1,
+        turn_window_m=2,
+        turn_angle_deg=90,
+        source="radar",
+        straight_reference_time_s=2.25,
+    )
+    result = cod.assess_trace(
+        time, np.full_like(time, 2), spec, StartSpec(kind="external_trigger", trigger_s=trigger)
+    )
+    assert result["total_time_s"] == pytest.approx(2.5)
+    assert result["milestones_s"] == pytest.approx({"3_m": 1.5, "5_m": 2.5})
+    assert result["cod_deficit_s"] == pytest.approx(0.25)

@@ -21,6 +21,10 @@
         "force_platform": "time between force dropping below and rising above the contact threshold"
       },
       "empirical_status": "missing_evidence: analytical study only: idealised observation models of one truth; no measured paired data exist, so empirical agreement and interchangeability are not established",
+      "execution_basis": [
+        "engine",
+        "engine"
+      ],
       "id": "force_vs_contact_flight_time",
       "interchangeable": "unknown",
       "left": "force_platform.single",
@@ -93,6 +97,10 @@
         "imu": "specific-force magnitude below a declared threshold for a minimum duration"
       },
       "empirical_status": "missing_evidence: analytical study only: idealised observation models of one truth; no measured paired data exist, so empirical agreement and interchangeability are not established",
+      "execution_basis": [
+        "engine",
+        "engine"
+      ],
       "id": "force_vs_imu_flight_time",
       "interchangeable": "unknown",
       "left": "force_platform.single",
@@ -158,6 +166,10 @@
         "load_cell": "uniaxial force at the cell, with rig compliance and line of action unmodelled"
       },
       "empirical_status": "missing_evidence: analytical study only: idealised observation models of one truth; no measured paired data exist, so empirical agreement and interchangeability are not established",
+      "execution_basis": [
+        "closed_form",
+        "engine"
+      ],
       "id": "force_vs_load_cell_isometric_force",
       "interchangeable": "unknown",
       "left": "force_platform.single",
@@ -215,6 +227,10 @@
         "radar": "Doppler radial speed (direct measurement of velocity)"
       },
       "empirical_status": "missing_evidence: analytical study only: idealised observation models of one truth; no measured paired data exist, so empirical agreement and interchangeability are not established",
+      "execution_basis": [
+        "engine",
+        "engine"
+      ],
       "id": "radar_vs_laser_velocity",
       "interchangeable": "no",
       "left": "radar_laser.radar",
@@ -269,6 +285,10 @@
         "radar": "Doppler radial speed along the beam"
       },
       "empirical_status": "missing_evidence: analytical study only: idealised observation models of one truth; no measured paired data exist, so empirical agreement and interchangeability are not established",
+      "execution_basis": [
+        "closed_form",
+        "closed_form"
+      ],
       "id": "radar_vs_positional_speed",
       "interchangeable": "no",
       "left": "radar_laser.radar",
@@ -355,6 +375,10 @@
         "radar": "Doppler radial speed along the beam"
       },
       "empirical_status": "missing_evidence: analytical study only: idealised observation models of one truth; no measured paired data exist, so empirical agreement and interchangeability are not established",
+      "execution_basis": [
+        "closed_form",
+        "closed_form"
+      ],
       "id": "radar_vs_lps_speed",
       "interchangeable": "no",
       "left": "radar_laser.radar",
@@ -440,6 +464,10 @@
         "radar": "instantaneous Doppler speed at a time"
       },
       "empirical_status": "missing_evidence: analytical study only: idealised observation models of one truth; no measured paired data exist, so empirical agreement and interchangeability are not established",
+      "execution_basis": [
+        "closed_form",
+        "closed_form"
+      ],
       "id": "radar_vs_gates_velocity",
       "interchangeable": "no",
       "left": "radar_laser.radar",
@@ -501,6 +529,10 @@
         "lpt": "peak attachment displacement above the declared standing start"
       },
       "empirical_status": "missing_evidence: analytical study only: idealised observation models of one truth; no measured paired data exist, so empirical agreement and interchangeability are not established",
+      "execution_basis": [
+        "closed_form",
+        "closed_form"
+      ],
       "id": "force_vs_lpt_jump_height",
       "interchangeable": "no",
       "left": "force_platform.single",
@@ -567,6 +599,10 @@
         "lpt": "change of cable length, equal to vertical displacement only for a vertical cable"
       },
       "empirical_status": "missing_evidence: analytical study only: idealised observation models of one truth; no measured paired data exist, so empirical agreement and interchangeability are not established",
+      "execution_basis": [
+        "closed_form",
+        "closed_form"
+      ],
       "id": "cable_vs_vertical_displacement",
       "interchangeable": "no",
       "left": "force_platform.single",
@@ -636,6 +672,10 @@
         "lpt": "vertical mass-model power of the attachment point with declared system mass"
       },
       "empirical_status": "missing_evidence: analytical study only: idealised observation models of one truth; no measured paired data exist, so empirical agreement and interchangeability are not established",
+      "execution_basis": [
+        "closed_form",
+        "closed_form"
+      ],
       "id": "attachment_vs_com_power",
       "interchangeable": "no",
       "left": "force_platform.single",
@@ -685,6 +725,10 @@
         "vendor_corrected": "vendor-defined correction (undisclosed algorithm)"
       },
       "empirical_status": "missing_evidence: analytical study only: idealised observation models of one truth; no measured paired data exist, so empirical agreement and interchangeability are not established",
+      "execution_basis": [
+        "unavailable",
+        "unavailable"
+      ],
       "id": "nordic_raw_vs_vendor_corrected",
       "interchangeable": "unknown",
       "left": "nordic_hip.nordic",
@@ -698,7 +742,7 @@
     {
       "assumptions": [
         "radar start equals gate start",
-        "integration of an exact speed trace",
+        "integration of a synthetic radar speed trace",
         "no start-definition bias"
       ],
       "classification": "analytical_model_agreement",
@@ -707,21 +751,25 @@
         "radar": "time at which integrated Doppler speed reaches the distance"
       },
       "empirical_status": "missing_evidence: analytical study only: idealised observation models of one truth; no measured paired data exist, so empirical agreement and interchangeability are not established",
+      "execution_basis": [
+        "engine",
+        "closed_form"
+      ],
       "id": "gates_vs_radar_laser_timing",
       "interchangeable": "unknown",
       "left": "radar_laser.radar",
       "pairs": [
         [
-          2.1031246565401025,
-          2.1031297245323044
+          2.1031297245323044,
+          2.1031246565401025
         ],
         [
-          3.3485505747362385,
-          3.3485571820221027
+          3.3485571820221027,
+          3.3485505747362385
         ],
         [
-          4.50523488280616,
-          4.505241578033881
+          4.505241578033881,
+          4.50523488280616
         ]
       ],
       "quantity": "sprint_split_time",
@@ -731,17 +779,17 @@
         "start_offset_effect": "a start offset adds directly to every split"
       },
       "statistics": {
-        "bias": 6.123501928930371e-06,
+        "bias": -6.123501928930371e-06,
         "expanded_uncertainty_of_difference": null,
         "limits_of_agreement": [
-          4.3298307070186594e-06,
-          7.917173150842082e-06
+          -7.917173150842082e-06,
+          -4.3298307070186594e-06
         ],
         "n": 3,
         "proportional_bias_p": 0.28915694465855263,
-        "proportional_bias_slope": 6.845479110035262e-07,
+        "proportional_bias_slope": -6.845479110035262e-07,
         "proportional_bias_slope_se": 3.3423320095433927e-07,
-        "ratio_bias_percent": 0.00018450006654985155,
+        "ratio_bias_percent": -0.00018449972614773398,
         "sd_difference": 9.151551947178424e-07,
         "tolerance": 0.01,
         "typical_error": 6.471124440230816e-07,

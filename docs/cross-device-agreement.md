@@ -46,3 +46,10 @@ Undefined quantities are `null`, never NaN.
 No comparison is upgraded from `unknown`. Ledger entries now carry `evidence_level =
 analytical` and point to the JSON report; empirical interchangeability needs measured paired
 data, an accepted tolerance and independent review (M8).
+
+Each study reports `execution_basis` in left/right pair order. `engine` means the
+quantity came from executing that engine on a synthetic observation. `closed_form`
+means the quantity came from the analytical scenario. `unavailable` indicates no
+pair was computed. In particular, the force/load-cell study executes the load cell
+only and the radar/gate split study executes the radar only. The execution labels
+and evidence classification answer separate questions. Empirical agreement remains unknown.

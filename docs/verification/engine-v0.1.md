@@ -458,20 +458,20 @@ declared_path
 
 Classification counts: {"analytical_model_agreement": 4, "definition_mismatch": 7, "unsupported_comparison": 1}; interchangeable claims: 0; empirical device agreement studies: 0.
 
-| Comparison | Quantity | Class |
-| -- | -- | -- |
-| force_platform.single vs timing_contact.contact | flight_time | analytical_model_agreement |
-| force_platform.single vs imu.inertial | flight_time | analytical_model_agreement |
-| force_platform.single vs load_cell_isometric.load_cell | isometric_force | analytical_model_agreement |
-| radar_laser.radar vs radar_laser.laser | doppler_vs_differentiated_velocity | definition_mismatch |
-| radar_laser.radar vs gnss_lps.gnss | running_speed | definition_mismatch |
-| radar_laser.radar vs gnss_lps.lps | running_speed | definition_mismatch |
-| radar_laser.radar vs timing_contact.gates | sprint_velocity | definition_mismatch |
-| force_platform.single vs lpt_encoder.lpt | jump_height | definition_mismatch |
-| force_platform.single vs lpt_encoder.lpt | cable_vs_vertical_displacement | definition_mismatch |
-| force_platform.single vs lpt_encoder.lpt | attachment_vs_com_power | definition_mismatch |
-| nordic_hip.nordic vs nordic_hip.nordic | force_basis | unsupported_comparison |
-| radar_laser.radar vs timing_contact.gates | sprint_split_time | analytical_model_agreement |
+| Comparison | Quantity | Left / right execution | Class |
+| -- | -- | -- | -- |
+| force_platform.single vs timing_contact.contact | flight_time | engine / engine | analytical_model_agreement |
+| force_platform.single vs imu.inertial | flight_time | engine / engine | analytical_model_agreement |
+| force_platform.single vs load_cell_isometric.load_cell | isometric_force | closed_form / engine | analytical_model_agreement |
+| radar_laser.radar vs radar_laser.laser | doppler_vs_differentiated_velocity | engine / engine | definition_mismatch |
+| radar_laser.radar vs gnss_lps.gnss | running_speed | closed_form / closed_form | definition_mismatch |
+| radar_laser.radar vs gnss_lps.lps | running_speed | closed_form / closed_form | definition_mismatch |
+| radar_laser.radar vs timing_contact.gates | sprint_velocity | closed_form / closed_form | definition_mismatch |
+| force_platform.single vs lpt_encoder.lpt | jump_height | closed_form / closed_form | definition_mismatch |
+| force_platform.single vs lpt_encoder.lpt | cable_vs_vertical_displacement | closed_form / closed_form | definition_mismatch |
+| force_platform.single vs lpt_encoder.lpt | attachment_vs_com_power | closed_form / closed_form | definition_mismatch |
+| nordic_hip.nordic vs nordic_hip.nordic | force_basis | unavailable / unavailable | unsupported_comparison |
+| radar_laser.radar vs timing_contact.gates | sprint_split_time | engine / closed_form | analytical_model_agreement |
 
 Analytical model agreement, empirical device agreement, unsupported comparison, missing evidence and
 definition mismatch are separate states (docs/cross-device-agreement.md). Synthetic agreement never
