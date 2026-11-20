@@ -325,3 +325,53 @@ def test_modules_never_import_reference_substrate() -> None:
             if isinstance(node, ast.ImportFrom):
                 assert not (node.module or "").startswith("dynamisbench_soccer.reference")
     assert math.isfinite(F0)
+
+
+@pytest.mark.parametrize(
+    "start",
+    [
+        StartSpec(kind="external_trigger", trigger_s=0.25),
+        StartSpec(kind="velocity_threshold", threshold_m_s=0.5),
+    ],
+)
+def test_cod_integrates_and_inverts_fractional_start(start) -> None:
+    # v=2t implies distance t²-0.25², independently of the coarse sample grid.
+    t = np.arange(0, 4, 0.5)
+    spec = CodSpec(
+        declared_path="graded turn",
+        path_length_m=6,
+        turn_distance_m=3,
+        entry_distance_m=1,
+        turn_window_m=6,
+        turn_angle_deg=90,
+        source="radar",
+    )
+    out = cod.assess_trace(t, 2 * t, spec, start)
+    assert out["total_time_s"] == pytest.approx(math.sqrt(6.0625) - 0.25)
+    assert out["milestones_s"] == pytest.approx(
+        {"3_m": 1.75 - 0.25, "6_m": math.sqrt(6.0625) - 0.25}
+    )
+    assert out["entry_speed_m_s"] == pytest.approx(2 * math.sqrt(2.0625))
+    assert out["post_turn_peak_speed_m_s"] == pytest.approx(2 * math.sqrt(6.0625))
+
+
+@pytest.mark.parametrize(
+    ("positions", "times", "reason"),
+    [
+        ([5, 10, 15], [0, 1, 2], "position zero"),
+        ([0, 10, 15], [1, 2, 3], "elapsed time zero"),
+        ([0, 12, 8, 15], [0, 1, 2, 3], "positions must increase"),
+        ([0, 8, 8, 15], [0, 1, 2, 3], "positions must increase"),
+        ([0, float("nan"), 15], [0, 1, 2], "finite"),
+    ],
+)
+def test_cod_refuses_invalid_full_course_gates(positions, times, reason) -> None:
+    spec = CodSpec(
+        declared_path="out and back",
+        path_length_m=15,
+        turn_distance_m=8,
+        turn_angle_deg=180,
+        source="radar",
+    )
+    with pytest.raises(ValueError, match=reason):
+        cod.assess_gates(positions, times, spec)
