@@ -144,24 +144,69 @@ def start_time(time: FloatArray, speed: FloatArray, start: StartSpec) -> float:
     return float(time[i - 1] + frac * (time[i] - time[i - 1]))
 
 
+def _validate_trace(time: FloatArray, speed: FloatArray) -> None:
+    if (
+        time.ndim != 1
+        or time.shape != speed.shape
+        or len(time) < 3
+        or not np.all(np.isfinite(time))
+        or not np.all(np.isfinite(speed))
+        or not np.all(np.diff(time) > 0)
+    ):
+        raise ValueError("milestones need finite, strictly increasing time and finite speed")
+    if np.any(speed < 0):
+        raise ValueError("milestones need nonnegative speed: distance would not be monotonic")
+
+
+def distance_profile(
+    time: FloatArray, speed: FloatArray, start: StartSpec
+) -> tuple[FloatArray, FloatArray, FloatArray]:
+    """Time, speed and distance from the exact (possibly fractional) declared start.
+
+    Speed is piecewise linear between samples, so each interval integrates exactly by the
+    trapezoid rule. The profile begins at the declared start itself, not at a sample.
+    """
+    _validate_trace(time, speed)
+    t0 = start_time(time, speed, start)
+    after = time > t0
+    t = np.concatenate(([t0], time[after]))
+    v = np.concatenate(([np.interp(t0, time, speed)], speed[after]))
+    if len(t) < 3:
+        raise ValueError("too few samples after the start")
+    distance = np.concatenate(([0.0], np.cumsum(0.5 * (v[1:] + v[:-1]) * np.diff(t))))
+    return t, v, distance
+
+
+def first_arrival(t: FloatArray, v: FloatArray, distance: FloatArray, d: float) -> float | None:
+    """First time the integrated distance reaches ``d``; ``None`` beyond the observed support.
+
+    Inside an interval the linear speed is inverted exactly, so a stationary tail after
+    arrival never moves the answer and nothing is extrapolated past the last sample.
+    """
+    if d < 0 or d > distance[-1] * (1 + 1e-12) + 1e-12:
+        return None
+    if d == 0:
+        return float(t[0])
+    d = min(d, float(distance[-1]))
+    right = int(np.searchsorted(distance, d, side="left"))
+    left = right - 1
+    delta = d - float(distance[left])
+    dt = float(t[right] - t[left])
+    acceleration = float(v[right] - v[left]) / dt
+    crossing = math.sqrt(max(0.0, float(v[left]) ** 2 + 2 * acceleration * delta))
+    denominator = float(v[left]) + crossing
+    return float(min(float(t[right]), float(t[left]) + 2 * delta / denominator))
+
+
 def milestones(
     time: FloatArray, speed: FloatArray, distances_m: list[float], start: StartSpec
 ) -> dict[str, float | None]:
-    """Time from the declared start to each distance, integrating the labelled speed."""
-    t0 = start_time(time, speed, start)
-    keep = time >= t0
-    t, v = time[keep], speed[keep]
-    if len(t) < 3:
-        raise ValueError("too few samples after the start")
-    v0 = float(np.interp(t0, time, speed))
-    t = np.concatenate(([t0], t[t > t0]))
-    v = np.concatenate(([v0], v[len(v) - len(t) + 1 :]))
-    distance = np.concatenate(([0.0], np.cumsum(0.5 * (v[1:] + v[:-1]) * np.diff(t))))
+    """Elapsed time from the declared start to the first arrival at each distance."""
+    t, v, distance = distance_profile(time, speed, start)
     out: dict[str, float | None] = {}
     for d in distances_m:
-        out[f"{d:g}_m"] = (
-            float(np.interp(d, distance, t - t0)) if d <= distance[-1] and d >= 0 else None
-        )
+        arrival = first_arrival(t, v, distance, float(d))
+        out[f"{d:g}_m"] = None if arrival is None else arrival - float(t[0])
     return out
 
 
@@ -335,12 +380,20 @@ def fv_start_sensitivity(
     return out
 
 
-def report(fit: FvFit, *, source: str) -> str:
+def report(
+    fit: FvFit,
+    *,
+    source: str,
+    input_record: dict[str, object] | None = None,
+    milestones_s: dict[str, float | None] | None = None,
+) -> str:
     return (
         json.dumps(
             {
                 "engine": ENGINE,
                 "source": source_estimand(source),
+                "input": input_record,
+                "milestones_s": milestones_s,
                 "fit": asdict(fit),
                 "limitations": list(LIMITATIONS),
                 "qualification": "engineering calculations only; no scientific qualification",
