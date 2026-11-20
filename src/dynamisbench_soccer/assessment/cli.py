@@ -121,7 +121,7 @@ def _isometric(args: argparse.Namespace) -> int:
         result = isometric.assess(
             results,
             config.isometric,
-            geometry=bundles[0].meta.geometry,
+            geometries=[b.meta.geometry for b in bundles],
             bundles=bundles,
             cell=config.cell,
             method=config.method,
