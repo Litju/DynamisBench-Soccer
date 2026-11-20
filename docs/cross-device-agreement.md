@@ -53,3 +53,26 @@ means the quantity came from the analytical scenario. `unavailable` indicates no
 pair was computed. In particular, the force/load-cell study executes the load cell
 only and the radar/gate split study executes the radar only. The execution labels
 and evidence classification answer separate questions. Empirical agreement remains unknown.
+
+## Source-evidence propagation and evidence classes (RES-703 correction)
+
+Every study now carries `source_evidence` (per trial: source instrument, protocol, protocol eligibility,
+QC verdict, diagnostic-only flag, estimand) and one `evidence_class`:
+
+| Class | Meaning |
+| --- | --- |
+| `ENGINE_TO_ENGINE` | both sides executed by device engines on accepted trials |
+| `ENGINE_TO_INDEPENDENT_CLOSED_FORM` | one engine against an independent closed form |
+| `CLOSED_FORM_DEMONSTRATION` | both sides closed form; not executed verification |
+| `DIAGNOSTIC_ONLY` | any source trial was rejected or protocol-ineligible; statistics are suppressed |
+| `UNSUPPORTED` | no executable basis |
+| `EMPIRICAL_MEASURED` | reserved; no study qualifies without qualified measured paired data |
+
+Finding: `force_vs_contact_flight_time` and `force_vs_imu_flight_time` previously paired flight times from
+five force-platform assessments that were device-rejected (clipping rule QC-S03 on the flat analytical
+force maximum) and protocol-ineligible (the analytical jump has no countermovement but was assessed as a
+CMJ). They were reported as engine-to-engine analytical agreement. The fixtures now use a sub-newton
+ripple and the squat-jump protocol, the trials are accepted, and `accepted_force=False` reproduces the
+rejected control, which classifies as `DIAGNOSTIC_ONLY` with no statistics. Numerical pairs are unchanged
+in meaning; all empirical interchangeability conclusions remain unknown. Tests:
+`tests/test_agreement_evidence_integrity.py`.
