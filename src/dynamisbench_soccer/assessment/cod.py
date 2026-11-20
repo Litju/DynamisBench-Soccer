@@ -93,7 +93,9 @@ def assess_trace(
     distance = np.concatenate((distance[in_course], [spec.path_length_m]))
 
     turn_idx = np.flatnonzero(
-        (distance >= spec.turn_distance_m - spec.turn_window_m / 2)
+        (distance > 0)
+        & (distance < spec.path_length_m)
+        & (distance >= spec.turn_distance_m - spec.turn_window_m / 2)
         & (distance <= spec.turn_distance_m + spec.turn_window_m / 2)
     )
     if len(turn_idx) < 3:

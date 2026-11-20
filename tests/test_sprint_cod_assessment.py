@@ -396,3 +396,19 @@ def test_cod_constant_speed_does_not_add_remaining_sample_interval(trigger) -> N
     assert result["total_time_s"] == pytest.approx(2.5)
     assert result["milestones_s"] == pytest.approx({"3_m": 1.5, "5_m": 2.5})
     assert result["cod_deficit_s"] == pytest.approx(0.25)
+
+
+def test_cod_turn_window_excludes_course_boundaries() -> None:
+    t = np.arange(0, 4, 0.25)
+    spec = CodSpec(
+        declared_path="broad turn window",
+        path_length_m=6,
+        turn_distance_m=3,
+        entry_distance_m=1,
+        turn_window_m=8,
+        turn_angle_deg=90,
+        source="radar",
+    )
+    out = cod.assess_trace(t, t, spec, StartSpec())
+    assert out["turn_time_s"] == 0.25
+    assert out["speed_loss_fraction"] == 0

@@ -404,6 +404,10 @@ def test_cmj_and_unjustified_initial_velocity_cannot_be_accepted_as_drop_jumps()
         assert "rsi_m_s" in report["diagnostics"]["estimands"]
     forged = replace(cmj_signal, velocity_m_s=cmj_signal.velocity_m_s + DROP.touchdown_velocity_m_s)
     assert not assess(forged, spec, drop_evidence=DROP).eligible
+    spike = cmj_signal.force_n.copy()
+    spike[0] = 2 * cmj_signal.body_weight_n
+    forged_impact = replace(forged, raw_force_n=spike)
+    assert not assess(forged_impact, spec, drop_evidence=DROP).eligible
     never_leaves = replace(
         cmj_signal, raw_force_n=None, force_n=np.full_like(cmj_signal.force_n, MASS * G)
     )

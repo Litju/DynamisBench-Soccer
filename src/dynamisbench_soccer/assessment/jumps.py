@@ -348,12 +348,16 @@ def assess(
                 )
             else:
                 refusals["rsi"] = "no complete rebound flight after the first contact"
+            quiet_contact = np.abs(event_force[first_start:first_end] - bw) <= 0.05 * bw
+            standing = any(
+                (b - a) * dt >= spec.quiet_s - dt / 2 for a, b in _segments(quiet_contact)
+            )
             checks.append(
                 _check(
                     "drop_landing",
                     signal.velocity_m_s[first_start] < 0
                     and (first_start > 0 or event_force[0] > 1.05 * bw)
-                    and not quiet_ok(),
+                    and not standing,
                     "descending first landing without a quiet standing baseline",
                 )
             )
