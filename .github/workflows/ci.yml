@@ -52,6 +52,13 @@ jobs:
           uv run ruff format --check .
       - name: Type-check
         run: uv run mypy
+      - name: Install Linux sandbox for the RES-737 development-only controls
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y bubblewrap
+          if ! unshare -Ur true; then
+            sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+          fi
       - name: Test
         run: uv run pytest
       - name: Build
@@ -68,6 +75,12 @@ jobs:
           "$wheel_bin/dbs" timing gates --help
           "$wheel_bin/dbs" timing contact --help
           "$wheel_bin/python" -m pytest "$GITHUB_WORKSPACE/tests/test_timing_gates.py" "$GITHUB_WORKSPACE/tests/test_timing_contact.py"
+      - name: RES-737 offline development-only installed-wheel smoke
+        run: |
+          wheel_bin="$RUNNER_TEMP/wheel-venv/bin"
+          cd "$RUNNER_TEMP"
+          "$wheel_bin/python" -I -m dynamisbench_soccer.m4.demo > "$RUNNER_TEMP/m4-development.json"
+          "$wheel_bin/python" -m pytest "$GITHUB_WORKSPACE/tests/test_m4_contracts.py" "$GITHUB_WORKSPACE/tests/test_m4_runner.py" "$GITHUB_WORKSPACE/tests/test_m4_demo.py"
       - name: RES-697 Nordic and hip installed-wheel processing
         run: |
           wheel_bin="$RUNNER_TEMP/wheel-venv/bin"

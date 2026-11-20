@@ -10,7 +10,16 @@ def episode():
     return Episode(
         episode_id="trial-1",
         seed=42,
-        task=Task(task_id="test", evidence="analytical", prompt="Compute x.", inputs={"x": 1}),
+        task=Task(
+            task_id="test",
+            evidence="analytical",
+            prompt="Compute x.",
+            inputs={"x": 1},
+            estimand="test",
+            unit="m",
+            method_spec={},
+            provenance="test",
+        ),
     )
 
 
@@ -29,7 +38,12 @@ def test_versioned_and_marked_contracts():
 def test_grader_distinguishes_correct_numbers_from_correct_method_and_refusal():
     trial = episode()
     key = Answer(
-        decision="compute", method="closed_form", reason="declared_origin", metrics={"x": 2}
+        decision="compute",
+        method="closed_form",
+        reason="declared_origin",
+        metrics={"x": 2},
+        estimand="test",
+        unit="m",
     )
     assert grade(trial, key.model_dump_json().encode(), key, atol=1e-6).passed
     for updates, expected in [
@@ -46,7 +60,12 @@ def test_grader_distinguishes_correct_numbers_from_correct_method_and_refusal():
     for invalid in (b"", b"null", b"{}", key.model_dump_json().replace("2.0", "NaN").encode()):
         assert grade(trial, invalid, key, atol=1e-6).outcome == "invalid_answer"
     refusal = Answer(
-        decision="refuse", method="gate_validation", reason="partial_course", metrics={}
+        decision="refuse",
+        method="gate_validation",
+        reason="partial_course",
+        metrics={},
+        estimand="test",
+        unit="m",
     )
     assert grade(trial, refusal.model_dump_json().encode(), refusal, atol=0).passed
     assert not grade(

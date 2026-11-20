@@ -14,7 +14,16 @@ def episode():
     return Episode(
         episode_id="isolation",
         seed=72,
-        task=Task(task_id="test", evidence="synthetic", prompt="Compute.", inputs={}),
+        task=Task(
+            task_id="test",
+            evidence="synthetic",
+            prompt="Compute.",
+            inputs={},
+            estimand="test",
+            unit="m",
+            method_spec={},
+            provenance="test",
+        ),
     )
 
 

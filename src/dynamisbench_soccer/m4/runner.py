@@ -10,7 +10,8 @@ import tempfile
 from pathlib import Path
 from typing import Literal
 
-from dynamisbench_soccer.m4.contracts import Answer, Episode, Score, grade
+from dynamisbench_soccer.m4.contracts import Episode, Score, grade
+from dynamisbench_soccer.m4.key_store import PrivateKey, digest
 
 MAX_OUTPUT = 16 * 1024
 MAX_SOURCE = 64 * 1024
@@ -121,8 +122,12 @@ def execute(episode: Episode, source: bytes) -> tuple[LauncherResult, bytes]:
             return "graded", output.read(MAX_OUTPUT)
 
 
-def trial(episode: Episode, source: bytes, answer: Answer, *, atol: float) -> Score:
+def trial(episode: Episode, source: bytes, key: PrivateKey) -> Score:
+    if key.episode_sha256 != digest(episode.model_dump_json().encode()):
+        raise ValueError("private answer belongs to another episode")
     outcome, output = execute(episode, source)
     if outcome != "graded":
         return Score(episode_id=episode.episode_id, outcome=outcome)
-    return grade(episode, output, answer, atol=atol)
+    return grade(
+        episode, output, key.answer, atol=key.atol, alternative_methods=key.alternative_methods
+    )
