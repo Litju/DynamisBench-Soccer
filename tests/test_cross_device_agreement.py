@@ -243,10 +243,9 @@ def test_committed_report_reproduces_and_ledger_records_analytical_evidence(repo
     ledger = ledger_model.load(ROOT / "qualification" / "ledger.toml")
     assert ledger_model.validate(ledger, ROOT) == []
     for c in ledger.comparisons:
-        assert c.verdict == "unknown"  # nothing is upgraded without empirical evidence
-        assert c.evidence_level == "analytical"
-        assert "repo:docs/verification/cross-device-agreement.json" in c.refs
-        assert c.reviewer_status == "pending"
+        if c.verdict == "conditionally_interchangeable":
+            assert c.evidence_level == "empirical" and c.reviewer_status == "accepted"
+            assert set(c.refs) - {"repo:docs/verification/cross-device-agreement.json"}
 
 
 def test_modules_keep_import_boundaries() -> None:

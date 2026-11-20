@@ -480,8 +480,9 @@ establishes interchangeability.
 ## 7. Frozen interface
 
 `engine-v0.1`: `docs/verification/engine-v0.1-interface.json` records every CLI command path, option
-and the JSON-schema digest of every specification. `dbs qualification interface` fails when the live
-interface differs; changing it requires an explicit new version. The freeze covers the software interface
+and JSON-schema digests for registered method and acquisition specifications.
+`dbs qualification interface` fails when the live snapshot differs. Contextual runtime evidence is
+declared separately. Changing the frozen snapshot requires an explicit new version. It covers software
 only and says nothing about qualification.
 
 ## 8. Reproduce

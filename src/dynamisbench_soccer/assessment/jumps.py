@@ -175,7 +175,7 @@ def _height_velocity(velocity: float) -> float:
 
 
 def _check(name: str, ok: bool, detail: str) -> dict[str, object]:
-    return {"check": name, "passed": ok, "detail": detail}
+    return {"check": name, "passed": bool(ok), "detail": detail}
 
 
 def _unweight(sig: JumpSignal, onset: int, takeoff: int) -> tuple[float, int]:
@@ -355,10 +355,8 @@ def assess(
             checks.append(
                 _check(
                     "drop_landing",
-                    signal.velocity_m_s[first_start] < 0
-                    and (first_start > 0 or event_force[0] > 1.05 * bw)
-                    and not standing,
-                    "descending first landing without a quiet standing baseline",
+                    signal.velocity_m_s[first_start] < 0 and first_start > 0 and not standing,
+                    "observed airborne-to-contact transition, descending velocity and no stance",
                 )
             )
             checks.append(

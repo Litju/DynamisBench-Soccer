@@ -74,7 +74,9 @@ def assess_trace(
     v = np.concatenate(([np.interp(t0, time, speed)], speed[keep]))
     distance = np.concatenate(([0.0], np.cumsum(0.5 * (v[1:] + v[:-1]) * np.diff(t))))
     if distance[-1] < spec.path_length_m:
-        raise ValueError("trace ends before the declared path length")
+        if not math.isclose(distance[-1], spec.path_length_m, rel_tol=1e-12):
+            raise ValueError("trace ends before the declared path length")
+        distance[-1] = spec.path_length_m
     refusals: dict[str, str] = {}
 
     def at(d: float) -> float:
@@ -84,7 +86,7 @@ def assess_trace(
         delta = d - distance[left]
         acceleration = (v[right] - v[left]) / (t[right] - t[left])
         crossing_speed = math.sqrt(max(0.0, v[left] ** 2 + 2 * acceleration * delta))
-        return float(t[left] + 2 * delta / (v[left] + crossing_speed))
+        return float(min(t[right], t[left] + 2 * delta / (v[left] + crossing_speed)))
 
     finish = at(spec.path_length_m)
     in_course = t < finish

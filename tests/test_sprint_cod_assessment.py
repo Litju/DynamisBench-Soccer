@@ -412,3 +412,20 @@ def test_cod_turn_window_excludes_course_boundaries() -> None:
     out = cod.assess_trace(t, t, spec, StartSpec())
     assert out["turn_time_s"] == 0.25
     assert out["speed_loss_fraction"] == 0
+
+
+def test_cod_accepts_fractional_start_with_finish_at_last_observed_sample() -> None:
+    time = np.arange(31) / 10
+    speed = np.full_like(time, 2.5)
+    spec = CodSpec(
+        declared_path="observed endpoint",
+        path_length_m=7.375,
+        turn_distance_m=4,
+        turn_angle_deg=90,
+        source="radar",
+    )
+    start = StartSpec(kind="external_trigger", trigger_s=0.05)
+    assert cod.assess_trace(time, speed, spec, start)["total_time_s"] == pytest.approx(2.95)
+    longer = spec.model_copy(update={"path_length_m": 7.375001})
+    with pytest.raises(ValueError, match="trace ends"):
+        cod.assess_trace(time, speed, longer, start)

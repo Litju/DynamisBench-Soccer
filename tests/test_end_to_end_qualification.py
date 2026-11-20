@@ -101,7 +101,7 @@ def test_states_are_computed_from_evidence_not_declared() -> None:
 
     def state_for(**changes) -> str:
         sub = dataclasses.replace(target, **changes)
-        model = dataclasses.replace(LEDGER, evidence=(*LEDGER.evidence, j))
+        model = dataclasses.replace(LEDGER, evidence=(j,), reviewers=())
         return subfamily_state(model, sub).state
 
     assert state_for(ratings=verified, blockers=("open",)) == "SPECIFIED"
@@ -168,7 +168,7 @@ def test_gate_passes_only_when_every_subfamily_is_engineering_verified() -> None
 
 def test_every_unverified_subfamily_names_its_owner_blocker_and_required_experiment() -> None:
     for s in computed_states(LEDGER):
-        if s.state == "ENGINEERING_VERIFIED":
+        if s.state in {"ENGINEERING_VERIFIED", "SCIENTIFICALLY_QUALIFIED"}:
             continue
         assert s.blockers, s.subfamily
         assert set(s.required_experiments) == set(s.unverified_m3)

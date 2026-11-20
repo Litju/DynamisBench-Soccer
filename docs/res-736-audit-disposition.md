@@ -4,7 +4,7 @@
 | --- | --- |
 | P1-A fractional COD start | Fixed. The COD tests recover constant-speed elapsed time at three fractional offsets and recover distance crossings and entry speed for a linear speed ramp. |
 | P1-B partial gates | Fixed. A full-course total requires zero origin in position and elapsed time, strictly increasing positions and times, and an observed finish. Partial, duplicate, reversed and nonfinite inputs are refused. |
-| P1-C DJ eligibility | Fixed. The valid DJ control has independently justified descending touchdown and a complete rebound. Standing CMJ, forged initial velocity on standing force, incomplete contact, missing drop evidence and contradictory drop height are ineligible. DJ diagnostics remain available. |
+| P1-C DJ eligibility | Fixed. The valid DJ control uses a prescribed touchdown velocity independent of the height declaration. The signal must bracket touchdown and show a complete rebound. Standing CMJ, a truncated initial contact, forged velocity on standing force, missing evidence and contradictory height are ineligible. DJ diagnostics remain available. |
 | P2-D failed report freshness | Fixed. The checker rejects a freshly rendered report with a failed case and names the failing case. |
 | P2-E refusal specificity | Fixed. Matrix cases check exception type and case-specific reason. The GNSS/LPS faults are now bound to the corrupted observations so the case reaches the actual jump check. |
 | P2-F execution evidence | Labelled the execution basis of each side. Three studies execute both engines. One-sided and formula-only demonstrations retain their scope. Additional matched two-engine paths remain research backlog. |
