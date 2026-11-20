@@ -102,6 +102,10 @@ def _jump(args: argparse.Namespace) -> int:
         )
         report = result.report()
         report["device"] = {"engine": "force-platform.v1", "verdict": device.verdict}
+        report["input"] = [
+            {"stem": p.name, "bundle_id": b.meta.bundle_id}
+            for p, b in zip(inputs, bundles, strict=True)
+        ]
         text = json.dumps(report, sort_keys=True, indent=2, allow_nan=False) + "\n"
         return text, 0 if result.eligible and device.verdict != "reject" else 1
 
