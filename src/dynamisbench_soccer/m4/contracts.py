@@ -30,6 +30,7 @@ class Task(Contract):
     provenance: str
     engine_version: Literal["independent-closed-form.v1"] = "independent-closed-form.v1"
     allowed_tools: Literal["offline_python_stdlib"] = "offline_python_stdlib"
+    absolute_tolerance: float = Field(default=1e-8, ge=0)
     convention: Literal["fixed", "defended"] = "fixed"
 
 

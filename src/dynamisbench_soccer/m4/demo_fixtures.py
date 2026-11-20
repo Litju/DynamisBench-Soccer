@@ -21,6 +21,8 @@ TASKS = (
         method_spec={
             "speed": "piecewise_linear",
             "start": "external_trigger",
+            "method": "linear_speed_integral",
+            "reason": "declared_fractional_start",
             "output": "elapsed_s and first_interval_distance_m",
             "assumptions": "exact time and velocity samples",
         },
@@ -35,6 +37,7 @@ TASKS = (
         inputs={"flight_s": 0.6, "gravity_m_s2": 9.80665, "equal_com_height": True},
         method_spec={
             "allowed_methods": ["flight_time", "velocity_energy"],
+            "reason": "equal_com_height",
             "output": "height_m and takeoff_speed_m_s",
             "assumptions": "constant gravity, equal take-off and landing COM height",
         },
@@ -42,7 +45,7 @@ TASKS = (
         convention="defended",
     ),
     Task(
-        task_id="partial_gates",
+        task_id="gate_course",
         evidence="synthetic",
         estimand="full_course_gate_time",
         unit="s",
@@ -58,12 +61,18 @@ TASKS = (
         method_spec={
             "course_origin_m": 0,
             "elapsed_origin_s": 0,
+            "method": "course_geometry",
+            "refusal_reasons": [
+                "missing_course_origin",
+                "invalid_position_order",
+                "missing_finish",
+            ],
             "assumptions": "positions are cumulative path coordinates",
         },
-        provenance="Hand-built partial-course record with fictional vendor and injected text.",
+        provenance="Hand-built gate observation with fictional record annotations.",
     ),
     Task(
-        task_id="missing_drop_evidence",
+        task_id="drop_jump",
         evidence="synthetic",
         estimand="drop_jump_rsi",
         unit="m/s",
@@ -77,9 +86,11 @@ TASKS = (
         method_spec={
             "required": "independently sourced descending touchdown velocity",
             "rsi_basis": "flight_time",
+            "method": "dj_eligibility",
+            "refusal_reasons": ["missing_independent_touchdown", "inconsistent_touchdown"],
             "assumptions": "contact and flight are diagnostic",
         },
-        provenance="Hand-built missing-evidence fixture. Protocol concepts from RES-736 DJ.",
+        provenance="Hand-built contact observation. Protocol concepts from RES-736 DJ.",
     ),
 )
 

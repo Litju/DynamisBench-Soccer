@@ -28,6 +28,7 @@ formulas. Graders score numerical and methodological criteria independently.
 | Partial gate course | Synthetic | Pass (refusal) | Fail | Fail | Fail |
 | Missing DJ touchdown evidence | Synthetic | Pass (refusal) | Fail | Fail | Fail |
 
+The committed example is `docs/verification/m4-development-demo.json`.
 The output carries per-episode and candidate digests, evidence class, separate
 score dimensions and execution outcome. All scores and artifacts carry the
 development marker. Controls exercise wrong units, swapped estimands, guessed

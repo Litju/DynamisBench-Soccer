@@ -16,6 +16,8 @@ from dynamisbench_soccer.m4.runner import execute, trial
 def test_demo_reproduces_expected_control_counts_without_serializing_answers():
     report = run()
     assert report == run()
+    committed = Path(__file__).resolve().parents[1] / "docs/verification/m4-development-demo.json"
+    assert report == json.loads(committed.read_text())
     assert (report["status"], len(report["episodes"])) == (STAMP, 4)
     for row in report["episodes"]:
         assert row["status"] == STAMP

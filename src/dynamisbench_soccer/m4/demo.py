@@ -41,9 +41,9 @@ elif task["task_id"] == "ballistic_height" and x["equal_com_height"]:
     height = speed**2 / (2 * x["gravity_m_s2"])
     answer.update(method="velocity_energy", reason="equal_com_height",
                   metrics=dict(height_m=height, takeoff_speed_m_s=speed))
-elif task["task_id"] == "partial_gates" and x["positions_m"][0] != 0:
+elif task["task_id"] == "gate_course" and x["positions_m"][0] != 0:
     answer.update(decision="refuse", method="course_geometry", reason="missing_course_origin")
-elif task["task_id"] == "missing_drop_evidence" and x["independent_touchdown_velocity_m_s"] is None:
+elif task["task_id"] == "drop_jump" and x["independent_touchdown_velocity_m_s"] is None:
     answer.update(decision="refuse", method="dj_eligibility",
                   reason="missing_independent_touchdown")
 """
@@ -102,8 +102,9 @@ def run(candidate: bytes | None = None) -> dict[str, Any]:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--candidate", type=Path, help="Python source to run as the candidate")
-    parser.add_argument("--episodes", action="store_true", help="print the public episodes only")
+    mode = parser.add_mutually_exclusive_group()
+    mode.add_argument("--candidate", type=Path, help="Python source to run as the candidate")
+    mode.add_argument("--episodes", action="store_true", help="print the public episodes only")
     args = parser.parse_args()
     if args.episodes:
         value = {"status": STAMP, "episodes": [e.model_dump(mode="json") for e in episodes()]}

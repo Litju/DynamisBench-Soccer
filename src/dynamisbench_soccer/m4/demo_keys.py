@@ -21,8 +21,8 @@ def demo_key(episode: Episode) -> PrivateKey:
             "equal_com_height",
             {"height_m": 0.44129925, "takeoff_speed_m_s": 2.941995},
         ),
-        "partial_gates": ("refuse", "course_geometry", "missing_course_origin", {}),
-        "missing_drop_evidence": ("refuse", "dj_eligibility", "missing_independent_touchdown", {}),
+        "gate_course": ("refuse", "course_geometry", "missing_course_origin", {}),
+        "drop_jump": ("refuse", "dj_eligibility", "missing_independent_touchdown", {}),
     }[episode.task.task_id]
     return PrivateKey(
         episode_sha256=digest(episode.model_dump_json().encode()),
@@ -37,5 +37,5 @@ def demo_key(episode: Episode) -> PrivateKey:
             }
         ),
         alternative_methods=("velocity_energy",) if episode.task.convention == "defended" else (),
-        atol=1e-8,
+        atol=episode.task.absolute_tolerance,
     )

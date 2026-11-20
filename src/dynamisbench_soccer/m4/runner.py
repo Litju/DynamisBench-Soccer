@@ -93,11 +93,14 @@ def execute(episode: Episode, source: bytes) -> tuple[LauncherResult, bytes]:
     """Mount only the candidate program and system runtime. Stream the public episode as stdin."""
     if len(source) > MAX_SOURCE:
         raise ValueError("candidate source exceeds size limit")
+    public = episode.model_dump_json().encode()
+    if len(public) > MAX_SOURCE:
+        raise ValueError("public episode exceeds size limit")
     with tempfile.TemporaryDirectory(prefix="dbs-m4-") as tmp:
         path = Path(tmp) / "candidate.py"
         path.write_bytes(source)
         with tempfile.TemporaryFile() as payload, tempfile.TemporaryFile() as output:
-            payload.write(episode.model_dump_json().encode())
+            payload.write(public)
             payload.seek(0)
             with subprocess.Popen(
                 _command(path),
