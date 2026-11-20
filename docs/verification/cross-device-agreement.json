@@ -6,6 +6,12 @@
   },
   "empirical_device_agreement_studies": 0,
   "engine": "cross-device-agreement.v1",
+  "evidence_class_counts": {
+    "CLOSED_FORM_DEMONSTRATION": 6,
+    "ENGINE_TO_ENGINE": 3,
+    "ENGINE_TO_INDEPENDENT_CLOSED_FORM": 2,
+    "UNSUPPORTED": 1
+  },
   "interchangeable_claims": 0,
   "statement": "analytical study only: idealised observation models of one truth; no measured paired data exist, so empirical agreement and interchangeability are not established",
   "studies": [
@@ -21,6 +27,7 @@
         "force_platform": "time between force dropping below and rising above the contact threshold"
       },
       "empirical_status": "missing_evidence: analytical study only: idealised observation models of one truth; no measured paired data exist, so empirical agreement and interchangeability are not established",
+      "evidence_class": "ENGINE_TO_ENGINE",
       "execution_basis": [
         "engine",
         "engine"
@@ -67,6 +74,98 @@
           0.6526183763058742
         ]
       },
+      "source_evidence": [
+        {
+          "diagnostic_only": false,
+          "estimand": "flight_time (force below contact threshold)",
+          "protocol": "sj",
+          "protocol_eligible": true,
+          "qc_verdict": "accept_with_flags",
+          "source": "force_platform.single",
+          "trial": 0
+        },
+        {
+          "diagnostic_only": false,
+          "estimand": "flight_time (force below contact threshold)",
+          "protocol": "sj",
+          "protocol_eligible": true,
+          "qc_verdict": "accept_with_flags",
+          "source": "force_platform.single",
+          "trial": 1
+        },
+        {
+          "diagnostic_only": false,
+          "estimand": "flight_time (force below contact threshold)",
+          "protocol": "sj",
+          "protocol_eligible": true,
+          "qc_verdict": "accept_with_flags",
+          "source": "force_platform.single",
+          "trial": 2
+        },
+        {
+          "diagnostic_only": false,
+          "estimand": "flight_time (force below contact threshold)",
+          "protocol": "sj",
+          "protocol_eligible": true,
+          "qc_verdict": "accept_with_flags",
+          "source": "force_platform.single",
+          "trial": 3
+        },
+        {
+          "diagnostic_only": false,
+          "estimand": "flight_time (force below contact threshold)",
+          "protocol": "sj",
+          "protocol_eligible": true,
+          "qc_verdict": "accept_with_flags",
+          "source": "force_platform.single",
+          "trial": 4
+        },
+        {
+          "diagnostic_only": false,
+          "estimand": "flight_time (switch-state)",
+          "protocol": "sj",
+          "protocol_eligible": null,
+          "qc_verdict": "unreported",
+          "source": "timing_contact.contact",
+          "trial": 0
+        },
+        {
+          "diagnostic_only": false,
+          "estimand": "flight_time (switch-state)",
+          "protocol": "sj",
+          "protocol_eligible": null,
+          "qc_verdict": "unreported",
+          "source": "timing_contact.contact",
+          "trial": 1
+        },
+        {
+          "diagnostic_only": false,
+          "estimand": "flight_time (switch-state)",
+          "protocol": "sj",
+          "protocol_eligible": null,
+          "qc_verdict": "unreported",
+          "source": "timing_contact.contact",
+          "trial": 2
+        },
+        {
+          "diagnostic_only": false,
+          "estimand": "flight_time (switch-state)",
+          "protocol": "sj",
+          "protocol_eligible": null,
+          "qc_verdict": "unreported",
+          "source": "timing_contact.contact",
+          "trial": 3
+        },
+        {
+          "diagnostic_only": false,
+          "estimand": "flight_time (switch-state)",
+          "protocol": "sj",
+          "protocol_eligible": null,
+          "qc_verdict": "unreported",
+          "source": "timing_contact.contact",
+          "trial": 4
+        }
+      ],
       "statistics": {
         "bias": -0.0005475692514772757,
         "expanded_uncertainty_of_difference": null,
@@ -97,6 +196,7 @@
         "imu": "specific-force magnitude below a declared threshold for a minimum duration"
       },
       "empirical_status": "missing_evidence: analytical study only: idealised observation models of one truth; no measured paired data exist, so empirical agreement and interchangeability are not established",
+      "evidence_class": "ENGINE_TO_ENGINE",
       "execution_basis": [
         "engine",
         "engine"
@@ -136,6 +236,98 @@
           "threshold_6": 0.003747569251477234
         }
       },
+      "source_evidence": [
+        {
+          "diagnostic_only": false,
+          "estimand": "flight_time (force below contact threshold)",
+          "protocol": "sj",
+          "protocol_eligible": true,
+          "qc_verdict": "accept_with_flags",
+          "source": "force_platform.single",
+          "trial": 0
+        },
+        {
+          "diagnostic_only": false,
+          "estimand": "flight_time (force below contact threshold)",
+          "protocol": "sj",
+          "protocol_eligible": true,
+          "qc_verdict": "accept_with_flags",
+          "source": "force_platform.single",
+          "trial": 1
+        },
+        {
+          "diagnostic_only": false,
+          "estimand": "flight_time (force below contact threshold)",
+          "protocol": "sj",
+          "protocol_eligible": true,
+          "qc_verdict": "accept_with_flags",
+          "source": "force_platform.single",
+          "trial": 2
+        },
+        {
+          "diagnostic_only": false,
+          "estimand": "flight_time (force below contact threshold)",
+          "protocol": "sj",
+          "protocol_eligible": true,
+          "qc_verdict": "accept_with_flags",
+          "source": "force_platform.single",
+          "trial": 3
+        },
+        {
+          "diagnostic_only": false,
+          "estimand": "flight_time (force below contact threshold)",
+          "protocol": "sj",
+          "protocol_eligible": true,
+          "qc_verdict": "accept_with_flags",
+          "source": "force_platform.single",
+          "trial": 4
+        },
+        {
+          "diagnostic_only": false,
+          "estimand": "flight_time (specific-force magnitude below threshold)",
+          "protocol": "sj",
+          "protocol_eligible": null,
+          "qc_verdict": "accept",
+          "source": "imu.inertial",
+          "trial": 0
+        },
+        {
+          "diagnostic_only": false,
+          "estimand": "flight_time (specific-force magnitude below threshold)",
+          "protocol": "sj",
+          "protocol_eligible": null,
+          "qc_verdict": "accept",
+          "source": "imu.inertial",
+          "trial": 1
+        },
+        {
+          "diagnostic_only": false,
+          "estimand": "flight_time (specific-force magnitude below threshold)",
+          "protocol": "sj",
+          "protocol_eligible": null,
+          "qc_verdict": "accept",
+          "source": "imu.inertial",
+          "trial": 2
+        },
+        {
+          "diagnostic_only": false,
+          "estimand": "flight_time (specific-force magnitude below threshold)",
+          "protocol": "sj",
+          "protocol_eligible": null,
+          "qc_verdict": "accept",
+          "source": "imu.inertial",
+          "trial": 3
+        },
+        {
+          "diagnostic_only": false,
+          "estimand": "flight_time (specific-force magnitude below threshold)",
+          "protocol": "sj",
+          "protocol_eligible": null,
+          "qc_verdict": "accept",
+          "source": "imu.inertial",
+          "trial": 4
+        }
+      ],
       "statistics": {
         "bias": 0.002400000000000002,
         "expanded_uncertainty_of_difference": null,
@@ -166,6 +358,7 @@
         "load_cell": "uniaxial force at the cell, with rig compliance and line of action unmodelled"
       },
       "empirical_status": "missing_evidence: analytical study only: idealised observation models of one truth; no measured paired data exist, so empirical agreement and interchangeability are not established",
+      "evidence_class": "ENGINE_TO_INDEPENDENT_CLOSED_FORM",
       "execution_basis": [
         "closed_form",
         "engine"
@@ -197,6 +390,44 @@
       "sensitivities": {
         "rig_compliance": "not modelled; delays and attenuates early RFD"
       },
+      "source_evidence": [
+        {
+          "diagnostic_only": false,
+          "estimand": "peak force at the cell",
+          "protocol": "isometric_ramp",
+          "protocol_eligible": null,
+          "qc_verdict": "accept",
+          "source": "load_cell_isometric.load_cell",
+          "trial": 0
+        },
+        {
+          "diagnostic_only": false,
+          "estimand": "peak force at the cell",
+          "protocol": "isometric_ramp",
+          "protocol_eligible": null,
+          "qc_verdict": "accept",
+          "source": "load_cell_isometric.load_cell",
+          "trial": 1
+        },
+        {
+          "diagnostic_only": false,
+          "estimand": "peak force at the cell",
+          "protocol": "isometric_ramp",
+          "protocol_eligible": null,
+          "qc_verdict": "accept",
+          "source": "load_cell_isometric.load_cell",
+          "trial": 2
+        },
+        {
+          "diagnostic_only": false,
+          "estimand": "peak force at the cell",
+          "protocol": "isometric_ramp",
+          "protocol_eligible": null,
+          "qc_verdict": "accept",
+          "source": "load_cell_isometric.load_cell",
+          "trial": 3
+        }
+      ],
       "statistics": {
         "bias": 0.0,
         "expanded_uncertainty_of_difference": null,
@@ -227,6 +458,7 @@
         "radar": "Doppler radial speed (direct measurement of velocity)"
       },
       "empirical_status": "missing_evidence: analytical study only: idealised observation models of one truth; no measured paired data exist, so empirical agreement and interchangeability are not established",
+      "evidence_class": "ENGINE_TO_ENGINE",
       "execution_basis": [
         "engine",
         "engine"
@@ -255,6 +487,62 @@
         "five_point_derivative_noise_sd_m_s_at_256hz_for_0.01m_range_noise": 2.432,
         "note": "range noise of 1 cm at 256 Hz gives ~2.4 m/s of velocity noise before filtering"
       },
+      "source_evidence": [
+        {
+          "diagnostic_only": false,
+          "estimand": "radar_declared_axis_projection_velocity",
+          "protocol": "sprint",
+          "protocol_eligible": null,
+          "qc_verdict": "admitted_by_engine_refusal_gate",
+          "source": "radar_laser.radar",
+          "trial": 0
+        },
+        {
+          "diagnostic_only": false,
+          "estimand": "laser_line_of_sight_range_rate",
+          "protocol": "sprint",
+          "protocol_eligible": null,
+          "qc_verdict": "admitted_by_engine_refusal_gate",
+          "source": "radar_laser.laser",
+          "trial": 0
+        },
+        {
+          "diagnostic_only": false,
+          "estimand": "radar_declared_axis_projection_velocity",
+          "protocol": "sprint",
+          "protocol_eligible": null,
+          "qc_verdict": "admitted_by_engine_refusal_gate",
+          "source": "radar_laser.radar",
+          "trial": 1
+        },
+        {
+          "diagnostic_only": false,
+          "estimand": "laser_line_of_sight_range_rate",
+          "protocol": "sprint",
+          "protocol_eligible": null,
+          "qc_verdict": "admitted_by_engine_refusal_gate",
+          "source": "radar_laser.laser",
+          "trial": 1
+        },
+        {
+          "diagnostic_only": false,
+          "estimand": "radar_declared_axis_projection_velocity",
+          "protocol": "sprint",
+          "protocol_eligible": null,
+          "qc_verdict": "admitted_by_engine_refusal_gate",
+          "source": "radar_laser.radar",
+          "trial": 2
+        },
+        {
+          "diagnostic_only": false,
+          "estimand": "laser_line_of_sight_range_rate",
+          "protocol": "sprint",
+          "protocol_eligible": null,
+          "qc_verdict": "admitted_by_engine_refusal_gate",
+          "source": "radar_laser.laser",
+          "trial": 2
+        }
+      ],
       "statistics": {
         "bias": 6.187405713120597e-06,
         "expanded_uncertainty_of_difference": null,
@@ -285,6 +573,7 @@
         "radar": "Doppler radial speed along the beam"
       },
       "empirical_status": "missing_evidence: analytical study only: idealised observation models of one truth; no measured paired data exist, so empirical agreement and interchangeability are not established",
+      "evidence_class": "CLOSED_FORM_DEMONSTRATION",
       "execution_basis": [
         "closed_form",
         "closed_form"
@@ -345,6 +634,7 @@
           "4": 0.027901930360227922
         }
       },
+      "source_evidence": [],
       "statistics": {
         "bias": -0.09820569406063787,
         "expanded_uncertainty_of_difference": null,
@@ -375,6 +665,7 @@
         "radar": "Doppler radial speed along the beam"
       },
       "empirical_status": "missing_evidence: analytical study only: idealised observation models of one truth; no measured paired data exist, so empirical agreement and interchangeability are not established",
+      "evidence_class": "CLOSED_FORM_DEMONSTRATION",
       "execution_basis": [
         "closed_form",
         "closed_form"
@@ -435,6 +726,7 @@
           "4": 0.013660362114245928
         }
       },
+      "source_evidence": [],
       "statistics": {
         "bias": -0.048080019024827704,
         "expanded_uncertainty_of_difference": null,
@@ -464,6 +756,7 @@
         "radar": "instantaneous Doppler speed at a time"
       },
       "empirical_status": "missing_evidence: analytical study only: idealised observation models of one truth; no measured paired data exist, so empirical agreement and interchangeability are not established",
+      "evidence_class": "CLOSED_FORM_DEMONSTRATION",
       "execution_basis": [
         "closed_form",
         "closed_form"
@@ -499,6 +792,7 @@
       "sensitivities": {
         "note": "average over distance differs from speed at the time midpoint by a curvature term"
       },
+      "source_evidence": [],
       "statistics": {
         "bias": -0.07499854392068625,
         "expanded_uncertainty_of_difference": null,
@@ -529,6 +823,7 @@
         "lpt": "peak attachment displacement above the declared standing start"
       },
       "empirical_status": "missing_evidence: analytical study only: idealised observation models of one truth; no measured paired data exist, so empirical agreement and interchangeability are not established",
+      "evidence_class": "CLOSED_FORM_DEMONSTRATION",
       "execution_basis": [
         "closed_form",
         "closed_form"
@@ -570,6 +865,7 @@
           "takeoff_speed_3.2": 0.48000000000000004
         }
       },
+      "source_evidence": [],
       "statistics": {
         "bias": 0.39,
         "expanded_uncertainty_of_difference": null,
@@ -599,6 +895,7 @@
         "lpt": "change of cable length, equal to vertical displacement only for a vertical cable"
       },
       "empirical_status": "missing_evidence: analytical study only: idealised observation models of one truth; no measured paired data exist, so empirical agreement and interchangeability are not established",
+      "evidence_class": "CLOSED_FORM_DEMONSTRATION",
       "execution_basis": [
         "closed_form",
         "closed_form"
@@ -643,6 +940,7 @@
           "anchor_offset_0_m": 0.0
         }
       },
+      "source_evidence": [],
       "statistics": {
         "bias": -0.17417290916506126,
         "expanded_uncertainty_of_difference": null,
@@ -672,6 +970,7 @@
         "lpt": "vertical mass-model power of the attachment point with declared system mass"
       },
       "empirical_status": "missing_evidence: analytical study only: idealised observation models of one truth; no measured paired data exist, so empirical agreement and interchangeability are not established",
+      "evidence_class": "CLOSED_FORM_DEMONSTRATION",
       "execution_basis": [
         "closed_form",
         "closed_form"
@@ -699,6 +998,7 @@
       "sensitivities": {
         "note": "attachment velocity differs from COM velocity under any joint motion"
       },
+      "source_evidence": [],
       "statistics": {
         "bias": 472.266,
         "expanded_uncertainty_of_difference": null,
@@ -725,6 +1025,7 @@
         "vendor_corrected": "vendor-defined correction (undisclosed algorithm)"
       },
       "empirical_status": "missing_evidence: analytical study only: idealised observation models of one truth; no measured paired data exist, so empirical agreement and interchangeability are not established",
+      "evidence_class": "UNSUPPORTED",
       "execution_basis": [
         "unavailable",
         "unavailable"
@@ -737,6 +1038,7 @@
       "reason": "no vendor-corrected data or algorithm is available; the engine refuses to pool or convert the two bases",
       "right": "nordic_hip.nordic",
       "sensitivities": {},
+      "source_evidence": [],
       "statistics": null
     },
     {
@@ -751,6 +1053,7 @@
         "radar": "time at which integrated Doppler speed reaches the distance"
       },
       "empirical_status": "missing_evidence: analytical study only: idealised observation models of one truth; no measured paired data exist, so empirical agreement and interchangeability are not established",
+      "evidence_class": "ENGINE_TO_INDEPENDENT_CLOSED_FORM",
       "execution_basis": [
         "engine",
         "closed_form"
@@ -778,6 +1081,7 @@
       "sensitivities": {
         "start_offset_effect": "a start offset adds directly to every split"
       },
+      "source_evidence": [],
       "statistics": {
         "bias": -6.123501928930371e-06,
         "expanded_uncertainty_of_difference": null,

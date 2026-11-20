@@ -35,8 +35,17 @@ from dynamisbench_soccer.reference.clocks import DeviceClock
 from dynamisbench_soccer.reference.exporters import export_case
 from dynamisbench_soccer.reference.kinematics import G, Phase, Trajectory, _flight_and_land
 from dynamisbench_soccer.reference.motion_models import IsometricRamp, MonoExponentialSprint
+from dynamisbench_soccer.signals.schema import SignalBundle
 
 ENGINE = "cross-device-agreement.v1"
+EVIDENCE_CLASSES = (
+    "ENGINE_TO_ENGINE",
+    "ENGINE_TO_INDEPENDENT_CLOSED_FORM",
+    "CLOSED_FORM_DEMONSTRATION",
+    "DIAGNOSTIC_ONLY",
+    "UNSUPPORTED",
+    "EMPIRICAL_MEASURED",  # reserved: only qualified measured paired data may earn it
+)
 TAKEOFF_SPEEDS = (2.0, 2.3, 2.6, 2.9, 3.2)
 NOT_EMPIRICAL = (
     "analytical study only: idealised observation models of one truth; no measured paired "
@@ -60,6 +69,8 @@ class Study:
     sensitivities: dict[str, Any] = field(default_factory=dict)
     execution_basis: tuple[str, str] = ("unavailable", "unavailable")
     empirical_status: str = "missing_evidence: " + NOT_EMPIRICAL
+    evidence_class: str = "UNSUPPORTED"
+    source_evidence: list[dict[str, Any]] = field(default_factory=list)
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -70,7 +81,7 @@ def _jump(v: float) -> Trajectory:
         75.0,
         0.0,
         (Phase("quiet", 1.0, 0.0, True), Phase("propel", 0.3, v / 0.3, True), *_flight_and_land(v)),
-        assessment_id="cmj",
+        assessment_id="sj",
     )
 
 
@@ -93,19 +104,92 @@ def _contact_policy(latency: float = 0.0) -> ContactPolicy:
     )
 
 
-def _force_flights() -> tuple[list[float], list[jumps.Assessment]]:
+def _force_flights(*, accepted: bool = True) -> tuple[list[float], list[jumps.Assessment]]:
+    """Force-platform squat-jump assessments of the analytical jumps (no countermovement).
+
+    The exported force has a flat maximum, which the clipping rule (QC-S03) rejects. A
+    sub-newton ripple on loaded samples, far below the contact threshold, gives device-accepted
+    trials. ``accepted=False`` keeps the rejected fixture as the diagnostic negative control.
+    """
     truth, out = [], []
     for v in TAKEOFF_SPEEDS:
         motion = _jump(v)
         truth.append(motion.flight_time_s())
-        device = force_process(
-            export_case("force_platform.single", motion, hz=1000).observation,
-            plates=(PlateSpec(plate=1, assume_field_axes=True),),
-        )
+        observation = export_case("force_platform.single", motion, hz=1000).observation
+        if accepted:
+            force = observation["fz"]
+            ripple = (force > 0) * np.sin(np.arange(len(force))) * 0.1
+            observation = SignalBundle(observation.meta, {**observation.data, "fz": force + ripple})
+        device = force_process(observation, plates=(PlateSpec(plate=1, assume_field_axes=True),))
         out.append(
-            jumps.assess(jumps.JumpSignal.from_engine(device), jumps.JumpSpec(protocol="cmj"))
+            jumps.assess(jumps.JumpSignal.from_engine(device), jumps.JumpSpec(protocol="sj"))
         )
     return truth, out
+
+
+def _force_evidence(index: int, a: jumps.Assessment) -> dict[str, Any]:
+    return {
+        "source": "force_platform.single",
+        "trial": index,
+        "protocol": a.protocol,
+        "protocol_eligible": a.eligible,
+        "qc_verdict": a.device_verdict,
+        "diagnostic_only": a.device_verdict == "reject" or not a.eligible,
+        "estimand": "flight_time (force below contact threshold)",
+    }
+
+
+def _imu_evidence(index: int, result: imu_engine.Processed) -> dict[str, Any]:
+    return {
+        "source": "imu.inertial",
+        "trial": index,
+        "protocol": "sj",
+        "protocol_eligible": None,
+        "qc_verdict": result.verdict,
+        "diagnostic_only": result.verdict == "reject",
+        "estimand": "flight_time (specific-force magnitude below threshold)",
+    }
+
+
+def _contact_evidence(index: int) -> dict[str, Any]:
+    return {
+        "source": "timing_contact.contact",
+        "trial": index,
+        "protocol": "sj",
+        "protocol_eligible": None,
+        "qc_verdict": "unreported",
+        "diagnostic_only": False,
+        "estimand": "flight_time (switch-state)",
+    }
+
+
+def _native_evidence(
+    source: str, trial: int, verdict: str, estimand: str, protocol: str
+) -> dict[str, Any]:
+    return {
+        "source": source,
+        "trial": trial,
+        "protocol": protocol,
+        "protocol_eligible": None,
+        "qc_verdict": verdict,
+        "diagnostic_only": verdict == "reject",
+        "estimand": estimand,
+    }
+
+
+def evidence_class(
+    execution_basis: tuple[str, str], source_evidence: list[dict[str, Any]], unsupported: bool
+) -> str:
+    """What the executed inputs can support; never EMPIRICAL_MEASURED from synthetic data."""
+    if unsupported or "unavailable" in execution_basis:
+        return "UNSUPPORTED"
+    if any(e["diagnostic_only"] for e in source_evidence):
+        return "DIAGNOSTIC_ONLY"
+    if execution_basis == ("engine", "engine"):
+        return "ENGINE_TO_ENGINE"
+    if "engine" in execution_basis:
+        return "ENGINE_TO_INDEPENDENT_CLOSED_FORM"
+    return "CLOSED_FORM_DEMONSTRATION"
 
 
 def _study(
@@ -122,9 +206,13 @@ def _study(
     tolerance: float | None = None,
     sensitivities: dict[str, Any] | None = None,
     unsupported_reason: str | None = None,
+    source_evidence: list[dict[str, Any]] | None = None,
 ) -> Study:
+    evidence = source_evidence or []
+    klass = evidence_class(execution_basis, evidence, unsupported_reason is not None)
+    rejected = klass == "DIAGNOSTIC_ONLY"
     verdict = classify(
-        origin="analytical" if pairs else "none",
+        origin="analytical" if pairs and not rejected else "none",
         definitions_match=definitions_match,
         unsupported_reason=unsupported_reason,
     )
@@ -132,7 +220,7 @@ def _study(
         paired_agreement(
             [p[0] for p in pairs], [p[1] for p in pairs], tolerance=tolerance
         ).to_dict()
-        if len(pairs) >= 3
+        if len(pairs) >= 3 and not rejected
         else None
     )
     return Study(
@@ -149,12 +237,17 @@ def _study(
         assumptions,
         sensitivities or {},
         execution_basis,
+        evidence_class=klass,
+        source_evidence=evidence,
     )
 
 
-def force_vs_contact_flight_time() -> Study:
-    truth, forces = _force_flights()
+def force_vs_contact_flight_time(*, accepted_force: bool = True) -> Study:
+    truth, forces = _force_flights(accepted=accepted_force)
     pairs, latency_runs = [], {}
+    evidence = [_force_evidence(i, fp) for i, fp in enumerate(forces)] + [
+        _contact_evidence(i) for i in range(len(forces))
+    ]
     for v, fp in zip(TAKEOFF_SPEEDS, forces, strict=True):
         edge_case = export_case("timing_contact.contact", _jump(v), clock=DeviceClock(0.0, 0.0))
         c = contact(edge_case.observation, _contact_policy())
@@ -180,17 +273,20 @@ def force_vs_contact_flight_time() -> Study:
         tolerance=0.004,
         assumptions=["rigid ideal switch", "declared symmetric latency", "1 kHz force sampling"],
         sensitivities={"error_vs_truth_s": latency_runs, "truth_flight_time_s": truth},
+        source_evidence=evidence,
     )
 
 
-def force_vs_imu_flight_time() -> Study:
-    truth, forces = _force_flights()
+def force_vs_imu_flight_time(*, accepted_force: bool = True) -> Study:
+    truth, forces = _force_flights(accepted=accepted_force)
     pairs = []
-    for fp, v in zip(forces, TAKEOFF_SPEEDS, strict=True):
+    evidence = [_force_evidence(i, fp) for i, fp in enumerate(forces)]
+    for i, (fp, v) in enumerate(zip(forces, TAKEOFF_SPEEDS, strict=True)):
         result = imu_engine.process(
             export_case("imu.inertial", _jump(v), hz=500).observation,
             imu_engine.ImuSpec(initial_orientation=((1, 0, 0), (0, 1, 0), (0, 0, 1))),
         )
+        evidence.append(_imu_evidence(i, result))
         pairs.append((fp.estimands["flight_time_s"], result.flights[0].duration_s))
     thresholds = {}
     for t in (1.0, 3.0, 6.0):
@@ -219,11 +315,13 @@ def force_vs_imu_flight_time() -> Study:
             "ideal flight specific force of zero",
         ],
         sensitivities={"error_vs_truth_by_threshold_s": thresholds},
+        source_evidence=evidence,
     )
 
 
 def force_vs_load_cell_isometric_force() -> Study:
     pairs = []
+    evidence: list[dict[str, Any]] = []
     for peak in (1500.0, 2000.0, 2500.0, 3000.0):
         ramp = IsometricRamp(peak_n=peak)
         # The plate-side comparator is the ideal vertical force from the closed form.
@@ -235,6 +333,15 @@ def force_vs_load_cell_isometric_force() -> Study:
         plate_equiv = ramp.peak_n  # an ideal plate reads the ramp force exactly
         measured = cell.metrics["peak_force_n"]
         assert measured is not None
+        evidence.append(
+            _native_evidence(
+                "load_cell_isometric.load_cell",
+                len(evidence),
+                cell.verdict,
+                "peak force at the cell",
+                "isometric_ramp",
+            )
+        )
         pairs.append((plate_equiv, measured))
     return _study(
         "force_vs_load_cell_isometric_force",
@@ -251,12 +358,14 @@ def force_vs_load_cell_isometric_force() -> Study:
         tolerance=0.01,
         assumptions=["rigid zero-compliance rig", "perfectly aligned axes", "ideal calibration"],
         sensitivities={"rig_compliance": "not modelled; delays and attenuates early RFD"},
+        source_evidence=evidence,
     )
 
 
 def radar_vs_laser_velocity() -> Study:
     sprint = MonoExponentialSprint()
     pairs = []
+    evidence: list[dict[str, Any]] = []
     for hz in (47, 100, 256):
         radar = radar_laser.process(
             export_case("radar_laser.radar", sprint, hz=hz).observation,
@@ -272,6 +381,17 @@ def radar_vs_laser_velocity() -> Study:
             ),
         )
         pairs.append((radar.peak_velocity_m_s, laser.peak_velocity_m_s))
+        for name, result in (("radar_laser.radar", radar), ("radar_laser.laser", laser)):
+            # The engine refuses unacceptable traces outright, so a returned result was admitted.
+            evidence.append(
+                _native_evidence(
+                    name,
+                    len(pairs) - 1,
+                    "admitted_by_engine_refusal_gate",
+                    result.estimand,
+                    "sprint",
+                )
+            )
     sd = 0.01
     noise_sd = 0.95 * sd * 256  # five-point derivative of white noise: sqrt(130)/12 * sd / dt
     return _study(
@@ -291,6 +411,7 @@ def radar_vs_laser_velocity() -> Study:
             "declared fixed angle for radar",
             "aiming point on the laser axis",
         ],
+        source_evidence=evidence,
         sensitivities={
             "five_point_derivative_noise_sd_m_s_at_256hz_for_0.01m_range_noise": noise_sd,
             "note": "range noise of 1 cm at 256 Hz gives ~2.4 m/s of velocity noise before filtering",  # noqa: E501
@@ -527,10 +648,14 @@ def run_all() -> dict[str, Any]:
     counts: dict[str, int] = {}
     for s in studies:
         counts[s["classification"]] = counts.get(s["classification"], 0) + 1
+    evidence_counts: dict[str, int] = {}
+    for s in studies:
+        evidence_counts[s["evidence_class"]] = evidence_counts.get(s["evidence_class"], 0) + 1
     return {
         "engine": ENGINE,
         "studies": studies,
         "classification_counts": counts,
+        "evidence_class_counts": evidence_counts,
         "interchangeable_claims": 0,
         "empirical_device_agreement_studies": 0,
         "statement": NOT_EMPIRICAL,
