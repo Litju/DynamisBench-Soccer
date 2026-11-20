@@ -17,6 +17,7 @@ from dataclasses import dataclass, field
 from typing import Any
 
 import numpy as np
+from pydantic import ValidationError
 from test_gnss_lps_acquisition import track_case
 from test_lpt_acquisition import LINE, LPT, MOTION, _modify
 from test_timing_gates import DISTANCES, gate_policy
@@ -37,6 +38,7 @@ from dynamisbench_soccer.engines.force_platform import process as force_process
 from dynamisbench_soccer.engines.force_platform_acquisition import PlateSpec
 from dynamisbench_soccer.engines.gnss_lps import ProcessingOptions as TrackOptions
 from dynamisbench_soccer.engines.gnss_lps import process as track_process
+from dynamisbench_soccer.engines.gnss_lps_acquisition import AcquisitionRefusal as TrackRefusal
 from dynamisbench_soccer.engines.load_cell_acquisition import KGF_TO_N, CellSpec, RawRecord
 from dynamisbench_soccer.engines.lpt import MethodSpec as LptMethod
 from dynamisbench_soccer.engines.lpt import process as lpt_process
@@ -116,14 +118,20 @@ def holds(condition: bool, observed: Any, expected: Any, detail: str = "") -> Ou
     return Outcome(bool(condition), observed, expected, None, detail)
 
 
-def refuses(fn: Callable[[], object], match: str) -> Outcome:
+def refuses(fn: Callable[[], object], expected_type: type[Exception], match: str) -> Outcome:
+    if not match.strip():
+        raise ValueError("a meaningful refusal reason is required")
+    expected = f"{expected_type.__name__} matching {match!r}"
     try:
         fn()
-    except (ValueError, EventRefusal, AcquisitionRefusal) as exc:
+    except ValueError as exc:
         return Outcome(
-            match.lower() in str(exc).lower(), str(exc)[:160], f"refusal matching {match!r}", None
+            type(exc) is expected_type and match.lower() in str(exc).lower(),
+            f"{type(exc).__name__}: {str(exc)[:160]}",
+            expected,
+            None,
         )
-    return Outcome(False, "no refusal", f"refusal matching {match!r}", None)
+    return Outcome(False, "no refusal", expected, None)
 
 
 # ---------------------------------------------------------------- force platforms
@@ -250,7 +258,7 @@ def _fp_elig() -> Outcome:
 )
 def _fp_rate() -> Outcome:
     obs = export_case("force_platform.single", cmj(), hz=250).observation
-    return refuses(lambda: force_process(obs, plates=PLATE), "at least 500")
+    return refuses(lambda: force_process(obs, plates=PLATE), ValueError, "at least 500")
 
 
 @case(
@@ -714,7 +722,7 @@ def _nordic_side() -> Outcome:
             nordic.SideDeclaration(channel="force_right", side="left"),
         )
     )
-    return refuses(lambda: nordic.process(bundle, swapped), "side contradiction")
+    return refuses(lambda: nordic.process(bundle, swapped), ValueError, "side contradiction")
 
 
 @case(
@@ -770,7 +778,9 @@ def _nordic_basis() -> Outcome:
     a = nordic.process(bundle, _nordic_spec())
     b = nordic.process(bundle, _nordic_spec(force_basis="vendor_corrected"))
     return refuses(
-        lambda: isometric.assess_nordic([a, b], isometric.NordicSpec()), "cannot be combined"
+        lambda: isometric.assess_nordic([a, b], isometric.NordicSpec()),
+        ValueError,
+        "cannot be combined",
     )
 
 
@@ -817,7 +827,7 @@ def _hip_geometry() -> Outcome:
         force_basis="raw_calibrated",
         sides=(nordic.SideDeclaration(channel="force", side="unilateral"),),
     )
-    return refuses(lambda: nordic.process(stripped, spec), "hip flexion angle")
+    return refuses(lambda: nordic.process(stripped, spec), ValueError, "hip flexion angle")
 
 
 # ---------------------------------------------------------------- timing gates and contact
@@ -905,7 +915,7 @@ def _gates_flying() -> Outcome:
     refusal="segment averages",
 )
 def _gates_refusal() -> Outcome:
-    return refuses(lambda: sprint.instantaneous_velocity("gates"), "segment averages")
+    return refuses(lambda: sprint.instantaneous_velocity("gates"), ValueError, "segment averages")
 
 
 for _kind in (EventKind.MISSING, EventKind.DUPLICATE, EventKind.OUT_OF_ORDER):
@@ -914,7 +924,13 @@ for _kind in (EventKind.MISSING, EventKind.DUPLICATE, EventKind.OUT_OF_ORDER):
         def run() -> Outcome:
             obs = export_case("timing_contact.gates", SPRINT).observation
             return refuses(
-                lambda: gate_sprint([inject(obs, EventFault(kind, index=1))], gate_policy()), ""
+                lambda: gate_sprint([inject(obs, EventFault(kind, index=1))], gate_policy()),
+                EventRefusal,
+                {
+                    EventKind.MISSING: "missing gate 2",
+                    EventKind.DUPLICATE: "duplicate or ambiguous beam trigger",
+                    EventKind.OUT_OF_ORDER: "out-of-order native timestamps",
+                }[kind],
             )
 
         return run
@@ -982,7 +998,8 @@ def _contact_dup() -> Outcome:
     obs = export_case("timing_contact.contact", cmj(), clock=DeviceClock(0.0, 0.0)).observation
     return refuses(
         lambda: contact(inject(obs, EventFault(EventKind.DUPLICATE, index=1)), _contact_policy()),
-        "",
+        EventRefusal,
+        "repeated contact state without an intervening edge",
     )
 
 
@@ -1042,18 +1059,22 @@ def _radar_fv() -> Outcome:
 @case(
     "radar_laser",
     "radar_laser.radar",
-    "manufacturer_processed_channel_without_cosine_qualification_refuses",
+    "manufacturer_processed_channel_without_stage_provenance_refuses",
     "engine refusal",
     rate_hz=100,
     calibration_geometry="vendor-processed stage",
-    refusal="stage not qualified",
+    refusal="stage provenance missing",
 )
 def _radar_stage() -> Outcome:
     obs = export_case("radar_laser.radar", SPRINT, hz=100).observation
     options = radar_laser.ProcessingOptions(
         channel_stage=ChannelStage.MANUFACTURER_PROCESSED, correction_method="declared_fixed_angle"
     )
-    return refuses(lambda: radar_laser.process(obs, options), "")
+    return refuses(
+        lambda: radar_laser.process(obs, options),
+        AcquisitionRefusal,
+        "manufacturer-processed stage requires matching source processing provenance",
+    )
 
 
 for _method in ("central", "five_point"):
@@ -1158,12 +1179,12 @@ for _kind, _hz in (("gnss", 18), ("lps", 25)):
             jumped = inject(
                 built.observation, PositionFault(PositionKind.JUMP, index=10, shift_m=(5.0, 0, 0))
             )
-            try:
-                result = track_process(jumped, declaration)
-            except (ValueError, AcquisitionRefusal) as exc:
-                return Outcome(True, str(exc)[:120], "refusal or reported discontinuity", None)
-            peak = result.sensitivity.native.horizontal_positional_speed_m_s
-            return holds(peak > 20, peak, "discontinuity visible in peak speed")
+            bound = declaration.model_copy(update={"bundle_id": jumped.meta.bundle_id})
+            return refuses(
+                lambda: track_process(jumped, bound),
+                TrackRefusal,
+                "position jump exceeds declared 3D step-speed limit",
+            )
 
         return run
 
@@ -1354,7 +1375,8 @@ def _cod_path() -> Outcome:
                 "source": "radar",
             }
         ),
-        "declared_path",
+        ValidationError,
+        "String should have at least 3 characters",
     )
 
 

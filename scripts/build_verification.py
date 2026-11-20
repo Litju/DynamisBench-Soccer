@@ -102,8 +102,6 @@ def markdown(p: dict, agreement: dict) -> str:
         f"* Ledger structural problems: {len(gate['structural_problems'])}.",
         "* ENGINEERING_VERIFIED requires dimensions A-M and O verified, an independent reference",
         "  and no open blockers. N belongs to M4/M5 and independent scientific sign-off to M8.",
-        "* No dimension is rated `verified` in the ledger because A-C need audited native device records,",
-        "  measured calibration/geometry and clock characterisation, none of which exist in this repository.",
         "",
         "## 2. Subfamily states, blockers, owners and required experiments",
         "",
@@ -236,6 +234,9 @@ def main() -> int:
     payload, text = build()
     rendered = json.dumps(payload, indent=2, sort_keys=True, allow_nan=False) + "\n"
     if args.check:
+        if failed := payload["case_totals"]["failed"]:
+            print(f"FAIL verification matrix: {', '.join(failed)}", file=sys.stderr)
+            return 1
         committed = json.loads(JSON_PATH.read_text()) if JSON_PATH.exists() else None
         if committed != json.loads(rendered) or not MD_PATH.exists() or MD_PATH.read_text() != text:
             print("FAIL stale verification report", file=sys.stderr)

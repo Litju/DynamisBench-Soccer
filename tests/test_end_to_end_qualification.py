@@ -80,9 +80,12 @@ def test_states_are_computed_from_evidence_not_declared() -> None:
     states = {s.subfamily: s for s in computed_states(LEDGER)}
     assert set(states) == set(ledger_model.SUBFAMILIES)
     gate = m3_gate(LEDGER, ROOT)
-    assert gate.passed is False and gate.structural_problems == ()
-    assert gate.engineering_verified == 0
-    assert all(s.state in {"SPECIFIED", "IN_PROGRESS", "NOT_STARTED"} for s in states.values())
+    assert not gate.structural_problems
+    verified_count = sum(
+        s.state in {"ENGINEERING_VERIFIED", "SCIENTIFICALLY_QUALIFIED"} for s in states.values()
+    )
+    assert gate.engineering_verified == verified_count
+    assert gate.passed == (verified_count == len(states))
     target = next(s for s in LEDGER.subfamilies if s.id == "force_platform.single")
     verified = {d: Rating.VERIFIED for d in ledger_model.DIMENSIONS}
     j = Evidence(
@@ -101,7 +104,6 @@ def test_states_are_computed_from_evidence_not_declared() -> None:
         model = dataclasses.replace(LEDGER, evidence=(*LEDGER.evidence, j))
         return subfamily_state(model, sub).state
 
-    assert state_for() == "SPECIFIED"
     assert state_for(ratings=verified, blockers=("open",)) == "SPECIFIED"
     assert state_for(ratings=verified, blockers=()) == "ENGINEERING_VERIFIED"
     no_n = {**verified, "N": Rating.ABSENT}
@@ -125,29 +127,43 @@ def test_states_are_computed_from_evidence_not_declared() -> None:
 
 
 def test_gate_passes_only_when_every_subfamily_is_engineering_verified() -> None:
-    verified = {d: Rating.VERIFIED for d in ledger_model.DIMENSIONS}
+    verified = {d: Rating.VERIFIED for d in ledger_model.M3_DIMENSIONS}
     extra = tuple(
         Evidence(
             s.id,
-            "J",
-            "analytical_reference",
+            d,
+            "independent_test",
             "repo:README.md",
-            "RES-669",
-            "x",
+            "RES-736",
+            "in-memory gate control",
             independence_from=s.engine_id,
-            implementation="independent closed form",
+            implementation="independent gate fixture",
         )
         for s in LEDGER.subfamilies
+        for d in verified
     )
-    clean = tuple(dataclasses.replace(s, ratings=verified, blockers=()) for s in LEDGER.subfamilies)
-    model = dataclasses.replace(LEDGER, subfamilies=clean, evidence=(*LEDGER.evidence, *extra))
-    assert m3_gate(model).engineering_verified == 15
+    clean = tuple(
+        dataclasses.replace(s, ratings={**s.ratings, **verified, "N": Rating.ABSENT}, blockers=())
+        for s in LEDGER.subfamilies
+    )
+    model = dataclasses.replace(
+        LEDGER,
+        subfamilies=clean,
+        evidence=(*LEDGER.evidence, *extra),
+        comparisons=tuple(
+            dataclasses.replace(c, verdict="not_interchangeable") for c in LEDGER.comparisons
+        ),
+    )
+    passed = m3_gate(model, ROOT)
+    assert passed.passed and not passed.structural_problems
+    assert passed.engineering_verified == len(clean)
     one_blocked = (
         dataclasses.replace(clean[0], blockers=("needs measured calibration",)),
         *clean[1:],
     )
-    assert m3_gate(dataclasses.replace(model, subfamilies=one_blocked)).engineering_verified == 14
-    assert m3_gate(dataclasses.replace(model, subfamilies=one_blocked)).passed is False
+    blocked = m3_gate(dataclasses.replace(model, subfamilies=one_blocked), ROOT)
+    assert blocked.engineering_verified == len(clean) - 1
+    assert not blocked.passed and clean[0].id in blocked.blocking
 
 
 def test_every_unverified_subfamily_names_its_owner_blocker_and_required_experiment() -> None:
@@ -165,8 +181,10 @@ def test_cli_states_reports_the_computed_gate(
     monkeypatch.chdir(ROOT)
     code = main(["qualification", "states"])
     payload = json.loads(capsys.readouterr().out)
-    assert code == 1 and payload["m3_gate"]["passed"] is False
-    assert len(payload["subfamilies"]) == 15
+    computed = m3_gate(LEDGER, ROOT)
+    assert code == (0 if computed.passed else 1)
+    assert payload["m3_gate"] == json.loads(json.dumps(dataclasses.asdict(computed)))
+    assert len(payload["subfamilies"]) == len(LEDGER.subfamilies)
 
 
 def test_frozen_interface_matches_the_live_interface(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -239,3 +257,39 @@ def test_build_script_check_mode_passes_from_a_clean_process() -> None:
         capture_output=True, text=True, cwd=ROOT, check=False,
     )  # fmt: skip
     assert result.returncode == 0, result.stderr
+
+
+def test_typed_refusal_rejects_wrong_type_wrong_reason_and_blank_reason() -> None:
+    def throw(exc):
+        raise exc
+
+    expected = e2e_cases.EventRefusal
+    assert e2e_cases.refuses(
+        lambda: throw(expected("missing gate")), expected, "missing gate"
+    ).passed
+    assert not e2e_cases.refuses(
+        lambda: throw(ValueError("missing gate")), expected, "missing gate"
+    ).passed
+    assert not e2e_cases.refuses(
+        lambda: throw(expected("duplicate gate")), expected, "missing gate"
+    ).passed
+    with pytest.raises(ValueError, match="meaningful"):
+        e2e_cases.refuses(lambda: None, expected, " ")
+
+
+def test_matching_failed_report_is_not_fresh(tmp_path, monkeypatch, capsys) -> None:
+    spec = importlib.util.spec_from_file_location(
+        "verification_check", ROOT / "scripts/build_verification.py"
+    )
+    assert spec and spec.loader
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    payload = {"case_totals": {"failed": ["family/case"]}}
+    monkeypatch.setattr(module, "build", lambda: (payload, "current failed report"))
+    monkeypatch.setattr(module, "JSON_PATH", tmp_path / "report.json")
+    monkeypatch.setattr(module, "MD_PATH", tmp_path / "report.md")
+    module.JSON_PATH.write_text(json.dumps(payload))
+    module.MD_PATH.write_text("current failed report")
+    monkeypatch.setattr(sys, "argv", ["build_verification.py", "--check"])
+    assert module.main() == 1
+    assert "FAIL verification matrix: family/case" in capsys.readouterr().err

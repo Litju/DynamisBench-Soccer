@@ -279,9 +279,9 @@
       "case": "sampling_below_500hz_is_refused",
       "chain": "native force -> engine refusal",
       "detail": "",
-      "expected": "refusal matching 'at least 500'",
+      "expected": "ValueError matching 'at least 500'",
       "family": "force_platform",
-      "observed": "force-platform processing requires at least 500 reference samples/s",
+      "observed": "ValueError: force-platform processing requires at least 500 reference samples/s",
       "passed": true,
       "subfamily": "force_platform.single",
       "tolerance": null
@@ -770,9 +770,9 @@
       "case": "side_contradiction_is_refused",
       "chain": "engine refusal",
       "detail": "",
-      "expected": "refusal matching 'side contradiction'",
+      "expected": "ValueError matching 'side contradiction'",
       "family": "nordic_hip",
-      "observed": "side contradiction on 'force_left': bundle says left, declaration says right",
+      "observed": "ValueError: side contradiction on 'force_left': bundle says left, declaration says right",
       "passed": true,
       "subfamily": "nordic_hip.nordic",
       "tolerance": null
@@ -820,9 +820,9 @@
       "case": "raw_and_vendor_corrected_trials_cannot_be_pooled",
       "chain": "engine -> assessment refusal",
       "detail": "",
-      "expected": "refusal matching 'cannot be combined'",
+      "expected": "ValueError matching 'cannot be combined'",
       "family": "nordic_hip",
-      "observed": "raw-calibrated and vendor-corrected trials cannot be combined",
+      "observed": "ValueError: raw-calibrated and vendor-corrected trials cannot be combined",
       "passed": true,
       "subfamily": "nordic_hip.nordic",
       "tolerance": null
@@ -852,9 +852,9 @@
       "case": "hip_squeeze_refused_without_hip_flexion",
       "chain": "engine refusal",
       "detail": "",
-      "expected": "refusal matching 'hip flexion angle'",
+      "expected": "ValueError matching 'hip flexion angle'",
       "family": "nordic_hip",
-      "observed": "hip squeeze refused: hip flexion angle of the protocol is undeclared",
+      "observed": "ValueError: hip squeeze refused: hip flexion angle of the protocol is undeclared",
       "passed": true,
       "subfamily": "nordic_hip.hip",
       "tolerance": null
@@ -913,9 +913,9 @@
       "case": "gates_never_yield_instantaneous_velocity",
       "chain": "assessment refusal",
       "detail": "",
-      "expected": "refusal matching 'segment averages'",
+      "expected": "ValueError matching 'segment averages'",
       "family": "timing_contact",
-      "observed": "gates yields segment averages only; instantaneous velocity is not manufactured",
+      "observed": "ValueError: gates yields segment averages only; instantaneous velocity is not manufactured",
       "passed": true,
       "subfamily": "timing_contact.gates",
       "tolerance": null
@@ -928,9 +928,9 @@
       "case": "adversarial_missing_event",
       "chain": "corruption -> engine refusal",
       "detail": "",
-      "expected": "refusal matching ''",
+      "expected": "EventRefusal matching 'missing gate 2'",
       "family": "timing_contact",
-      "observed": "missing gate 2",
+      "observed": "EventRefusal: missing gate 2",
       "passed": true,
       "subfamily": "timing_contact.gates",
       "tolerance": null
@@ -943,9 +943,9 @@
       "case": "adversarial_duplicate_event",
       "chain": "corruption -> engine refusal",
       "detail": "",
-      "expected": "refusal matching ''",
+      "expected": "EventRefusal matching 'duplicate or ambiguous beam trigger'",
       "family": "timing_contact",
-      "observed": "gate 2: duplicate or ambiguous beam trigger",
+      "observed": "EventRefusal: gate 2: duplicate or ambiguous beam trigger",
       "passed": true,
       "subfamily": "timing_contact.gates",
       "tolerance": null
@@ -958,9 +958,9 @@
       "case": "adversarial_out_of_order_event",
       "chain": "corruption -> engine refusal",
       "detail": "",
-      "expected": "refusal matching ''",
+      "expected": "EventRefusal matching 'out-of-order native timestamps'",
       "family": "timing_contact",
-      "observed": "res669-corrupted-512e88dd674ada50ea732fa8: out-of-order native timestamps",
+      "observed": "EventRefusal: res669-corrupted-512e88dd674ada50ea732fa8: out-of-order native timestamps",
       "passed": true,
       "subfamily": "timing_contact.gates",
       "tolerance": null
@@ -1003,9 +1003,9 @@
       "case": "duplicate_switch_event_is_refused",
       "chain": "corruption -> engine refusal",
       "detail": "",
-      "expected": "refusal matching ''",
+      "expected": "EventRefusal matching 'repeated contact state without an intervening edge'",
       "family": "timing_contact",
-      "observed": "repeated contact state without an intervening edge at row 2",
+      "observed": "EventRefusal: repeated contact state without an intervening edge at row 2",
       "passed": true,
       "subfamily": "timing_contact.contact",
       "tolerance": null
@@ -1077,14 +1077,14 @@
       "axes": {
         "calibration_geometry": "vendor-processed stage",
         "rate_hz": "100",
-        "refusal": "stage not qualified"
+        "refusal": "stage provenance missing"
       },
-      "case": "manufacturer_processed_channel_without_cosine_qualification_refuses",
+      "case": "manufacturer_processed_channel_without_stage_provenance_refuses",
       "chain": "engine refusal",
       "detail": "",
-      "expected": "refusal matching ''",
+      "expected": "AcquisitionRefusal matching 'manufacturer-processed stage requires matching source processing provenance'",
       "family": "radar_laser",
-      "observed": "manufacturer-processed stage requires matching source processing provenance",
+      "observed": "AcquisitionRefusal: manufacturer-processed stage requires matching source processing provenance",
       "passed": true,
       "subfamily": "radar_laser.radar",
       "tolerance": null
@@ -1208,9 +1208,9 @@
       "case": "position_jump_is_not_hidden",
       "chain": "corruption -> engine",
       "detail": "",
-      "expected": "refusal or reported discontinuity",
+      "expected": "AcquisitionRefusal matching 'position jump exceeds declared 3D step-speed limit'",
       "family": "gnss_lps",
-      "observed": "acquisition declaration belongs to a different bundle",
+      "observed": "AcquisitionRefusal: position jump exceeds declared 3D step-speed limit",
       "passed": true,
       "subfamily": "gnss_lps.gnss",
       "tolerance": null
@@ -1223,9 +1223,9 @@
       "case": "position_jump_is_not_hidden",
       "chain": "corruption -> engine",
       "detail": "",
-      "expected": "refusal or reported discontinuity",
+      "expected": "AcquisitionRefusal matching 'position jump exceeds declared 3D step-speed limit'",
       "family": "gnss_lps",
-      "observed": "acquisition declaration belongs to a different bundle",
+      "observed": "AcquisitionRefusal: position jump exceeds declared 3D step-speed limit",
       "passed": true,
       "subfamily": "gnss_lps.lps",
       "tolerance": null
@@ -1387,9 +1387,9 @@
       "case": "cod_trace_needs_a_declared_path",
       "chain": "engine -> assessment refusal",
       "detail": "",
-      "expected": "refusal matching 'declared_path'",
+      "expected": "ValidationError matching 'String should have at least 3 characters'",
       "family": "radar_laser",
-      "observed": "1 validation error for CodSpec\ndeclared_path\n  String should have at least 3 characters [type=string_too_short, input_value='', input_type=str]\n    For further ",
+      "observed": "ValidationError: 1 validation error for CodSpec\ndeclared_path\n  String should have at least 3 characters [type=string_too_short, input_value='', input_type=str]\n    For further ",
       "passed": true,
       "subfamily": "radar_laser.radar",
       "tolerance": null
@@ -1612,7 +1612,7 @@
       ],
       "refusal": [
         "declared path required",
-        "stage not qualified"
+        "stage provenance missing"
       ]
     },
     "timing_contact": {
