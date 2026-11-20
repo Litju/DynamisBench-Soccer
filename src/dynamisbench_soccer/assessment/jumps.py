@@ -499,6 +499,45 @@ def assess(
 __all__ = ["Assessment", "JumpSignal", "JumpSpec", "asdict", "assess"]
 
 
+def rj_10_5_selection(
+    assessment: Assessment, *, n_jumps: int = 10, n_best: int = 5
+) -> dict[str, object]:
+    """10/5 repeated-jump summaries (RJ-003): best-5-of-10 mean RSI and peak single RSI.
+
+    Both are reported as named variants. The protocol needs exactly ``n_jumps`` valid hops
+    from an eligible, device-accepted assessment; anything else is refused, never padded or
+    truncated, and a rejected source never yields an accepted summary.
+    """
+    if assessment.protocol != "repeated_hops":
+        raise ValueError(
+            f"10/5 selection needs a repeated_hops assessment, not {assessment.protocol}"
+        )
+    if assessment.device_verdict == "reject" or not assessment.eligible:
+        raise ValueError("assessment is ineligible or device-rejected: no accepted 10/5 summary")
+    hops_ = assessment.contacts
+    if len(hops_) != n_jumps:
+        raise ValueError(f"10/5 requires exactly {n_jumps} valid hops, found {len(hops_)}")
+    order = sorted(range(len(hops_)), key=lambda i: -hops_[i]["rsi_m_s"])
+    best = sorted(order[:n_best])
+    return {
+        "protocol": "rj_10_5",
+        "n_hops": len(hops_),
+        "best_5_of_10_mean": {
+            "rsi_m_s": float(np.mean([hops_[i]["rsi_m_s"] for i in best])),
+            "selected_hop_indices": best,
+        },
+        "peak_single_rsi": {
+            "rsi_m_s": float(hops_[order[0]]["rsi_m_s"]),
+            "selected_hop_indices": [order[0]],
+        },
+        "all_hops_mean_rsi_m_s": float(np.mean([h["rsi_m_s"] for h in hops_])),
+        "rsi_height_basis": "flight_time",  # per-hop RSI is always flight-time based
+        "contact_time_criterion": "not applied (RJ-003 variants rank by RSI only)",
+        "device_verdict": assessment.device_verdict,
+        "variants_are_not_interchangeable": True,
+    }
+
+
 @dataclass(frozen=True)
 class SourceEstimate:
     """One device's flight-time estimand, labelled with its own definition and resolution."""
@@ -511,10 +550,28 @@ class SourceEstimate:
     height_flight_time_m: float
     height_low_m: float
     height_high_m: float
+    # Eligibility and QC context travels with the number (RES-671); the comparison gate
+    # refuses rejected or ineligible estimates even if diagnostic_only is cleared.
+    qc_verdict: str = "unreported"
+    protocol: str | None = None
+    protocol_eligible: bool | None = None
+    diagnostic_only: bool = False
+    basis: str = ""
+    uncertainty_assumptions: str = "resolution interval only; not a full uncertainty budget"
 
 
 def _flight_estimate(
-    source: str, definition: str, value: float, low: float, high: float
+    source: str,
+    definition: str,
+    value: float,
+    low: float,
+    high: float,
+    *,
+    qc_verdict: str = "unreported",
+    protocol: str | None = None,
+    protocol_eligible: bool | None = None,
+    diagnostic_only: bool = False,
+    basis: str = "",
 ) -> SourceEstimate:
     if not all(math.isfinite(v) for v in (value, low, high)) or not 0 < low <= value <= high:
         raise ValueError("flight time and its bounds must be finite, positive and ordered")
@@ -527,15 +584,35 @@ def _flight_estimate(
         _height_flight(value),
         _height_flight(low),
         _height_flight(high),
+        qc_verdict=qc_verdict,
+        protocol=protocol,
+        protocol_eligible=protocol_eligible,
+        diagnostic_only=diagnostic_only,
+        basis=basis,
     )
 
 
-def contact_system_estimates(result: object) -> list[SourceEstimate]:
+def _refuse_rejected(verdict: str, what: str, allow_diagnostic: bool) -> bool:
+    """True when the source is rejected and the caller explicitly accepted diagnostics."""
+    if verdict != "reject":
+        return False
+    if not allow_diagnostic:
+        raise ValueError(
+            f"{what} was rejected by QC: no accepted estimate (diagnostic opt-in only)"
+        )
+    return True
+
+
+def contact_system_estimates(
+    result: object, *, allow_diagnostic: bool = False
+) -> list[SourceEstimate]:
     """Flight-time heights from a contact-system result (switch-state flight time)."""
     flights = getattr(result, "flights", None)
     if flights is None:
         raise ValueError("expected a contact-system result")
     definition = getattr(result, "estimand", "contact_system_switch_flight_time")
+    verdict = str(getattr(result, "verdict", "unreported"))
+    diagnostic = _refuse_rejected(verdict, "contact-system result", allow_diagnostic)
     return [
         _flight_estimate(
             f"contact_system:{getattr(result, 'system', 'unknown')}",
@@ -543,16 +620,21 @@ def contact_system_estimates(result: object) -> list[SourceEstimate]:
             f.flight_s.value,
             f.flight_s.low,
             f.flight_s.high,
+            qc_verdict=verdict,
+            diagnostic_only=diagnostic,
+            basis=f"trigger: {getattr(result, 'trigger_definition', 'unreported')}",
         )
         for f in flights
     ]
 
 
-def imu_estimates(result: object) -> list[SourceEstimate]:
+def imu_estimates(result: object, *, allow_diagnostic: bool = False) -> list[SourceEstimate]:
     """Flight-time heights from IMU specific-force-magnitude flights."""
     flights = getattr(result, "flights", None)
     if flights is None:
         raise ValueError("expected an IMU result")
+    verdict = str(getattr(result, "verdict", "unreported"))
+    diagnostic = _refuse_rejected(verdict, "IMU result", allow_diagnostic)
     return [
         _flight_estimate(
             "imu:specific_force_magnitude",
@@ -560,13 +642,31 @@ def imu_estimates(result: object) -> list[SourceEstimate]:
             f.duration_s,
             max(f.duration_s - f.resolution_s, 1e-9),
             f.duration_s + f.resolution_s,
+            qc_verdict=verdict,
+            diagnostic_only=diagnostic,
+            basis="IMU specific-force magnitude; mounting site and threshold dependent",
         )
         for f in flights
     ]
 
 
-def force_platform_estimate(assessment: Assessment) -> SourceEstimate:
-    value = assessment.estimands.get("flight_time_s")
+def force_platform_estimate(
+    assessment: Assessment, *, allow_diagnostic: bool = False
+) -> SourceEstimate:
+    """Flight-time estimate that keeps the assessment's QC verdict and protocol eligibility.
+
+    An ineligible or device-rejected assessment is refused unless the caller opts into a
+    diagnostic estimate, which is then flagged ``diagnostic_only`` and cannot be compared.
+    """
+    diagnostic = assessment.device_verdict == "reject" or not assessment.eligible
+    if diagnostic and not allow_diagnostic:
+        raise ValueError(
+            f"{assessment.protocol} assessment is ineligible or device-rejected: "
+            "no accepted flight-time estimate (diagnostic opt-in only)"
+        )
+    held = assessment.diagnostics.get("estimands", {})
+    estimands: dict[str, float] = assessment.estimands or (held if isinstance(held, dict) else {})
+    value = estimands.get("flight_time_s")
     if value is None:
         raise ValueError("force-platform assessment has no flight time")
     resolution = float(assessment.uncertainty["flight_time_resolution_s"])  # type: ignore[arg-type]
@@ -576,11 +676,33 @@ def force_platform_estimate(assessment: Assessment) -> SourceEstimate:
         value,
         max(value - resolution, 1e-9),
         value + resolution,
+        qc_verdict=assessment.device_verdict,
+        protocol=assessment.protocol,
+        protocol_eligible=assessment.eligible,
+        diagnostic_only=diagnostic,
+        basis="force-platform vertical force below the declared contact threshold",
     )
 
 
-def compare_sources(estimates: list[SourceEstimate]) -> dict[str, object]:
-    """Pairwise numerical differences; interval overlap is NOT interchangeability."""
+def compare_sources(
+    estimates: list[SourceEstimate], *, allow_diagnostic: bool = False
+) -> dict[str, object]:
+    """Pairwise numerical differences; interval overlap is NOT interchangeability.
+
+    Diagnostic-only estimates are refused unless explicitly allowed, and then mark every pair
+    they enter. Estimates from different declared protocols are never compared.
+    """
+    if not allow_diagnostic and any(
+        e.diagnostic_only or e.qc_verdict == "reject" or e.protocol_eligible is False
+        for e in estimates
+    ):
+        raise ValueError(
+            "diagnostic-only, QC-rejected or protocol-ineligible estimates cannot enter an "
+            "accepted comparison"
+        )
+    declared = {e.protocol for e in estimates if e.protocol is not None}
+    if len(declared) > 1:
+        raise ValueError(f"estimates come from different protocols: {sorted(declared)}")
     pairs = []
     for i, a in enumerate(estimates):
         for b in estimates[i + 1 :]:
@@ -595,6 +717,8 @@ def compare_sources(estimates: list[SourceEstimate]) -> dict[str, object]:
                     "flight_time_difference_s": b.flight_time_s - a.flight_time_s,
                     "height_difference_m": b.height_flight_time_m - a.height_flight_time_m,
                     "resolution_intervals_overlap": overlap,
+                    "diagnostic_only": a.diagnostic_only or b.diagnostic_only,
+                    "qc_verdicts": {a.source: a.qc_verdict, b.source: b.qc_verdict},
                     "empirical_agreement": "not established (RES-703)",
                     "scope": "single-trial analytical/model comparison; not an agreement study",
                 }
@@ -616,9 +740,11 @@ class LptHeights:
     peak_velocity_m_s: float
     definitions: dict[str, str]
     refusal: str | None = None
+    qc_verdict: str = "unreported"
+    diagnostic_only: bool = False
 
 
-def lpt_estimates(report: dict[str, object]) -> LptHeights:
+def lpt_estimates(report: dict[str, object], *, allow_diagnostic: bool = False) -> LptHeights:
     """Attachment-motion heights from an LPT/encoder engine report (RES-695).
 
     Refused for cable-length-only reports, because cable length is not vertical displacement.
@@ -629,6 +755,8 @@ def lpt_estimates(report: dict[str, object]) -> LptHeights:
         raise ValueError("expected a processed LPT report with motion series")
     if estimand == "cable_displacement":
         raise ValueError("cable displacement is not vertical displacement: jump heights refused")
+    verdict = str(report.get("verdict", "unreported"))
+    diagnostic = _refuse_rejected(verdict, "LPT report", allow_diagnostic)
     displacement = np.asarray(motion["displacement_m"], dtype=np.float64)
     velocity = np.asarray(motion["velocity_m_s"], dtype=np.float64)
     peak_v = float(velocity.max())
@@ -637,6 +765,8 @@ def lpt_estimates(report: dict[str, object]) -> LptHeights:
         height_peak_displacement_above_start_m=float(displacement.max() - displacement[0]),
         height_peak_velocity_m=_height_velocity(peak_v),
         peak_velocity_m_s=peak_v,
+        qc_verdict=verdict,
+        diagnostic_only=diagnostic,
         definitions={
             "height_peak_displacement_above_start_m": "peak attachment displacement minus the "
             "first sample (includes any rise during the push-off)",

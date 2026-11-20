@@ -53,6 +53,16 @@ def _signal(trajectory, weigh: bool = False, **method: object) -> JumpSignal:
     return JumpSignal.from_engine(result)
 
 
+def _accepted_signal(trajectory) -> JumpSignal:  # type: ignore[no-untyped-def]
+    """A device-accepted force signal: a sub-newton contact-only ripple avoids the clipping rule."""
+    observation = export_case("force_platform.single", trajectory, hz=HZ).observation
+    force = observation["fz"]
+    data = {**observation.data, "fz": force + (force > 0) * np.sin(np.arange(len(force))) * 0.1}
+    result = process(type(observation)(observation.meta, data), plates=PLATE)
+    assert result.verdict != "reject"
+    return JumpSignal.from_engine(result)
+
+
 def _dj_signal() -> JumpSignal:
     fall_s, contact_s, rebound = 0.075, 0.18, 2.6
     initial = DROP.touchdown_velocity_m_s + G * fall_s
@@ -291,6 +301,7 @@ def test_cli_end_to_end_and_exit_codes(tmp_path: Path) -> None:
     report = json.loads(out.read_text())
     assert report["protocol"] == "cmj" and report["estimands"]["flight_time_s"] > 0.5
     assert report["device"]["engine"] == "force-platform.v1"
+    assert report["input"][0]["stem"] == "cmj" and report["input"][0]["bundle_id"]
     assert code in {0, 1}
     config.write_text(
         json.dumps(
@@ -343,7 +354,7 @@ def test_force_contact_and_imu_flight_estimates_stay_separate_labelled_sources()
     from dynamisbench_soccer.engines.imu import process as imu_process
 
     truth = 2 * 2.7 / G
-    force = jumps.force_platform_estimate(assess(_signal(cmj()), JumpSpec(protocol="cmj")))
+    force = jumps.force_platform_estimate(assess(_accepted_signal(cmj()), JumpSpec(protocol="cmj")))
     contact_estimate = jumps.contact_system_estimates(_contact_result())
     imu = jumps.imu_estimates(
         imu_process(
