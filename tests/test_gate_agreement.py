@@ -101,3 +101,13 @@ def test_analytical_evidence_alone_can_satisfy_the_gate_so_the_verified_flag_is_
     analytical = _complete("analytical_reference")
     assert L.gate(analytical, Stage.M3, ROOT).passed
     assert m3_gate(analytical, ROOT).passed
+
+
+def test_states_expose_which_verified_dimensions_rest_on_analytical_evidence_only() -> None:
+    from dynamisbench_soccer.qualification.state import computed_states
+
+    states = computed_states(_complete("analytical_reference"))
+    assert all(s.state == "ENGINEERING_VERIFIED" for s in states)
+    assert all(s.analytical_only_dimensions for s in states)
+    empirical = computed_states(_complete("empirical_study"))
+    assert all(not s.analytical_only_dimensions for s in empirical)

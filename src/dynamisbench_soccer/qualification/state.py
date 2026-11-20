@@ -60,6 +60,7 @@ class SubfamilyState:
     required_experiments: dict[str, str]
     independent_reference: bool
     non_analytical_reference: bool
+    analytical_only_dimensions: tuple[str, ...] = ()
 
 
 def subfamily_state(model: Ledger, sub: Subfamily) -> SubfamilyState:
@@ -87,6 +88,12 @@ def subfamily_state(model: Ledger, sub: Subfamily) -> SubfamilyState:
         state = "SPECIFIED"  # every M3 dimension has at least a specification or partial evidence
     else:
         state = "IN_PROGRESS"
+    analytical_only = tuple(
+        d
+        for d in verified
+        if ratings[d] == Rating.VERIFIED
+        and not any(e.dimension == d and e.kind in NON_ANALYTICAL for e in evidence)
+    )
     return SubfamilyState(
         sub.id,
         sub.family,
@@ -99,6 +106,7 @@ def subfamily_state(model: Ledger, sub: Subfamily) -> SubfamilyState:
         {d: REQUIRED_EXPERIMENT[d] for d in unverified},
         independent,
         non_analytical,
+        analytical_only,
     )
 
 
