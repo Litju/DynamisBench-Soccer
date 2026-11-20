@@ -56,8 +56,13 @@ using the contact and IMU engines, and the CLI. Engineering calculations only.
 For DJ CLI runs, provide `drop_evidence` alongside `jump`, with a negative
 `touchdown_velocity_m_s` and a `source` identifying how it was established independently
 of drop height and force integration. Set `jump.drop_height_m` from the declared protocol.
-A record beginning on the plate must show loaded impact without a standing baseline.
+Force must bracket the initial touchdown with an airborne sample followed by contact.
+A record starting in contact cannot establish the start of ground contact.
 Use separately justified initial conditions in the force processing method. The assessment
 compares touchdown with both the declared drop model and the integrated touchdown state.
 Failed eligibility or device rejection places the DJ calculations under `diagnostics`, with
 empty accepted estimands and contacts.
+
+The engine-v0.1 snapshot covers the registered method specification schemas and CLI
+arguments. The jump CLI configuration envelope carries contextual `drop_evidence`
+separately from the frozen `JumpSpec` method declaration.
