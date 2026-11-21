@@ -15,6 +15,7 @@ from pathlib import Path
 
 import e2e_cases
 import pytest
+from receipt_fixtures import fixture_receipts
 
 from dynamisbench_soccer.cli import main
 from dynamisbench_soccer.qualification import interface
@@ -77,7 +78,7 @@ def test_native_rates_filters_events_and_differentiation_are_swept_where_relevan
 
 
 def test_states_are_computed_from_evidence_not_declared() -> None:
-    states = {s.subfamily: s for s in computed_states(LEDGER)}
+    states = {s.subfamily: s for s in computed_states(LEDGER, ROOT)}
     assert set(states) == set(ledger_model.SUBFAMILIES)
     gate = m3_gate(LEDGER, ROOT)
     assert not gate.structural_problems
@@ -99,10 +100,13 @@ def test_states_are_computed_from_evidence_not_declared() -> None:
         implementation="independent closed form",
     )
 
+    def model_with_j():  # type: ignore[no-untyped-def]
+        return dataclasses.replace(LEDGER, evidence=(j,), reviewers=())
+
     def state_for(**changes) -> str:
         sub = dataclasses.replace(target, **changes)
         model = dataclasses.replace(LEDGER, evidence=(j,), reviewers=())
-        return subfamily_state(model, sub).state
+        return subfamily_state(model, sub, ROOT, receipts=fixture_receipts(model)).state
 
     assert state_for(ratings=verified, blockers=("open",)) == "SPECIFIED"
     assert state_for(ratings=verified, blockers=()) == "ENGINEERING_VERIFIED"
@@ -122,8 +126,13 @@ def test_states_are_computed_from_evidence_not_declared() -> None:
     )
     unreferenced = dataclasses.replace(target, ratings=verified, blockers=())
     assert (
-        subfamily_state(no_reference, unreferenced).state == "SPECIFIED"
+        subfamily_state(
+            no_reference, unreferenced, ROOT, receipts=fixture_receipts(no_reference)
+        ).state
+        == "SPECIFIED"
     )  # no independent reference
+    # Policy A: the same fully rated subfamily without a valid receipt is not verified.
+    assert subfamily_state(model_with_j(), unreferenced, ROOT, receipts=()).state == "SPECIFIED"
 
 
 def test_gate_passes_only_when_every_subfamily_is_engineering_verified() -> None:
@@ -154,25 +163,30 @@ def test_gate_passes_only_when_every_subfamily_is_engineering_verified() -> None
             dataclasses.replace(c, verdict="not_interchangeable") for c in LEDGER.comparisons
         ),
     )
-    passed = m3_gate(model, ROOT)
+    receipts = fixture_receipts(model)
+    passed = m3_gate(model, ROOT, receipts=receipts)
     assert passed.passed and not passed.structural_problems
     assert passed.engineering_verified == len(clean)
     one_blocked = (
         dataclasses.replace(clean[0], blockers=("needs measured calibration",)),
         *clean[1:],
     )
-    blocked = m3_gate(dataclasses.replace(model, subfamilies=one_blocked), ROOT)
+    blocked = m3_gate(dataclasses.replace(model, subfamilies=one_blocked), ROOT, receipts=receipts)
     assert blocked.engineering_verified == len(clean) - 1
     assert not blocked.passed and clean[0].id in blocked.blocking
 
 
 def test_every_unverified_subfamily_names_its_owner_blocker_and_required_experiment() -> None:
-    for s in computed_states(LEDGER):
+    for s in computed_states(LEDGER, ROOT):
         if s.state in {"ENGINEERING_VERIFIED", "SCIENTIFICALLY_QUALIFIED"}:
             continue
         assert s.blockers, s.subfamily
-        assert set(s.required_experiments) == set(s.unverified_m3)
+        assert set(s.required_computational) == set(s.unverified_m3)
         assert all(s.owners[d].startswith("RES-") for d in s.unverified_m3)
+        # empirical requirements are reported separately and never cleared by computation
+        assert set(s.empirical_requirements) == set(ledger_model.M3_DIMENSIONS) - set(
+            s.empirical_dimensions_covered
+        )
 
 
 def test_cli_states_reports_the_computed_gate(

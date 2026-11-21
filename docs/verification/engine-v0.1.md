@@ -9,8 +9,11 @@ Engineering calculations only; no scientific qualification of any device or metr
 
 * **M3 gate passed: False.** 0/15 subfamilies are ENGINEERING_VERIFIED. State counts: {"SPECIFIED": 15}.
 * Ledger structural problems: 0.
-* ENGINEERING_VERIFIED requires dimensions A-M and O verified, an independent reference
-  and no open blockers. N belongs to M4/M5 and independent scientific sign-off to M8.
+* Policy A: ENGINEERING_VERIFIED means computational-reference readiness. It requires A-M
+  and O verified by substantive independent receipts, an independent reference and no
+  open computational blocker. It says nothing about physical-device validity, which is
+  reported separately (section 2b). N belongs to M4/M5 and sign-off to M8.
+* Receipt problems: 0; empirical-record problems: 0.
 
 ## 2. Subfamily states, blockers, owners and required experiments
 
@@ -35,274 +38,551 @@ Engineering calculations only; no scientific qualification of any device or metr
 ### Blockers and the experiment that would clear them
 
 **force_platform.dual** (SPECIFIED)
-* blocker: Dual production processing verified on analytical controls (RES-670); actual bilateral calibration, cross-talk, assignment and timing remain unqualified
-* blocker: G/H assessment and L agreement qualification remain open (RES-671/672/703/675)
-* K - owner RES-669: fixtures covering measured fault classes
-* J - owner RES-669: independent reference implementation or empirical criterion
-* A - owner RES-670: audited native raw-data acquisition from the device
-* F - owner RES-670: device-specific reconstruction checked against a criterion measure
-* D - owner RES-670: empirical signal-integrity study with real fault occurrences
-* B - owner RES-670: measured calibration, axes and geometry records for the device
-* I - owner RES-670: measurement-uncertainty budget from device metrology
-* E - owner RES-670: method comparison on measured data with accepted sensitivity bounds
-* O - owner RES-670: sourced limitation statement reviewed by a domain expert
-* H - owner RES-671: metric-definition review against the protocol literature
-* G - owner RES-671: protocol event detection checked against adjudicated events
-* M - owner RES-675: seeded bundle chain with provenance for every processing stage
-* C - owner RES-693: measured clock, latency and synchronisation characterisation
-* L - owner RES-703: paired measured cross-device agreement study (at least 20 independent subjects)
+* computational blocker: A: executable admission contract: native/vendor stage, units and integrity refusals tested (owner RES-670; rated specified)
+* computational blocker: B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-670; rated specified)
+* computational blocker: C: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused (owner RES-693; rated specified)
+* computational blocker: D: integrity and QC checks reject injected faults and pass clean controls (owner RES-670; rated partial)
+* computational blocker: E: every processing method variant is compared with an independent reference with stated sensitivity bounds (owner RES-670; rated partial)
+* computational blocker: F: reconstructed quantities agree with an independent analytical truth within tolerance (owner RES-670; rated partial)
+* computational blocker: G: protocol events are recovered against analytically known event times, with eligibility refusals (owner RES-671; rated partial)
+* computational blocker: H: metric definitions are bound to sourced registry claims and executable exactly (owner RES-671; rated partial)
+* computational blocker: I: declared uncertainty propagation is checked against an independent analytical result (owner RES-670; rated partial)
+* computational blocker: J: an independent reference implementation or closed form that shares no code with the engine (owner RES-669; rated partial)
+* computational blocker: K: synthetic fault fixtures cover the declared fault classes with expected verdicts (owner RES-669; rated partial)
+* computational blocker: L: analytical cross-device studies are executed and classified, never read as interchangeability (owner RES-703; rated partial)
+* computational blocker: M: seeded, hash-bound provenance chain for every processing stage, reproduced exactly (owner RES-675; rated partial)
+* computational blocker: O: limitation statements are sourced and emitted with every result (owner RES-670; rated partial)
+* computational blocker: blocker: Dual production processing verified on analytical controls (RES-670); actual bilateral calibration, cross-talk, assignment and timing remain unqualified
+* computational blocker: blocker: G/H assessment and L agreement qualification remain open (RES-671/672/703/675)
+* J - owner RES-669: an independent reference implementation or closed form that shares no code with the engine
+* K - owner RES-669: synthetic fault fixtures cover the declared fault classes with expected verdicts
+* B - owner RES-670: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused
+* I - owner RES-670: declared uncertainty propagation is checked against an independent analytical result
+* E - owner RES-670: every processing method variant is compared with an independent reference with stated sensitivity bounds
+* A - owner RES-670: executable admission contract: native/vendor stage, units and integrity refusals tested
+* D - owner RES-670: integrity and QC checks reject injected faults and pass clean controls
+* O - owner RES-670: limitation statements are sourced and emitted with every result
+* F - owner RES-670: reconstructed quantities agree with an independent analytical truth within tolerance
+* H - owner RES-671: metric definitions are bound to sourced registry claims and executable exactly
+* G - owner RES-671: protocol events are recovered against analytically known event times, with eligibility refusals
+* M - owner RES-675: seeded, hash-bound provenance chain for every processing stage, reproduced exactly
+* C - owner RES-693: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused
+* L - owner RES-703: analytical cross-device studies are executed and classified, never read as interchangeability
 
 **force_platform.single** (SPECIFIED)
-* blocker: Production engine and numerical checks available (RES-670); G/H assessment qualification remains RES-671/672
-* blocker: Measured-device calibration/compliance/uncertainty and L agreement evidence remain open (RES-694/703/675)
-* K - owner RES-669: fixtures covering measured fault classes
-* J - owner RES-669: independent reference implementation or empirical criterion
-* A - owner RES-670: audited native raw-data acquisition from the device
-* F - owner RES-670: device-specific reconstruction checked against a criterion measure
-* D - owner RES-670: empirical signal-integrity study with real fault occurrences
-* B - owner RES-670: measured calibration, axes and geometry records for the device
-* I - owner RES-670: measurement-uncertainty budget from device metrology
-* E - owner RES-670: method comparison on measured data with accepted sensitivity bounds
-* O - owner RES-670: sourced limitation statement reviewed by a domain expert
-* H - owner RES-671: metric-definition review against the protocol literature
-* G - owner RES-671: protocol event detection checked against adjudicated events
-* M - owner RES-675: seeded bundle chain with provenance for every processing stage
-* C - owner RES-693: measured clock, latency and synchronisation characterisation
-* L - owner RES-703: paired measured cross-device agreement study (at least 20 independent subjects)
+* computational blocker: A: executable admission contract: native/vendor stage, units and integrity refusals tested (owner RES-670; rated specified)
+* computational blocker: B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-670; rated specified)
+* computational blocker: C: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused (owner RES-693; rated specified)
+* computational blocker: D: integrity and QC checks reject injected faults and pass clean controls (owner RES-670; rated partial)
+* computational blocker: E: every processing method variant is compared with an independent reference with stated sensitivity bounds (owner RES-670; rated partial)
+* computational blocker: F: reconstructed quantities agree with an independent analytical truth within tolerance (owner RES-670; rated partial)
+* computational blocker: G: protocol events are recovered against analytically known event times, with eligibility refusals (owner RES-671; rated partial)
+* computational blocker: H: metric definitions are bound to sourced registry claims and executable exactly (owner RES-671; rated partial)
+* computational blocker: I: declared uncertainty propagation is checked against an independent analytical result (owner RES-670; rated partial)
+* computational blocker: J: an independent reference implementation or closed form that shares no code with the engine (owner RES-669; rated partial)
+* computational blocker: K: synthetic fault fixtures cover the declared fault classes with expected verdicts (owner RES-669; rated partial)
+* computational blocker: L: analytical cross-device studies are executed and classified, never read as interchangeability (owner RES-703; rated partial)
+* computational blocker: M: seeded, hash-bound provenance chain for every processing stage, reproduced exactly (owner RES-675; rated partial)
+* computational blocker: O: limitation statements are sourced and emitted with every result (owner RES-670; rated partial)
+* computational blocker: blocker: Production engine and numerical checks available (RES-670); G/H assessment qualification remains RES-671/672
+* computational blocker: blocker: Measured-device calibration/compliance/uncertainty and L agreement evidence remain open (RES-694/703/675)
+* J - owner RES-669: an independent reference implementation or closed form that shares no code with the engine
+* K - owner RES-669: synthetic fault fixtures cover the declared fault classes with expected verdicts
+* B - owner RES-670: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused
+* I - owner RES-670: declared uncertainty propagation is checked against an independent analytical result
+* E - owner RES-670: every processing method variant is compared with an independent reference with stated sensitivity bounds
+* A - owner RES-670: executable admission contract: native/vendor stage, units and integrity refusals tested
+* D - owner RES-670: integrity and QC checks reject injected faults and pass clean controls
+* O - owner RES-670: limitation statements are sourced and emitted with every result
+* F - owner RES-670: reconstructed quantities agree with an independent analytical truth within tolerance
+* H - owner RES-671: metric definitions are bound to sourced registry claims and executable exactly
+* G - owner RES-671: protocol events are recovered against analytically known event times, with eligibility refusals
+* M - owner RES-675: seeded, hash-bound provenance chain for every processing stage, reproduced exactly
+* C - owner RES-693: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused
+* L - owner RES-703: analytical cross-device studies are executed and classified, never read as interchangeability
 
 **gnss_lps.gnss** (SPECIFIED)
-* blocker: Engine verified on analytical tracks (RES-700); audited native GNSS data and empirical latency, HDOP and multipath evidence remain open (RES-694)
-* blocker: Positional versus Doppler/radar agreement is analytical only (RES-703)
-* K - owner RES-669: fixtures covering measured fault classes
-* J - owner RES-669: independent reference implementation or empirical criterion
-* H - owner RES-673: metric-definition review against the protocol literature
-* G - owner RES-673: protocol event detection checked against adjudicated events
-* A - owner RES-693: audited native raw-data acquisition from the device
-* C - owner RES-693: measured clock, latency and synchronisation characterisation
-* F - owner RES-700: device-specific reconstruction checked against a criterion measure
-* D - owner RES-700: empirical signal-integrity study with real fault occurrences
-* B - owner RES-700: measured calibration, axes and geometry records for the device
-* I - owner RES-700: measurement-uncertainty budget from device metrology
-* E - owner RES-700: method comparison on measured data with accepted sensitivity bounds
-* M - owner RES-700: seeded bundle chain with provenance for every processing stage
-* O - owner RES-700: sourced limitation statement reviewed by a domain expert
-* L - owner RES-703: paired measured cross-device agreement study (at least 20 independent subjects)
+* computational blocker: A: executable admission contract: native/vendor stage, units and integrity refusals tested (owner RES-693; rated specified)
+* computational blocker: B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-700; rated specified)
+* computational blocker: C: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused (owner RES-693; rated specified)
+* computational blocker: D: integrity and QC checks reject injected faults and pass clean controls (owner RES-700; rated partial)
+* computational blocker: E: every processing method variant is compared with an independent reference with stated sensitivity bounds (owner RES-700; rated partial)
+* computational blocker: F: reconstructed quantities agree with an independent analytical truth within tolerance (owner RES-700; rated partial)
+* computational blocker: G: protocol events are recovered against analytically known event times, with eligibility refusals (owner RES-673; rated partial)
+* computational blocker: H: metric definitions are bound to sourced registry claims and executable exactly (owner RES-673; rated partial)
+* computational blocker: I: declared uncertainty propagation is checked against an independent analytical result (owner RES-700; rated partial)
+* computational blocker: J: an independent reference implementation or closed form that shares no code with the engine (owner RES-669; rated partial)
+* computational blocker: K: synthetic fault fixtures cover the declared fault classes with expected verdicts (owner RES-669; rated partial)
+* computational blocker: L: analytical cross-device studies are executed and classified, never read as interchangeability (owner RES-703; rated partial)
+* computational blocker: M: seeded, hash-bound provenance chain for every processing stage, reproduced exactly (owner RES-700; rated partial)
+* computational blocker: O: limitation statements are sourced and emitted with every result (owner RES-700; rated partial)
+* computational blocker: blocker: Engine verified on analytical tracks (RES-700); audited native GNSS data and empirical latency, HDOP and multipath evidence remain open (RES-694)
+* computational blocker: blocker: Positional versus Doppler/radar agreement is analytical only (RES-703)
+* J - owner RES-669: an independent reference implementation or closed form that shares no code with the engine
+* K - owner RES-669: synthetic fault fixtures cover the declared fault classes with expected verdicts
+* H - owner RES-673: metric definitions are bound to sourced registry claims and executable exactly
+* G - owner RES-673: protocol events are recovered against analytically known event times, with eligibility refusals
+* C - owner RES-693: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused
+* A - owner RES-693: executable admission contract: native/vendor stage, units and integrity refusals tested
+* B - owner RES-700: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused
+* I - owner RES-700: declared uncertainty propagation is checked against an independent analytical result
+* E - owner RES-700: every processing method variant is compared with an independent reference with stated sensitivity bounds
+* D - owner RES-700: integrity and QC checks reject injected faults and pass clean controls
+* O - owner RES-700: limitation statements are sourced and emitted with every result
+* F - owner RES-700: reconstructed quantities agree with an independent analytical truth within tolerance
+* M - owner RES-700: seeded, hash-bound provenance chain for every processing stage, reproduced exactly
+* L - owner RES-703: analytical cross-device studies are executed and classified, never read as interchangeability
 
 **gnss_lps.lps** (SPECIFIED)
-* blocker: Engine verified on analytical tracks (RES-700); audited native LPS data, anchor survey and latency evidence remain open (RES-694)
-* blocker: Positional versus radar agreement is analytical only (RES-703)
-* K - owner RES-669: fixtures covering measured fault classes
-* J - owner RES-669: independent reference implementation or empirical criterion
-* H - owner RES-673: metric-definition review against the protocol literature
-* G - owner RES-673: protocol event detection checked against adjudicated events
-* A - owner RES-693: audited native raw-data acquisition from the device
-* C - owner RES-693: measured clock, latency and synchronisation characterisation
-* F - owner RES-700: device-specific reconstruction checked against a criterion measure
-* D - owner RES-700: empirical signal-integrity study with real fault occurrences
-* B - owner RES-700: measured calibration, axes and geometry records for the device
-* I - owner RES-700: measurement-uncertainty budget from device metrology
-* E - owner RES-700: method comparison on measured data with accepted sensitivity bounds
-* M - owner RES-700: seeded bundle chain with provenance for every processing stage
-* O - owner RES-700: sourced limitation statement reviewed by a domain expert
-* L - owner RES-703: paired measured cross-device agreement study (at least 20 independent subjects)
+* computational blocker: A: executable admission contract: native/vendor stage, units and integrity refusals tested (owner RES-693; rated specified)
+* computational blocker: B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-700; rated specified)
+* computational blocker: C: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused (owner RES-693; rated specified)
+* computational blocker: D: integrity and QC checks reject injected faults and pass clean controls (owner RES-700; rated partial)
+* computational blocker: E: every processing method variant is compared with an independent reference with stated sensitivity bounds (owner RES-700; rated partial)
+* computational blocker: F: reconstructed quantities agree with an independent analytical truth within tolerance (owner RES-700; rated partial)
+* computational blocker: G: protocol events are recovered against analytically known event times, with eligibility refusals (owner RES-673; rated partial)
+* computational blocker: H: metric definitions are bound to sourced registry claims and executable exactly (owner RES-673; rated partial)
+* computational blocker: I: declared uncertainty propagation is checked against an independent analytical result (owner RES-700; rated partial)
+* computational blocker: J: an independent reference implementation or closed form that shares no code with the engine (owner RES-669; rated partial)
+* computational blocker: K: synthetic fault fixtures cover the declared fault classes with expected verdicts (owner RES-669; rated partial)
+* computational blocker: L: analytical cross-device studies are executed and classified, never read as interchangeability (owner RES-703; rated partial)
+* computational blocker: M: seeded, hash-bound provenance chain for every processing stage, reproduced exactly (owner RES-700; rated partial)
+* computational blocker: O: limitation statements are sourced and emitted with every result (owner RES-700; rated partial)
+* computational blocker: blocker: Engine verified on analytical tracks (RES-700); audited native LPS data, anchor survey and latency evidence remain open (RES-694)
+* computational blocker: blocker: Positional versus radar agreement is analytical only (RES-703)
+* J - owner RES-669: an independent reference implementation or closed form that shares no code with the engine
+* K - owner RES-669: synthetic fault fixtures cover the declared fault classes with expected verdicts
+* H - owner RES-673: metric definitions are bound to sourced registry claims and executable exactly
+* G - owner RES-673: protocol events are recovered against analytically known event times, with eligibility refusals
+* C - owner RES-693: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused
+* A - owner RES-693: executable admission contract: native/vendor stage, units and integrity refusals tested
+* B - owner RES-700: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused
+* I - owner RES-700: declared uncertainty propagation is checked against an independent analytical result
+* E - owner RES-700: every processing method variant is compared with an independent reference with stated sensitivity bounds
+* D - owner RES-700: integrity and QC checks reject injected faults and pass clean controls
+* O - owner RES-700: limitation statements are sourced and emitted with every result
+* F - owner RES-700: reconstructed quantities agree with an independent analytical truth within tolerance
+* M - owner RES-700: seeded, hash-bound provenance chain for every processing stage, reproduced exactly
+* L - owner RES-703: analytical cross-device studies are executed and classified, never read as interchangeability
 
 **imu.inertial** (SPECIFIED)
-* blocker: Engine verified on analytical rigid-body and trajectory controls (RES-701); sensor placement, soft-tissue artefact, calibration and flight-time agreement with force plates remain unqualified (RES-694/703)
-* blocker: G/H assessment qualification remains RES-671
-* K - owner RES-669: fixtures covering measured fault classes
-* J - owner RES-669: independent reference implementation or empirical criterion
-* H - owner RES-671: metric-definition review against the protocol literature
-* G - owner RES-671: protocol event detection checked against adjudicated events
-* A - owner RES-693: audited native raw-data acquisition from the device
-* C - owner RES-693: measured clock, latency and synchronisation characterisation
-* F - owner RES-701: device-specific reconstruction checked against a criterion measure
-* D - owner RES-701: empirical signal-integrity study with real fault occurrences
-* B - owner RES-701: measured calibration, axes and geometry records for the device
-* I - owner RES-701: measurement-uncertainty budget from device metrology
-* E - owner RES-701: method comparison on measured data with accepted sensitivity bounds
-* M - owner RES-701: seeded bundle chain with provenance for every processing stage
-* O - owner RES-701: sourced limitation statement reviewed by a domain expert
-* L - owner RES-703: paired measured cross-device agreement study (at least 20 independent subjects)
+* computational blocker: A: executable admission contract: native/vendor stage, units and integrity refusals tested (owner RES-693; rated specified)
+* computational blocker: B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-701; rated specified)
+* computational blocker: C: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused (owner RES-693; rated specified)
+* computational blocker: D: integrity and QC checks reject injected faults and pass clean controls (owner RES-701; rated partial)
+* computational blocker: E: every processing method variant is compared with an independent reference with stated sensitivity bounds (owner RES-701; rated partial)
+* computational blocker: F: reconstructed quantities agree with an independent analytical truth within tolerance (owner RES-701; rated partial)
+* computational blocker: G: protocol events are recovered against analytically known event times, with eligibility refusals (owner RES-671; rated partial)
+* computational blocker: H: metric definitions are bound to sourced registry claims and executable exactly (owner RES-671; rated partial)
+* computational blocker: I: declared uncertainty propagation is checked against an independent analytical result (owner RES-701; rated partial)
+* computational blocker: J: an independent reference implementation or closed form that shares no code with the engine (owner RES-669; rated partial)
+* computational blocker: K: synthetic fault fixtures cover the declared fault classes with expected verdicts (owner RES-669; rated partial)
+* computational blocker: L: analytical cross-device studies are executed and classified, never read as interchangeability (owner RES-703; rated partial)
+* computational blocker: M: seeded, hash-bound provenance chain for every processing stage, reproduced exactly (owner RES-701; rated partial)
+* computational blocker: O: limitation statements are sourced and emitted with every result (owner RES-701; rated partial)
+* computational blocker: blocker: Engine verified on analytical rigid-body and trajectory controls (RES-701); sensor placement, soft-tissue artefact, calibration and flight-time agreement with force plates remain unqualified (RES-694/703)
+* computational blocker: blocker: G/H assessment qualification remains RES-671
+* J - owner RES-669: an independent reference implementation or closed form that shares no code with the engine
+* K - owner RES-669: synthetic fault fixtures cover the declared fault classes with expected verdicts
+* H - owner RES-671: metric definitions are bound to sourced registry claims and executable exactly
+* G - owner RES-671: protocol events are recovered against analytically known event times, with eligibility refusals
+* C - owner RES-693: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused
+* A - owner RES-693: executable admission contract: native/vendor stage, units and integrity refusals tested
+* B - owner RES-701: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused
+* I - owner RES-701: declared uncertainty propagation is checked against an independent analytical result
+* E - owner RES-701: every processing method variant is compared with an independent reference with stated sensitivity bounds
+* D - owner RES-701: integrity and QC checks reject injected faults and pass clean controls
+* O - owner RES-701: limitation statements are sourced and emitted with every result
+* F - owner RES-701: reconstructed quantities agree with an independent analytical truth within tolerance
+* M - owner RES-701: seeded, hash-bound provenance chain for every processing stage, reproduced exactly
+* L - owner RES-703: analytical cross-device studies are executed and classified, never read as interchangeability
 
 **load_cell_isometric.isometric_rig** (SPECIFIED)
-* blocker: Engine verified on analytical isometric controls (RES-696); no isometric rig compliance or validity source (RES-694)
-* blocker: Rig versus plate agreement is analytical only (RES-703)
-* K - owner RES-669: fixtures covering measured fault classes
-* J - owner RES-669: independent reference implementation or empirical criterion
-* H - owner RES-672: metric-definition review against the protocol literature
-* G - owner RES-672: protocol event detection checked against adjudicated events
-* A - owner RES-693: audited native raw-data acquisition from the device
-* C - owner RES-693: measured clock, latency and synchronisation characterisation
-* F - owner RES-696: device-specific reconstruction checked against a criterion measure
-* D - owner RES-696: empirical signal-integrity study with real fault occurrences
-* B - owner RES-696: measured calibration, axes and geometry records for the device
-* I - owner RES-696: measurement-uncertainty budget from device metrology
-* E - owner RES-696: method comparison on measured data with accepted sensitivity bounds
-* M - owner RES-696: seeded bundle chain with provenance for every processing stage
-* O - owner RES-696: sourced limitation statement reviewed by a domain expert
-* L - owner RES-703: paired measured cross-device agreement study (at least 20 independent subjects)
+* computational blocker: A: executable admission contract: native/vendor stage, units and integrity refusals tested (owner RES-693; rated specified)
+* computational blocker: B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-696; rated specified)
+* computational blocker: C: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused (owner RES-693; rated specified)
+* computational blocker: D: integrity and QC checks reject injected faults and pass clean controls (owner RES-696; rated partial)
+* computational blocker: E: every processing method variant is compared with an independent reference with stated sensitivity bounds (owner RES-696; rated partial)
+* computational blocker: F: reconstructed quantities agree with an independent analytical truth within tolerance (owner RES-696; rated partial)
+* computational blocker: G: protocol events are recovered against analytically known event times, with eligibility refusals (owner RES-672; rated partial)
+* computational blocker: H: metric definitions are bound to sourced registry claims and executable exactly (owner RES-672; rated partial)
+* computational blocker: I: declared uncertainty propagation is checked against an independent analytical result (owner RES-696; rated partial)
+* computational blocker: J: an independent reference implementation or closed form that shares no code with the engine (owner RES-669; rated partial)
+* computational blocker: K: synthetic fault fixtures cover the declared fault classes with expected verdicts (owner RES-669; rated partial)
+* computational blocker: L: analytical cross-device studies are executed and classified, never read as interchangeability (owner RES-703; rated partial)
+* computational blocker: M: seeded, hash-bound provenance chain for every processing stage, reproduced exactly (owner RES-696; rated partial)
+* computational blocker: O: limitation statements are sourced and emitted with every result (owner RES-696; rated partial)
+* computational blocker: blocker: Engine verified on analytical isometric controls (RES-696); no isometric rig compliance or validity source (RES-694)
+* computational blocker: blocker: Rig versus plate agreement is analytical only (RES-703)
+* J - owner RES-669: an independent reference implementation or closed form that shares no code with the engine
+* K - owner RES-669: synthetic fault fixtures cover the declared fault classes with expected verdicts
+* H - owner RES-672: metric definitions are bound to sourced registry claims and executable exactly
+* G - owner RES-672: protocol events are recovered against analytically known event times, with eligibility refusals
+* C - owner RES-693: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused
+* A - owner RES-693: executable admission contract: native/vendor stage, units and integrity refusals tested
+* B - owner RES-696: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused
+* I - owner RES-696: declared uncertainty propagation is checked against an independent analytical result
+* E - owner RES-696: every processing method variant is compared with an independent reference with stated sensitivity bounds
+* D - owner RES-696: integrity and QC checks reject injected faults and pass clean controls
+* O - owner RES-696: limitation statements are sourced and emitted with every result
+* F - owner RES-696: reconstructed quantities agree with an independent analytical truth within tolerance
+* M - owner RES-696: seeded, hash-bound provenance chain for every processing stage, reproduced exactly
+* L - owner RES-703: analytical cross-device studies are executed and classified, never read as interchangeability
 
 **load_cell_isometric.load_cell** (SPECIFIED)
-* blocker: Engine verified on analytical isometric controls (RES-696); measured calibration, rig compliance and temperature behaviour remain unqualified (RES-694)
-* blocker: Load-cell versus force-plate IMTP agreement is analytical only (RES-703)
-* K - owner RES-669: fixtures covering measured fault classes
-* J - owner RES-669: independent reference implementation or empirical criterion
-* H - owner RES-672: metric-definition review against the protocol literature
-* G - owner RES-672: protocol event detection checked against adjudicated events
-* A - owner RES-693: audited native raw-data acquisition from the device
-* C - owner RES-693: measured clock, latency and synchronisation characterisation
-* F - owner RES-696: device-specific reconstruction checked against a criterion measure
-* D - owner RES-696: empirical signal-integrity study with real fault occurrences
-* B - owner RES-696: measured calibration, axes and geometry records for the device
-* I - owner RES-696: measurement-uncertainty budget from device metrology
-* E - owner RES-696: method comparison on measured data with accepted sensitivity bounds
-* M - owner RES-696: seeded bundle chain with provenance for every processing stage
-* O - owner RES-696: sourced limitation statement reviewed by a domain expert
-* L - owner RES-703: paired measured cross-device agreement study (at least 20 independent subjects)
+* computational blocker: A: executable admission contract: native/vendor stage, units and integrity refusals tested (owner RES-693; rated specified)
+* computational blocker: B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-696; rated specified)
+* computational blocker: C: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused (owner RES-693; rated specified)
+* computational blocker: D: integrity and QC checks reject injected faults and pass clean controls (owner RES-696; rated partial)
+* computational blocker: E: every processing method variant is compared with an independent reference with stated sensitivity bounds (owner RES-696; rated partial)
+* computational blocker: F: reconstructed quantities agree with an independent analytical truth within tolerance (owner RES-696; rated partial)
+* computational blocker: G: protocol events are recovered against analytically known event times, with eligibility refusals (owner RES-672; rated partial)
+* computational blocker: H: metric definitions are bound to sourced registry claims and executable exactly (owner RES-672; rated partial)
+* computational blocker: I: declared uncertainty propagation is checked against an independent analytical result (owner RES-696; rated partial)
+* computational blocker: J: an independent reference implementation or closed form that shares no code with the engine (owner RES-669; rated partial)
+* computational blocker: K: synthetic fault fixtures cover the declared fault classes with expected verdicts (owner RES-669; rated partial)
+* computational blocker: L: analytical cross-device studies are executed and classified, never read as interchangeability (owner RES-703; rated partial)
+* computational blocker: M: seeded, hash-bound provenance chain for every processing stage, reproduced exactly (owner RES-696; rated partial)
+* computational blocker: O: limitation statements are sourced and emitted with every result (owner RES-696; rated partial)
+* computational blocker: blocker: Engine verified on analytical isometric controls (RES-696); measured calibration, rig compliance and temperature behaviour remain unqualified (RES-694)
+* computational blocker: blocker: Load-cell versus force-plate IMTP agreement is analytical only (RES-703)
+* J - owner RES-669: an independent reference implementation or closed form that shares no code with the engine
+* K - owner RES-669: synthetic fault fixtures cover the declared fault classes with expected verdicts
+* H - owner RES-672: metric definitions are bound to sourced registry claims and executable exactly
+* G - owner RES-672: protocol events are recovered against analytically known event times, with eligibility refusals
+* C - owner RES-693: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused
+* A - owner RES-693: executable admission contract: native/vendor stage, units and integrity refusals tested
+* B - owner RES-696: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused
+* I - owner RES-696: declared uncertainty propagation is checked against an independent analytical result
+* E - owner RES-696: every processing method variant is compared with an independent reference with stated sensitivity bounds
+* D - owner RES-696: integrity and QC checks reject injected faults and pass clean controls
+* O - owner RES-696: limitation statements are sourced and emitted with every result
+* F - owner RES-696: reconstructed quantities agree with an independent analytical truth within tolerance
+* M - owner RES-696: seeded, hash-bound provenance chain for every processing stage, reproduced exactly
+* L - owner RES-703: analytical cross-device studies are executed and classified, never read as interchangeability
 
 **lpt_encoder.encoder** (SPECIFIED)
-* blocker: Engine verified on analytical controls (RES-695); measured counts-per-metre, quantization and attachment validity remain unqualified (RES-694)
-* blocker: Cross-device agreement is analytical only (RES-703)
-* K - owner RES-669: fixtures covering measured fault classes
-* J - owner RES-669: independent reference implementation or empirical criterion
-* H - owner RES-671: metric-definition review against the protocol literature
-* G - owner RES-671: protocol event detection checked against adjudicated events
-* A - owner RES-693: audited native raw-data acquisition from the device
-* C - owner RES-693: measured clock, latency and synchronisation characterisation
-* F - owner RES-695: device-specific reconstruction checked against a criterion measure
-* D - owner RES-695: empirical signal-integrity study with real fault occurrences
-* B - owner RES-695: measured calibration, axes and geometry records for the device
-* I - owner RES-695: measurement-uncertainty budget from device metrology
-* E - owner RES-695: method comparison on measured data with accepted sensitivity bounds
-* M - owner RES-695: seeded bundle chain with provenance for every processing stage
-* O - owner RES-695: sourced limitation statement reviewed by a domain expert
-* L - owner RES-703: paired measured cross-device agreement study (at least 20 independent subjects)
+* computational blocker: A: executable admission contract: native/vendor stage, units and integrity refusals tested (owner RES-693; rated specified)
+* computational blocker: B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-695; rated specified)
+* computational blocker: C: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused (owner RES-693; rated specified)
+* computational blocker: D: integrity and QC checks reject injected faults and pass clean controls (owner RES-695; rated partial)
+* computational blocker: E: every processing method variant is compared with an independent reference with stated sensitivity bounds (owner RES-695; rated partial)
+* computational blocker: F: reconstructed quantities agree with an independent analytical truth within tolerance (owner RES-695; rated partial)
+* computational blocker: G: protocol events are recovered against analytically known event times, with eligibility refusals (owner RES-671; rated partial)
+* computational blocker: H: metric definitions are bound to sourced registry claims and executable exactly (owner RES-671; rated partial)
+* computational blocker: I: declared uncertainty propagation is checked against an independent analytical result (owner RES-695; rated partial)
+* computational blocker: J: an independent reference implementation or closed form that shares no code with the engine (owner RES-669; rated partial)
+* computational blocker: K: synthetic fault fixtures cover the declared fault classes with expected verdicts (owner RES-669; rated partial)
+* computational blocker: L: analytical cross-device studies are executed and classified, never read as interchangeability (owner RES-703; rated partial)
+* computational blocker: M: seeded, hash-bound provenance chain for every processing stage, reproduced exactly (owner RES-695; rated partial)
+* computational blocker: O: limitation statements are sourced and emitted with every result (owner RES-695; rated partial)
+* computational blocker: blocker: Engine verified on analytical controls (RES-695); measured counts-per-metre, quantization and attachment validity remain unqualified (RES-694)
+* computational blocker: blocker: Cross-device agreement is analytical only (RES-703)
+* J - owner RES-669: an independent reference implementation or closed form that shares no code with the engine
+* K - owner RES-669: synthetic fault fixtures cover the declared fault classes with expected verdicts
+* H - owner RES-671: metric definitions are bound to sourced registry claims and executable exactly
+* G - owner RES-671: protocol events are recovered against analytically known event times, with eligibility refusals
+* C - owner RES-693: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused
+* A - owner RES-693: executable admission contract: native/vendor stage, units and integrity refusals tested
+* B - owner RES-695: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused
+* I - owner RES-695: declared uncertainty propagation is checked against an independent analytical result
+* E - owner RES-695: every processing method variant is compared with an independent reference with stated sensitivity bounds
+* D - owner RES-695: integrity and QC checks reject injected faults and pass clean controls
+* O - owner RES-695: limitation statements are sourced and emitted with every result
+* F - owner RES-695: reconstructed quantities agree with an independent analytical truth within tolerance
+* M - owner RES-695: seeded, hash-bound provenance chain for every processing stage, reproduced exactly
+* L - owner RES-703: analytical cross-device studies are executed and classified, never read as interchangeability
 
 **lpt_encoder.lpt** (SPECIFIED)
-* blocker: Engine verified on analytical controls (RES-695); measured cable geometry, calibration and attachment-versus-COM validity remain unqualified (RES-694)
-* blocker: Cross-device agreement with force plates is analytical only (RES-703)
-* K - owner RES-669: fixtures covering measured fault classes
-* J - owner RES-669: independent reference implementation or empirical criterion
-* H - owner RES-671: metric-definition review against the protocol literature
-* G - owner RES-671: protocol event detection checked against adjudicated events
-* A - owner RES-693: audited native raw-data acquisition from the device
-* C - owner RES-693: measured clock, latency and synchronisation characterisation
-* F - owner RES-695: device-specific reconstruction checked against a criterion measure
-* D - owner RES-695: empirical signal-integrity study with real fault occurrences
-* B - owner RES-695: measured calibration, axes and geometry records for the device
-* I - owner RES-695: measurement-uncertainty budget from device metrology
-* E - owner RES-695: method comparison on measured data with accepted sensitivity bounds
-* M - owner RES-695: seeded bundle chain with provenance for every processing stage
-* O - owner RES-695: sourced limitation statement reviewed by a domain expert
-* L - owner RES-703: paired measured cross-device agreement study (at least 20 independent subjects)
+* computational blocker: A: executable admission contract: native/vendor stage, units and integrity refusals tested (owner RES-693; rated specified)
+* computational blocker: B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-695; rated specified)
+* computational blocker: C: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused (owner RES-693; rated specified)
+* computational blocker: D: integrity and QC checks reject injected faults and pass clean controls (owner RES-695; rated partial)
+* computational blocker: E: every processing method variant is compared with an independent reference with stated sensitivity bounds (owner RES-695; rated partial)
+* computational blocker: F: reconstructed quantities agree with an independent analytical truth within tolerance (owner RES-695; rated partial)
+* computational blocker: G: protocol events are recovered against analytically known event times, with eligibility refusals (owner RES-671; rated partial)
+* computational blocker: H: metric definitions are bound to sourced registry claims and executable exactly (owner RES-671; rated partial)
+* computational blocker: I: declared uncertainty propagation is checked against an independent analytical result (owner RES-695; rated partial)
+* computational blocker: J: an independent reference implementation or closed form that shares no code with the engine (owner RES-669; rated partial)
+* computational blocker: K: synthetic fault fixtures cover the declared fault classes with expected verdicts (owner RES-669; rated partial)
+* computational blocker: L: analytical cross-device studies are executed and classified, never read as interchangeability (owner RES-703; rated partial)
+* computational blocker: M: seeded, hash-bound provenance chain for every processing stage, reproduced exactly (owner RES-695; rated partial)
+* computational blocker: O: limitation statements are sourced and emitted with every result (owner RES-695; rated partial)
+* computational blocker: blocker: Engine verified on analytical controls (RES-695); measured cable geometry, calibration and attachment-versus-COM validity remain unqualified (RES-694)
+* computational blocker: blocker: Cross-device agreement with force plates is analytical only (RES-703)
+* J - owner RES-669: an independent reference implementation or closed form that shares no code with the engine
+* K - owner RES-669: synthetic fault fixtures cover the declared fault classes with expected verdicts
+* H - owner RES-671: metric definitions are bound to sourced registry claims and executable exactly
+* G - owner RES-671: protocol events are recovered against analytically known event times, with eligibility refusals
+* C - owner RES-693: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused
+* A - owner RES-693: executable admission contract: native/vendor stage, units and integrity refusals tested
+* B - owner RES-695: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused
+* I - owner RES-695: declared uncertainty propagation is checked against an independent analytical result
+* E - owner RES-695: every processing method variant is compared with an independent reference with stated sensitivity bounds
+* D - owner RES-695: integrity and QC checks reject injected faults and pass clean controls
+* O - owner RES-695: limitation statements are sourced and emitted with every result
+* F - owner RES-695: reconstructed quantities agree with an independent analytical truth within tolerance
+* M - owner RES-695: seeded, hash-bound provenance chain for every processing stage, reproduced exactly
+* L - owner RES-703: analytical cross-device studies are executed and classified, never read as interchangeability
 
 **nordic_hip.hip** (SPECIFIED)
-* blocker: Engine verified on analytical isometric controls (RES-697); squeeze protocol geometry validity and device metrology remain unqualified (RES-694)
-* blocker: G/H assessment qualification remains RES-672
-* K - owner RES-669: fixtures covering measured fault classes
-* J - owner RES-669: independent reference implementation or empirical criterion
-* H - owner RES-672: metric-definition review against the protocol literature
-* G - owner RES-672: protocol event detection checked against adjudicated events
-* C - owner RES-693: measured clock, latency and synchronisation characterisation
-* A - owner RES-697: audited native raw-data acquisition from the device
-* F - owner RES-697: device-specific reconstruction checked against a criterion measure
-* D - owner RES-697: empirical signal-integrity study with real fault occurrences
-* B - owner RES-697: measured calibration, axes and geometry records for the device
-* I - owner RES-697: measurement-uncertainty budget from device metrology
-* E - owner RES-697: method comparison on measured data with accepted sensitivity bounds
-* M - owner RES-697: seeded bundle chain with provenance for every processing stage
-* O - owner RES-697: sourced limitation statement reviewed by a domain expert
-* L - owner RES-703: paired measured cross-device agreement study (at least 20 independent subjects)
+* computational blocker: A: executable admission contract: native/vendor stage, units and integrity refusals tested (owner RES-697; rated specified)
+* computational blocker: B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-697; rated specified)
+* computational blocker: C: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused (owner RES-693; rated specified)
+* computational blocker: D: integrity and QC checks reject injected faults and pass clean controls (owner RES-697; rated partial)
+* computational blocker: E: every processing method variant is compared with an independent reference with stated sensitivity bounds (owner RES-697; rated partial)
+* computational blocker: F: reconstructed quantities agree with an independent analytical truth within tolerance (owner RES-697; rated partial)
+* computational blocker: G: protocol events are recovered against analytically known event times, with eligibility refusals (owner RES-672; rated partial)
+* computational blocker: H: metric definitions are bound to sourced registry claims and executable exactly (owner RES-672; rated partial)
+* computational blocker: I: declared uncertainty propagation is checked against an independent analytical result (owner RES-697; rated partial)
+* computational blocker: J: an independent reference implementation or closed form that shares no code with the engine (owner RES-669; rated partial)
+* computational blocker: K: synthetic fault fixtures cover the declared fault classes with expected verdicts (owner RES-669; rated partial)
+* computational blocker: L: analytical cross-device studies are executed and classified, never read as interchangeability (owner RES-703; rated partial)
+* computational blocker: M: seeded, hash-bound provenance chain for every processing stage, reproduced exactly (owner RES-697; rated partial)
+* computational blocker: O: limitation statements are sourced and emitted with every result (owner RES-697; rated partial)
+* computational blocker: blocker: Engine verified on analytical isometric controls (RES-697); squeeze protocol geometry validity and device metrology remain unqualified (RES-694)
+* computational blocker: blocker: G/H assessment qualification remains RES-672
+* J - owner RES-669: an independent reference implementation or closed form that shares no code with the engine
+* K - owner RES-669: synthetic fault fixtures cover the declared fault classes with expected verdicts
+* H - owner RES-672: metric definitions are bound to sourced registry claims and executable exactly
+* G - owner RES-672: protocol events are recovered against analytically known event times, with eligibility refusals
+* C - owner RES-693: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused
+* B - owner RES-697: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused
+* I - owner RES-697: declared uncertainty propagation is checked against an independent analytical result
+* E - owner RES-697: every processing method variant is compared with an independent reference with stated sensitivity bounds
+* A - owner RES-697: executable admission contract: native/vendor stage, units and integrity refusals tested
+* D - owner RES-697: integrity and QC checks reject injected faults and pass clean controls
+* O - owner RES-697: limitation statements are sourced and emitted with every result
+* F - owner RES-697: reconstructed quantities agree with an independent analytical truth within tolerance
+* M - owner RES-697: seeded, hash-bound provenance chain for every processing stage, reproduced exactly
+* L - owner RES-703: analytical cross-device studies are executed and classified, never read as interchangeability
 
 **nordic_hip.nordic** (SPECIFIED)
-* blocker: Engine verified on analytical eccentric controls (RES-697); athlete-level validity, strap/lever geometry measurements and vendor-corrected versus raw agreement remain unqualified (RES-694/703)
-* blocker: G/H assessment qualification remains RES-672
-* K - owner RES-669: fixtures covering measured fault classes
-* J - owner RES-669: independent reference implementation or empirical criterion
-* H - owner RES-672: metric-definition review against the protocol literature
-* G - owner RES-672: protocol event detection checked against adjudicated events
-* C - owner RES-693: measured clock, latency and synchronisation characterisation
-* A - owner RES-697: audited native raw-data acquisition from the device
-* F - owner RES-697: device-specific reconstruction checked against a criterion measure
-* D - owner RES-697: empirical signal-integrity study with real fault occurrences
-* B - owner RES-697: measured calibration, axes and geometry records for the device
-* I - owner RES-697: measurement-uncertainty budget from device metrology
-* E - owner RES-697: method comparison on measured data with accepted sensitivity bounds
-* M - owner RES-697: seeded bundle chain with provenance for every processing stage
-* O - owner RES-697: sourced limitation statement reviewed by a domain expert
-* L - owner RES-703: paired measured cross-device agreement study (at least 20 independent subjects)
+* computational blocker: A: executable admission contract: native/vendor stage, units and integrity refusals tested (owner RES-697; rated specified)
+* computational blocker: B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-697; rated specified)
+* computational blocker: C: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused (owner RES-693; rated specified)
+* computational blocker: D: integrity and QC checks reject injected faults and pass clean controls (owner RES-697; rated partial)
+* computational blocker: E: every processing method variant is compared with an independent reference with stated sensitivity bounds (owner RES-697; rated partial)
+* computational blocker: F: reconstructed quantities agree with an independent analytical truth within tolerance (owner RES-697; rated partial)
+* computational blocker: G: protocol events are recovered against analytically known event times, with eligibility refusals (owner RES-672; rated partial)
+* computational blocker: H: metric definitions are bound to sourced registry claims and executable exactly (owner RES-672; rated partial)
+* computational blocker: I: declared uncertainty propagation is checked against an independent analytical result (owner RES-697; rated partial)
+* computational blocker: J: an independent reference implementation or closed form that shares no code with the engine (owner RES-669; rated partial)
+* computational blocker: K: synthetic fault fixtures cover the declared fault classes with expected verdicts (owner RES-669; rated partial)
+* computational blocker: L: analytical cross-device studies are executed and classified, never read as interchangeability (owner RES-703; rated partial)
+* computational blocker: M: seeded, hash-bound provenance chain for every processing stage, reproduced exactly (owner RES-697; rated partial)
+* computational blocker: O: limitation statements are sourced and emitted with every result (owner RES-697; rated partial)
+* computational blocker: blocker: Engine verified on analytical eccentric controls (RES-697); athlete-level validity, strap/lever geometry measurements and vendor-corrected versus raw agreement remain unqualified (RES-694/703)
+* computational blocker: blocker: G/H assessment qualification remains RES-672
+* J - owner RES-669: an independent reference implementation or closed form that shares no code with the engine
+* K - owner RES-669: synthetic fault fixtures cover the declared fault classes with expected verdicts
+* H - owner RES-672: metric definitions are bound to sourced registry claims and executable exactly
+* G - owner RES-672: protocol events are recovered against analytically known event times, with eligibility refusals
+* C - owner RES-693: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused
+* B - owner RES-697: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused
+* I - owner RES-697: declared uncertainty propagation is checked against an independent analytical result
+* E - owner RES-697: every processing method variant is compared with an independent reference with stated sensitivity bounds
+* A - owner RES-697: executable admission contract: native/vendor stage, units and integrity refusals tested
+* D - owner RES-697: integrity and QC checks reject injected faults and pass clean controls
+* O - owner RES-697: limitation statements are sourced and emitted with every result
+* F - owner RES-697: reconstructed quantities agree with an independent analytical truth within tolerance
+* M - owner RES-697: seeded, hash-bound provenance chain for every processing stage, reproduced exactly
+* L - owner RES-703: analytical cross-device studies are executed and classified, never read as interchangeability
 
 **radar_laser.laser** (SPECIFIED)
-* blocker: Engine verified on analytical sprint controls (RES-699); no raw laser validity or range-noise study (RES-694)
-* blocker: Range-rate versus Doppler agreement is analytical only (RES-703)
-* K - owner RES-669: fixtures covering measured fault classes
-* J - owner RES-669: independent reference implementation or empirical criterion
-* H - owner RES-673: metric-definition review against the protocol literature
-* G - owner RES-673: protocol event detection checked against adjudicated events
-* A - owner RES-693: audited native raw-data acquisition from the device
-* C - owner RES-693: measured clock, latency and synchronisation characterisation
-* F - owner RES-699: device-specific reconstruction checked against a criterion measure
-* D - owner RES-699: empirical signal-integrity study with real fault occurrences
-* B - owner RES-699: measured calibration, axes and geometry records for the device
-* I - owner RES-699: measurement-uncertainty budget from device metrology
-* E - owner RES-699: method comparison on measured data with accepted sensitivity bounds
-* M - owner RES-699: seeded bundle chain with provenance for every processing stage
-* O - owner RES-699: sourced limitation statement reviewed by a domain expert
-* L - owner RES-703: paired measured cross-device agreement study (at least 20 independent subjects)
+* computational blocker: A: executable admission contract: native/vendor stage, units and integrity refusals tested (owner RES-693; rated specified)
+* computational blocker: B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-699; rated specified)
+* computational blocker: C: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused (owner RES-693; rated specified)
+* computational blocker: D: integrity and QC checks reject injected faults and pass clean controls (owner RES-699; rated partial)
+* computational blocker: E: every processing method variant is compared with an independent reference with stated sensitivity bounds (owner RES-699; rated partial)
+* computational blocker: F: reconstructed quantities agree with an independent analytical truth within tolerance (owner RES-699; rated partial)
+* computational blocker: G: protocol events are recovered against analytically known event times, with eligibility refusals (owner RES-673; rated partial)
+* computational blocker: H: metric definitions are bound to sourced registry claims and executable exactly (owner RES-673; rated partial)
+* computational blocker: I: declared uncertainty propagation is checked against an independent analytical result (owner RES-699; rated partial)
+* computational blocker: J: an independent reference implementation or closed form that shares no code with the engine (owner RES-669; rated partial)
+* computational blocker: K: synthetic fault fixtures cover the declared fault classes with expected verdicts (owner RES-669; rated partial)
+* computational blocker: L: analytical cross-device studies are executed and classified, never read as interchangeability (owner RES-703; rated partial)
+* computational blocker: M: seeded, hash-bound provenance chain for every processing stage, reproduced exactly (owner RES-699; rated partial)
+* computational blocker: O: limitation statements are sourced and emitted with every result (owner RES-699; rated partial)
+* computational blocker: blocker: Engine verified on analytical sprint controls (RES-699); no raw laser validity or range-noise study (RES-694)
+* computational blocker: blocker: Range-rate versus Doppler agreement is analytical only (RES-703)
+* J - owner RES-669: an independent reference implementation or closed form that shares no code with the engine
+* K - owner RES-669: synthetic fault fixtures cover the declared fault classes with expected verdicts
+* H - owner RES-673: metric definitions are bound to sourced registry claims and executable exactly
+* G - owner RES-673: protocol events are recovered against analytically known event times, with eligibility refusals
+* C - owner RES-693: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused
+* A - owner RES-693: executable admission contract: native/vendor stage, units and integrity refusals tested
+* B - owner RES-699: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused
+* I - owner RES-699: declared uncertainty propagation is checked against an independent analytical result
+* E - owner RES-699: every processing method variant is compared with an independent reference with stated sensitivity bounds
+* D - owner RES-699: integrity and QC checks reject injected faults and pass clean controls
+* O - owner RES-699: limitation statements are sourced and emitted with every result
+* F - owner RES-699: reconstructed quantities agree with an independent analytical truth within tolerance
+* M - owner RES-699: seeded, hash-bound provenance chain for every processing stage, reproduced exactly
+* L - owner RES-703: analytical cross-device studies are executed and classified, never read as interchangeability
 
 **radar_laser.radar** (SPECIFIED)
-* blocker: Engine verified on analytical sprint controls (RES-699); no raw radar validity or latency study (RES-694)
-* blocker: Doppler versus positional/gate agreement is analytical only (RES-703)
-* K - owner RES-669: fixtures covering measured fault classes
-* J - owner RES-669: independent reference implementation or empirical criterion
-* H - owner RES-673: metric-definition review against the protocol literature
-* G - owner RES-673: protocol event detection checked against adjudicated events
-* A - owner RES-693: audited native raw-data acquisition from the device
-* C - owner RES-693: measured clock, latency and synchronisation characterisation
-* F - owner RES-699: device-specific reconstruction checked against a criterion measure
-* D - owner RES-699: empirical signal-integrity study with real fault occurrences
-* B - owner RES-699: measured calibration, axes and geometry records for the device
-* I - owner RES-699: measurement-uncertainty budget from device metrology
-* E - owner RES-699: method comparison on measured data with accepted sensitivity bounds
-* M - owner RES-699: seeded bundle chain with provenance for every processing stage
-* O - owner RES-699: sourced limitation statement reviewed by a domain expert
-* L - owner RES-703: paired measured cross-device agreement study (at least 20 independent subjects)
+* computational blocker: A: executable admission contract: native/vendor stage, units and integrity refusals tested (owner RES-693; rated specified)
+* computational blocker: B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-699; rated specified)
+* computational blocker: C: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused (owner RES-693; rated specified)
+* computational blocker: D: integrity and QC checks reject injected faults and pass clean controls (owner RES-699; rated partial)
+* computational blocker: E: every processing method variant is compared with an independent reference with stated sensitivity bounds (owner RES-699; rated partial)
+* computational blocker: F: reconstructed quantities agree with an independent analytical truth within tolerance (owner RES-699; rated partial)
+* computational blocker: G: protocol events are recovered against analytically known event times, with eligibility refusals (owner RES-673; rated partial)
+* computational blocker: H: metric definitions are bound to sourced registry claims and executable exactly (owner RES-673; rated partial)
+* computational blocker: I: declared uncertainty propagation is checked against an independent analytical result (owner RES-699; rated partial)
+* computational blocker: J: an independent reference implementation or closed form that shares no code with the engine (owner RES-669; rated partial)
+* computational blocker: K: synthetic fault fixtures cover the declared fault classes with expected verdicts (owner RES-669; rated partial)
+* computational blocker: L: analytical cross-device studies are executed and classified, never read as interchangeability (owner RES-703; rated partial)
+* computational blocker: M: seeded, hash-bound provenance chain for every processing stage, reproduced exactly (owner RES-699; rated partial)
+* computational blocker: O: limitation statements are sourced and emitted with every result (owner RES-699; rated partial)
+* computational blocker: blocker: Engine verified on analytical sprint controls (RES-699); no raw radar validity or latency study (RES-694)
+* computational blocker: blocker: Doppler versus positional/gate agreement is analytical only (RES-703)
+* J - owner RES-669: an independent reference implementation or closed form that shares no code with the engine
+* K - owner RES-669: synthetic fault fixtures cover the declared fault classes with expected verdicts
+* H - owner RES-673: metric definitions are bound to sourced registry claims and executable exactly
+* G - owner RES-673: protocol events are recovered against analytically known event times, with eligibility refusals
+* C - owner RES-693: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused
+* A - owner RES-693: executable admission contract: native/vendor stage, units and integrity refusals tested
+* B - owner RES-699: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused
+* I - owner RES-699: declared uncertainty propagation is checked against an independent analytical result
+* E - owner RES-699: every processing method variant is compared with an independent reference with stated sensitivity bounds
+* D - owner RES-699: integrity and QC checks reject injected faults and pass clean controls
+* O - owner RES-699: limitation statements are sourced and emitted with every result
+* F - owner RES-699: reconstructed quantities agree with an independent analytical truth within tolerance
+* M - owner RES-699: seeded, hash-bound provenance chain for every processing stage, reproduced exactly
+* L - owner RES-703: analytical cross-device studies are executed and classified, never read as interchangeability
 
 **timing_contact.contact** (SPECIFIED)
-* blocker: Contact-system switching thresholds and latency bounds need empirical metrology (RES-694)
-* blocker: Assessment-specific validity and force-platform/IMU agreement remain open (RES-671/703)
-* K - owner RES-669: fixtures covering measured fault classes
-* J - owner RES-669: independent reference implementation or empirical criterion
-* G - owner RES-671: protocol event detection checked against adjudicated events
-* H - owner RES-673: metric-definition review against the protocol literature
-* A - owner RES-693: audited native raw-data acquisition from the device
-* C - owner RES-693: measured clock, latency and synchronisation characterisation
-* F - owner RES-698: device-specific reconstruction checked against a criterion measure
-* D - owner RES-698: empirical signal-integrity study with real fault occurrences
-* B - owner RES-698: measured calibration, axes and geometry records for the device
-* I - owner RES-698: measurement-uncertainty budget from device metrology
-* E - owner RES-698: method comparison on measured data with accepted sensitivity bounds
-* M - owner RES-698: seeded bundle chain with provenance for every processing stage
-* O - owner RES-698: sourced limitation statement reviewed by a domain expert
-* L - owner RES-703: paired measured cross-device agreement study (at least 20 independent subjects)
+* computational blocker: A: executable admission contract: native/vendor stage, units and integrity refusals tested (owner RES-693; rated specified)
+* computational blocker: B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-698; rated specified)
+* computational blocker: C: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused (owner RES-693; rated specified)
+* computational blocker: D: integrity and QC checks reject injected faults and pass clean controls (owner RES-698; rated partial)
+* computational blocker: E: every processing method variant is compared with an independent reference with stated sensitivity bounds (owner RES-698; rated partial)
+* computational blocker: F: reconstructed quantities agree with an independent analytical truth within tolerance (owner RES-698; rated partial)
+* computational blocker: G: protocol events are recovered against analytically known event times, with eligibility refusals (owner RES-671; rated partial)
+* computational blocker: H: metric definitions are bound to sourced registry claims and executable exactly (owner RES-673; rated partial)
+* computational blocker: I: declared uncertainty propagation is checked against an independent analytical result (owner RES-698; rated partial)
+* computational blocker: J: an independent reference implementation or closed form that shares no code with the engine (owner RES-669; rated partial)
+* computational blocker: K: synthetic fault fixtures cover the declared fault classes with expected verdicts (owner RES-669; rated partial)
+* computational blocker: L: analytical cross-device studies are executed and classified, never read as interchangeability (owner RES-703; rated partial)
+* computational blocker: M: seeded, hash-bound provenance chain for every processing stage, reproduced exactly (owner RES-698; rated partial)
+* computational blocker: O: limitation statements are sourced and emitted with every result (owner RES-698; rated partial)
+* computational blocker: blocker: Contact-system switching thresholds and latency bounds need empirical metrology (RES-694)
+* computational blocker: blocker: Assessment-specific validity and force-platform/IMU agreement remain open (RES-671/703)
+* J - owner RES-669: an independent reference implementation or closed form that shares no code with the engine
+* K - owner RES-669: synthetic fault fixtures cover the declared fault classes with expected verdicts
+* G - owner RES-671: protocol events are recovered against analytically known event times, with eligibility refusals
+* H - owner RES-673: metric definitions are bound to sourced registry claims and executable exactly
+* C - owner RES-693: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused
+* A - owner RES-693: executable admission contract: native/vendor stage, units and integrity refusals tested
+* B - owner RES-698: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused
+* I - owner RES-698: declared uncertainty propagation is checked against an independent analytical result
+* E - owner RES-698: every processing method variant is compared with an independent reference with stated sensitivity bounds
+* D - owner RES-698: integrity and QC checks reject injected faults and pass clean controls
+* O - owner RES-698: limitation statements are sourced and emitted with every result
+* F - owner RES-698: reconstructed quantities agree with an independent analytical truth within tolerance
+* M - owner RES-698: seeded, hash-bound provenance chain for every processing stage, reproduced exactly
+* L - owner RES-703: analytical cross-device studies are executed and classified, never read as interchangeability
 
 **timing_contact.gates** (SPECIFIED)
-* blocker: Gate geometry, trigger validity and timing-error bounds need empirical metrology (RES-694)
-* blocker: Sprint assessment variants and cross-device agreement remain open (RES-673/703)
-* K - owner RES-669: fixtures covering measured fault classes
-* J - owner RES-669: independent reference implementation or empirical criterion
-* G - owner RES-671: protocol event detection checked against adjudicated events
-* H - owner RES-673: metric-definition review against the protocol literature
-* A - owner RES-693: audited native raw-data acquisition from the device
-* C - owner RES-693: measured clock, latency and synchronisation characterisation
-* F - owner RES-698: device-specific reconstruction checked against a criterion measure
-* D - owner RES-698: empirical signal-integrity study with real fault occurrences
-* B - owner RES-698: measured calibration, axes and geometry records for the device
-* I - owner RES-698: measurement-uncertainty budget from device metrology
-* E - owner RES-698: method comparison on measured data with accepted sensitivity bounds
-* M - owner RES-698: seeded bundle chain with provenance for every processing stage
-* O - owner RES-698: sourced limitation statement reviewed by a domain expert
-* L - owner RES-703: paired measured cross-device agreement study (at least 20 independent subjects)
+* computational blocker: A: executable admission contract: native/vendor stage, units and integrity refusals tested (owner RES-693; rated specified)
+* computational blocker: B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-698; rated specified)
+* computational blocker: C: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused (owner RES-693; rated specified)
+* computational blocker: D: integrity and QC checks reject injected faults and pass clean controls (owner RES-698; rated partial)
+* computational blocker: E: every processing method variant is compared with an independent reference with stated sensitivity bounds (owner RES-698; rated partial)
+* computational blocker: F: reconstructed quantities agree with an independent analytical truth within tolerance (owner RES-698; rated partial)
+* computational blocker: G: protocol events are recovered against analytically known event times, with eligibility refusals (owner RES-671; rated partial)
+* computational blocker: H: metric definitions are bound to sourced registry claims and executable exactly (owner RES-673; rated partial)
+* computational blocker: I: declared uncertainty propagation is checked against an independent analytical result (owner RES-698; rated partial)
+* computational blocker: J: an independent reference implementation or closed form that shares no code with the engine (owner RES-669; rated partial)
+* computational blocker: K: synthetic fault fixtures cover the declared fault classes with expected verdicts (owner RES-669; rated partial)
+* computational blocker: L: analytical cross-device studies are executed and classified, never read as interchangeability (owner RES-703; rated partial)
+* computational blocker: M: seeded, hash-bound provenance chain for every processing stage, reproduced exactly (owner RES-698; rated partial)
+* computational blocker: O: limitation statements are sourced and emitted with every result (owner RES-698; rated partial)
+* computational blocker: blocker: Gate geometry, trigger validity and timing-error bounds need empirical metrology (RES-694)
+* computational blocker: blocker: Sprint assessment variants and cross-device agreement remain open (RES-673/703)
+* J - owner RES-669: an independent reference implementation or closed form that shares no code with the engine
+* K - owner RES-669: synthetic fault fixtures cover the declared fault classes with expected verdicts
+* G - owner RES-671: protocol events are recovered against analytically known event times, with eligibility refusals
+* H - owner RES-673: metric definitions are bound to sourced registry claims and executable exactly
+* C - owner RES-693: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused
+* A - owner RES-693: executable admission contract: native/vendor stage, units and integrity refusals tested
+* B - owner RES-698: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused
+* I - owner RES-698: declared uncertainty propagation is checked against an independent analytical result
+* E - owner RES-698: every processing method variant is compared with an independent reference with stated sensitivity bounds
+* D - owner RES-698: integrity and QC checks reject injected faults and pass clean controls
+* O - owner RES-698: limitation statements are sourced and emitted with every result
+* F - owner RES-698: reconstructed quantities agree with an independent analytical truth within tolerance
+* M - owner RES-698: seeded, hash-bound provenance chain for every processing stage, reproduced exactly
+* L - owner RES-703: analytical cross-device studies are executed and classified, never read as interchangeability
+
+## 2b. Empirical device-validity evidence (separate from the computational gate)
+
+| Subfamily | Measured records | Dimensions covered | Interchangeability |
+| -- | -- | -- | -- |
+| force_platform.dual | 0 | none | unknown |
+| force_platform.single | 0 | none | unknown |
+| gnss_lps.gnss | 0 | none | unknown |
+| gnss_lps.lps | 0 | none | unknown |
+| imu.inertial | 0 | none | unknown |
+| load_cell_isometric.isometric_rig | 0 | none | unknown |
+| load_cell_isometric.load_cell | 0 | none | unknown |
+| lpt_encoder.encoder | 0 | none | unknown |
+| lpt_encoder.lpt | 0 | none | unknown |
+| nordic_hip.hip | 0 | none | unknown |
+| nordic_hip.nordic | 0 | none | unknown |
+| radar_laser.laser | 0 | none | unknown |
+| radar_laser.radar | 0 | none | unknown |
+| timing_contact.contact | 0 | none | unknown |
+| timing_contact.gates | 0 | none | unknown |
+
+Open empirical requirements (what only physical measurement can close):
+
+**force_platform.dual**
+* needs measured evidence for: A, B, C, D, E, F, G, H, I, J, K, L, M, O (see docs/verification/m3-gate-policy-decision.md)
+
+**force_platform.single**
+* needs measured evidence for: A, B, C, D, E, F, G, H, I, J, K, L, M, O (see docs/verification/m3-gate-policy-decision.md)
+
+**gnss_lps.gnss**
+* needs measured evidence for: A, B, C, D, E, F, G, H, I, J, K, L, M, O (see docs/verification/m3-gate-policy-decision.md)
+
+**gnss_lps.lps**
+* needs measured evidence for: A, B, C, D, E, F, G, H, I, J, K, L, M, O (see docs/verification/m3-gate-policy-decision.md)
+
+**imu.inertial**
+* needs measured evidence for: A, B, C, D, E, F, G, H, I, J, K, L, M, O (see docs/verification/m3-gate-policy-decision.md)
+
+**load_cell_isometric.isometric_rig**
+* needs measured evidence for: A, B, C, D, E, F, G, H, I, J, K, L, M, O (see docs/verification/m3-gate-policy-decision.md)
+
+**load_cell_isometric.load_cell**
+* needs measured evidence for: A, B, C, D, E, F, G, H, I, J, K, L, M, O (see docs/verification/m3-gate-policy-decision.md)
+
+**lpt_encoder.encoder**
+* needs measured evidence for: A, B, C, D, E, F, G, H, I, J, K, L, M, O (see docs/verification/m3-gate-policy-decision.md)
+
+**lpt_encoder.lpt**
+* needs measured evidence for: A, B, C, D, E, F, G, H, I, J, K, L, M, O (see docs/verification/m3-gate-policy-decision.md)
+
+**nordic_hip.hip**
+* needs measured evidence for: A, B, C, D, E, F, G, H, I, J, K, L, M, O (see docs/verification/m3-gate-policy-decision.md)
+
+**nordic_hip.nordic**
+* needs measured evidence for: A, B, C, D, E, F, G, H, I, J, K, L, M, O (see docs/verification/m3-gate-policy-decision.md)
+
+**radar_laser.laser**
+* needs measured evidence for: A, B, C, D, E, F, G, H, I, J, K, L, M, O (see docs/verification/m3-gate-policy-decision.md)
+
+**radar_laser.radar**
+* needs measured evidence for: A, B, C, D, E, F, G, H, I, J, K, L, M, O (see docs/verification/m3-gate-policy-decision.md)
+
+**timing_contact.contact**
+* needs measured evidence for: A, B, C, D, E, F, G, H, I, J, K, L, M, O (see docs/verification/m3-gate-policy-decision.md)
+
+**timing_contact.gates**
+* needs measured evidence for: A, B, C, D, E, F, G, H, I, J, K, L, M, O (see docs/verification/m3-gate-policy-decision.md)
 
 ## 3. Dimension ratings by subfamily
 

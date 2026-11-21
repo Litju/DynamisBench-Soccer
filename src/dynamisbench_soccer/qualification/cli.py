@@ -24,7 +24,8 @@ def _validate(args: argparse.Namespace) -> int:
 def _gate(args: argparse.Namespace) -> int:
     model = load(Path(args.ledger))
     result = gate(model, Stage(args.stage))
-    print(f"{args.stage}: {result.passed_families}/{result.total_families} families")
+    label = "computational-reference readiness" if args.stage == "M3" else "scientific gate"
+    print(f"{args.stage} ({label}): {result.passed_families}/{result.total_families} families")
     for family, missing in result.missing.items():
         print(f"  {family}: {len(missing)} unmet requirements")
         if args.verbose:
@@ -65,8 +66,9 @@ def _states(args: argparse.Namespace) -> int:
     model = load(Path(args.ledger))
     gate_result = m3_gate(model, Path("."))
     payload = {
+        "policy": "A: M3 = computational-reference readiness; empirical validity is separate",
         "m3_gate": asdict(gate_result),
-        "subfamilies": [asdict(s) for s in computed_states(model)],
+        "subfamilies": [asdict(s) for s in computed_states(model, Path("."))],
     }
     print(json.dumps(payload, indent=2, sort_keys=True))
     return 0 if gate_result.passed else 1
