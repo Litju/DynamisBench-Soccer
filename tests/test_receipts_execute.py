@@ -20,6 +20,15 @@ def test_every_cited_receipt_test_runs_and_passes() -> None:
         {t for r in receipts.load(ROOT / "qualification/receipts.toml") for t in r.tests}
     )
     if not cited:
+        # an empty store is only acceptable while no M3 dimension is rated verified
+        from dynamisbench_soccer.qualification import ledger as ledger_model
+
+        model = ledger_model.load(ROOT / "qualification/ledger.toml")
+        assert not any(
+            s.ratings[d].value == "verified"
+            for s in model.subfamilies
+            for d in ledger_model.M3_DIMENSIONS
+        )
         return
     result = subprocess.run(
         [sys.executable, "-m", "pytest", "-q", "-p", "no:cacheprovider", *cited],

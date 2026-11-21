@@ -402,33 +402,33 @@ def gate(
             len(families),
             {name: tuple(v) for name, v in sorted(blocked.items())},
         )
-    required = DIMENSIONS
+    # M5 and M8 build on the same canonical evaluator: M5 needs the M3 computational state plus
+    # a verified N; M8 needs the full scientific state (measured empirical records, N, review).
+    from dynamisbench_soccer.qualification.gate import evaluate_m3
+
+    report = evaluate_m3(model, receipts, empirical, root)
+    sub_by_id = {x.id: x for x in model.subfamilies}
     missing: dict[str, list[str]] = {}
-    for s in model.subfamilies:
-        for d in required:
-            if s.ratings.get(d) not in {Rating.VERIFIED, Rating.NOT_APPLICABLE}:
-                missing.setdefault(s.family, []).append(f"{s.id}/{d}")
-        if s.blockers:
-            missing.setdefault(s.family, []).extend(f"{s.id}: {b}" for b in s.blockers)
-        if stage == Stage.M8:
-            accepted = {
-                r.identity
-                for r in model.reviewers
-                if r.family == s.family
-                and r.independent
-                and r.decision == "accepted"
-                and r.evidence_ref
-            }
-            if len(accepted) < 2:
-                missing.setdefault(s.family, []).append("two independent reviewers")
+    for st in report.subfamilies:
+        sub = sub_by_id[st.subfamily]
+        if stage == Stage.M5:
+            ok = st.state in {
+                "ENGINEERING_VERIFIED",
+                "SCIENTIFICALLY_QUALIFIED",
+            } and sub.ratings.get("N") in {Rating.VERIFIED, Rating.NOT_APPLICABLE}
+            reasons = [f"{st.subfamily}: M3 state {st.state} / N {sub.ratings.get('N')}"]
+        else:
+            ok = st.state == "SCIENTIFICALLY_QUALIFIED"
+            reasons = [f"{st.subfamily}: state {st.state}, needs measured records and review"]
+        if not ok:
+            missing.setdefault(st.family, []).extend(reasons)
     families = {s.family for s in model.subfamilies}
     ready = len(families - set(missing))
-    structural = validate(model, root, receipts=receipts, empirical=empirical)
-    if structural:
-        missing.setdefault("__ledger__", []).extend(structural)
+    if report.structural_problems:
+        missing.setdefault("__ledger__", []).extend(report.structural_problems)
     return GateResult(
         stage,
-        ready == len(families) and not structural,
+        ready == len(families) and not report.structural_problems,
         ready,
         len(families),
         {name: tuple(v) for name, v in sorted(missing.items())},

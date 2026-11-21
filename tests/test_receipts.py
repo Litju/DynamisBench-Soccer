@@ -14,7 +14,7 @@ SUBS = {"force_platform.single"}
 
 def _tree(tmp_path: Path, **overrides: str) -> Path:
     files = {
-        "src/impl.py": "def engine(x):\n    return 2 * x\n",
+        "src/dynamisbench_soccer/engines/impl.py": "def engine(x):\n    return 2 * x\n",
         "src/ref.py": "def closed_form(x):\n    return x + x\n",
         "tests/test_cmp.py": (
             "from src.ref import closed_form\n\n"
@@ -36,7 +36,7 @@ def _receipt(root: Path, **changes: object) -> receipts.Receipt:
         subfamilies=("force_platform.single",),
         claim="The engine doubling equals an independently written closed form within tolerance.",
         issue="RES-675",
-        implementation=("src/impl.py::engine",),
+        implementation=("src/dynamisbench_soccer/engines/impl.py::engine",),
         reference=("src/ref.py::closed_form",),
         reference_kind="closed_form",
         independence=(
@@ -67,10 +67,14 @@ def test_a_substantive_receipt_is_valid(tmp_path: Path) -> None:
 def test_digest_binds_the_receipt_to_the_exact_code(tmp_path: Path) -> None:
     root = _tree(tmp_path)
     r = _receipt(root)
-    (root / "src/impl.py").write_text("def engine(x):\n    return 3 * x\n")
+    (root / "src/dynamisbench_soccer/engines/impl.py").write_text(
+        "def engine(x):\n    return 3 * x\n"
+    )
     assert any("stale" in e for e in _errors(root, r))
     # comments and formatting do not invalidate it
-    (root / "src/impl.py").write_text("def engine(x):\n    # note\n    return 2*x\n")
+    (root / "src/dynamisbench_soccer/engines/impl.py").write_text(
+        "def engine(x):\n    # note\n    return 2*x\n"
+    )
     assert _errors(root, r) == []
 
 
@@ -88,8 +92,11 @@ def test_digest_binds_the_receipt_to_the_exact_code(tmp_path: Path) -> None:
         ({"subfamilies": ("nope",)}, "unknown or missing subfamilies"),
         ({"issue": "x"}, "invalid owning issue"),
         ({"tests": ()}, "all required"),
-        ({"implementation": ("tests/test_cmp.py::test_matches",)}, "must live under src/"),
-        ({"implementation": ("src/impl.py::missing",)}, "does not resolve"),
+        ({"implementation": ("tests/test_cmp.py::test_matches",)}, "must be engine, assessment"),
+        (
+            {"implementation": ("src/dynamisbench_soccer/engines/impl.py::missing",)},
+            "does not resolve",
+        ),
     ],
 )
 def test_receipts_with_missing_substance_are_rejected(
@@ -103,7 +110,9 @@ def test_reference_may_not_be_the_implementation_or_call_engine_code(tmp_path: P
     root = _tree(tmp_path)
     assert any(
         "implementation file" in e
-        for e in _errors(root, _receipt(root, reference=("src/impl.py::engine",)))
+        for e in _errors(
+            root, _receipt(root, reference=("src/dynamisbench_soccer/engines/impl.py::engine",))
+        )
     )
     root = _tree(
         tmp_path / "b",
@@ -152,7 +161,7 @@ def test_duplicate_ids_and_paths_outside_the_repo_are_rejected(tmp_path: Path) -
     _per, global_errors = receipts.verify_all((r, r), root, SUBS)
     assert any("duplicate receipt id" in e for e in global_errors)
     escaped = _receipt(root, implementation=("src/../../etc/passwd::x",))
-    assert any("does not resolve" in e or "must live" in e for e in _errors(root, escaped))
+    assert any("does not resolve" in e or "must be engine" in e for e in _errors(root, escaped))
 
 
 def test_loader_roundtrip_and_missing_file(tmp_path: Path) -> None:
@@ -241,3 +250,106 @@ def test_categorical_receipts_need_expected_outcomes_not_a_tolerance(tmp_path: P
     assert any("not substantive" in e for e in _errors(root, vague))
     numeric_without_tolerance = dataclasses.replace(ok, check_kind="numeric")
     assert any("positive tolerance" in e for e in _errors(root, numeric_without_tolerance))
+
+
+# ---- independent-review findings (RES-692) -------------------------------------------------
+
+IMPL = "src/dynamisbench_soccer/engines/impl.py"
+IMPL_BODY = (
+    "SCALE = 2\n\ndef _helper(x):\n    return SCALE * x\n\ndef engine(x):\n    return _helper(x)\n"
+)
+
+
+def test_indirect_engine_use_by_a_reference_is_rejected(tmp_path: Path) -> None:
+    for name, body in {
+        "package import": (
+            "from dynamisbench_soccer import engines\n\n"
+            "def closed_form(x):\n    return engines.eng.process(x)\n"
+        ),
+        "agreement import": (
+            "from dynamisbench_soccer.agreement.studies import run_all\n\n"
+            "def closed_form(x):\n    return run_all()\n"
+        ),
+    }.items():
+        root = _tree(tmp_path / name.replace(" ", "_"), **{"src/ref.py": body})
+        assert any("engine/assessment code" in e for e in _errors(root, _receipt(root))), name
+    # a test-file helper that reaches engine code through another local helper
+    root = _tree(
+        tmp_path / "helper",
+        **{
+            "tests/test_cmp.py": (
+                "from dynamisbench_soccer.engines.radar_laser import process\n\n"
+                "def _indirect(x):\n    return process(x)\n\n"
+                "def reference(x):\n    return _indirect(x)\n\n"
+                "def test_matches():\n    assert reference(1) == 1\n"
+            )
+        },
+    )
+    errs = _errors(root, _receipt(root, reference=("tests/test_cmp.py::reference",)))
+    assert any("calls engine/assessment code" in e for e in errs)
+
+
+def test_implementation_must_be_engine_code_and_may_not_import_its_reference(
+    tmp_path: Path,
+) -> None:
+    root = _tree(
+        tmp_path,
+        **{IMPL: "from ref import closed_form\n\ndef engine(x):\n    return closed_form(x)\n"},
+    )
+    assert any("imports its own reference" in e for e in _errors(root, _receipt(root)))
+    root = _tree(tmp_path / "b", **{"src/ref2.py": "def reference_only():\n    return 1\n"})
+    bad = _receipt(root, implementation=("src/ref2.py::reference_only",))
+    assert any("must be engine, assessment" in e for e in _errors(root, bad))
+
+
+@pytest.mark.parametrize("body", ["assert True", "assert 1 + 1 == 2", "assert (1, 2)"])
+def test_vacuous_assertions_do_not_substantiate_a_receipt(tmp_path: Path, body: str) -> None:
+    root = _tree(tmp_path, **{"tests/test_cmp.py": f"def test_matches():\n    {body}\n"})
+    assert any("no assertion" in e for e in _errors(root, _receipt(root)))
+
+
+def test_the_digest_covers_the_same_file_helpers_and_constants_a_symbol_uses(
+    tmp_path: Path,
+) -> None:
+    root = _tree(
+        tmp_path,
+        **{IMPL: IMPL_BODY},
+    )
+    r = _receipt(root)
+    assert _errors(root, r) == []
+    (root / IMPL).write_text(IMPL_BODY.replace("SCALE = 2", "SCALE = 3"))
+    assert any("stale" in e for e in _errors(root, r))
+    (root / IMPL).write_text(IMPL_BODY.replace("SCALE * x", "SCALE * x * 1"))
+    assert any("stale" in e for e in _errors(root, r))
+
+
+def test_a_duplicated_id_invalidates_every_copy(tmp_path: Path) -> None:
+    root = _tree(tmp_path)
+    good = _receipt(root)
+    broken = dataclasses.replace(good, dimension="K", digests={}, tests=("tests/nope.py::test_x",))
+    problems, global_errors = receipts.verify_all((broken, good), root, SUBS)
+    assert any("duplicate" in e for e in global_errors)
+    assert problems[good.id]  # the valid copy is invalid too: nothing can hide behind an id
+
+
+def test_empirical_l_needs_paired_units_and_clearance_must_resolve(tmp_path: Path) -> None:
+    ok = _record(dimension="L", criterion_kind="paired_instrument", n_independent_units=20)
+    assert empirical.verify(ok, SUBS) == []
+    assert any(
+        "at least 20" in e
+        for e in empirical.verify(
+            _record(dimension="L", n_independent_units=3, criterion_kind="paired_instrument"), SUBS
+        )
+    )
+    assert any(
+        "paired_instrument" in e
+        for e in empirical.verify(_record(dimension="L", n_independent_units=25), SUBS)
+    )
+    assert any("not an M3 dimension" in e for e in empirical.verify(_record(dimension="Z"), SUBS))
+    assert any(
+        "does not resolve" in e
+        for e in empirical.verify(_record(rights_ref="nope.md"), SUBS, tmp_path)
+    )
+    (tmp_path / "docs").mkdir()
+    (tmp_path / "docs/clearance.md").write_text("cleared")
+    assert empirical.verify(_record(rights_ref="docs/clearance.md"), SUBS, tmp_path) == []

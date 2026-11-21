@@ -191,3 +191,68 @@ def test_synthetic_receipts_cannot_stand_in_for_physical_validity() -> None:
         assert set(s.empirical_requirements) == set(L.M3_DIMENSIONS)
         assert s.empirical_interchangeability in {"unknown", "not_interchangeable"}
         assert set(s.analytical_only_dimensions) == set(L.M3_DIMENSIONS)
+
+
+def test_not_applicable_never_verifies_without_a_receipt_and_never_for_j() -> None:
+    """Reviewer finding: N/A with a bare applicability_review reached ENGINEERING_VERIFIED."""
+    base = _complete()
+    sub = base.subfamilies[0]
+    na = {**sub.ratings, **{d: Rating.NOT_APPLICABLE for d in L.M3_DIMENSIONS}}
+    review = tuple(
+        Evidence(sub.id, d, "applicability_review", "repo:README.md", "RES-675", "bare review")
+        for d in L.M3_DIMENSIONS
+    )
+    model = dataclasses.replace(
+        base,
+        subfamilies=(dataclasses.replace(sub, ratings=na), *base.subfamilies[1:]),
+        evidence=(*base.evidence, *review),
+    )
+    good = tuple(r for r in fixture_receipts(base) if not r.id.startswith(f"FX-{sub.id}-"))
+    state = {s.subfamily: s for s in computed_states(model, ROOT, receipts=good)}[sub.id]
+    assert state.state != "ENGINEERING_VERIFIED"
+    assert not m3_gate(model, ROOT, receipts=good).passed
+    # N/A on J is invalid even with a receipt
+    with_receipts = fixture_receipts(model)
+    errors = L.validate(model, ROOT, receipts=with_receipts)
+    assert any(
+        f"{sub.id}/J: the independent reference cannot be not_applicable" in e for e in errors
+    )
+
+
+def test_m5_and_m8_follow_the_canonical_evaluator_not_bare_ratings() -> None:
+    from receipt_fixtures import fixture_empirical
+
+    base = _complete()
+    # all dimensions incl. N verified with receipts, but no measured records and no reviewers
+    subs = tuple(
+        dataclasses.replace(s, ratings=dict.fromkeys(L.DIMENSIONS, Rating.VERIFIED))
+        for s in base.subfamilies
+    )
+    n_evidence = tuple(
+        Evidence(
+            s.id, "N", "independent_test", "repo:README.md", "RES-675", "N fixture",
+            independence_from=s.engine_id, implementation="independent control",
+        )
+        for s in subs
+    )  # fmt: skip
+    model = dataclasses.replace(base, subfamilies=subs, evidence=(*base.evidence, *n_evidence))
+    receipts = fixture_receipts(model)
+    assert L.gate(model, Stage.M5, ROOT, receipts=receipts).passed
+    reviewers = tuple(
+        L.Reviewer(f, who, True, "accepted", "repo:README.md")
+        for f in {s.family for s in subs}
+        for who in ("A", "B")
+    )
+    with_reviewers = dataclasses.replace(model, reviewers=reviewers)
+    # two reviewers and verified ratings are not scientific qualification without measured records
+    assert not L.gate(with_reviewers, Stage.M8, ROOT, receipts=receipts, empirical=()).passed
+    full = L.gate(
+        with_reviewers, Stage.M8, ROOT, receipts=receipts, empirical=fixture_empirical(model)
+    )
+    assert full.passed, full.missing
+    # M5 also fails when the M3 computational state fails
+    broken = dataclasses.replace(
+        model,
+        subfamilies=(dataclasses.replace(subs[0], blockers=("open",)), *subs[1:]),
+    )
+    assert not L.gate(broken, Stage.M5, ROOT, receipts=receipts).passed

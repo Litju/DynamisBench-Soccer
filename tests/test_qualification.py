@@ -4,7 +4,7 @@ from dataclasses import replace
 from pathlib import Path
 
 import pytest
-from receipt_fixtures import fixture_receipts
+from receipt_fixtures import fixture_empirical, fixture_receipts
 
 from dynamisbench_soccer.cli import main
 from dynamisbench_soccer.qualification.ledger import (
@@ -29,7 +29,13 @@ def vvalidate(model: Ledger, root: Path | None = None) -> list[str]:
 
 
 def vgate(model: Ledger, stage: Stage, root: Path = Path(".")):  # type: ignore[no-untyped-def]
-    return gate(model, stage, root, receipts=fixture_receipts(model))
+    return gate(
+        model,
+        stage,
+        root,
+        receipts=fixture_receipts(model),
+        empirical=fixture_empirical(model) if stage == Stage.M8 else (),
+    )
 
 
 @pytest.fixture

@@ -15,6 +15,7 @@ import tomllib
 from dataclasses import dataclass
 from pathlib import Path
 
+M3_DIMENSIONS = ("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "O")
 DATA_CATEGORIES = frozenset({"measured", "synthetic", "analytical", "simulated", "vendor_reported"})
 ACCEPTED_CATEGORY = "measured"
 CRITERION_KINDS = frozenset(
@@ -74,9 +75,21 @@ def load(path: Path) -> tuple[EmpiricalRecord, ...]:
     )
 
 
-def verify(record: EmpiricalRecord, subfamily_ids: set[str]) -> list[str]:
+MIN_PAIRED_UNITS = 20  # the approved paired-agreement floor for dimension L
+
+
+def verify(record: EmpiricalRecord, subfamily_ids: set[str], root: Path | None = None) -> list[str]:
     rid = record.id
     errors: list[str] = []
+    if record.dimension not in M3_DIMENSIONS:
+        errors.append(f"{rid}: dimension {record.dimension!r} is not an M3 dimension")
+    if record.dimension == "L":
+        if record.criterion_kind != "paired_instrument":
+            errors.append(f"{rid}: L needs a paired_instrument criterion")
+        if record.n_independent_units < MIN_PAIRED_UNITS:
+            errors.append(f"{rid}: L needs at least {MIN_PAIRED_UNITS} independent units")
+    if root is not None and not (root / record.rights_ref).is_file():
+        errors.append(f"{rid}: rights/provenance clearance {record.rights_ref!r} does not resolve")
     if record.subfamily not in subfamily_ids:
         errors.append(f"{rid}: unknown subfamily {record.subfamily}")
     if record.data_category not in DATA_CATEGORIES:
@@ -102,12 +115,12 @@ def verify(record: EmpiricalRecord, subfamily_ids: set[str]) -> list[str]:
 
 
 def verify_all(
-    records: tuple[EmpiricalRecord, ...], subfamily_ids: set[str]
+    records: tuple[EmpiricalRecord, ...], subfamily_ids: set[str], root: Path | None = None
 ) -> dict[str, list[str]]:
     seen: set[str] = set()
     out: dict[str, list[str]] = {}
     for r in records:
-        errs = verify(r, subfamily_ids)
+        errs = verify(r, subfamily_ids, root)
         if r.id in seen:
             errs.append(f"{r.id}: duplicate id")
         seen.add(r.id)

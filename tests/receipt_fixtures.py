@@ -60,3 +60,30 @@ def fixture_receipts(model: Ledger) -> tuple[Receipt, ...]:
     return tuple(
         receipt((s.id,), d, rid=f"FX-{s.id}-{d}") for s in model.subfamilies for d in M3_DIMENSIONS
     )
+
+
+def fixture_empirical(model: Ledger):  # type: ignore[no-untyped-def]
+    """Structurally valid *measured* records, for gate-logic tests only (not real evidence)."""
+    from dynamisbench_soccer.qualification.empirical import EmpiricalRecord
+
+    return tuple(
+        EmpiricalRecord(
+            id=f"EX-{s.id}-{d}",
+            subfamily=s.id,
+            dimension=d,
+            instrument="Fixture instrument description for gate-logic tests only",
+            estimand="fixture estimand for gate-logic tests only",
+            protocol="fixture protocol for gate-logic tests only",
+            conditions="fixture conditions for gate-logic tests only",
+            criterion_kind="paired_instrument" if d == "L" else "reference_standard",
+            criterion="fixture criterion for gate-logic tests only",
+            uncertainty="fixture uncertainty statement for gate-logic tests only",
+            data_category="measured",
+            data_sha256="b" * 64,
+            rights_ref="README.md",
+            n_independent_units=20,
+            issue="RES-692",
+        )
+        for s in model.subfamilies
+        for d in M3_DIMENSIONS
+    )

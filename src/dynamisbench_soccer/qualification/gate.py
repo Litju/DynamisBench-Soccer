@@ -119,7 +119,7 @@ def _valid_receipts(
     index: dict[tuple[str, str], list[str]] = {}
     for r in receipts:
         if problems.get(r.id):
-            continue
+            continue  # any invalid receipt, and every receipt sharing a duplicated id
         for sub in r.subfamilies:
             index.setdefault((sub, r.dimension), []).append(r.id)
     return {k: tuple(v) for k, v in index.items()}, problems, global_errors
@@ -143,12 +143,18 @@ def receipt_structure_problems(
     }
     for sub in model.subfamilies:
         for d in M3_DIMENSIONS:
-            if sub.ratings.get(d) == Rating.VERIFIED and not index.get((sub.id, d)):
-                errors.append(f"{sub.id}/{d}: rated verified without a valid independent receipt")
+            if sub.ratings.get(d) in {Rating.VERIFIED, Rating.NOT_APPLICABLE} and not index.get(
+                (sub.id, d)
+            ):
+                errors.append(
+                    f"{sub.id}/{d}: rated {sub.ratings[d].value} with no valid independent receipt"
+                )
+            if sub.ratings.get(d) == Rating.NOT_APPLICABLE and d == "J":
+                errors.append(f"{sub.id}/J: the independent reference cannot be not_applicable")
             if d == "O" and sub.ratings.get(d) == Rating.VERIFIED and (sub.id, d) not in sourced:
                 errors.append(f"{sub.id}/O: limitations verified without a registry-sourced basis")
     ids = {s.id for s in model.subfamilies}
-    for errs in empirical_mod.verify_all(empirical_records, ids).values():
+    for errs in empirical_mod.verify_all(empirical_records, ids, root).values():
         errors.extend(errs)
     return errors
 
@@ -188,11 +194,19 @@ def subfamily_status(
         have = index.get((sub.id, d), ())
         if rating == Rating.VERIFIED and have:
             cells[d] = Cell(d, rating.value, True, have, None)
-        elif rating == Rating.NOT_APPLICABLE and any(
-            e.subfamily == sub.id and e.dimension == d and e.kind == "applicability_review"
-            for e in model.evidence
+        elif (
+            rating == Rating.NOT_APPLICABLE
+            and d != "J"
+            and have
+            and any(
+                e.subfamily == sub.id and e.dimension == d and e.kind == "applicability_review"
+                for e in model.evidence
+            )
         ):
-            cells[d] = Cell(d, rating.value, True, (), None)
+            # not applicable is a claim like any other: reviewed AND demonstrated by a receipt
+            cells[d] = Cell(d, rating.value, True, have, None)
+        elif rating == Rating.NOT_APPLICABLE:
+            cells[d] = Cell(d, rating.value, False, have, "not_applicable without receipt/review")
         elif rating == Rating.VERIFIED:
             cells[d] = Cell(d, rating.value, False, (), "verified without a valid receipt")
         else:
@@ -278,7 +292,7 @@ def evaluate_m3(
         empirical_records = empirical_mod.load(qdir / "empirical.toml")
     index, receipt_errors, _global = _valid_receipts(model, receipts, root)
     ids = {s.id for s in model.subfamilies}
-    empirical_errors = empirical_mod.verify_all(empirical_records, ids)
+    empirical_errors = empirical_mod.verify_all(empirical_records, ids, root)
     valid_empirical = {rid for rid, errs in empirical_errors.items() if not errs}
     structural = tuple(validate(model, root, receipts=receipts, empirical=empirical_records))
     statuses = tuple(
