@@ -85,8 +85,8 @@ paradigm, and that difference is the point of parity without identical algorithm
 | `NOT_STARTED` | Every dimension absent |
 | `IN_PROGRESS` | Anything between |
 | `SPECIFIED` | Every dimension at least specified |
-| `ENGINEERING_VERIFIED` (**M3 gate**) | A–M and O verified for all 15 subfamilies, independent reference, no open blockers; N excluded |
-| `SCIENTIFICALLY_QUALIFIED` | Every dimension verified, plus a non-analytical independent reference (independent implementation, empirical criterion or published worked example), plus independent review (M8, RES-688) |
+| `ENGINEERING_VERIFIED` (**M3 gate**) | Computational-reference readiness (Policy A): A–M and O each verified by a valid independent receipt, an independent reference, no open computational blocker; N excluded. Says nothing about physical-device validity |
+| `SCIENTIFICALLY_QUALIFIED` | Every dimension verified, measured empirical records for every M3 dimension, qualified grading (N), plus independent review (M8, RES-688) |
 
 A family is reported as **blocked** whenever a dimension carries a *scientific*
 blocker, such as a missing source, missing data or an unresolved scientific question.
@@ -187,7 +187,7 @@ A new device class enters only through a versioned scientific evidence contract 
 - QP-05: Processing methods must suit the family's paradigm. Continuous-signal filtering is not applied to discrete timing or contact events.
 - QP-06: Measurements from different devices are different estimands until an agreement study rules otherwise. Examples: GNSS-derived speed is not a radar velocity trace; LPT cable displacement is not vertical displacement without geometry; commercial force, torque, velocity, power and RFD definitions are not interchangeable between vendors.
 - QP-07: Three engines are kept separate: the device processing engine (how an instrument produces observations), the assessment science engine (how a protocol produces scientific quantities) and the AI benchmark engine (how an AI system is evaluated on that work).
-- QP-08: M3 is complete only when every in-scope family computes ENGINEERING_VERIFIED. Families that cannot are reported as blocked, never silently removed from scope. SCIENTIFICALLY_QUALIFIED needs independent review (M8) and qualified grading (N).
+- QP-08: M3 is complete only when every in-scope subfamily computes ENGINEERING_VERIFIED, which under the owner-approved Policy A means computational-reference readiness (see "M3 contract (Policy A)"). Families that cannot are reported as blocked, never silently removed from scope. SCIENTIFICALLY_QUALIFIED needs independent review (M8) and qualified grading (N).
 - QP-09: Project constraints: at least two atomic commits per issue, independent verification, explicit scientific assumptions, qualified data provenance, no paid model evaluations, and no modifications to DynamisSimBench.
 
 ## Declared estimand non-equivalences
@@ -223,3 +223,73 @@ A new device class enters only through a versioned scientific evidence contract 
 - `orientation_complementary` (inertial): Complementary-filter orientation estimate.
 - `orientation_kalman` (inertial): Kalman-filter orientation estimate.
 - `gravity_removal` (inertial): Remove gravity from specific force using the estimated orientation.
+
+## M3 contract (Policy A, owner-approved)
+
+**Approved.** M3 verifies the *computational reference*: given declared inputs and conditions,
+the software computes the specified quantity correctly, as shown by independent checks. It is
+*verification* in the NIST/ASME sense (are we solving the equations right) and says nothing
+about *validation* (does a physical instrument measure the right thing). Physical-device
+validity, calibration and metrological traceability (JCGM 200:2012, VIM) need measured data,
+a criterion and an uncertainty statement; they are recorded separately in
+`qualification/empirical.toml` and are never inferred from synthetic or analytical evidence.
+
+One canonical evaluator (`qualification/gate.py`) decides M3 for `ledger.gate`, `state.m3_gate`
+and the `dbs qualification gate|states` commands. A dimension of a subfamily is verified only
+when its rating is `verified` **and** at least one valid receipt covers it. A receipt
+(`qualification/receipts.toml`) is not a file path or an evidence-kind string. It names:
+
+* the implementation symbols under test (under `src/`);
+* an independent reference: a closed form, an independent implementation or a published
+  worked example, in a file that is not an implementation file and does not call
+  engine/assessment code;
+* the tests that compare them (real `test_*` functions with assertions, not skipped);
+* a positive numeric tolerance with unit and basis, a substantive claim and independence
+  statement; and
+* SHA-256 digests of the syntax tree of every cited symbol, so any edit invalidates the receipt
+  until it is re-issued and independently re-reviewed.
+
+`tests/test_receipts_execute.py` additionally runs every cited test, so no receipt can rest on
+a failing test.
+
+### Computational reading of A–M and O
+
+| Dim | M3 (computational) requirement | What stays empirical |
+| -- | -- | -- |
+| A | executable admission contract: native/vendor stage, units and integrity refusals tested | audited native raw-data acquisition from the device |
+| B | declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused | measured calibration, axes and geometry records |
+| C | clock, latency and synchronisation models are declared, applied and propagated; inconsistent timing is refused | measured clock, latency and synchronisation characterisation |
+| D | integrity and QC checks reject injected faults and pass clean controls | study with real fault occurrences |
+| E | every processing method variant is compared with an independent reference with stated sensitivity bounds | method comparison on measured data |
+| F | reconstructed quantities agree with an independent analytical truth within tolerance | reconstruction checked against a criterion measure |
+| G | protocol events are recovered against analytically known event times, with eligibility refusals | detection checked against adjudicated events |
+| H | metric definitions are bound to sourced registry claims and executable exactly | domain-expert definition review |
+| I | declared uncertainty propagation is checked against an independent analytical result | uncertainty budget from device metrology |
+| J | an independent reference implementation or closed form that shares no code with the engine | criterion instrument for the physical quantity |
+| K | synthetic fault fixtures cover the declared fault classes with expected verdicts | fixtures of measured fault classes |
+| L | analytical cross-device studies are executed and classified, never read as interchangeability | paired measured agreement study (at least 20 independent subjects) |
+| M | seeded, hash-bound provenance chain for every processing stage, reproduced exactly | provenance of measured data to the acquisition session |
+| O | limitation statements are sourced and emitted with every result | domain-expert review of limitations |
+
+### Analytical versus empirical interchangeability
+
+Dimension L at M3 means the analytical cross-device studies were executed and classified
+(`ENGINE_TO_ENGINE`, `ENGINE_TO_INDEPENDENT_CLOSED_FORM`, `CLOSED_FORM_DEMONSTRATION`,
+`DIAGNOSTIC_ONLY`, `UNSUPPORTED`). Each comparison's empirical verdict stays `unknown` until
+qualified measured paired data exist; an `interchangeable` verdict still needs empirical
+evidence and accepted review. Analytical agreement never promotes it.
+
+### Reports
+
+`dbs qualification states` and `docs/verification/engine-v0.1.md` list **computational
+blockers** (unverified dimensions and open computational issues, with owners) separately
+from **empirical requirements** (what only physical measurement can close). The M4/M5/M8
+boundaries are unchanged: N still belongs to M4/M5, and independent scientific review to M8.
+
+### Original RES-675 acceptance, reinterpreted
+
+The original acceptance ("full verification matrix ... cross-implementation agreement ...
+report in `docs/verification/engine-v0.1.md` ... open discrepancies with a disposition")
+is read as computational verification. Phrases implying device validation (audited native
+data, metrology, paired measured agreement) are empirical-track requirements and are not
+M3 pass conditions. All eight families and 15 subfamilies remain in scope; none is removed.

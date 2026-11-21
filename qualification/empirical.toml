@@ -1,0 +1,4 @@
+# Empirical device-validity records (Policy A, RES-692). Measured data only.
+# One [[record]] per subfamily/dimension: instrument, estimand, protocol, conditions,
+# criterion, uncertainty, data sha256 and rights clearance. Synthetic, analytical, simulated
+# and vendor-reported data are rejected by the validator. No record exists yet.

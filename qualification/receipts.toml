@@ -1,0 +1,4 @@
+# Independent computational-verification receipts (Policy A, RES-692 / RES-675).
+# One [[receipt]] per (dimension, subfamilies) claim. See docs/m3-architecture.md.
+# Digests are filled by scripts/issue_receipts.py and checked on every validation: editing a
+# cited symbol invalidates its receipts until they are re-issued and re-reviewed.
