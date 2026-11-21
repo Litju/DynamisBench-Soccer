@@ -57,7 +57,9 @@ def verified(ledger: Ledger) -> Ledger:
         for d in DIMENSIONS
     )
     comparisons = tuple(replace(c, verdict="not_interchangeable") for c in ledger.comparisons)
-    return replace(ledger, subfamilies=subs, evidence=evidence, comparisons=comparisons)
+    return replace(
+        ledger, subfamilies=subs, evidence=(*ledger.evidence, *evidence), comparisons=comparisons
+    )
 
 
 def test_current_ledger_and_generated_report(ledger: Ledger) -> None:

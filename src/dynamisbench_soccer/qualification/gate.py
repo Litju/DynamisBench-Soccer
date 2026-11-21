@@ -136,10 +136,17 @@ def receipt_structure_problems(
     errors = list(global_errors)
     for errs in problems.values():
         errors.extend(errs)
+    sourced = {
+        (e.subfamily, e.dimension)
+        for e in model.evidence
+        if e.kind in {"registry_claim", "registry_gap"}
+    }
     for sub in model.subfamilies:
         for d in M3_DIMENSIONS:
             if sub.ratings.get(d) == Rating.VERIFIED and not index.get((sub.id, d)):
                 errors.append(f"{sub.id}/{d}: rated verified without a valid independent receipt")
+            if d == "O" and sub.ratings.get(d) == Rating.VERIFIED and (sub.id, d) not in sourced:
+                errors.append(f"{sub.id}/O: limitations verified without a registry-sourced basis")
     ids = {s.id for s in model.subfamilies}
     for errs in empirical_mod.verify_all(empirical_records, ids).values():
         errors.extend(errs)

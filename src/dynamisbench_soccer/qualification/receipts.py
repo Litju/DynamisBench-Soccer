@@ -48,6 +48,9 @@ class Receipt:
     tolerance_unit: str
     tolerance_basis: str
     digests: dict[str, str] = field(default_factory=dict)
+    # "numeric": agreement within a positive tolerance. "categorical": the expected verdict,
+    # refusal or classification is asserted exactly; the basis states the expected outcomes.
+    check_kind: str = "numeric"
 
 
 def load(path: Path) -> tuple[Receipt, ...]:
@@ -68,10 +71,11 @@ def load(path: Path) -> tuple[Receipt, ...]:
                 reference_kind=row["reference_kind"],
                 independence=row["independence"],
                 tests=tuple(row["tests"]),
-                tolerance=float(row["tolerance"]),
-                tolerance_unit=row["tolerance_unit"],
+                tolerance=float(row.get("tolerance", 0.0)),
+                tolerance_unit=row.get("tolerance_unit", ""),
                 tolerance_basis=row["tolerance_basis"],
                 digests=dict(row.get("digests", {})),
+                check_kind=row.get("check_kind", "numeric"),
             )
         )
     return tuple(out)
@@ -193,11 +197,19 @@ def _marks(node: ast.AST) -> set[str]:
     return found
 
 
+ASSERTING_CALLS = frozenset({"approx", "raises", "allclose", "isclose", "array_equal", "warns"})
+
+
 def _has_assertion(node: ast.AST) -> bool:
     for sub in ast.walk(node):
         if isinstance(sub, ast.Assert):
             return True
-        if isinstance(sub, ast.Attribute) and sub.attr in {"approx", "raises", "allclose"}:
+        name = None
+        if isinstance(sub, ast.Attribute):
+            name = sub.attr
+        elif isinstance(sub, ast.Name):
+            name = sub.id
+        if name is not None and (name in ASSERTING_CALLS or name.startswith("assert_")):
             return True
     return False
 
@@ -218,10 +230,14 @@ def verify(receipt: Receipt, root: Path, subfamily_ids: set[str]) -> list[str]:
         errors.append(f"{rid}: invalid owning issue")
     if receipt.reference_kind not in REFERENCE_KINDS:
         errors.append(f"{rid}: unknown reference kind {receipt.reference_kind!r}")
-    if not (receipt.tolerance > 0) or not receipt.tolerance_unit.strip():
+    if receipt.check_kind not in {"numeric", "categorical"}:
+        errors.append(f"{rid}: unknown check kind {receipt.check_kind!r}")
+    if receipt.check_kind == "numeric" and (
+        not (receipt.tolerance > 0) or not receipt.tolerance_unit.strip()
+    ):
         errors.append(f"{rid}: a positive tolerance with a unit is required")
-    if not receipt.tolerance_basis.strip():
-        errors.append(f"{rid}: tolerance basis missing")
+    if len(receipt.tolerance_basis.strip()) < 20:
+        errors.append(f"{rid}: tolerance basis (or expected outcomes) is not substantive")
     if not receipt.implementation or not receipt.reference or not receipt.tests:
         errors.append(f"{rid}: implementation, reference and tests are all required")
         return errors

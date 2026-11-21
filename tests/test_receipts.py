@@ -82,6 +82,7 @@ def test_digest_binds_the_receipt_to_the_exact_code(tmp_path: Path) -> None:
         ({"tolerance": 0.0}, "positive tolerance"),
         ({"tolerance_unit": " "}, "positive tolerance"),
         ({"tolerance_basis": ""}, "tolerance basis"),
+        ({"check_kind": "vibes"}, "unknown check kind"),
         ({"reference_kind": "vendor_number"}, "unknown reference kind"),
         ({"dimension": "N"}, "not an M3 dimension"),
         ({"subfamilies": ("nope",)}, "unknown or missing subfamilies"),
@@ -224,3 +225,19 @@ def test_empirical_duplicate_ids_and_loader(tmp_path: Path) -> None:
     res = empirical.verify_all((_record(), _record()), SUBS)
     assert any("duplicate" in e for e in res["E-1"])
     assert empirical.load(tmp_path / "none.toml") == ()
+
+
+def test_categorical_receipts_need_expected_outcomes_not_a_tolerance(tmp_path: Path) -> None:
+    root = _tree(tmp_path)
+    ok = _receipt(
+        root,
+        check_kind="categorical",
+        tolerance=0.0,
+        tolerance_unit="",
+        tolerance_basis="Every injected fault class is refused with its named reason.",
+    )
+    assert _errors(root, ok) == []
+    vague = dataclasses.replace(ok, tolerance_basis="ok")
+    assert any("not substantive" in e for e in _errors(root, vague))
+    numeric_without_tolerance = dataclasses.replace(ok, check_kind="numeric")
+    assert any("positive tolerance" in e for e in _errors(root, numeric_without_tolerance))

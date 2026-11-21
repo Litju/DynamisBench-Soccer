@@ -45,7 +45,7 @@ def receipt(
         "tests": (TEST,),
         "tolerance": 1e-6,
         "tolerance_unit": "m/s",
-        "tolerance_basis": "fixture tolerance",
+        "tolerance_basis": "fixture tolerance chosen only for gate-logic tests",
     }
     base.update(changes)
     r = Receipt(**base)  # type: ignore[arg-type]

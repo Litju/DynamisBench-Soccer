@@ -352,6 +352,23 @@ def validate(
             errors.append(f"unresolved reviewer evidence {r.family}")
         if r.family not in families:
             errors.append(f"unknown reviewer family {r.family}")
+    if root is not None or receipts is not None:
+        from dynamisbench_soccer.qualification import empirical as empirical_mod
+        from dynamisbench_soccer.qualification import receipts as receipts_mod
+        from dynamisbench_soccer.qualification.gate import receipt_structure_problems
+
+        base = root if root is not None else Path(".")
+        loaded_receipts = (
+            receipts
+            if receipts is not None
+            else receipts_mod.load(base / "qualification" / "receipts.toml")
+        )
+        loaded_empirical = (
+            empirical
+            if empirical is not None
+            else empirical_mod.load(base / "qualification" / "empirical.toml")
+        )
+        errors.extend(receipt_structure_problems(model, loaded_receipts, loaded_empirical, base))
     return errors
 
 

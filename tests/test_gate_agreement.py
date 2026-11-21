@@ -79,6 +79,22 @@ def _cases() -> dict[str, tuple[L.Ledger, tuple, bool]]:
         tuple(r for r in good if r.id != f"FX-{first.id}-F"),
         False,
     )
+    out["O_without_registry_basis"] = (
+        dataclasses.replace(
+            base,
+            evidence=tuple(
+                e
+                for e in base.evidence
+                if not (
+                    e.subfamily == first.id
+                    and e.dimension == "O"
+                    and e.kind in {"registry_claim", "registry_gap"}
+                )
+            ),
+        ),
+        good,
+        False,
+    )
     out["no_J_evidence"] = (
         dataclasses.replace(base, evidence=tuple(e for e in base.evidence if e.dimension != "J")),
         good,
