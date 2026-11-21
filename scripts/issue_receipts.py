@@ -26,11 +26,9 @@ def main(check: bool) -> int:
     text = PATH.read_text(encoding="utf-8")
     loaded = receipts.load(PATH)
     raw = tomllib.loads(text).get("receipt", [])
-    # Drop existing digest tables, then append fresh ones per receipt.
-    head = re.sub(r"(?ms)^\[receipt\.digests\]\n(?:.*\n)*?(?=\n?\[\[receipt\]\]|\Z)", "", text)
+    blocks = re.split(r"(?m)^(?=\[\[receipt\]\])", text)
+    prefix, bodies = blocks[0], [b.split("[receipt.digests]")[0] for b in blocks[1:]]
     stale = 0
-    blocks = re.split(r"(?m)^(?=\[\[receipt\]\])", head)
-    prefix, bodies = blocks[0], blocks[1:]
     out = [prefix]
     for body, r, row in zip(bodies, loaded, raw, strict=True):
         digests = {}

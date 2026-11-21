@@ -31,3 +31,14 @@ def test_every_cited_receipt_test_runs_and_passes() -> None:
     assert result.returncode == 0, result.stdout[-3000:] + result.stderr[-1000:]
     assert " skipped" not in result.stdout and " xfailed" not in result.stdout
     assert " passed" in result.stdout, result.stdout[-500:]
+
+
+def test_committed_receipt_digests_are_current_and_the_check_tool_reads_digested_files() -> None:
+    result = subprocess.run(
+        [sys.executable, "scripts/issue_receipts.py", "--check"],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert result.returncode == 0, result.stderr + result.stdout
