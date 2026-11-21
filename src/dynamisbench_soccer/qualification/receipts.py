@@ -345,6 +345,10 @@ def verify(receipt: Receipt, root: Path, subfamily_ids: set[str]) -> list[str]:
         if ref_path.startswith("src/") and ref_path.endswith(".py"):
             reference_modules.add(ref_path[4:-3].replace("/", "."))
     for path in sorted(impl_files):
+        if path.startswith("src/dynamisbench_soccer/agreement/"):
+            # Agreement studies are harnesses: they build inputs from the substrate and compare
+            # engine outputs, so importing it is their purpose, not a circular reference.
+            continue
         tree = _parse(root, path)
         if tree is None:
             continue
