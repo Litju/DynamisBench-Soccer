@@ -4,6 +4,8 @@
 
 177 receipts were drafted by mapping each (subfamily, dimension) cell to existing tests and extracting tolerances from the test source. Three separate-model auditors (Claude Opus, read-only, able to run the cited tests) judged each one independently.
 
+Each committed receipt is bound by content digest to its audit entry (`scripts/bind_audit.py --check`, run in CI and in `tests/test_receipt_audit_binding.py`): editing a receipt, or any code it cites, breaks the binding until it is re-issued and re-reviewed.
+
 Only `SUPPORTED` receipts are committed in `qualification/receipts.toml` and rated `verified`. Everything else stays `partial`/`specified`, and the reviewer's `fix` is the computational work still open for that cell.
 
 **Limitations of this review:** Model-based review, not a human domain-expert review. Single pass: receipts the auditors marked PARTIAL/UNSUPPORTED were not revised and re-audited. One receipt (radar_laser.radar L) received no verdict and was not promoted. Reviewers could run the cited tests; they did not review the engines line by line.

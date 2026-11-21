@@ -18,11 +18,13 @@
    "verdict": "PARTIAL"
   },
   "RCP-force_platform-dual-C": {
+   "bound_digest": "0d1313e1567bbadaccb2b2d2427dae4cc3e097eba9472efb7e72e2905846ae85",
    "fix": "",
    "reason": "test_dual_clock_mapping_and_explicit_overlap_resampling applies offset, drift and latency exactly at 1e-10 and refuses mismatched grids. Unknown reference clock and bad timebase are refused on dual fixtures.",
    "verdict": "SUPPORTED"
   },
   "RCP-force_platform-dual-D": {
+   "bound_digest": "59c8e1ddb6fbcf759707c851efc310379558c4edc28221e3f52fc2c2ff6fa116",
    "fix": "",
    "reason": "On dual fixtures, the clean noisy control is not rejected. Wrong side assignment fails FP-ASSIGN, step-off is refused, and isolated-load crosstalk fails FP-CROSSTALK-1. Parameter refusals are also covered.",
    "verdict": "SUPPORTED"
@@ -63,6 +65,7 @@
    "verdict": "PARTIAL"
   },
   "RCP-force_platform-dual-M": {
+   "bound_digest": "e0b796427f2c8349a17fb7f879f771c692b157c9d24fbaf6e6aec3da4fcac3f1",
    "fix": "",
    "reason": "The same provenance test is parametrized for dual (2 plates, two input digests), with change detection on fz_left. The 'source sha == [x] or len==plates' assertion is slightly loose.",
    "verdict": "SUPPORTED"
@@ -98,6 +101,7 @@
    "verdict": "PARTIAL"
   },
   "RCP-force_platform-single-G": {
+   "bound_digest": "df9c153e770ebaa74112c3f1e3ef5e0c08d8e2b814529833f39d47a1e8f0f242",
    "fix": "",
    "reason": "CMJ, SJ, DJ and hops events and phases match closed forms within 2-3 samples on single fixtures. Eligibility refusals are present: SJ/CMJ cross-check, no flight, too few hops and no onset. The 0.01 tolerance is consistent.",
    "verdict": "SUPPORTED"
@@ -123,16 +127,19 @@
    "verdict": "PARTIAL"
   },
   "RCP-force_platform-single-L": {
+   "bound_digest": "37c687c23c3db515763e88e25d0a65fa6978904b5202df84e22282ea44cac712",
    "fix": "Record tolerance 0.006 s.",
    "reason": "Flight-time studies run the single-plate engine against contact and IMU engines and are classified. All 12 studies claim no interchangeability, and rejected trials are diagnostic-only. Asserted bias bounds reach 0.006, not the recorded 0.002.",
    "verdict": "SUPPORTED"
   },
   "RCP-force_platform-single-M": {
+   "bound_digest": "9a53ccfdef4835faa93f5754ed017d214201daff52acee680e6bdb3eb9a1e9eb",
    "fix": "",
    "reason": "The test round-trips a file and checks that the report reproduces exactly, records the source sha, input digests and QC-rules hash, and changes digest when the input changes. Exporter determinism and tamper rejection are also cited.",
    "verdict": "SUPPORTED"
   },
   "RCP-gnss_lps-gnss-A": {
+   "bound_digest": "b1822223a0255bfc6574a413c5951a226f6e7a6feb53d3119d34d1fbd0576838",
    "fix": "",
    "reason": "GNSS: 9 contradictory declarations (rate, stage, latency, drift, bundle, ENU, Doppler) and resampled provenance are refused, and positive admission is exact. The missing-time and truth-input refusals are LPS-only but share the code path.",
    "verdict": "SUPPORTED"
@@ -143,6 +150,7 @@
    "verdict": "PARTIAL"
   },
   "RCP-gnss_lps-gnss-C": {
+   "bound_digest": "76e2129c4728a69449ffe6fbf537ad8f63d3f211b4495ad235ae5f4b348d01a0",
    "fix": "",
    "reason": "For GNSS, latency and \u2212160 ppm drift are mapped to truth at 1e-12, and drift without bracketing sync pulses is refused. Jitter refusal for five_point is shown on LPS (shared engine). The tolerance matches.",
    "verdict": "SUPPORTED"
@@ -158,11 +166,13 @@
    "verdict": "UNSUPPORTED"
   },
   "RCP-gnss_lps-gnss-F": {
+   "bound_digest": "6ed12333aa94faf579de653fe14183c314891582046b951879f14f12f51a989d",
    "fix": "",
    "reason": "test_closed_form_acceleration_speed_distance_and_doppler[gnss] checks position, speed, acceleration and distance against t+t\u00b2 closed forms for both derivatives. Bounds of 4e-9 to 1e-5 are consistent.",
    "verdict": "SUPPORTED"
   },
   "RCP-gnss_lps-gnss-G": {
+   "bound_digest": "c5ee5509f206082a0f6a2179cbe0eca3c0773943993d61518e1afb2269b16223",
    "fix": "",
    "reason": "The GNSS Doppler threshold test recovers exact run counts, durations and integrated distances, and refuses the single-sample run. The 1e-5 tolerance comes from the closed-form test. Events are exact.",
    "verdict": "SUPPORTED"
@@ -178,16 +188,19 @@
    "verdict": "UNSUPPORTED"
   },
   "RCP-gnss_lps-gnss-J": {
+   "bound_digest": "ea0be2243a00838f8b008f569d399ece9974eee7e72937031698f29706e5d36f",
    "fix": "Add an AST no-reference-import test for gnss_lps engines.",
    "reason": "The engine matches the independent closed form (ENU equator, t+t\u00b2 track). The reference geodetic_ecef is checked against the PROJ published example at 1 mm. The engine imports no reference code (verified by grep), though no cited test checks this.",
    "verdict": "SUPPORTED"
   },
   "RCP-gnss_lps-gnss-K": {
+   "bound_digest": "a28d6fcd62645d624b04283c6e2442e2e5880eced51641cd7908f2584f99a37c",
    "fix": "",
    "reason": "The inject outputs (jump in metres, dropout, interpolation, seeded noise) are verified against independent closed forms and are deterministic. test_res669 asserts engine refusal verdicts for each class on GNSS.",
    "verdict": "SUPPORTED"
   },
   "RCP-gnss_lps-gnss-L": {
+   "bound_digest": "7e669dfc3f45b8dabcdd55786dbc052a761ea4e14b99bd1b34d1e761c160db3f",
    "fix": "",
    "reason": "radar_vs_positional_speed (radar vs gnss) latency bias matches the closed form at rel 1e-9 and is classified definition_mismatch, with no interchangeability claims. The recorded 0.001 comes from a != assertion. It is conservative but mis-extracted.",
    "verdict": "SUPPORTED"
@@ -228,6 +241,7 @@
    "verdict": "PARTIAL"
   },
   "RCP-gnss_lps-lps-F": {
+   "bound_digest": "94ac91b74dada07238625d2892d7a78f4a74b52e4e2f1270dfbfe6084aa78f0f",
    "fix": "",
    "reason": "The closed-form tests [lps] and the turning-point test check speed, vector acceleration (\u22122cos t) and chord distance against PlanarTrajectory within the 1e-5 bound.",
    "verdict": "SUPPORTED"
@@ -253,6 +267,7 @@
    "verdict": "PARTIAL"
   },
   "RCP-gnss_lps-lps-K": {
+   "bound_digest": "758605b17e392a90f0c387df3c22ff812c45300a2aea222bbbbb9b8a8101284b",
    "fix": "",
    "reason": "Position faults on LPS are verified exactly against independent formulas and are deterministic. test_res669[lps] asserts refusal verdicts per class.",
    "verdict": "SUPPORTED"
@@ -278,21 +293,25 @@
    "verdict": "PARTIAL"
   },
   "RCP-imu-inertial-B": {
+   "bound_digest": "5d1d01296f5ec743345a86530503eb312175abb5994af6fe99f446bbdcbf7a5c",
    "fix": "",
    "reason": "An independent forward model (scale, bias, misalignment) is inverted at 1e-9. Undeclared placement and non-invertible or improper matrices are refused. Static tilt recovers roll and pitch at 1e-9.",
    "verdict": "SUPPORTED"
   },
   "RCP-imu-inertial-D": {
+   "bound_digest": "446c477c237480f05b141c955cf7de8749b5bb3afcb08556bc30b07c2824bcd5",
    "fix": "",
    "reason": "Gaps, saturation, spike, sync, rate, gyro-bias and slip each give FAIL or reject. Clean controls give PASS or NOT_APPLICABLE, and the slip magnitude matches at 1e-6.",
    "verdict": "SUPPORTED"
   },
   "RCP-imu-inertial-E": {
+   "bound_digest": "3175d574462fd2ad4f2af551c9ee5528748a6e5271bf25c13694c383e22846b3",
    "fix": "",
    "reason": "All declared variants are covered: gyro_integration (bias\u00b7t), complementary (bias/gain), declared_initial_velocity, zupt_linear_drift, plus the unobservable refusal. Each has a closed form. Tolerance 0.01 matches the complementary bound.",
    "verdict": "SUPPORTED"
   },
   "RCP-imu-inertial-F": {
+   "bound_digest": "a2a6b200c33394052cab99f799c8aa558da3b2cf0e4ee3430943143fe1783202",
    "fix": "",
    "reason": "Rotation at 1e-9 and free acceleration at 1e-8 against RigidBody truth. Trapezoid velocity and position are within the derived error bound. Specific force is kept distinct.",
    "verdict": "SUPPORTED"
@@ -308,11 +327,13 @@
    "verdict": "PARTIAL"
   },
   "RCP-imu-inertial-I": {
+   "bound_digest": "7c2329ebfb9e8670337311cf4231f9d22123c22a05e9bebacd265ddeb36bb4fe",
    "fix": "",
    "reason": "velocity_error_bound equals the bias\u00b7t closed form, and the complementary tilt bound equals bias/gain within 0.01. Both compare reported uncertainty with an analytical result.",
    "verdict": "SUPPORTED"
   },
   "RCP-imu-inertial-J": {
+   "bound_digest": "4e6d801989555d576fd591e9261f19110e3a0f1bf864a5f5bfd22b2162ccef91",
    "fix": "",
    "reason": "The engine matches the RigidBody closed form at 1e-8. An AST test confirms imu.py imports no reference code. The reference itself is validated by finite differences and the inversion identity.",
    "verdict": "SUPPORTED"
@@ -333,6 +354,7 @@
    "verdict": "PARTIAL"
   },
   "RCP-load_cell_isometric-isometric_rig-A": {
+   "bound_digest": "c9d46afcdcc292915d4613f141562d06e1693a65e811846df97c3ea36c214659",
    "fix": "",
    "reason": "test_isometric_dynamometer_newton_channel_passes_through runs the isometric_rig fixture, admits its Newton channel and refuses a second calibration ('apply twice'). The generic unit, non-finite and device refusals apply.",
    "verdict": "SUPPORTED"
@@ -388,21 +410,25 @@
    "verdict": "UNSUPPORTED"
   },
   "RCP-load_cell_isometric-isometric_rig-M": {
+   "bound_digest": "804b41c7a7be3d138e3c9ec7fe382c97e105f1f8e19880144d3981ea3e823dab",
    "fix": "",
    "reason": "The same provenance test, parametrized for isometric_rig, binds the file hash and detects input changes.",
    "verdict": "SUPPORTED"
   },
   "RCP-load_cell_isometric-isometric_rig-O": {
+   "bound_digest": "7da1470fa3826943ceb66179782508133b95444584c2b99f97a297fb6c720aae",
    "fix": "",
    "reason": "test_every_result_carries_substantive_limitation_statements[isometric_rig] runs load_cell.process on the isometric_rig export and checks the limitations are substantive, unique and non-interchangeable. test_limitations_are_recorded_in_outputs checks they are carried into the report.",
    "verdict": "SUPPORTED"
   },
   "RCP-load_cell_isometric-load_cell-A": {
+   "bound_digest": "c6837b5de049e457714926cec0cd47f45b38e7ec285ed57eaec1095486d0141a",
    "fix": "",
    "reason": "Refusals tested on the bundle and RawRecord paths: lbf unit, missing calibration, non-integer counts, non-finite samples/time, wrong device class, ambiguous channel, and double application on the rig.",
    "verdict": "SUPPORTED"
   },
   "RCP-load_cell_isometric-load_cell-B": {
+   "bound_digest": "8cb1bc348ec4980a7ad14806fb81c64d8c77b73a95c599c63fc782816d57f147",
    "fix": "",
    "reason": "Voltage to force matches the closed form at 1e-9. Two-point and OLS calibration are checked against an independent fit, plus the exact kgf factor. Unit mismatches, missing gain/offset and a missing or unknown lever arm are refused.",
    "verdict": "SUPPORTED"
@@ -413,6 +439,7 @@
    "verdict": "PARTIAL"
   },
   "RCP-load_cell_isometric-load_cell-D": {
+   "bound_digest": "a2bff7d6a0e13cbe58ec1c68c0fdd574705a161b2cac52df583d270489fae050",
    "fix": "",
    "reason": "Injected offset, clipping, mislabel, drift and creep are flagged, with clean PASS controls (zero, rails, honest units). Verdicts are checked end to end.",
    "verdict": "SUPPORTED"
@@ -423,11 +450,13 @@
    "verdict": "PARTIAL"
   },
   "RCP-load_cell_isometric-load_cell-F": {
+   "bound_digest": "c9a906d022e3b19bfbfc82bb9871301109ed84f2ac54896f1fa065b527cb890f",
    "fix": "",
    "reason": "Peak, onset, RFD, net and gross impulse match the IsometricRamp closed forms over two ramps and two rates. test_isometric_baseline_does_not_use_body_weight is only a source scan.",
    "verdict": "SUPPORTED"
   },
   "RCP-load_cell_isometric-load_cell-G": {
+   "bound_digest": "9bc3ca136c7b767aab605603625854f820d5eda2a82ba39448e928149dd4ff8a",
    "fix": "",
    "reason": "Onset and time-to-peak match the ramp closed form. Absent effort refuses windows. Edge-peak, preloaded and knee-angle out-of-range or undeclared trials are ineligible. Tolerance 0.002 s is consistent.",
    "verdict": "SUPPORTED"
@@ -443,6 +472,7 @@
    "verdict": "PARTIAL"
   },
   "RCP-load_cell_isometric-load_cell-J": {
+   "bound_digest": "9eef4ff38e11dcaf52d400c041f830abf99a7bfd73580642e8a86f5a96f7b243",
    "fix": "",
    "reason": "The IsometricRamp closed forms are independent. An AST and subprocess import check shows the engine loads no reference module. The engine matches the reference at 1e-8.",
    "verdict": "SUPPORTED"
@@ -453,16 +483,19 @@
    "verdict": "PARTIAL"
   },
   "RCP-load_cell_isometric-load_cell-L": {
+   "bound_digest": "632d0f7a079cde9046d922bee86ef4c2d4b3c9651dfccce8c52250bf2bfeef54",
    "fix": "",
    "reason": "The isometric study runs the load_cell export against the closed-form ideal plate (abs 1e-6) and states the compliance assumptions. The global test enforces zero interchangeable or empirical claims and fixed classification counts.",
    "verdict": "SUPPORTED"
   },
   "RCP-load_cell_isometric-load_cell-M": {
+   "bound_digest": "4d0bb778eb0788485208ac31346a4e49f3b8fe644887370e11bc95a9d0236f4d",
    "fix": "",
    "reason": "The test asserts source_file_sha256 == meta sha == file hash and exact reproduction, and that the input digest changes on mutation, plus deterministic exports.",
    "verdict": "SUPPORTED"
   },
   "RCP-load_cell_isometric-load_cell-O": {
+   "bound_digest": "36d60762c29ea54592e51ba45c1dab5c39b13ad8d904752eca79f1b87d9f8ee4",
    "fix": "",
    "reason": "test_limitations_are_recorded_in_outputs asserts the declared LIMITATIONS set is in every result, plus the torque-refusal and off-axis statements. The policy test checks that the statements are substantive.",
    "verdict": "SUPPORTED"
@@ -473,6 +506,7 @@
    "verdict": "UNSUPPORTED"
   },
   "RCP-lpt_encoder-encoder-B": {
+   "bound_digest": "096122d32d038f761f489c558d9d0f8ff8c2448724f5fb0a4b9766974e98d1fa",
    "fix": "Record 5e-4 m as the largest bound.",
    "reason": "Signed affine count calibration is exact (1e-15) on an encoder fixture. Quantization resolution is checked, and contradictory attachment is refused ('differs'). Recorded tolerance omits the 0.0005 m quantization bound.",
    "verdict": "SUPPORTED"
@@ -498,6 +532,7 @@
    "verdict": "PARTIAL"
   },
   "RCP-lpt_encoder-lpt-C": {
+   "bound_digest": "f946a86a1d3436d6c840618b2e727ce85ed38159fd9233322e96765eb8051161",
    "fix": "",
    "reason": "Dual clock offset is applied exactly (4e-15), and skew, sync uncertainty and non-bracketing sync events are refused. Native irregular timestamps are preserved. All run on LPT fixtures.",
    "verdict": "SUPPORTED"
@@ -513,6 +548,7 @@
    "verdict": "PARTIAL"
   },
   "RCP-lpt_encoder-lpt-F": {
+   "bound_digest": "a7283dbe4c58e47380983354923b7c1f39384d82f2f33d85a78ab91151195adf",
    "fix": "",
    "reason": "LPT fixed vertical line matches 0.4t+t^2 within 2e-15, and dual LPT velocity/acceleration match the closed form. The irregular test is encoder but supplementary. Tolerance 1.0 W matches the power bound.",
    "verdict": "SUPPORTED"
@@ -533,6 +569,7 @@
    "verdict": "UNSUPPORTED"
   },
   "RCP-lpt_encoder-lpt-J": {
+   "bound_digest": "ed9975b14cbaed155a655f12d8d37bbc96795588ecd9614694241d1716d3440c",
    "fix": "",
    "reason": "The engine output is compared with inline analytic trajectories that share no code (dual LPT, fixed line), and the import-boundary test passes. The CLI test keeps the truth bundle refused. Tolerance 1.0 W is consistent.",
    "verdict": "SUPPORTED"
@@ -548,6 +585,7 @@
    "verdict": "PARTIAL"
   },
   "RCP-lpt_encoder-lpt-M": {
+   "bound_digest": "2a071a28cccf564bfa4c09d34d5ce117a642364b8b370bbd9f4475a7093535a5",
    "fix": "",
    "reason": "bundle_id and data_sha256 equal the file hash, and the result reproduces exactly and changes when the input is mutated.",
    "verdict": "SUPPORTED"
@@ -618,16 +656,19 @@
    "verdict": "PARTIAL"
   },
   "RCP-nordic_hip-nordic-F": {
+   "bound_digest": "50caebcd58d21e198956d7b2c4f6cef7c6c99786791d93455be4280037d08518",
    "fix": "",
    "reason": "test_peak_torque_impulse_and_asymmetry_match_closed_forms and test_measured_angle_gives_work... compare peak, time, torque, impulse, work and angle with hand-derived EccentricCurve closed forms. The 0.1 N bound (sum_peak) matches the recorded tolerance.",
    "verdict": "SUPPORTED"
   },
   "RCP-nordic_hip-nordic-G": {
+   "bound_digest": "452fd59671c04b7f00936adb6546b84061ff06605126fa3f4dd0054ab82194f6",
    "fix": "",
    "reason": "The break angle is recovered from an independent angle fixture (abs 0.5 deg, matching the tolerance), with refusals for no controlled descent and for an angle taken from force. Note that test_repetition_detection_finds_each_effort uses hip data, not nordic.",
    "verdict": "SUPPORTED"
   },
   "RCP-nordic_hip-nordic-H": {
+   "bound_digest": "3e5abe36ddd376857998e538ded38e9a56fd86572b327f9da73e08072744f4fd",
    "fix": "",
    "reason": "Both asymmetry definitions are executed against closed forms. Force basis is mandatory and carried through, peak, impulse and torque estimands are named, and the limitation text disclaims muscle force.",
    "verdict": "SUPPORTED"
@@ -638,6 +679,7 @@
    "verdict": "PARTIAL"
   },
   "RCP-nordic_hip-nordic-J": {
+   "bound_digest": "912eabdb476c26a0693572177cbaf4a5626c2e1f756d7256f82c7ea40e329111",
    "fix": "",
    "reason": "Engine output matches the hand-derived EccentricCurve closed forms. The engine imports only load_cell and qc, and both the AST import-boundary test and the nordic_hip import test pass.",
    "verdict": "SUPPORTED"
@@ -648,6 +690,7 @@
    "verdict": "PARTIAL"
   },
   "RCP-nordic_hip-nordic-L": {
+   "bound_digest": "e2aa6dd130c5d309a019ee70ebdbcfd168e2bc5fdc0b202c3daca99d1a3edf93",
    "fix": "",
    "reason": "The raw versus vendor_corrected study is classified unsupported with no pairs, assess_nordic refuses pooling ('cannot be combined'), and the global test forbids interchangeability claims.",
    "verdict": "SUPPORTED"
@@ -663,6 +706,7 @@
    "verdict": "PARTIAL"
   },
   "RCP-radar_laser-laser-C": {
+   "bound_digest": "acffe01cdbc3a8312c135f89cca764544597b77fd1de6ed3e1172ea4951dce5f",
    "fix": "",
    "reason": "On laser: the affine clock maps to truth time at atol 1e-12, a non-monotonic timestamp and DROP-fault gaps are refused, and range_change start is exercised. The tolerance matches.",
    "verdict": "SUPPORTED"
@@ -708,6 +752,7 @@
    "verdict": "PARTIAL"
   },
   "RCP-radar_laser-laser-L": {
+   "bound_digest": "48e035e5869cb572ba79729062a685decf5496daa7fc51432ab190402b71b60f",
    "fix": "",
    "reason": "radar_vs_laser_velocity is classified definition_mismatch. Its noise amplification matches the closed form sqrt(130)/12\u00b70.01\u00b7256 at rel 0.01, and the global test confirms no interchangeability claims.",
    "verdict": "SUPPORTED"
@@ -718,6 +763,7 @@
    "verdict": "PARTIAL"
   },
   "RCP-radar_laser-radar-A": {
+   "bound_digest": "f9c4a3bafb157e3c9a43fe28b5cd07f7cbd516be6ce4d86f67e06d30cb46cba2",
    "fix": "",
    "reason": "The tests admit native radar with an affine clock and refuse truth data, a string stage, GNSS data, a mislabelled processed stage and ambiguous calibration, all through admit().",
    "verdict": "SUPPORTED"
@@ -728,11 +774,13 @@
    "verdict": "PARTIAL"
   },
   "RCP-radar_laser-radar-C": {
+   "bound_digest": "dbe4d6cc526f18669eb81235a269cb9e724e5ed2b5aa7c99995ee8cd0ecdfce9",
    "fix": "",
    "reason": "The affine DeviceClock maps to reference time within 1e-12, non-monotonic timestamps and gaps are refused, and the start modes refuse missing triggers.",
    "verdict": "SUPPORTED"
   },
   "RCP-radar_laser-radar-D": {
+   "bound_digest": "a40b7ab6e09cd967a5d44b7e2651820feab5a52e5af2fa532d2ab50cdc17f1f7",
    "fix": "",
    "reason": "Timestamp faults, dropouts, reflection or target switch and clipped plateaus are refused, and stationary pre-start zeros are not falsely flagged, which serves as the clean control.",
    "verdict": "SUPPORTED"
@@ -743,16 +791,19 @@
    "verdict": "PARTIAL"
   },
   "RCP-radar_laser-radar-F": {
+   "bound_digest": "dfad71b754c5cdee221c6a820e69286cb43ff075e37eeb3b5fe87eed6ed7035b",
    "fix": "",
    "reason": "Radar velocity and time match the MonoExponentialSprint truth at atol 2e-12 at 47, 100 and 256 Hz, and the aiming-drift test shows no improper correction.",
    "verdict": "SUPPORTED"
   },
   "RCP-radar_laser-radar-G": {
+   "bound_digest": "e148f8f63c0bdf3a9c9d56997b25361c618475481ddc33e91eeec829a77e7986",
    "fix": "",
    "reason": "Milestones match the exact position inverse (abs 2e-3 and 1e-12) and COD trace metrics match the piecewise closed form. Start-definition refusals and the native radar pipeline are included.",
    "verdict": "SUPPORTED"
   },
   "RCP-radar_laser-radar-H": {
+   "bound_digest": "8415110525994fa9343a09090a54fbe93d65283b38bb1f7e77bbde6110856d43",
    "fix": "",
    "reason": "Source estimand labels are distinct, gates are refused as instantaneous, the noiseless fit recovers vmax, tau, F0 and Pmax (rel 1e-6), and wrong source labels are refused.",
    "verdict": "SUPPORTED"
@@ -763,6 +814,7 @@
    "verdict": "PARTIAL"
   },
   "RCP-radar_laser-radar-J": {
+   "bound_digest": "e507f1dc8b1334aa2be8cef05dd1fcae9340023f644c0e5302ce2ef248d2402a",
    "fix": "",
    "reason": "The radar engine matches the independent truth at 2e-12, and both engine files are AST-checked for no imports from the reference package.",
    "verdict": "SUPPORTED"
@@ -783,6 +835,7 @@
    "verdict": "PARTIAL"
   },
   "RCP-timing_contact-contact-A": {
+   "bound_digest": "61fe6736ec1752d13401332a9f7e14b031a71ed24a50734c190d3f895dabad3b",
    "fix": "",
    "reason": "The tests refuse an extra flight, force_platform and IMU bundles, event faults, unresolved latency and a tampered parquet file through the CLI, all on the contact engine.",
    "verdict": "SUPPORTED"
@@ -793,16 +846,19 @@
    "verdict": "PARTIAL"
   },
   "RCP-timing_contact-contact-D": {
+   "bound_digest": "ea258d6e1efbe2d914fff0d50d3da4d35d91c99433fad096a02319d97e02f821",
    "fix": "",
    "reason": "Missing, duplicate and out-of-order events are refused, and bounce or repeat is discarded with audit while matching the clean flight. Extra flights and the wrong device are refused.",
    "verdict": "SUPPORTED"
   },
   "RCP-timing_contact-contact-E": {
+   "bound_digest": "6de40814344a0b685f1eca76799dd00c55be49745838feb759bcfdbf31308bb0",
    "fix": "",
    "reason": "Three contact systems, debounce and latency variants are compared with the contact_events truth. The CLI sensitivity variant shifts flight by exactly 0.02 and refuses height. The tolerance is 0.005.",
    "verdict": "SUPPORTED"
   },
   "RCP-timing_contact-contact-F": {
+   "bound_digest": "18631cef4f4f6245fcfee8af373789e09baa911e3cc960b0f14675f8a344393e",
    "fix": "",
    "reason": "Flight time, flight height and RSI are compared with the Trajectory truth for CMJ, SJ and DJ, within abs 0.005 as recorded.",
    "verdict": "SUPPORTED"
@@ -813,6 +869,7 @@
    "verdict": "PARTIAL"
   },
   "RCP-timing_contact-contact-H": {
+   "bound_digest": "c809f216be79453684a8bf8383ed59fb603735e0068e7e418194b86672a57e04",
    "fix": "",
    "reason": "Flight-time height, RSI definition and protocol refusals are executed against the truth, and the latency bias is kept as a difference rather than a correction in jumps.contact_system_estimates.",
    "verdict": "SUPPORTED"
@@ -823,6 +880,7 @@
    "verdict": "PARTIAL"
   },
   "RCP-timing_contact-contact-J": {
+   "bound_digest": "77ad6ecade3a808d1ef94b77fbf153a9c3a1d82de14f22fb722e0edc9c3e92d5",
    "fix": "",
    "reason": "The engine is compared with the independent contact_events and Trajectory reference, and the AST import-boundary test passes.",
    "verdict": "SUPPORTED"
@@ -833,11 +891,13 @@
    "verdict": "PARTIAL"
   },
   "RCP-timing_contact-contact-L": {
+   "bound_digest": "9d05c676969369ba09920d71b3f78a2760dd6e125e08d462dc08a2d60493f092",
    "fix": "",
    "reason": "Force versus contact flight time agrees within 0.004 and 0.002 of the truth, with the engine-to-engine evidence context asserted and no interchangeability claims.",
    "verdict": "SUPPORTED"
   },
   "RCP-timing_contact-gates-A": {
+   "bound_digest": "80b887711cd6b089a3ab9cee058de6b38ddff578950e51ee2a3bd977857549fc",
    "fix": "",
    "reason": "The tests refuse missing, out-of-order and duplicate events, mismatched or absent start triggers, impossible routes, an unresolved clock, a missing acquisition and data labelled as analytical truth. That is a broad admission set on the gates engine.",
    "verdict": "SUPPORTED"
@@ -848,6 +908,7 @@
    "verdict": "PARTIAL"
   },
   "RCP-timing_contact-gates-D": {
+   "bound_digest": "9b0fe4e578ae348a3b4bddc5b06bf2a9b317956959ea0dd1412ccbee1eb1c3ea",
    "fix": "",
    "reason": "Injected missing, out-of-order and duplicate events and impossible routes are refused. The refractory test removes a duplicate and matches the clean split, which serves as the clean control.",
    "verdict": "SUPPORTED"
@@ -868,6 +929,7 @@
    "verdict": "PARTIAL"
   },
   "RCP-timing_contact-gates-H": {
+   "bound_digest": "48a17ff9a4eb210e52b0963423f3e4c1be5468331b0f21d0ee605a1df1c9919c",
    "fix": "",
    "reason": "Gates are refused as instantaneous velocity, estimand labels are distinct, the split fit recovers vmax and tau (rel 1e-4, F0 1e-3), and segment averages are defined. These match the recorded rel 1e-3.",
    "verdict": "SUPPORTED"
@@ -888,6 +950,7 @@
    "verdict": "PARTIAL"
   },
   "RCP-timing_contact-gates-L": {
+   "bound_digest": "b78404a9c8a24dcda31bca428b84064a1b536e2ac239935a968a698c6b4dc940",
    "fix": "",
    "reason": "Gates versus radar timing agree with a bias within 2e-4, and the gate velocity versus radar comparison is a definition mismatch derived in closed form. The global test forbids interchangeability claims.",
    "verdict": "SUPPORTED"

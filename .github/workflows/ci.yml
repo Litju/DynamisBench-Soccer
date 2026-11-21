@@ -135,6 +135,7 @@ jobs:
           uv run dbs qualification interface
           uv run python scripts/build_verification.py --check
           uv run python scripts/issue_receipts.py --check
+          uv run python scripts/bind_audit.py --check
           uv run dbs qualification states > "$RUNNER_TEMP/states.json" || test $? -eq 1
       - name: RES-700 GNSS and LPS installed-wheel processing
         run: |
