@@ -347,9 +347,32 @@ def test_empirical_l_needs_paired_units_and_clearance_must_resolve(tmp_path: Pat
     )
     assert any("not an M3 dimension" in e for e in empirical.verify(_record(dimension="Z"), SUBS))
     assert any(
-        "does not resolve" in e
+        "must be a file under" in e
         for e in empirical.verify(_record(rights_ref="nope.md"), SUBS, tmp_path)
     )
-    (tmp_path / "docs").mkdir()
+    (tmp_path / "docs").mkdir(exist_ok=True)
     (tmp_path / "docs/clearance.md").write_text("cleared")
     assert empirical.verify(_record(rights_ref="docs/clearance.md"), SUBS, tmp_path) == []
+
+
+def test_bare_package_import_cannot_smuggle_engine_code_into_a_reference(tmp_path: Path) -> None:
+    root = _tree(
+        tmp_path,
+        **{
+            "src/ref.py": (
+                "import dynamisbench_soccer\n\n"
+                "def closed_form(x):\n    return dynamisbench_soccer.engines.eng.process(x)\n"
+            )
+        },
+    )
+    assert any("calls engine/assessment code" in e for e in _errors(root, _receipt(root)))
+
+
+def test_rights_clearance_must_be_a_repository_file_under_docs_or_data(tmp_path: Path) -> None:
+    (tmp_path / "docs").mkdir()
+    (tmp_path / "docs/ok.md").write_text("cleared")
+    (tmp_path / "other.md").write_text("not a clearance")
+    for bad in ("/etc/hostname", "../../etc/hostname", "other.md", "docs/missing.md"):
+        errs = empirical.verify(_record(rights_ref=bad), SUBS, tmp_path)
+        assert any("must be a file under" in e for e in errs), bad
+    assert empirical.verify(_record(rights_ref="docs/ok.md"), SUBS, tmp_path) == []

@@ -80,7 +80,7 @@ def fixture_empirical(model: Ledger):  # type: ignore[no-untyped-def]
             uncertainty="fixture uncertainty statement for gate-logic tests only",
             data_category="measured",
             data_sha256="b" * 64,
-            rights_ref="README.md",
+            rights_ref="docs/m3-architecture.md",
             n_independent_units=20,
             issue="RES-692",
         )
