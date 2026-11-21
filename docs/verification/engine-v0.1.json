@@ -1654,8 +1654,6 @@
       "force_platform.dual": [
         "A: executable admission contract: native/vendor stage, units and integrity refusals tested (owner RES-670; rated specified)",
         "B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-670; rated specified)",
-        "C: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused (owner RES-693; rated specified)",
-        "D: integrity and QC checks reject injected faults and pass clean controls (owner RES-670; rated partial)",
         "E: every processing method variant is compared with an independent reference with stated sensitivity bounds (owner RES-670; rated partial)",
         "F: reconstructed quantities agree with an independent analytical truth within tolerance (owner RES-670; rated partial)",
         "G: protocol events are recovered against analytically known event times, with eligibility refusals (owner RES-671; rated partial)",
@@ -1664,10 +1662,7 @@
         "J: an independent reference implementation or closed form that shares no code with the engine (owner RES-669; rated partial)",
         "K: synthetic fault fixtures cover the declared fault classes with expected verdicts (owner RES-669; rated partial)",
         "L: analytical cross-device studies are executed and classified, never read as interchangeability (owner RES-703; rated partial)",
-        "M: seeded, hash-bound provenance chain for every processing stage, reproduced exactly (owner RES-675; rated partial)",
-        "O: limitation statements are sourced and emitted with every result (owner RES-670; rated partial)",
-        "blocker: Dual production processing verified on analytical controls (RES-670); actual bilateral calibration, cross-talk, assignment and timing remain unqualified",
-        "blocker: G/H assessment and L agreement qualification remain open (RES-671/672/703/675)"
+        "O: limitation statements are sourced and emitted with every result (owner RES-670; rated partial)"
       ],
       "force_platform.single": [
         "A: executable admission contract: native/vendor stage, units and integrity refusals tested (owner RES-670; rated specified)",
@@ -1676,34 +1671,20 @@
         "D: integrity and QC checks reject injected faults and pass clean controls (owner RES-670; rated partial)",
         "E: every processing method variant is compared with an independent reference with stated sensitivity bounds (owner RES-670; rated partial)",
         "F: reconstructed quantities agree with an independent analytical truth within tolerance (owner RES-670; rated partial)",
-        "G: protocol events are recovered against analytically known event times, with eligibility refusals (owner RES-671; rated partial)",
         "H: metric definitions are bound to sourced registry claims and executable exactly (owner RES-671; rated partial)",
         "I: declared uncertainty propagation is checked against an independent analytical result (owner RES-670; rated partial)",
         "J: an independent reference implementation or closed form that shares no code with the engine (owner RES-669; rated partial)",
         "K: synthetic fault fixtures cover the declared fault classes with expected verdicts (owner RES-669; rated partial)",
-        "L: analytical cross-device studies are executed and classified, never read as interchangeability (owner RES-703; rated partial)",
-        "M: seeded, hash-bound provenance chain for every processing stage, reproduced exactly (owner RES-675; rated partial)",
-        "O: limitation statements are sourced and emitted with every result (owner RES-670; rated partial)",
-        "blocker: Production engine and numerical checks available (RES-670); G/H assessment qualification remains RES-671/672",
-        "blocker: Measured-device calibration/compliance/uncertainty and L agreement evidence remain open (RES-694/703/675)"
+        "O: limitation statements are sourced and emitted with every result (owner RES-670; rated partial)"
       ],
       "gnss_lps.gnss": [
-        "A: executable admission contract: native/vendor stage, units and integrity refusals tested (owner RES-693; rated specified)",
         "B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-700; rated specified)",
-        "C: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused (owner RES-693; rated specified)",
         "D: integrity and QC checks reject injected faults and pass clean controls (owner RES-700; rated partial)",
         "E: every processing method variant is compared with an independent reference with stated sensitivity bounds (owner RES-700; rated partial)",
-        "F: reconstructed quantities agree with an independent analytical truth within tolerance (owner RES-700; rated partial)",
-        "G: protocol events are recovered against analytically known event times, with eligibility refusals (owner RES-673; rated partial)",
         "H: metric definitions are bound to sourced registry claims and executable exactly (owner RES-673; rated partial)",
         "I: declared uncertainty propagation is checked against an independent analytical result (owner RES-700; rated partial)",
-        "J: an independent reference implementation or closed form that shares no code with the engine (owner RES-669; rated partial)",
-        "K: synthetic fault fixtures cover the declared fault classes with expected verdicts (owner RES-669; rated partial)",
-        "L: analytical cross-device studies are executed and classified, never read as interchangeability (owner RES-703; rated partial)",
         "M: seeded, hash-bound provenance chain for every processing stage, reproduced exactly (owner RES-700; rated partial)",
-        "O: limitation statements are sourced and emitted with every result (owner RES-700; rated partial)",
-        "blocker: Engine verified on analytical tracks (RES-700); audited native GNSS data and empirical latency, HDOP and multipath evidence remain open (RES-694)",
-        "blocker: Positional versus Doppler/radar agreement is analytical only (RES-703)"
+        "O: limitation statements are sourced and emitted with every result (owner RES-700; rated partial)"
       ],
       "gnss_lps.lps": [
         "A: executable admission contract: native/vendor stage, units and integrity refusals tested (owner RES-693; rated specified)",
@@ -1711,38 +1692,25 @@
         "C: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused (owner RES-693; rated specified)",
         "D: integrity and QC checks reject injected faults and pass clean controls (owner RES-700; rated partial)",
         "E: every processing method variant is compared with an independent reference with stated sensitivity bounds (owner RES-700; rated partial)",
-        "F: reconstructed quantities agree with an independent analytical truth within tolerance (owner RES-700; rated partial)",
         "G: protocol events are recovered against analytically known event times, with eligibility refusals (owner RES-673; rated partial)",
         "H: metric definitions are bound to sourced registry claims and executable exactly (owner RES-673; rated partial)",
         "I: declared uncertainty propagation is checked against an independent analytical result (owner RES-700; rated partial)",
         "J: an independent reference implementation or closed form that shares no code with the engine (owner RES-669; rated partial)",
-        "K: synthetic fault fixtures cover the declared fault classes with expected verdicts (owner RES-669; rated partial)",
         "L: analytical cross-device studies are executed and classified, never read as interchangeability (owner RES-703; rated partial)",
         "M: seeded, hash-bound provenance chain for every processing stage, reproduced exactly (owner RES-700; rated partial)",
-        "O: limitation statements are sourced and emitted with every result (owner RES-700; rated partial)",
-        "blocker: Engine verified on analytical tracks (RES-700); audited native LPS data, anchor survey and latency evidence remain open (RES-694)",
-        "blocker: Positional versus radar agreement is analytical only (RES-703)"
+        "O: limitation statements are sourced and emitted with every result (owner RES-700; rated partial)"
       ],
       "imu.inertial": [
         "A: executable admission contract: native/vendor stage, units and integrity refusals tested (owner RES-693; rated specified)",
-        "B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-701; rated specified)",
         "C: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused (owner RES-693; rated specified)",
-        "D: integrity and QC checks reject injected faults and pass clean controls (owner RES-701; rated partial)",
-        "E: every processing method variant is compared with an independent reference with stated sensitivity bounds (owner RES-701; rated partial)",
-        "F: reconstructed quantities agree with an independent analytical truth within tolerance (owner RES-701; rated partial)",
         "G: protocol events are recovered against analytically known event times, with eligibility refusals (owner RES-671; rated partial)",
         "H: metric definitions are bound to sourced registry claims and executable exactly (owner RES-671; rated partial)",
-        "I: declared uncertainty propagation is checked against an independent analytical result (owner RES-701; rated partial)",
-        "J: an independent reference implementation or closed form that shares no code with the engine (owner RES-669; rated partial)",
         "K: synthetic fault fixtures cover the declared fault classes with expected verdicts (owner RES-669; rated partial)",
         "L: analytical cross-device studies are executed and classified, never read as interchangeability (owner RES-703; rated partial)",
         "M: seeded, hash-bound provenance chain for every processing stage, reproduced exactly (owner RES-701; rated partial)",
-        "O: limitation statements are sourced and emitted with every result (owner RES-701; rated partial)",
-        "blocker: Engine verified on analytical rigid-body and trajectory controls (RES-701); sensor placement, soft-tissue artefact, calibration and flight-time agreement with force plates remain unqualified (RES-694/703)",
-        "blocker: G/H assessment qualification remains RES-671"
+        "O: limitation statements are sourced and emitted with every result (owner RES-701; rated partial)"
       ],
       "load_cell_isometric.isometric_rig": [
-        "A: executable admission contract: native/vendor stage, units and integrity refusals tested (owner RES-693; rated specified)",
         "B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-696; rated specified)",
         "C: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused (owner RES-693; rated specified)",
         "D: integrity and QC checks reject injected faults and pass clean controls (owner RES-696; rated partial)",
@@ -1753,33 +1721,17 @@
         "I: declared uncertainty propagation is checked against an independent analytical result (owner RES-696; rated partial)",
         "J: an independent reference implementation or closed form that shares no code with the engine (owner RES-669; rated partial)",
         "K: synthetic fault fixtures cover the declared fault classes with expected verdicts (owner RES-669; rated partial)",
-        "L: analytical cross-device studies are executed and classified, never read as interchangeability (owner RES-703; rated partial)",
-        "M: seeded, hash-bound provenance chain for every processing stage, reproduced exactly (owner RES-696; rated partial)",
-        "O: limitation statements are sourced and emitted with every result (owner RES-696; rated partial)",
-        "blocker: Engine verified on analytical isometric controls (RES-696); no isometric rig compliance or validity source (RES-694)",
-        "blocker: Rig versus plate agreement is analytical only (RES-703)"
+        "L: analytical cross-device studies are executed and classified, never read as interchangeability (owner RES-703; rated partial)"
       ],
       "load_cell_isometric.load_cell": [
-        "A: executable admission contract: native/vendor stage, units and integrity refusals tested (owner RES-693; rated specified)",
-        "B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-696; rated specified)",
         "C: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused (owner RES-693; rated specified)",
-        "D: integrity and QC checks reject injected faults and pass clean controls (owner RES-696; rated partial)",
         "E: every processing method variant is compared with an independent reference with stated sensitivity bounds (owner RES-696; rated partial)",
-        "F: reconstructed quantities agree with an independent analytical truth within tolerance (owner RES-696; rated partial)",
-        "G: protocol events are recovered against analytically known event times, with eligibility refusals (owner RES-672; rated partial)",
         "H: metric definitions are bound to sourced registry claims and executable exactly (owner RES-672; rated partial)",
         "I: declared uncertainty propagation is checked against an independent analytical result (owner RES-696; rated partial)",
-        "J: an independent reference implementation or closed form that shares no code with the engine (owner RES-669; rated partial)",
-        "K: synthetic fault fixtures cover the declared fault classes with expected verdicts (owner RES-669; rated partial)",
-        "L: analytical cross-device studies are executed and classified, never read as interchangeability (owner RES-703; rated partial)",
-        "M: seeded, hash-bound provenance chain for every processing stage, reproduced exactly (owner RES-696; rated partial)",
-        "O: limitation statements are sourced and emitted with every result (owner RES-696; rated partial)",
-        "blocker: Engine verified on analytical isometric controls (RES-696); measured calibration, rig compliance and temperature behaviour remain unqualified (RES-694)",
-        "blocker: Load-cell versus force-plate IMTP agreement is analytical only (RES-703)"
+        "K: synthetic fault fixtures cover the declared fault classes with expected verdicts (owner RES-669; rated partial)"
       ],
       "lpt_encoder.encoder": [
         "A: executable admission contract: native/vendor stage, units and integrity refusals tested (owner RES-693; rated specified)",
-        "B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-695; rated specified)",
         "C: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused (owner RES-693; rated specified)",
         "D: integrity and QC checks reject injected faults and pass clean controls (owner RES-695; rated partial)",
         "E: every processing method variant is compared with an independent reference with stated sensitivity bounds (owner RES-695; rated partial)",
@@ -1791,27 +1743,19 @@
         "K: synthetic fault fixtures cover the declared fault classes with expected verdicts (owner RES-669; rated partial)",
         "L: analytical cross-device studies are executed and classified, never read as interchangeability (owner RES-703; rated partial)",
         "M: seeded, hash-bound provenance chain for every processing stage, reproduced exactly (owner RES-695; rated partial)",
-        "O: limitation statements are sourced and emitted with every result (owner RES-695; rated partial)",
-        "blocker: Engine verified on analytical controls (RES-695); measured counts-per-metre, quantization and attachment validity remain unqualified (RES-694)",
-        "blocker: Cross-device agreement is analytical only (RES-703)"
+        "O: limitation statements are sourced and emitted with every result (owner RES-695; rated partial)"
       ],
       "lpt_encoder.lpt": [
         "A: executable admission contract: native/vendor stage, units and integrity refusals tested (owner RES-693; rated specified)",
         "B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-695; rated specified)",
-        "C: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused (owner RES-693; rated specified)",
         "D: integrity and QC checks reject injected faults and pass clean controls (owner RES-695; rated partial)",
         "E: every processing method variant is compared with an independent reference with stated sensitivity bounds (owner RES-695; rated partial)",
-        "F: reconstructed quantities agree with an independent analytical truth within tolerance (owner RES-695; rated partial)",
         "G: protocol events are recovered against analytically known event times, with eligibility refusals (owner RES-671; rated partial)",
         "H: metric definitions are bound to sourced registry claims and executable exactly (owner RES-671; rated partial)",
         "I: declared uncertainty propagation is checked against an independent analytical result (owner RES-695; rated partial)",
-        "J: an independent reference implementation or closed form that shares no code with the engine (owner RES-669; rated partial)",
         "K: synthetic fault fixtures cover the declared fault classes with expected verdicts (owner RES-669; rated partial)",
         "L: analytical cross-device studies are executed and classified, never read as interchangeability (owner RES-703; rated partial)",
-        "M: seeded, hash-bound provenance chain for every processing stage, reproduced exactly (owner RES-695; rated partial)",
-        "O: limitation statements are sourced and emitted with every result (owner RES-695; rated partial)",
-        "blocker: Engine verified on analytical controls (RES-695); measured cable geometry, calibration and attachment-versus-COM validity remain unqualified (RES-694)",
-        "blocker: Cross-device agreement with force plates is analytical only (RES-703)"
+        "O: limitation statements are sourced and emitted with every result (owner RES-695; rated partial)"
       ],
       "nordic_hip.hip": [
         "A: executable admission contract: native/vendor stage, units and integrity refusals tested (owner RES-697; rated specified)",
@@ -1827,9 +1771,7 @@
         "K: synthetic fault fixtures cover the declared fault classes with expected verdicts (owner RES-669; rated partial)",
         "L: analytical cross-device studies are executed and classified, never read as interchangeability (owner RES-703; rated partial)",
         "M: seeded, hash-bound provenance chain for every processing stage, reproduced exactly (owner RES-697; rated partial)",
-        "O: limitation statements are sourced and emitted with every result (owner RES-697; rated partial)",
-        "blocker: Engine verified on analytical isometric controls (RES-697); squeeze protocol geometry validity and device metrology remain unqualified (RES-694)",
-        "blocker: G/H assessment qualification remains RES-672"
+        "O: limitation statements are sourced and emitted with every result (owner RES-697; rated partial)"
       ],
       "nordic_hip.nordic": [
         "A: executable admission contract: native/vendor stage, units and integrity refusals tested (owner RES-697; rated specified)",
@@ -1837,22 +1779,14 @@
         "C: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused (owner RES-693; rated specified)",
         "D: integrity and QC checks reject injected faults and pass clean controls (owner RES-697; rated partial)",
         "E: every processing method variant is compared with an independent reference with stated sensitivity bounds (owner RES-697; rated partial)",
-        "F: reconstructed quantities agree with an independent analytical truth within tolerance (owner RES-697; rated partial)",
-        "G: protocol events are recovered against analytically known event times, with eligibility refusals (owner RES-672; rated partial)",
-        "H: metric definitions are bound to sourced registry claims and executable exactly (owner RES-672; rated partial)",
         "I: declared uncertainty propagation is checked against an independent analytical result (owner RES-697; rated partial)",
-        "J: an independent reference implementation or closed form that shares no code with the engine (owner RES-669; rated partial)",
         "K: synthetic fault fixtures cover the declared fault classes with expected verdicts (owner RES-669; rated partial)",
-        "L: analytical cross-device studies are executed and classified, never read as interchangeability (owner RES-703; rated partial)",
         "M: seeded, hash-bound provenance chain for every processing stage, reproduced exactly (owner RES-697; rated partial)",
-        "O: limitation statements are sourced and emitted with every result (owner RES-697; rated partial)",
-        "blocker: Engine verified on analytical eccentric controls (RES-697); athlete-level validity, strap/lever geometry measurements and vendor-corrected versus raw agreement remain unqualified (RES-694/703)",
-        "blocker: G/H assessment qualification remains RES-672"
+        "O: limitation statements are sourced and emitted with every result (owner RES-697; rated partial)"
       ],
       "radar_laser.laser": [
         "A: executable admission contract: native/vendor stage, units and integrity refusals tested (owner RES-693; rated specified)",
         "B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-699; rated specified)",
-        "C: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused (owner RES-693; rated specified)",
         "D: integrity and QC checks reject injected faults and pass clean controls (owner RES-699; rated partial)",
         "E: every processing method variant is compared with an independent reference with stated sensitivity bounds (owner RES-699; rated partial)",
         "F: reconstructed quantities agree with an independent analytical truth within tolerance (owner RES-699; rated partial)",
@@ -1861,65 +1795,38 @@
         "I: declared uncertainty propagation is checked against an independent analytical result (owner RES-699; rated partial)",
         "J: an independent reference implementation or closed form that shares no code with the engine (owner RES-669; rated partial)",
         "K: synthetic fault fixtures cover the declared fault classes with expected verdicts (owner RES-669; rated partial)",
-        "L: analytical cross-device studies are executed and classified, never read as interchangeability (owner RES-703; rated partial)",
         "M: seeded, hash-bound provenance chain for every processing stage, reproduced exactly (owner RES-699; rated partial)",
-        "O: limitation statements are sourced and emitted with every result (owner RES-699; rated partial)",
-        "blocker: Engine verified on analytical sprint controls (RES-699); no raw laser validity or range-noise study (RES-694)",
-        "blocker: Range-rate versus Doppler agreement is analytical only (RES-703)"
+        "O: limitation statements are sourced and emitted with every result (owner RES-699; rated partial)"
       ],
       "radar_laser.radar": [
-        "A: executable admission contract: native/vendor stage, units and integrity refusals tested (owner RES-693; rated specified)",
         "B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-699; rated specified)",
-        "C: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused (owner RES-693; rated specified)",
-        "D: integrity and QC checks reject injected faults and pass clean controls (owner RES-699; rated partial)",
         "E: every processing method variant is compared with an independent reference with stated sensitivity bounds (owner RES-699; rated partial)",
-        "F: reconstructed quantities agree with an independent analytical truth within tolerance (owner RES-699; rated partial)",
-        "G: protocol events are recovered against analytically known event times, with eligibility refusals (owner RES-673; rated partial)",
-        "H: metric definitions are bound to sourced registry claims and executable exactly (owner RES-673; rated partial)",
         "I: declared uncertainty propagation is checked against an independent analytical result (owner RES-699; rated partial)",
-        "J: an independent reference implementation or closed form that shares no code with the engine (owner RES-669; rated partial)",
         "K: synthetic fault fixtures cover the declared fault classes with expected verdicts (owner RES-669; rated partial)",
         "L: analytical cross-device studies are executed and classified, never read as interchangeability (owner RES-703; rated partial)",
         "M: seeded, hash-bound provenance chain for every processing stage, reproduced exactly (owner RES-699; rated partial)",
-        "O: limitation statements are sourced and emitted with every result (owner RES-699; rated partial)",
-        "blocker: Engine verified on analytical sprint controls (RES-699); no raw radar validity or latency study (RES-694)",
-        "blocker: Doppler versus positional/gate agreement is analytical only (RES-703)"
+        "O: limitation statements are sourced and emitted with every result (owner RES-699; rated partial)"
       ],
       "timing_contact.contact": [
-        "A: executable admission contract: native/vendor stage, units and integrity refusals tested (owner RES-693; rated specified)",
         "B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-698; rated specified)",
         "C: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused (owner RES-693; rated specified)",
-        "D: integrity and QC checks reject injected faults and pass clean controls (owner RES-698; rated partial)",
-        "E: every processing method variant is compared with an independent reference with stated sensitivity bounds (owner RES-698; rated partial)",
-        "F: reconstructed quantities agree with an independent analytical truth within tolerance (owner RES-698; rated partial)",
         "G: protocol events are recovered against analytically known event times, with eligibility refusals (owner RES-671; rated partial)",
-        "H: metric definitions are bound to sourced registry claims and executable exactly (owner RES-673; rated partial)",
         "I: declared uncertainty propagation is checked against an independent analytical result (owner RES-698; rated partial)",
-        "J: an independent reference implementation or closed form that shares no code with the engine (owner RES-669; rated partial)",
         "K: synthetic fault fixtures cover the declared fault classes with expected verdicts (owner RES-669; rated partial)",
-        "L: analytical cross-device studies are executed and classified, never read as interchangeability (owner RES-703; rated partial)",
         "M: seeded, hash-bound provenance chain for every processing stage, reproduced exactly (owner RES-698; rated partial)",
-        "O: limitation statements are sourced and emitted with every result (owner RES-698; rated partial)",
-        "blocker: Contact-system switching thresholds and latency bounds need empirical metrology (RES-694)",
-        "blocker: Assessment-specific validity and force-platform/IMU agreement remain open (RES-671/703)"
+        "O: limitation statements are sourced and emitted with every result (owner RES-698; rated partial)"
       ],
       "timing_contact.gates": [
-        "A: executable admission contract: native/vendor stage, units and integrity refusals tested (owner RES-693; rated specified)",
         "B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-698; rated specified)",
         "C: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused (owner RES-693; rated specified)",
-        "D: integrity and QC checks reject injected faults and pass clean controls (owner RES-698; rated partial)",
         "E: every processing method variant is compared with an independent reference with stated sensitivity bounds (owner RES-698; rated partial)",
         "F: reconstructed quantities agree with an independent analytical truth within tolerance (owner RES-698; rated partial)",
         "G: protocol events are recovered against analytically known event times, with eligibility refusals (owner RES-671; rated partial)",
-        "H: metric definitions are bound to sourced registry claims and executable exactly (owner RES-673; rated partial)",
         "I: declared uncertainty propagation is checked against an independent analytical result (owner RES-698; rated partial)",
         "J: an independent reference implementation or closed form that shares no code with the engine (owner RES-669; rated partial)",
         "K: synthetic fault fixtures cover the declared fault classes with expected verdicts (owner RES-669; rated partial)",
-        "L: analytical cross-device studies are executed and classified, never read as interchangeability (owner RES-703; rated partial)",
         "M: seeded, hash-bound provenance chain for every processing stage, reproduced exactly (owner RES-698; rated partial)",
-        "O: limitation statements are sourced and emitted with every result (owner RES-698; rated partial)",
-        "blocker: Gate geometry, trigger validity and timing-error bounds need empirical metrology (RES-694)",
-        "blocker: Sprint assessment variants and cross-device agreement remain open (RES-673/703)"
+        "O: limitation statements are sourced and emitted with every result (owner RES-698; rated partial)"
       ]
     },
     "by_state": {
@@ -2176,12 +2083,14 @@
   },
   "states": [
     {
-      "analytical_only_dimensions": [],
+      "analytical_only_dimensions": [
+        "C",
+        "D",
+        "M"
+      ],
       "blockers": [
         "A: executable admission contract: native/vendor stage, units and integrity refusals tested (owner RES-670; rated specified)",
         "B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-670; rated specified)",
-        "C: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused (owner RES-693; rated specified)",
-        "D: integrity and QC checks reject injected faults and pass clean controls (owner RES-670; rated partial)",
         "E: every processing method variant is compared with an independent reference with stated sensitivity bounds (owner RES-670; rated partial)",
         "F: reconstructed quantities agree with an independent analytical truth within tolerance (owner RES-670; rated partial)",
         "G: protocol events are recovered against analytically known event times, with eligibility refusals (owner RES-671; rated partial)",
@@ -2190,13 +2099,13 @@
         "J: an independent reference implementation or closed form that shares no code with the engine (owner RES-669; rated partial)",
         "K: synthetic fault fixtures cover the declared fault classes with expected verdicts (owner RES-669; rated partial)",
         "L: analytical cross-device studies are executed and classified, never read as interchangeability (owner RES-703; rated partial)",
-        "M: seeded, hash-bound provenance chain for every processing stage, reproduced exactly (owner RES-675; rated partial)",
-        "O: limitation statements are sourced and emitted with every result (owner RES-670; rated partial)",
-        "blocker: Dual production processing verified on analytical controls (RES-670); actual bilateral calibration, cross-talk, assignment and timing remain unqualified",
-        "blocker: G/H assessment and L agreement qualification remain open (RES-671/672/703/675)"
+        "O: limitation statements are sourced and emitted with every result (owner RES-670; rated partial)"
       ],
       "empirical_dimensions_covered": [],
-      "empirical_gaps": [],
+      "empirical_gaps": [
+        "Dual production processing verified on analytical controls (RES-670); actual bilateral calibration, cross-talk, assignment and timing remain unqualified",
+        "G/H assessment and L agreement qualification remain open (RES-671/672/703/675)"
+      ],
       "empirical_interchangeability": "unknown",
       "empirical_records": [],
       "empirical_requirements": {
@@ -2238,8 +2147,8 @@
       "ratings": {
         "A": "specified",
         "B": "specified",
-        "C": "specified",
-        "D": "partial",
+        "C": "verified",
+        "D": "verified",
         "E": "partial",
         "F": "partial",
         "G": "partial",
@@ -2248,16 +2157,24 @@
         "J": "partial",
         "K": "partial",
         "L": "partial",
-        "M": "partial",
+        "M": "verified",
         "N": "absent",
         "O": "partial"
       },
-      "receipts": {},
+      "receipts": {
+        "C": [
+          "RCP-force_platform-dual-C"
+        ],
+        "D": [
+          "RCP-force_platform-dual-D"
+        ],
+        "M": [
+          "RCP-force_platform-dual-M"
+        ]
+      },
       "required_computational": {
         "A": "executable admission contract: native/vendor stage, units and integrity refusals tested",
         "B": "declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused",
-        "C": "clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused",
-        "D": "integrity and QC checks reject injected faults and pass clean controls",
         "E": "every processing method variant is compared with an independent reference with stated sensitivity bounds",
         "F": "reconstructed quantities agree with an independent analytical truth within tolerance",
         "G": "protocol events are recovered against analytically known event times, with eligibility refusals",
@@ -2266,7 +2183,6 @@
         "J": "an independent reference implementation or closed form that shares no code with the engine",
         "K": "synthetic fault fixtures cover the declared fault classes with expected verdicts",
         "L": "analytical cross-device studies are executed and classified, never read as interchangeability",
-        "M": "seeded, hash-bound provenance chain for every processing stage, reproduced exactly",
         "O": "limitation statements are sourced and emitted with every result"
       },
       "state": "SPECIFIED",
@@ -2274,8 +2190,6 @@
       "unverified_m3": [
         "A",
         "B",
-        "C",
-        "D",
         "E",
         "F",
         "G",
@@ -2284,13 +2198,20 @@
         "J",
         "K",
         "L",
-        "M",
         "O"
       ],
-      "verified_m3": []
+      "verified_m3": [
+        "C",
+        "D",
+        "M"
+      ]
     },
     {
-      "analytical_only_dimensions": [],
+      "analytical_only_dimensions": [
+        "G",
+        "L",
+        "M"
+      ],
       "blockers": [
         "A: executable admission contract: native/vendor stage, units and integrity refusals tested (owner RES-670; rated specified)",
         "B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-670; rated specified)",
@@ -2298,19 +2219,17 @@
         "D: integrity and QC checks reject injected faults and pass clean controls (owner RES-670; rated partial)",
         "E: every processing method variant is compared with an independent reference with stated sensitivity bounds (owner RES-670; rated partial)",
         "F: reconstructed quantities agree with an independent analytical truth within tolerance (owner RES-670; rated partial)",
-        "G: protocol events are recovered against analytically known event times, with eligibility refusals (owner RES-671; rated partial)",
         "H: metric definitions are bound to sourced registry claims and executable exactly (owner RES-671; rated partial)",
         "I: declared uncertainty propagation is checked against an independent analytical result (owner RES-670; rated partial)",
         "J: an independent reference implementation or closed form that shares no code with the engine (owner RES-669; rated partial)",
         "K: synthetic fault fixtures cover the declared fault classes with expected verdicts (owner RES-669; rated partial)",
-        "L: analytical cross-device studies are executed and classified, never read as interchangeability (owner RES-703; rated partial)",
-        "M: seeded, hash-bound provenance chain for every processing stage, reproduced exactly (owner RES-675; rated partial)",
-        "O: limitation statements are sourced and emitted with every result (owner RES-670; rated partial)",
-        "blocker: Production engine and numerical checks available (RES-670); G/H assessment qualification remains RES-671/672",
-        "blocker: Measured-device calibration/compliance/uncertainty and L agreement evidence remain open (RES-694/703/675)"
+        "O: limitation statements are sourced and emitted with every result (owner RES-670; rated partial)"
       ],
       "empirical_dimensions_covered": [],
-      "empirical_gaps": [],
+      "empirical_gaps": [
+        "Production engine and numerical checks available (RES-670); G/H assessment qualification remains RES-671/672",
+        "Measured-device calibration/compliance/uncertainty and L agreement evidence remain open (RES-694/703/675)"
+      ],
       "empirical_interchangeability": "unknown",
       "empirical_records": [],
       "empirical_requirements": {
@@ -2356,17 +2275,27 @@
         "D": "partial",
         "E": "partial",
         "F": "partial",
-        "G": "partial",
+        "G": "verified",
         "H": "partial",
         "I": "partial",
         "J": "partial",
         "K": "partial",
-        "L": "partial",
-        "M": "partial",
+        "L": "verified",
+        "M": "verified",
         "N": "absent",
         "O": "partial"
       },
-      "receipts": {},
+      "receipts": {
+        "G": [
+          "RCP-force_platform-single-G"
+        ],
+        "L": [
+          "RCP-force_platform-single-L"
+        ],
+        "M": [
+          "RCP-force_platform-single-M"
+        ]
+      },
       "required_computational": {
         "A": "executable admission contract: native/vendor stage, units and integrity refusals tested",
         "B": "declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused",
@@ -2374,13 +2303,10 @@
         "D": "integrity and QC checks reject injected faults and pass clean controls",
         "E": "every processing method variant is compared with an independent reference with stated sensitivity bounds",
         "F": "reconstructed quantities agree with an independent analytical truth within tolerance",
-        "G": "protocol events are recovered against analytically known event times, with eligibility refusals",
         "H": "metric definitions are bound to sourced registry claims and executable exactly",
         "I": "declared uncertainty propagation is checked against an independent analytical result",
         "J": "an independent reference implementation or closed form that shares no code with the engine",
         "K": "synthetic fault fixtures cover the declared fault classes with expected verdicts",
-        "L": "analytical cross-device studies are executed and classified, never read as interchangeability",
-        "M": "seeded, hash-bound provenance chain for every processing stage, reproduced exactly",
         "O": "limitation statements are sourced and emitted with every result"
       },
       "state": "SPECIFIED",
@@ -2392,39 +2318,42 @@
         "D",
         "E",
         "F",
-        "G",
         "H",
         "I",
         "J",
         "K",
-        "L",
-        "M",
         "O"
       ],
-      "verified_m3": []
+      "verified_m3": [
+        "G",
+        "L",
+        "M"
+      ]
     },
     {
-      "analytical_only_dimensions": [],
+      "analytical_only_dimensions": [
+        "A",
+        "C",
+        "F",
+        "G",
+        "J",
+        "K",
+        "L"
+      ],
       "blockers": [
-        "A: executable admission contract: native/vendor stage, units and integrity refusals tested (owner RES-693; rated specified)",
         "B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-700; rated specified)",
-        "C: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused (owner RES-693; rated specified)",
         "D: integrity and QC checks reject injected faults and pass clean controls (owner RES-700; rated partial)",
         "E: every processing method variant is compared with an independent reference with stated sensitivity bounds (owner RES-700; rated partial)",
-        "F: reconstructed quantities agree with an independent analytical truth within tolerance (owner RES-700; rated partial)",
-        "G: protocol events are recovered against analytically known event times, with eligibility refusals (owner RES-673; rated partial)",
         "H: metric definitions are bound to sourced registry claims and executable exactly (owner RES-673; rated partial)",
         "I: declared uncertainty propagation is checked against an independent analytical result (owner RES-700; rated partial)",
-        "J: an independent reference implementation or closed form that shares no code with the engine (owner RES-669; rated partial)",
-        "K: synthetic fault fixtures cover the declared fault classes with expected verdicts (owner RES-669; rated partial)",
-        "L: analytical cross-device studies are executed and classified, never read as interchangeability (owner RES-703; rated partial)",
         "M: seeded, hash-bound provenance chain for every processing stage, reproduced exactly (owner RES-700; rated partial)",
-        "O: limitation statements are sourced and emitted with every result (owner RES-700; rated partial)",
-        "blocker: Engine verified on analytical tracks (RES-700); audited native GNSS data and empirical latency, HDOP and multipath evidence remain open (RES-694)",
-        "blocker: Positional versus Doppler/radar agreement is analytical only (RES-703)"
+        "O: limitation statements are sourced and emitted with every result (owner RES-700; rated partial)"
       ],
       "empirical_dimensions_covered": [],
-      "empirical_gaps": [],
+      "empirical_gaps": [
+        "Engine verified on analytical tracks (RES-700); audited native GNSS data and empirical latency, HDOP and multipath evidence remain open (RES-694)",
+        "Positional versus Doppler/radar agreement is analytical only (RES-703)"
+      ],
       "empirical_interchangeability": "unknown",
       "empirical_records": [],
       "empirical_requirements": {
@@ -2464,81 +2393,99 @@
         "O": "RES-700"
       },
       "ratings": {
-        "A": "specified",
+        "A": "verified",
         "B": "specified",
-        "C": "specified",
+        "C": "verified",
         "D": "partial",
         "E": "partial",
-        "F": "partial",
-        "G": "partial",
+        "F": "verified",
+        "G": "verified",
         "H": "partial",
         "I": "partial",
-        "J": "partial",
-        "K": "partial",
-        "L": "partial",
+        "J": "verified",
+        "K": "verified",
+        "L": "verified",
         "M": "partial",
         "N": "absent",
         "O": "partial"
       },
-      "receipts": {},
+      "receipts": {
+        "A": [
+          "RCP-gnss_lps-gnss-A"
+        ],
+        "C": [
+          "RCP-gnss_lps-gnss-C"
+        ],
+        "F": [
+          "RCP-gnss_lps-gnss-F"
+        ],
+        "G": [
+          "RCP-gnss_lps-gnss-G"
+        ],
+        "J": [
+          "RCP-gnss_lps-gnss-J"
+        ],
+        "K": [
+          "RCP-gnss_lps-gnss-K"
+        ],
+        "L": [
+          "RCP-gnss_lps-gnss-L"
+        ]
+      },
       "required_computational": {
-        "A": "executable admission contract: native/vendor stage, units and integrity refusals tested",
         "B": "declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused",
-        "C": "clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused",
         "D": "integrity and QC checks reject injected faults and pass clean controls",
         "E": "every processing method variant is compared with an independent reference with stated sensitivity bounds",
-        "F": "reconstructed quantities agree with an independent analytical truth within tolerance",
-        "G": "protocol events are recovered against analytically known event times, with eligibility refusals",
         "H": "metric definitions are bound to sourced registry claims and executable exactly",
         "I": "declared uncertainty propagation is checked against an independent analytical result",
-        "J": "an independent reference implementation or closed form that shares no code with the engine",
-        "K": "synthetic fault fixtures cover the declared fault classes with expected verdicts",
-        "L": "analytical cross-device studies are executed and classified, never read as interchangeability",
         "M": "seeded, hash-bound provenance chain for every processing stage, reproduced exactly",
         "O": "limitation statements are sourced and emitted with every result"
       },
       "state": "SPECIFIED",
       "subfamily": "gnss_lps.gnss",
       "unverified_m3": [
-        "A",
         "B",
-        "C",
         "D",
         "E",
-        "F",
-        "G",
         "H",
         "I",
-        "J",
-        "K",
-        "L",
         "M",
         "O"
       ],
-      "verified_m3": []
+      "verified_m3": [
+        "A",
+        "C",
+        "F",
+        "G",
+        "J",
+        "K",
+        "L"
+      ]
     },
     {
-      "analytical_only_dimensions": [],
+      "analytical_only_dimensions": [
+        "F",
+        "K"
+      ],
       "blockers": [
         "A: executable admission contract: native/vendor stage, units and integrity refusals tested (owner RES-693; rated specified)",
         "B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-700; rated specified)",
         "C: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused (owner RES-693; rated specified)",
         "D: integrity and QC checks reject injected faults and pass clean controls (owner RES-700; rated partial)",
         "E: every processing method variant is compared with an independent reference with stated sensitivity bounds (owner RES-700; rated partial)",
-        "F: reconstructed quantities agree with an independent analytical truth within tolerance (owner RES-700; rated partial)",
         "G: protocol events are recovered against analytically known event times, with eligibility refusals (owner RES-673; rated partial)",
         "H: metric definitions are bound to sourced registry claims and executable exactly (owner RES-673; rated partial)",
         "I: declared uncertainty propagation is checked against an independent analytical result (owner RES-700; rated partial)",
         "J: an independent reference implementation or closed form that shares no code with the engine (owner RES-669; rated partial)",
-        "K: synthetic fault fixtures cover the declared fault classes with expected verdicts (owner RES-669; rated partial)",
         "L: analytical cross-device studies are executed and classified, never read as interchangeability (owner RES-703; rated partial)",
         "M: seeded, hash-bound provenance chain for every processing stage, reproduced exactly (owner RES-700; rated partial)",
-        "O: limitation statements are sourced and emitted with every result (owner RES-700; rated partial)",
-        "blocker: Engine verified on analytical tracks (RES-700); audited native LPS data, anchor survey and latency evidence remain open (RES-694)",
-        "blocker: Positional versus radar agreement is analytical only (RES-703)"
+        "O: limitation statements are sourced and emitted with every result (owner RES-700; rated partial)"
       ],
       "empirical_dimensions_covered": [],
-      "empirical_gaps": [],
+      "empirical_gaps": [
+        "Engine verified on analytical tracks (RES-700); audited native LPS data, anchor survey and latency evidence remain open (RES-694)",
+        "Positional versus radar agreement is analytical only (RES-703)"
+      ],
       "empirical_interchangeability": "unknown",
       "empirical_records": [],
       "empirical_requirements": {
@@ -2583,30 +2530,35 @@
         "C": "specified",
         "D": "partial",
         "E": "partial",
-        "F": "partial",
+        "F": "verified",
         "G": "partial",
         "H": "partial",
         "I": "partial",
         "J": "partial",
-        "K": "partial",
+        "K": "verified",
         "L": "partial",
         "M": "partial",
         "N": "absent",
         "O": "partial"
       },
-      "receipts": {},
+      "receipts": {
+        "F": [
+          "RCP-gnss_lps-lps-F"
+        ],
+        "K": [
+          "RCP-gnss_lps-lps-K"
+        ]
+      },
       "required_computational": {
         "A": "executable admission contract: native/vendor stage, units and integrity refusals tested",
         "B": "declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused",
         "C": "clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused",
         "D": "integrity and QC checks reject injected faults and pass clean controls",
         "E": "every processing method variant is compared with an independent reference with stated sensitivity bounds",
-        "F": "reconstructed quantities agree with an independent analytical truth within tolerance",
         "G": "protocol events are recovered against analytically known event times, with eligibility refusals",
         "H": "metric definitions are bound to sourced registry claims and executable exactly",
         "I": "declared uncertainty propagation is checked against an independent analytical result",
         "J": "an independent reference implementation or closed form that shares no code with the engine",
-        "K": "synthetic fault fixtures cover the declared fault classes with expected verdicts",
         "L": "analytical cross-device studies are executed and classified, never read as interchangeability",
         "M": "seeded, hash-bound provenance chain for every processing stage, reproduced exactly",
         "O": "limitation statements are sourced and emitted with every result"
@@ -2619,40 +2571,43 @@
         "C",
         "D",
         "E",
-        "F",
         "G",
         "H",
         "I",
         "J",
-        "K",
         "L",
         "M",
         "O"
       ],
-      "verified_m3": []
+      "verified_m3": [
+        "F",
+        "K"
+      ]
     },
     {
-      "analytical_only_dimensions": [],
+      "analytical_only_dimensions": [
+        "B",
+        "D",
+        "E",
+        "F",
+        "I",
+        "J"
+      ],
       "blockers": [
         "A: executable admission contract: native/vendor stage, units and integrity refusals tested (owner RES-693; rated specified)",
-        "B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-701; rated specified)",
         "C: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused (owner RES-693; rated specified)",
-        "D: integrity and QC checks reject injected faults and pass clean controls (owner RES-701; rated partial)",
-        "E: every processing method variant is compared with an independent reference with stated sensitivity bounds (owner RES-701; rated partial)",
-        "F: reconstructed quantities agree with an independent analytical truth within tolerance (owner RES-701; rated partial)",
         "G: protocol events are recovered against analytically known event times, with eligibility refusals (owner RES-671; rated partial)",
         "H: metric definitions are bound to sourced registry claims and executable exactly (owner RES-671; rated partial)",
-        "I: declared uncertainty propagation is checked against an independent analytical result (owner RES-701; rated partial)",
-        "J: an independent reference implementation or closed form that shares no code with the engine (owner RES-669; rated partial)",
         "K: synthetic fault fixtures cover the declared fault classes with expected verdicts (owner RES-669; rated partial)",
         "L: analytical cross-device studies are executed and classified, never read as interchangeability (owner RES-703; rated partial)",
         "M: seeded, hash-bound provenance chain for every processing stage, reproduced exactly (owner RES-701; rated partial)",
-        "O: limitation statements are sourced and emitted with every result (owner RES-701; rated partial)",
-        "blocker: Engine verified on analytical rigid-body and trajectory controls (RES-701); sensor placement, soft-tissue artefact, calibration and flight-time agreement with force plates remain unqualified (RES-694/703)",
-        "blocker: G/H assessment qualification remains RES-671"
+        "O: limitation statements are sourced and emitted with every result (owner RES-701; rated partial)"
       ],
       "empirical_dimensions_covered": [],
-      "empirical_gaps": [],
+      "empirical_gaps": [
+        "Engine verified on analytical rigid-body and trajectory controls (RES-701); sensor placement, soft-tissue artefact, calibration and flight-time agreement with force plates remain unqualified (RES-694/703)",
+        "G/H assessment qualification remains RES-671"
+      ],
       "empirical_interchangeability": "unknown",
       "empirical_records": [],
       "empirical_requirements": {
@@ -2693,33 +2648,46 @@
       },
       "ratings": {
         "A": "specified",
-        "B": "specified",
+        "B": "verified",
         "C": "specified",
-        "D": "partial",
-        "E": "partial",
-        "F": "partial",
+        "D": "verified",
+        "E": "verified",
+        "F": "verified",
         "G": "partial",
         "H": "partial",
-        "I": "partial",
-        "J": "partial",
+        "I": "verified",
+        "J": "verified",
         "K": "partial",
         "L": "partial",
         "M": "partial",
         "N": "absent",
         "O": "partial"
       },
-      "receipts": {},
+      "receipts": {
+        "B": [
+          "RCP-imu-inertial-B"
+        ],
+        "D": [
+          "RCP-imu-inertial-D"
+        ],
+        "E": [
+          "RCP-imu-inertial-E"
+        ],
+        "F": [
+          "RCP-imu-inertial-F"
+        ],
+        "I": [
+          "RCP-imu-inertial-I"
+        ],
+        "J": [
+          "RCP-imu-inertial-J"
+        ]
+      },
       "required_computational": {
         "A": "executable admission contract: native/vendor stage, units and integrity refusals tested",
-        "B": "declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused",
         "C": "clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused",
-        "D": "integrity and QC checks reject injected faults and pass clean controls",
-        "E": "every processing method variant is compared with an independent reference with stated sensitivity bounds",
-        "F": "reconstructed quantities agree with an independent analytical truth within tolerance",
         "G": "protocol events are recovered against analytically known event times, with eligibility refusals",
         "H": "metric definitions are bound to sourced registry claims and executable exactly",
-        "I": "declared uncertainty propagation is checked against an independent analytical result",
-        "J": "an independent reference implementation or closed form that shares no code with the engine",
         "K": "synthetic fault fixtures cover the declared fault classes with expected verdicts",
         "L": "analytical cross-device studies are executed and classified, never read as interchangeability",
         "M": "seeded, hash-bound provenance chain for every processing stage, reproduced exactly",
@@ -2729,26 +2697,30 @@
       "subfamily": "imu.inertial",
       "unverified_m3": [
         "A",
-        "B",
         "C",
-        "D",
-        "E",
-        "F",
         "G",
         "H",
-        "I",
-        "J",
         "K",
         "L",
         "M",
         "O"
       ],
-      "verified_m3": []
+      "verified_m3": [
+        "B",
+        "D",
+        "E",
+        "F",
+        "I",
+        "J"
+      ]
     },
     {
-      "analytical_only_dimensions": [],
+      "analytical_only_dimensions": [
+        "A",
+        "M",
+        "O"
+      ],
       "blockers": [
-        "A: executable admission contract: native/vendor stage, units and integrity refusals tested (owner RES-693; rated specified)",
         "B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-696; rated specified)",
         "C: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused (owner RES-693; rated specified)",
         "D: integrity and QC checks reject injected faults and pass clean controls (owner RES-696; rated partial)",
@@ -2759,14 +2731,13 @@
         "I: declared uncertainty propagation is checked against an independent analytical result (owner RES-696; rated partial)",
         "J: an independent reference implementation or closed form that shares no code with the engine (owner RES-669; rated partial)",
         "K: synthetic fault fixtures cover the declared fault classes with expected verdicts (owner RES-669; rated partial)",
-        "L: analytical cross-device studies are executed and classified, never read as interchangeability (owner RES-703; rated partial)",
-        "M: seeded, hash-bound provenance chain for every processing stage, reproduced exactly (owner RES-696; rated partial)",
-        "O: limitation statements are sourced and emitted with every result (owner RES-696; rated partial)",
-        "blocker: Engine verified on analytical isometric controls (RES-696); no isometric rig compliance or validity source (RES-694)",
-        "blocker: Rig versus plate agreement is analytical only (RES-703)"
+        "L: analytical cross-device studies are executed and classified, never read as interchangeability (owner RES-703; rated partial)"
       ],
       "empirical_dimensions_covered": [],
-      "empirical_gaps": [],
+      "empirical_gaps": [
+        "Engine verified on analytical isometric controls (RES-696); no isometric rig compliance or validity source (RES-694)",
+        "Rig versus plate agreement is analytical only (RES-703)"
+      ],
       "empirical_interchangeability": "unknown",
       "empirical_records": [],
       "empirical_requirements": {
@@ -2806,7 +2777,7 @@
         "O": "RES-696"
       },
       "ratings": {
-        "A": "specified",
+        "A": "verified",
         "B": "specified",
         "C": "specified",
         "D": "partial",
@@ -2818,13 +2789,22 @@
         "J": "partial",
         "K": "partial",
         "L": "partial",
-        "M": "partial",
+        "M": "verified",
         "N": "absent",
-        "O": "partial"
+        "O": "verified"
       },
-      "receipts": {},
+      "receipts": {
+        "A": [
+          "RCP-load_cell_isometric-isometric_rig-A"
+        ],
+        "M": [
+          "RCP-load_cell_isometric-isometric_rig-M"
+        ],
+        "O": [
+          "RCP-load_cell_isometric-isometric_rig-O"
+        ]
+      },
       "required_computational": {
-        "A": "executable admission contract: native/vendor stage, units and integrity refusals tested",
         "B": "declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused",
         "C": "clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused",
         "D": "integrity and QC checks reject injected faults and pass clean controls",
@@ -2835,14 +2815,11 @@
         "I": "declared uncertainty propagation is checked against an independent analytical result",
         "J": "an independent reference implementation or closed form that shares no code with the engine",
         "K": "synthetic fault fixtures cover the declared fault classes with expected verdicts",
-        "L": "analytical cross-device studies are executed and classified, never read as interchangeability",
-        "M": "seeded, hash-bound provenance chain for every processing stage, reproduced exactly",
-        "O": "limitation statements are sourced and emitted with every result"
+        "L": "analytical cross-device studies are executed and classified, never read as interchangeability"
       },
       "state": "SPECIFIED",
       "subfamily": "load_cell_isometric.isometric_rig",
       "unverified_m3": [
-        "A",
         "B",
         "C",
         "D",
@@ -2853,34 +2830,38 @@
         "I",
         "J",
         "K",
+        "L"
+      ],
+      "verified_m3": [
+        "A",
+        "M",
+        "O"
+      ]
+    },
+    {
+      "analytical_only_dimensions": [
+        "A",
+        "B",
+        "D",
+        "F",
+        "G",
+        "J",
         "L",
         "M",
         "O"
       ],
-      "verified_m3": []
-    },
-    {
-      "analytical_only_dimensions": [],
       "blockers": [
-        "A: executable admission contract: native/vendor stage, units and integrity refusals tested (owner RES-693; rated specified)",
-        "B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-696; rated specified)",
         "C: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused (owner RES-693; rated specified)",
-        "D: integrity and QC checks reject injected faults and pass clean controls (owner RES-696; rated partial)",
         "E: every processing method variant is compared with an independent reference with stated sensitivity bounds (owner RES-696; rated partial)",
-        "F: reconstructed quantities agree with an independent analytical truth within tolerance (owner RES-696; rated partial)",
-        "G: protocol events are recovered against analytically known event times, with eligibility refusals (owner RES-672; rated partial)",
         "H: metric definitions are bound to sourced registry claims and executable exactly (owner RES-672; rated partial)",
         "I: declared uncertainty propagation is checked against an independent analytical result (owner RES-696; rated partial)",
-        "J: an independent reference implementation or closed form that shares no code with the engine (owner RES-669; rated partial)",
-        "K: synthetic fault fixtures cover the declared fault classes with expected verdicts (owner RES-669; rated partial)",
-        "L: analytical cross-device studies are executed and classified, never read as interchangeability (owner RES-703; rated partial)",
-        "M: seeded, hash-bound provenance chain for every processing stage, reproduced exactly (owner RES-696; rated partial)",
-        "O: limitation statements are sourced and emitted with every result (owner RES-696; rated partial)",
-        "blocker: Engine verified on analytical isometric controls (RES-696); measured calibration, rig compliance and temperature behaviour remain unqualified (RES-694)",
-        "blocker: Load-cell versus force-plate IMTP agreement is analytical only (RES-703)"
+        "K: synthetic fault fixtures cover the declared fault classes with expected verdicts (owner RES-669; rated partial)"
       ],
       "empirical_dimensions_covered": [],
-      "empirical_gaps": [],
+      "empirical_gaps": [
+        "Engine verified on analytical isometric controls (RES-696); measured calibration, rig compliance and temperature behaviour remain unqualified (RES-694)",
+        "Load-cell versus force-plate IMTP agreement is analytical only (RES-703)"
+      ],
       "empirical_interchangeability": "unknown",
       "empirical_records": [],
       "empirical_requirements": {
@@ -2920,64 +2901,85 @@
         "O": "RES-696"
       },
       "ratings": {
-        "A": "specified",
-        "B": "specified",
+        "A": "verified",
+        "B": "verified",
         "C": "specified",
-        "D": "partial",
+        "D": "verified",
         "E": "partial",
-        "F": "partial",
-        "G": "partial",
+        "F": "verified",
+        "G": "verified",
         "H": "partial",
         "I": "partial",
-        "J": "partial",
+        "J": "verified",
         "K": "partial",
-        "L": "partial",
-        "M": "partial",
+        "L": "verified",
+        "M": "verified",
         "N": "absent",
-        "O": "partial"
+        "O": "verified"
       },
-      "receipts": {},
+      "receipts": {
+        "A": [
+          "RCP-load_cell_isometric-load_cell-A"
+        ],
+        "B": [
+          "RCP-load_cell_isometric-load_cell-B"
+        ],
+        "D": [
+          "RCP-load_cell_isometric-load_cell-D"
+        ],
+        "F": [
+          "RCP-load_cell_isometric-load_cell-F"
+        ],
+        "G": [
+          "RCP-load_cell_isometric-load_cell-G"
+        ],
+        "J": [
+          "RCP-load_cell_isometric-load_cell-J"
+        ],
+        "L": [
+          "RCP-load_cell_isometric-load_cell-L"
+        ],
+        "M": [
+          "RCP-load_cell_isometric-load_cell-M"
+        ],
+        "O": [
+          "RCP-load_cell_isometric-load_cell-O"
+        ]
+      },
       "required_computational": {
-        "A": "executable admission contract: native/vendor stage, units and integrity refusals tested",
-        "B": "declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused",
         "C": "clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused",
-        "D": "integrity and QC checks reject injected faults and pass clean controls",
         "E": "every processing method variant is compared with an independent reference with stated sensitivity bounds",
-        "F": "reconstructed quantities agree with an independent analytical truth within tolerance",
-        "G": "protocol events are recovered against analytically known event times, with eligibility refusals",
         "H": "metric definitions are bound to sourced registry claims and executable exactly",
         "I": "declared uncertainty propagation is checked against an independent analytical result",
-        "J": "an independent reference implementation or closed form that shares no code with the engine",
-        "K": "synthetic fault fixtures cover the declared fault classes with expected verdicts",
-        "L": "analytical cross-device studies are executed and classified, never read as interchangeability",
-        "M": "seeded, hash-bound provenance chain for every processing stage, reproduced exactly",
-        "O": "limitation statements are sourced and emitted with every result"
+        "K": "synthetic fault fixtures cover the declared fault classes with expected verdicts"
       },
       "state": "SPECIFIED",
       "subfamily": "load_cell_isometric.load_cell",
       "unverified_m3": [
-        "A",
-        "B",
         "C",
-        "D",
         "E",
-        "F",
-        "G",
         "H",
         "I",
+        "K"
+      ],
+      "verified_m3": [
+        "A",
+        "B",
+        "D",
+        "F",
+        "G",
         "J",
-        "K",
         "L",
         "M",
         "O"
-      ],
-      "verified_m3": []
+      ]
     },
     {
-      "analytical_only_dimensions": [],
+      "analytical_only_dimensions": [
+        "B"
+      ],
       "blockers": [
         "A: executable admission contract: native/vendor stage, units and integrity refusals tested (owner RES-693; rated specified)",
-        "B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-695; rated specified)",
         "C: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused (owner RES-693; rated specified)",
         "D: integrity and QC checks reject injected faults and pass clean controls (owner RES-695; rated partial)",
         "E: every processing method variant is compared with an independent reference with stated sensitivity bounds (owner RES-695; rated partial)",
@@ -2989,12 +2991,13 @@
         "K: synthetic fault fixtures cover the declared fault classes with expected verdicts (owner RES-669; rated partial)",
         "L: analytical cross-device studies are executed and classified, never read as interchangeability (owner RES-703; rated partial)",
         "M: seeded, hash-bound provenance chain for every processing stage, reproduced exactly (owner RES-695; rated partial)",
-        "O: limitation statements are sourced and emitted with every result (owner RES-695; rated partial)",
-        "blocker: Engine verified on analytical controls (RES-695); measured counts-per-metre, quantization and attachment validity remain unqualified (RES-694)",
-        "blocker: Cross-device agreement is analytical only (RES-703)"
+        "O: limitation statements are sourced and emitted with every result (owner RES-695; rated partial)"
       ],
       "empirical_dimensions_covered": [],
-      "empirical_gaps": [],
+      "empirical_gaps": [
+        "Engine verified on analytical controls (RES-695); measured counts-per-metre, quantization and attachment validity remain unqualified (RES-694)",
+        "Cross-device agreement is analytical only (RES-703)"
+      ],
       "empirical_interchangeability": "unknown",
       "empirical_records": [],
       "empirical_requirements": {
@@ -3035,7 +3038,7 @@
       },
       "ratings": {
         "A": "specified",
-        "B": "specified",
+        "B": "verified",
         "C": "specified",
         "D": "partial",
         "E": "partial",
@@ -3050,10 +3053,13 @@
         "N": "absent",
         "O": "partial"
       },
-      "receipts": {},
+      "receipts": {
+        "B": [
+          "RCP-lpt_encoder-encoder-B"
+        ]
+      },
       "required_computational": {
         "A": "executable admission contract: native/vendor stage, units and integrity refusals tested",
-        "B": "declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused",
         "C": "clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused",
         "D": "integrity and QC checks reject injected faults and pass clean controls",
         "E": "every processing method variant is compared with an independent reference with stated sensitivity bounds",
@@ -3071,7 +3077,6 @@
       "subfamily": "lpt_encoder.encoder",
       "unverified_m3": [
         "A",
-        "B",
         "C",
         "D",
         "E",
@@ -3085,30 +3090,34 @@
         "M",
         "O"
       ],
-      "verified_m3": []
+      "verified_m3": [
+        "B"
+      ]
     },
     {
-      "analytical_only_dimensions": [],
+      "analytical_only_dimensions": [
+        "C",
+        "F",
+        "J",
+        "M"
+      ],
       "blockers": [
         "A: executable admission contract: native/vendor stage, units and integrity refusals tested (owner RES-693; rated specified)",
         "B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-695; rated specified)",
-        "C: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused (owner RES-693; rated specified)",
         "D: integrity and QC checks reject injected faults and pass clean controls (owner RES-695; rated partial)",
         "E: every processing method variant is compared with an independent reference with stated sensitivity bounds (owner RES-695; rated partial)",
-        "F: reconstructed quantities agree with an independent analytical truth within tolerance (owner RES-695; rated partial)",
         "G: protocol events are recovered against analytically known event times, with eligibility refusals (owner RES-671; rated partial)",
         "H: metric definitions are bound to sourced registry claims and executable exactly (owner RES-671; rated partial)",
         "I: declared uncertainty propagation is checked against an independent analytical result (owner RES-695; rated partial)",
-        "J: an independent reference implementation or closed form that shares no code with the engine (owner RES-669; rated partial)",
         "K: synthetic fault fixtures cover the declared fault classes with expected verdicts (owner RES-669; rated partial)",
         "L: analytical cross-device studies are executed and classified, never read as interchangeability (owner RES-703; rated partial)",
-        "M: seeded, hash-bound provenance chain for every processing stage, reproduced exactly (owner RES-695; rated partial)",
-        "O: limitation statements are sourced and emitted with every result (owner RES-695; rated partial)",
-        "blocker: Engine verified on analytical controls (RES-695); measured cable geometry, calibration and attachment-versus-COM validity remain unqualified (RES-694)",
-        "blocker: Cross-device agreement with force plates is analytical only (RES-703)"
+        "O: limitation statements are sourced and emitted with every result (owner RES-695; rated partial)"
       ],
       "empirical_dimensions_covered": [],
-      "empirical_gaps": [],
+      "empirical_gaps": [
+        "Engine verified on analytical controls (RES-695); measured cable geometry, calibration and attachment-versus-COM validity remain unqualified (RES-694)",
+        "Cross-device agreement with force plates is analytical only (RES-703)"
+      ],
       "empirical_interchangeability": "unknown",
       "empirical_records": [],
       "empirical_requirements": {
@@ -3150,35 +3159,44 @@
       "ratings": {
         "A": "specified",
         "B": "specified",
-        "C": "specified",
+        "C": "verified",
         "D": "partial",
         "E": "partial",
-        "F": "partial",
+        "F": "verified",
         "G": "partial",
         "H": "partial",
         "I": "partial",
-        "J": "partial",
+        "J": "verified",
         "K": "partial",
         "L": "partial",
-        "M": "partial",
+        "M": "verified",
         "N": "absent",
         "O": "partial"
       },
-      "receipts": {},
+      "receipts": {
+        "C": [
+          "RCP-lpt_encoder-lpt-C"
+        ],
+        "F": [
+          "RCP-lpt_encoder-lpt-F"
+        ],
+        "J": [
+          "RCP-lpt_encoder-lpt-J"
+        ],
+        "M": [
+          "RCP-lpt_encoder-lpt-M"
+        ]
+      },
       "required_computational": {
         "A": "executable admission contract: native/vendor stage, units and integrity refusals tested",
         "B": "declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused",
-        "C": "clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused",
         "D": "integrity and QC checks reject injected faults and pass clean controls",
         "E": "every processing method variant is compared with an independent reference with stated sensitivity bounds",
-        "F": "reconstructed quantities agree with an independent analytical truth within tolerance",
         "G": "protocol events are recovered against analytically known event times, with eligibility refusals",
         "H": "metric definitions are bound to sourced registry claims and executable exactly",
         "I": "declared uncertainty propagation is checked against an independent analytical result",
-        "J": "an independent reference implementation or closed form that shares no code with the engine",
         "K": "synthetic fault fixtures cover the declared fault classes with expected verdicts",
         "L": "analytical cross-device studies are executed and classified, never read as interchangeability",
-        "M": "seeded, hash-bound provenance chain for every processing stage, reproduced exactly",
         "O": "limitation statements are sourced and emitted with every result"
       },
       "state": "SPECIFIED",
@@ -3186,20 +3204,21 @@
       "unverified_m3": [
         "A",
         "B",
-        "C",
         "D",
         "E",
-        "F",
         "G",
         "H",
         "I",
-        "J",
         "K",
         "L",
-        "M",
         "O"
       ],
-      "verified_m3": []
+      "verified_m3": [
+        "C",
+        "F",
+        "J",
+        "M"
+      ]
     },
     {
       "analytical_only_dimensions": [],
@@ -3217,12 +3236,13 @@
         "K: synthetic fault fixtures cover the declared fault classes with expected verdicts (owner RES-669; rated partial)",
         "L: analytical cross-device studies are executed and classified, never read as interchangeability (owner RES-703; rated partial)",
         "M: seeded, hash-bound provenance chain for every processing stage, reproduced exactly (owner RES-697; rated partial)",
-        "O: limitation statements are sourced and emitted with every result (owner RES-697; rated partial)",
-        "blocker: Engine verified on analytical isometric controls (RES-697); squeeze protocol geometry validity and device metrology remain unqualified (RES-694)",
-        "blocker: G/H assessment qualification remains RES-672"
+        "O: limitation statements are sourced and emitted with every result (owner RES-697; rated partial)"
       ],
       "empirical_dimensions_covered": [],
-      "empirical_gaps": [],
+      "empirical_gaps": [
+        "Engine verified on analytical isometric controls (RES-697); squeeze protocol geometry validity and device metrology remain unqualified (RES-694)",
+        "G/H assessment qualification remains RES-672"
+      ],
       "empirical_interchangeability": "unknown",
       "empirical_records": [],
       "empirical_requirements": {
@@ -3316,27 +3336,29 @@
       "verified_m3": []
     },
     {
-      "analytical_only_dimensions": [],
+      "analytical_only_dimensions": [
+        "F",
+        "G",
+        "H",
+        "J",
+        "L"
+      ],
       "blockers": [
         "A: executable admission contract: native/vendor stage, units and integrity refusals tested (owner RES-697; rated specified)",
         "B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-697; rated specified)",
         "C: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused (owner RES-693; rated specified)",
         "D: integrity and QC checks reject injected faults and pass clean controls (owner RES-697; rated partial)",
         "E: every processing method variant is compared with an independent reference with stated sensitivity bounds (owner RES-697; rated partial)",
-        "F: reconstructed quantities agree with an independent analytical truth within tolerance (owner RES-697; rated partial)",
-        "G: protocol events are recovered against analytically known event times, with eligibility refusals (owner RES-672; rated partial)",
-        "H: metric definitions are bound to sourced registry claims and executable exactly (owner RES-672; rated partial)",
         "I: declared uncertainty propagation is checked against an independent analytical result (owner RES-697; rated partial)",
-        "J: an independent reference implementation or closed form that shares no code with the engine (owner RES-669; rated partial)",
         "K: synthetic fault fixtures cover the declared fault classes with expected verdicts (owner RES-669; rated partial)",
-        "L: analytical cross-device studies are executed and classified, never read as interchangeability (owner RES-703; rated partial)",
         "M: seeded, hash-bound provenance chain for every processing stage, reproduced exactly (owner RES-697; rated partial)",
-        "O: limitation statements are sourced and emitted with every result (owner RES-697; rated partial)",
-        "blocker: Engine verified on analytical eccentric controls (RES-697); athlete-level validity, strap/lever geometry measurements and vendor-corrected versus raw agreement remain unqualified (RES-694/703)",
-        "blocker: G/H assessment qualification remains RES-672"
+        "O: limitation statements are sourced and emitted with every result (owner RES-697; rated partial)"
       ],
       "empirical_dimensions_covered": [],
-      "empirical_gaps": [],
+      "empirical_gaps": [
+        "Engine verified on analytical eccentric controls (RES-697); athlete-level validity, strap/lever geometry measurements and vendor-corrected versus raw agreement remain unqualified (RES-694/703)",
+        "G/H assessment qualification remains RES-672"
+      ],
       "empirical_interchangeability": "unknown",
       "empirical_records": [],
       "empirical_requirements": {
@@ -3381,31 +3403,42 @@
         "C": "specified",
         "D": "partial",
         "E": "partial",
-        "F": "partial",
-        "G": "partial",
-        "H": "partial",
+        "F": "verified",
+        "G": "verified",
+        "H": "verified",
         "I": "partial",
-        "J": "partial",
+        "J": "verified",
         "K": "partial",
-        "L": "partial",
+        "L": "verified",
         "M": "partial",
         "N": "absent",
         "O": "partial"
       },
-      "receipts": {},
+      "receipts": {
+        "F": [
+          "RCP-nordic_hip-nordic-F"
+        ],
+        "G": [
+          "RCP-nordic_hip-nordic-G"
+        ],
+        "H": [
+          "RCP-nordic_hip-nordic-H"
+        ],
+        "J": [
+          "RCP-nordic_hip-nordic-J"
+        ],
+        "L": [
+          "RCP-nordic_hip-nordic-L"
+        ]
+      },
       "required_computational": {
         "A": "executable admission contract: native/vendor stage, units and integrity refusals tested",
         "B": "declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused",
         "C": "clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused",
         "D": "integrity and QC checks reject injected faults and pass clean controls",
         "E": "every processing method variant is compared with an independent reference with stated sensitivity bounds",
-        "F": "reconstructed quantities agree with an independent analytical truth within tolerance",
-        "G": "protocol events are recovered against analytically known event times, with eligibility refusals",
-        "H": "metric definitions are bound to sourced registry claims and executable exactly",
         "I": "declared uncertainty propagation is checked against an independent analytical result",
-        "J": "an independent reference implementation or closed form that shares no code with the engine",
         "K": "synthetic fault fixtures cover the declared fault classes with expected verdicts",
-        "L": "analytical cross-device studies are executed and classified, never read as interchangeability",
         "M": "seeded, hash-bound provenance chain for every processing stage, reproduced exactly",
         "O": "limitation statements are sourced and emitted with every result"
       },
@@ -3417,24 +3450,27 @@
         "C",
         "D",
         "E",
-        "F",
-        "G",
-        "H",
         "I",
-        "J",
         "K",
-        "L",
         "M",
         "O"
       ],
-      "verified_m3": []
+      "verified_m3": [
+        "F",
+        "G",
+        "H",
+        "J",
+        "L"
+      ]
     },
     {
-      "analytical_only_dimensions": [],
+      "analytical_only_dimensions": [
+        "C",
+        "L"
+      ],
       "blockers": [
         "A: executable admission contract: native/vendor stage, units and integrity refusals tested (owner RES-693; rated specified)",
         "B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-699; rated specified)",
-        "C: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused (owner RES-693; rated specified)",
         "D: integrity and QC checks reject injected faults and pass clean controls (owner RES-699; rated partial)",
         "E: every processing method variant is compared with an independent reference with stated sensitivity bounds (owner RES-699; rated partial)",
         "F: reconstructed quantities agree with an independent analytical truth within tolerance (owner RES-699; rated partial)",
@@ -3443,14 +3479,14 @@
         "I: declared uncertainty propagation is checked against an independent analytical result (owner RES-699; rated partial)",
         "J: an independent reference implementation or closed form that shares no code with the engine (owner RES-669; rated partial)",
         "K: synthetic fault fixtures cover the declared fault classes with expected verdicts (owner RES-669; rated partial)",
-        "L: analytical cross-device studies are executed and classified, never read as interchangeability (owner RES-703; rated partial)",
         "M: seeded, hash-bound provenance chain for every processing stage, reproduced exactly (owner RES-699; rated partial)",
-        "O: limitation statements are sourced and emitted with every result (owner RES-699; rated partial)",
-        "blocker: Engine verified on analytical sprint controls (RES-699); no raw laser validity or range-noise study (RES-694)",
-        "blocker: Range-rate versus Doppler agreement is analytical only (RES-703)"
+        "O: limitation statements are sourced and emitted with every result (owner RES-699; rated partial)"
       ],
       "empirical_dimensions_covered": [],
-      "empirical_gaps": [],
+      "empirical_gaps": [
+        "Engine verified on analytical sprint controls (RES-699); no raw laser validity or range-noise study (RES-694)",
+        "Range-rate versus Doppler agreement is analytical only (RES-703)"
+      ],
       "empirical_interchangeability": "unknown",
       "empirical_records": [],
       "empirical_requirements": {
@@ -3492,7 +3528,7 @@
       "ratings": {
         "A": "specified",
         "B": "specified",
-        "C": "specified",
+        "C": "verified",
         "D": "partial",
         "E": "partial",
         "F": "partial",
@@ -3501,16 +3537,22 @@
         "I": "partial",
         "J": "partial",
         "K": "partial",
-        "L": "partial",
+        "L": "verified",
         "M": "partial",
         "N": "absent",
         "O": "partial"
       },
-      "receipts": {},
+      "receipts": {
+        "C": [
+          "RCP-radar_laser-laser-C"
+        ],
+        "L": [
+          "RCP-radar_laser-laser-L"
+        ]
+      },
       "required_computational": {
         "A": "executable admission contract: native/vendor stage, units and integrity refusals tested",
         "B": "declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused",
-        "C": "clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused",
         "D": "integrity and QC checks reject injected faults and pass clean controls",
         "E": "every processing method variant is compared with an independent reference with stated sensitivity bounds",
         "F": "reconstructed quantities agree with an independent analytical truth within tolerance",
@@ -3519,7 +3561,6 @@
         "I": "declared uncertainty propagation is checked against an independent analytical result",
         "J": "an independent reference implementation or closed form that shares no code with the engine",
         "K": "synthetic fault fixtures cover the declared fault classes with expected verdicts",
-        "L": "analytical cross-device studies are executed and classified, never read as interchangeability",
         "M": "seeded, hash-bound provenance chain for every processing stage, reproduced exactly",
         "O": "limitation statements are sourced and emitted with every result"
       },
@@ -3528,7 +3569,6 @@
       "unverified_m3": [
         "A",
         "B",
-        "C",
         "D",
         "E",
         "F",
@@ -3537,34 +3577,38 @@
         "I",
         "J",
         "K",
-        "L",
         "M",
         "O"
       ],
-      "verified_m3": []
+      "verified_m3": [
+        "C",
+        "L"
+      ]
     },
     {
-      "analytical_only_dimensions": [],
+      "analytical_only_dimensions": [
+        "A",
+        "C",
+        "D",
+        "F",
+        "G",
+        "H",
+        "J"
+      ],
       "blockers": [
-        "A: executable admission contract: native/vendor stage, units and integrity refusals tested (owner RES-693; rated specified)",
         "B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-699; rated specified)",
-        "C: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused (owner RES-693; rated specified)",
-        "D: integrity and QC checks reject injected faults and pass clean controls (owner RES-699; rated partial)",
         "E: every processing method variant is compared with an independent reference with stated sensitivity bounds (owner RES-699; rated partial)",
-        "F: reconstructed quantities agree with an independent analytical truth within tolerance (owner RES-699; rated partial)",
-        "G: protocol events are recovered against analytically known event times, with eligibility refusals (owner RES-673; rated partial)",
-        "H: metric definitions are bound to sourced registry claims and executable exactly (owner RES-673; rated partial)",
         "I: declared uncertainty propagation is checked against an independent analytical result (owner RES-699; rated partial)",
-        "J: an independent reference implementation or closed form that shares no code with the engine (owner RES-669; rated partial)",
         "K: synthetic fault fixtures cover the declared fault classes with expected verdicts (owner RES-669; rated partial)",
         "L: analytical cross-device studies are executed and classified, never read as interchangeability (owner RES-703; rated partial)",
         "M: seeded, hash-bound provenance chain for every processing stage, reproduced exactly (owner RES-699; rated partial)",
-        "O: limitation statements are sourced and emitted with every result (owner RES-699; rated partial)",
-        "blocker: Engine verified on analytical sprint controls (RES-699); no raw radar validity or latency study (RES-694)",
-        "blocker: Doppler versus positional/gate agreement is analytical only (RES-703)"
+        "O: limitation statements are sourced and emitted with every result (owner RES-699; rated partial)"
       ],
       "empirical_dimensions_covered": [],
-      "empirical_gaps": [],
+      "empirical_gaps": [
+        "Engine verified on analytical sprint controls (RES-699); no raw radar validity or latency study (RES-694)",
+        "Doppler versus positional/gate agreement is analytical only (RES-703)"
+      ],
       "empirical_interchangeability": "unknown",
       "empirical_records": [],
       "empirical_requirements": {
@@ -3604,34 +3648,49 @@
         "O": "RES-699"
       },
       "ratings": {
-        "A": "specified",
+        "A": "verified",
         "B": "specified",
-        "C": "specified",
-        "D": "partial",
+        "C": "verified",
+        "D": "verified",
         "E": "partial",
-        "F": "partial",
-        "G": "partial",
-        "H": "partial",
+        "F": "verified",
+        "G": "verified",
+        "H": "verified",
         "I": "partial",
-        "J": "partial",
+        "J": "verified",
         "K": "partial",
         "L": "partial",
         "M": "partial",
         "N": "absent",
         "O": "partial"
       },
-      "receipts": {},
+      "receipts": {
+        "A": [
+          "RCP-radar_laser-radar-A"
+        ],
+        "C": [
+          "RCP-radar_laser-radar-C"
+        ],
+        "D": [
+          "RCP-radar_laser-radar-D"
+        ],
+        "F": [
+          "RCP-radar_laser-radar-F"
+        ],
+        "G": [
+          "RCP-radar_laser-radar-G"
+        ],
+        "H": [
+          "RCP-radar_laser-radar-H"
+        ],
+        "J": [
+          "RCP-radar_laser-radar-J"
+        ]
+      },
       "required_computational": {
-        "A": "executable admission contract: native/vendor stage, units and integrity refusals tested",
         "B": "declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused",
-        "C": "clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused",
-        "D": "integrity and QC checks reject injected faults and pass clean controls",
         "E": "every processing method variant is compared with an independent reference with stated sensitivity bounds",
-        "F": "reconstructed quantities agree with an independent analytical truth within tolerance",
-        "G": "protocol events are recovered against analytically known event times, with eligibility refusals",
-        "H": "metric definitions are bound to sourced registry claims and executable exactly",
         "I": "declared uncertainty propagation is checked against an independent analytical result",
-        "J": "an independent reference implementation or closed form that shares no code with the engine",
         "K": "synthetic fault fixtures cover the declared fault classes with expected verdicts",
         "L": "analytical cross-device studies are executed and classified, never read as interchangeability",
         "M": "seeded, hash-bound provenance chain for every processing stage, reproduced exactly",
@@ -3640,45 +3699,48 @@
       "state": "SPECIFIED",
       "subfamily": "radar_laser.radar",
       "unverified_m3": [
-        "A",
         "B",
-        "C",
-        "D",
         "E",
-        "F",
-        "G",
-        "H",
         "I",
-        "J",
         "K",
         "L",
         "M",
         "O"
       ],
-      "verified_m3": []
+      "verified_m3": [
+        "A",
+        "C",
+        "D",
+        "F",
+        "G",
+        "H",
+        "J"
+      ]
     },
     {
-      "analytical_only_dimensions": [],
+      "analytical_only_dimensions": [
+        "A",
+        "D",
+        "E",
+        "F",
+        "H",
+        "J",
+        "L"
+      ],
       "blockers": [
-        "A: executable admission contract: native/vendor stage, units and integrity refusals tested (owner RES-693; rated specified)",
         "B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-698; rated specified)",
         "C: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused (owner RES-693; rated specified)",
-        "D: integrity and QC checks reject injected faults and pass clean controls (owner RES-698; rated partial)",
-        "E: every processing method variant is compared with an independent reference with stated sensitivity bounds (owner RES-698; rated partial)",
-        "F: reconstructed quantities agree with an independent analytical truth within tolerance (owner RES-698; rated partial)",
         "G: protocol events are recovered against analytically known event times, with eligibility refusals (owner RES-671; rated partial)",
-        "H: metric definitions are bound to sourced registry claims and executable exactly (owner RES-673; rated partial)",
         "I: declared uncertainty propagation is checked against an independent analytical result (owner RES-698; rated partial)",
-        "J: an independent reference implementation or closed form that shares no code with the engine (owner RES-669; rated partial)",
         "K: synthetic fault fixtures cover the declared fault classes with expected verdicts (owner RES-669; rated partial)",
-        "L: analytical cross-device studies are executed and classified, never read as interchangeability (owner RES-703; rated partial)",
         "M: seeded, hash-bound provenance chain for every processing stage, reproduced exactly (owner RES-698; rated partial)",
-        "O: limitation statements are sourced and emitted with every result (owner RES-698; rated partial)",
-        "blocker: Contact-system switching thresholds and latency bounds need empirical metrology (RES-694)",
-        "blocker: Assessment-specific validity and force-platform/IMU agreement remain open (RES-671/703)"
+        "O: limitation statements are sourced and emitted with every result (owner RES-698; rated partial)"
       ],
       "empirical_dimensions_covered": [],
-      "empirical_gaps": [],
+      "empirical_gaps": [
+        "Contact-system switching thresholds and latency bounds need empirical metrology (RES-694)",
+        "Assessment-specific validity and force-platform/IMU agreement remain open (RES-671/703)"
+      ],
       "empirical_interchangeability": "unknown",
       "empirical_records": [],
       "empirical_requirements": {
@@ -3718,81 +3780,99 @@
         "O": "RES-698"
       },
       "ratings": {
-        "A": "specified",
+        "A": "verified",
         "B": "specified",
         "C": "specified",
-        "D": "partial",
-        "E": "partial",
-        "F": "partial",
+        "D": "verified",
+        "E": "verified",
+        "F": "verified",
         "G": "partial",
-        "H": "partial",
+        "H": "verified",
         "I": "partial",
-        "J": "partial",
+        "J": "verified",
         "K": "partial",
-        "L": "partial",
+        "L": "verified",
         "M": "partial",
         "N": "absent",
         "O": "partial"
       },
-      "receipts": {},
+      "receipts": {
+        "A": [
+          "RCP-timing_contact-contact-A"
+        ],
+        "D": [
+          "RCP-timing_contact-contact-D"
+        ],
+        "E": [
+          "RCP-timing_contact-contact-E"
+        ],
+        "F": [
+          "RCP-timing_contact-contact-F"
+        ],
+        "H": [
+          "RCP-timing_contact-contact-H"
+        ],
+        "J": [
+          "RCP-timing_contact-contact-J"
+        ],
+        "L": [
+          "RCP-timing_contact-contact-L"
+        ]
+      },
       "required_computational": {
-        "A": "executable admission contract: native/vendor stage, units and integrity refusals tested",
         "B": "declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused",
         "C": "clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused",
-        "D": "integrity and QC checks reject injected faults and pass clean controls",
-        "E": "every processing method variant is compared with an independent reference with stated sensitivity bounds",
-        "F": "reconstructed quantities agree with an independent analytical truth within tolerance",
         "G": "protocol events are recovered against analytically known event times, with eligibility refusals",
-        "H": "metric definitions are bound to sourced registry claims and executable exactly",
         "I": "declared uncertainty propagation is checked against an independent analytical result",
-        "J": "an independent reference implementation or closed form that shares no code with the engine",
         "K": "synthetic fault fixtures cover the declared fault classes with expected verdicts",
-        "L": "analytical cross-device studies are executed and classified, never read as interchangeability",
         "M": "seeded, hash-bound provenance chain for every processing stage, reproduced exactly",
         "O": "limitation statements are sourced and emitted with every result"
       },
       "state": "SPECIFIED",
       "subfamily": "timing_contact.contact",
       "unverified_m3": [
-        "A",
         "B",
         "C",
-        "D",
-        "E",
-        "F",
         "G",
-        "H",
         "I",
-        "J",
         "K",
-        "L",
         "M",
         "O"
       ],
-      "verified_m3": []
+      "verified_m3": [
+        "A",
+        "D",
+        "E",
+        "F",
+        "H",
+        "J",
+        "L"
+      ]
     },
     {
-      "analytical_only_dimensions": [],
+      "analytical_only_dimensions": [
+        "A",
+        "D",
+        "H",
+        "L"
+      ],
       "blockers": [
-        "A: executable admission contract: native/vendor stage, units and integrity refusals tested (owner RES-693; rated specified)",
         "B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-698; rated specified)",
         "C: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused (owner RES-693; rated specified)",
-        "D: integrity and QC checks reject injected faults and pass clean controls (owner RES-698; rated partial)",
         "E: every processing method variant is compared with an independent reference with stated sensitivity bounds (owner RES-698; rated partial)",
         "F: reconstructed quantities agree with an independent analytical truth within tolerance (owner RES-698; rated partial)",
         "G: protocol events are recovered against analytically known event times, with eligibility refusals (owner RES-671; rated partial)",
-        "H: metric definitions are bound to sourced registry claims and executable exactly (owner RES-673; rated partial)",
         "I: declared uncertainty propagation is checked against an independent analytical result (owner RES-698; rated partial)",
         "J: an independent reference implementation or closed form that shares no code with the engine (owner RES-669; rated partial)",
         "K: synthetic fault fixtures cover the declared fault classes with expected verdicts (owner RES-669; rated partial)",
-        "L: analytical cross-device studies are executed and classified, never read as interchangeability (owner RES-703; rated partial)",
         "M: seeded, hash-bound provenance chain for every processing stage, reproduced exactly (owner RES-698; rated partial)",
-        "O: limitation statements are sourced and emitted with every result (owner RES-698; rated partial)",
-        "blocker: Gate geometry, trigger validity and timing-error bounds need empirical metrology (RES-694)",
-        "blocker: Sprint assessment variants and cross-device agreement remain open (RES-673/703)"
+        "O: limitation statements are sourced and emitted with every result (owner RES-698; rated partial)"
       ],
       "empirical_dimensions_covered": [],
-      "empirical_gaps": [],
+      "empirical_gaps": [
+        "Gate geometry, trigger validity and timing-error bounds need empirical metrology (RES-694)",
+        "Sprint assessment variants and cross-device agreement remain open (RES-673/703)"
+      ],
       "empirical_interchangeability": "unknown",
       "empirical_records": [],
       "empirical_requirements": {
@@ -3832,58 +3912,68 @@
         "O": "RES-698"
       },
       "ratings": {
-        "A": "specified",
+        "A": "verified",
         "B": "specified",
         "C": "specified",
-        "D": "partial",
+        "D": "verified",
         "E": "partial",
         "F": "partial",
         "G": "partial",
-        "H": "partial",
+        "H": "verified",
         "I": "partial",
         "J": "partial",
         "K": "partial",
-        "L": "partial",
+        "L": "verified",
         "M": "partial",
         "N": "absent",
         "O": "partial"
       },
-      "receipts": {},
+      "receipts": {
+        "A": [
+          "RCP-timing_contact-gates-A"
+        ],
+        "D": [
+          "RCP-timing_contact-gates-D"
+        ],
+        "H": [
+          "RCP-timing_contact-gates-H"
+        ],
+        "L": [
+          "RCP-timing_contact-gates-L"
+        ]
+      },
       "required_computational": {
-        "A": "executable admission contract: native/vendor stage, units and integrity refusals tested",
         "B": "declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused",
         "C": "clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused",
-        "D": "integrity and QC checks reject injected faults and pass clean controls",
         "E": "every processing method variant is compared with an independent reference with stated sensitivity bounds",
         "F": "reconstructed quantities agree with an independent analytical truth within tolerance",
         "G": "protocol events are recovered against analytically known event times, with eligibility refusals",
-        "H": "metric definitions are bound to sourced registry claims and executable exactly",
         "I": "declared uncertainty propagation is checked against an independent analytical result",
         "J": "an independent reference implementation or closed form that shares no code with the engine",
         "K": "synthetic fault fixtures cover the declared fault classes with expected verdicts",
-        "L": "analytical cross-device studies are executed and classified, never read as interchangeability",
         "M": "seeded, hash-bound provenance chain for every processing stage, reproduced exactly",
         "O": "limitation statements are sourced and emitted with every result"
       },
       "state": "SPECIFIED",
       "subfamily": "timing_contact.gates",
       "unverified_m3": [
-        "A",
         "B",
         "C",
-        "D",
         "E",
         "F",
         "G",
-        "H",
         "I",
         "J",
         "K",
-        "L",
         "M",
         "O"
       ],
-      "verified_m3": []
+      "verified_m3": [
+        "A",
+        "D",
+        "H",
+        "L"
+      ]
     }
   ]
 }

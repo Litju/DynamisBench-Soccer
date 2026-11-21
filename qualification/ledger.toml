@@ -9,8 +9,9 @@ paradigm = "continuous_signal"
 issue = "RES-670"
 engine_id = "fp_single"
 methods = ["filter", "integrate"]
-ratings = { A = "specified", B = "specified", C = "specified", D = "partial", E = "partial", F = "partial", G = "partial", H = "partial", I = "partial", J = "partial", K = "partial", L = "partial", M = "partial", N = "absent", O = "partial" }
-blockers = ["Production engine and numerical checks available (RES-670); G/H assessment qualification remains RES-671/672", "Measured-device calibration/compliance/uncertainty and L agreement evidence remain open (RES-694/703/675)"]
+ratings = { A = "specified", B = "specified", C = "specified", D = "partial", E = "partial", F = "partial", G = "verified", H = "partial", I = "partial", J = "partial", K = "partial", L = "verified", M = "verified", N = "absent", O = "partial" }
+empirical_gaps = ["Production engine and numerical checks available (RES-670); G/H assessment qualification remains RES-671/672", "Measured-device calibration/compliance/uncertainty and L agreement evidence remain open (RES-694/703/675)"]
+blockers = []
 
 [[subfamily]]
 id = "force_platform.dual"
@@ -20,8 +21,9 @@ paradigm = "continuous_signal"
 issue = "RES-670"
 engine_id = "fp_dual"
 methods = ["filter", "integrate"]
-ratings = { A = "specified", B = "specified", C = "specified", D = "partial", E = "partial", F = "partial", G = "partial", H = "partial", I = "partial", J = "partial", K = "partial", L = "partial", M = "partial", N = "absent", O = "partial" }
-blockers = ["Dual production processing verified on analytical controls (RES-670); actual bilateral calibration, cross-talk, assignment and timing remain unqualified", "G/H assessment and L agreement qualification remain open (RES-671/672/703/675)"]
+ratings = { A = "specified", B = "specified", C = "verified", D = "verified", E = "partial", F = "partial", G = "partial", H = "partial", I = "partial", J = "partial", K = "partial", L = "partial", M = "verified", N = "absent", O = "partial" }
+empirical_gaps = ["Dual production processing verified on analytical controls (RES-670); actual bilateral calibration, cross-talk, assignment and timing remain unqualified", "G/H assessment and L agreement qualification remain open (RES-671/672/703/675)"]
+blockers = []
 
 [[subfamily]]
 id = "lpt_encoder.lpt"
@@ -31,8 +33,9 @@ paradigm = "continuous_signal"
 issue = "RES-695"
 engine_id = "lpt"
 methods = ["differentiate"]
-ratings = { A = "specified", B = "specified", C = "specified", D = "partial", E = "partial", F = "partial", G = "partial", H = "partial", I = "partial", J = "partial", K = "partial", L = "partial", M = "partial", N = "absent", O = "partial" }
-blockers = ["Engine verified on analytical controls (RES-695); measured cable geometry, calibration and attachment-versus-COM validity remain unqualified (RES-694)", "Cross-device agreement with force plates is analytical only (RES-703)"]
+ratings = { A = "specified", B = "specified", C = "verified", D = "partial", E = "partial", F = "verified", G = "partial", H = "partial", I = "partial", J = "verified", K = "partial", L = "partial", M = "verified", N = "absent", O = "partial" }
+empirical_gaps = ["Engine verified on analytical controls (RES-695); measured cable geometry, calibration and attachment-versus-COM validity remain unqualified (RES-694)", "Cross-device agreement with force plates is analytical only (RES-703)"]
+blockers = []
 
 [[subfamily]]
 id = "lpt_encoder.encoder"
@@ -42,8 +45,9 @@ paradigm = "discrete_event"
 issue = "RES-695"
 engine_id = "encoder"
 methods = ["count_unwrap", "event_rate"]
-ratings = { A = "specified", B = "specified", C = "specified", D = "partial", E = "partial", F = "partial", G = "partial", H = "partial", I = "partial", J = "partial", K = "partial", L = "partial", M = "partial", N = "absent", O = "partial" }
-blockers = ["Engine verified on analytical controls (RES-695); measured counts-per-metre, quantization and attachment validity remain unqualified (RES-694)", "Cross-device agreement is analytical only (RES-703)"]
+ratings = { A = "specified", B = "verified", C = "specified", D = "partial", E = "partial", F = "partial", G = "partial", H = "partial", I = "partial", J = "partial", K = "partial", L = "partial", M = "partial", N = "absent", O = "partial" }
+empirical_gaps = ["Engine verified on analytical controls (RES-695); measured counts-per-metre, quantization and attachment validity remain unqualified (RES-694)", "Cross-device agreement is analytical only (RES-703)"]
+blockers = []
 
 [[subfamily]]
 id = "load_cell_isometric.load_cell"
@@ -53,8 +57,9 @@ paradigm = "continuous_signal"
 issue = "RES-696"
 engine_id = "load_cell"
 methods = ["calibrate"]
-ratings = { A = "specified", B = "specified", C = "specified", D = "partial", E = "partial", F = "partial", G = "partial", H = "partial", I = "partial", J = "partial", K = "partial", L = "partial", M = "partial", N = "absent", O = "partial" }
-blockers = ["Engine verified on analytical isometric controls (RES-696); measured calibration, rig compliance and temperature behaviour remain unqualified (RES-694)", "Load-cell versus force-plate IMTP agreement is analytical only (RES-703)"]
+ratings = { A = "verified", B = "verified", C = "specified", D = "verified", E = "partial", F = "verified", G = "verified", H = "partial", I = "partial", J = "verified", K = "partial", L = "verified", M = "verified", N = "absent", O = "verified" }
+empirical_gaps = ["Engine verified on analytical isometric controls (RES-696); measured calibration, rig compliance and temperature behaviour remain unqualified (RES-694)", "Load-cell versus force-plate IMTP agreement is analytical only (RES-703)"]
+blockers = []
 
 [[subfamily]]
 id = "load_cell_isometric.isometric_rig"
@@ -64,8 +69,9 @@ paradigm = "continuous_signal"
 issue = "RES-696"
 engine_id = "iso_rig"
 methods = ["calibrate"]
-ratings = { A = "specified", B = "specified", C = "specified", D = "partial", E = "partial", F = "partial", G = "partial", H = "partial", I = "partial", J = "partial", K = "partial", L = "partial", M = "partial", N = "absent", O = "partial" }
-blockers = ["Engine verified on analytical isometric controls (RES-696); no isometric rig compliance or validity source (RES-694)", "Rig versus plate agreement is analytical only (RES-703)"]
+ratings = { A = "verified", B = "specified", C = "specified", D = "partial", E = "partial", F = "partial", G = "partial", H = "partial", I = "partial", J = "partial", K = "partial", L = "partial", M = "verified", N = "absent", O = "verified" }
+empirical_gaps = ["Engine verified on analytical isometric controls (RES-696); no isometric rig compliance or validity source (RES-694)", "Rig versus plate agreement is analytical only (RES-703)"]
+blockers = []
 
 [[subfamily]]
 id = "nordic_hip.nordic"
@@ -75,8 +81,9 @@ paradigm = "continuous_signal"
 issue = "RES-697"
 engine_id = "nordic"
 methods = ["filter"]
-ratings = { A = "specified", B = "specified", C = "specified", D = "partial", E = "partial", F = "partial", G = "partial", H = "partial", I = "partial", J = "partial", K = "partial", L = "partial", M = "partial", N = "absent", O = "partial" }
-blockers = ["Engine verified on analytical eccentric controls (RES-697); athlete-level validity, strap/lever geometry measurements and vendor-corrected versus raw agreement remain unqualified (RES-694/703)", "G/H assessment qualification remains RES-672"]
+ratings = { A = "specified", B = "specified", C = "specified", D = "partial", E = "partial", F = "verified", G = "verified", H = "verified", I = "partial", J = "verified", K = "partial", L = "verified", M = "partial", N = "absent", O = "partial" }
+empirical_gaps = ["Engine verified on analytical eccentric controls (RES-697); athlete-level validity, strap/lever geometry measurements and vendor-corrected versus raw agreement remain unqualified (RES-694/703)", "G/H assessment qualification remains RES-672"]
+blockers = []
 
 [[subfamily]]
 id = "nordic_hip.hip"
@@ -87,7 +94,8 @@ issue = "RES-697"
 engine_id = "hip"
 methods = ["filter"]
 ratings = { A = "specified", B = "specified", C = "specified", D = "partial", E = "partial", F = "partial", G = "partial", H = "partial", I = "partial", J = "partial", K = "partial", L = "partial", M = "partial", N = "absent", O = "partial" }
-blockers = ["Engine verified on analytical isometric controls (RES-697); squeeze protocol geometry validity and device metrology remain unqualified (RES-694)", "G/H assessment qualification remains RES-672"]
+empirical_gaps = ["Engine verified on analytical isometric controls (RES-697); squeeze protocol geometry validity and device metrology remain unqualified (RES-694)", "G/H assessment qualification remains RES-672"]
+blockers = []
 
 [[subfamily]]
 id = "timing_contact.gates"
@@ -97,8 +105,9 @@ paradigm = "discrete_event"
 issue = "RES-698"
 engine_id = "gates"
 methods = ["debounce", "multi_beam_voting", "trigger_latency_correction"]
-ratings = { A = "specified", B = "specified", C = "specified", D = "partial", E = "partial", F = "partial", G = "partial", H = "partial", I = "partial", J = "partial", K = "partial", L = "partial", M = "partial", N = "absent", O = "partial" }
-blockers = ["Gate geometry, trigger validity and timing-error bounds need empirical metrology (RES-694)", "Sprint assessment variants and cross-device agreement remain open (RES-673/703)"]
+ratings = { A = "verified", B = "specified", C = "specified", D = "verified", E = "partial", F = "partial", G = "partial", H = "verified", I = "partial", J = "partial", K = "partial", L = "verified", M = "partial", N = "absent", O = "partial" }
+empirical_gaps = ["Gate geometry, trigger validity and timing-error bounds need empirical metrology (RES-694)", "Sprint assessment variants and cross-device agreement remain open (RES-673/703)"]
+blockers = []
 
 [[subfamily]]
 id = "timing_contact.contact"
@@ -108,8 +117,9 @@ paradigm = "discrete_event"
 issue = "RES-698"
 engine_id = "contact"
 methods = ["debounce", "pair_events", "trigger_latency_correction"]
-ratings = { A = "specified", B = "specified", C = "specified", D = "partial", E = "partial", F = "partial", G = "partial", H = "partial", I = "partial", J = "partial", K = "partial", L = "partial", M = "partial", N = "absent", O = "partial" }
-blockers = ["Contact-system switching thresholds and latency bounds need empirical metrology (RES-694)", "Assessment-specific validity and force-platform/IMU agreement remain open (RES-671/703)"]
+ratings = { A = "verified", B = "specified", C = "specified", D = "verified", E = "verified", F = "verified", G = "partial", H = "verified", I = "partial", J = "verified", K = "partial", L = "verified", M = "partial", N = "absent", O = "partial" }
+empirical_gaps = ["Contact-system switching thresholds and latency bounds need empirical metrology (RES-694)", "Assessment-specific validity and force-platform/IMU agreement remain open (RES-671/703)"]
+blockers = []
 
 [[subfamily]]
 id = "radar_laser.radar"
@@ -119,8 +129,9 @@ paradigm = "continuous_signal"
 issue = "RES-699"
 engine_id = "radar"
 methods = ["filter", "start_detection"]
-ratings = { A = "specified", B = "specified", C = "specified", D = "partial", E = "partial", F = "partial", G = "partial", H = "partial", I = "partial", J = "partial", K = "partial", L = "partial", M = "partial", N = "absent", O = "partial" }
-blockers = ["Engine verified on analytical sprint controls (RES-699); no raw radar validity or latency study (RES-694)", "Doppler versus positional/gate agreement is analytical only (RES-703)"]
+ratings = { A = "verified", B = "specified", C = "verified", D = "verified", E = "partial", F = "verified", G = "verified", H = "verified", I = "partial", J = "verified", K = "partial", L = "partial", M = "partial", N = "absent", O = "partial" }
+empirical_gaps = ["Engine verified on analytical sprint controls (RES-699); no raw radar validity or latency study (RES-694)", "Doppler versus positional/gate agreement is analytical only (RES-703)"]
+blockers = []
 
 [[subfamily]]
 id = "radar_laser.laser"
@@ -130,8 +141,9 @@ paradigm = "continuous_signal"
 issue = "RES-699"
 engine_id = "laser"
 methods = ["differentiate", "filter"]
-ratings = { A = "specified", B = "specified", C = "specified", D = "partial", E = "partial", F = "partial", G = "partial", H = "partial", I = "partial", J = "partial", K = "partial", L = "partial", M = "partial", N = "absent", O = "partial" }
-blockers = ["Engine verified on analytical sprint controls (RES-699); no raw laser validity or range-noise study (RES-694)", "Range-rate versus Doppler agreement is analytical only (RES-703)"]
+ratings = { A = "specified", B = "specified", C = "verified", D = "partial", E = "partial", F = "partial", G = "partial", H = "partial", I = "partial", J = "partial", K = "partial", L = "verified", M = "partial", N = "absent", O = "partial" }
+empirical_gaps = ["Engine verified on analytical sprint controls (RES-699); no raw laser validity or range-noise study (RES-694)", "Range-rate versus Doppler agreement is analytical only (RES-703)"]
+blockers = []
 
 [[subfamily]]
 id = "gnss_lps.gnss"
@@ -141,8 +153,9 @@ paradigm = "position_track"
 issue = "RES-700"
 engine_id = "gnss"
 methods = ["resample", "smooth"]
-ratings = { A = "specified", B = "specified", C = "specified", D = "partial", E = "partial", F = "partial", G = "partial", H = "partial", I = "partial", J = "partial", K = "partial", L = "partial", M = "partial", N = "absent", O = "partial" }
-blockers = ["Engine verified on analytical tracks (RES-700); audited native GNSS data and empirical latency, HDOP and multipath evidence remain open (RES-694)", "Positional versus Doppler/radar agreement is analytical only (RES-703)"]
+ratings = { A = "verified", B = "specified", C = "verified", D = "partial", E = "partial", F = "verified", G = "verified", H = "partial", I = "partial", J = "verified", K = "verified", L = "verified", M = "partial", N = "absent", O = "partial" }
+empirical_gaps = ["Engine verified on analytical tracks (RES-700); audited native GNSS data and empirical latency, HDOP and multipath evidence remain open (RES-694)", "Positional versus Doppler/radar agreement is analytical only (RES-703)"]
+blockers = []
 
 [[subfamily]]
 id = "gnss_lps.lps"
@@ -152,8 +165,9 @@ paradigm = "position_track"
 issue = "RES-700"
 engine_id = "lps"
 methods = ["resample", "smooth"]
-ratings = { A = "specified", B = "specified", C = "specified", D = "partial", E = "partial", F = "partial", G = "partial", H = "partial", I = "partial", J = "partial", K = "partial", L = "partial", M = "partial", N = "absent", O = "partial" }
-blockers = ["Engine verified on analytical tracks (RES-700); audited native LPS data, anchor survey and latency evidence remain open (RES-694)", "Positional versus radar agreement is analytical only (RES-703)"]
+ratings = { A = "specified", B = "specified", C = "specified", D = "partial", E = "partial", F = "verified", G = "partial", H = "partial", I = "partial", J = "partial", K = "verified", L = "partial", M = "partial", N = "absent", O = "partial" }
+empirical_gaps = ["Engine verified on analytical tracks (RES-700); audited native LPS data, anchor survey and latency evidence remain open (RES-694)", "Positional versus radar agreement is analytical only (RES-703)"]
+blockers = []
 
 [[subfamily]]
 id = "imu.inertial"
@@ -163,8 +177,9 @@ paradigm = "inertial"
 issue = "RES-701"
 engine_id = "imu"
 methods = ["orientation_estimation", "gravity_removal"]
-ratings = { A = "specified", B = "specified", C = "specified", D = "partial", E = "partial", F = "partial", G = "partial", H = "partial", I = "partial", J = "partial", K = "partial", L = "partial", M = "partial", N = "absent", O = "partial" }
-blockers = ["Engine verified on analytical rigid-body and trajectory controls (RES-701); sensor placement, soft-tissue artefact, calibration and flight-time agreement with force plates remain unqualified (RES-694/703)", "G/H assessment qualification remains RES-671"]
+ratings = { A = "specified", B = "verified", C = "specified", D = "verified", E = "verified", F = "verified", G = "partial", H = "partial", I = "verified", J = "verified", K = "partial", L = "partial", M = "partial", N = "absent", O = "partial" }
+empirical_gaps = ["Engine verified on analytical rigid-body and trajectory controls (RES-701); sensor placement, soft-tissue artefact, calibration and flight-time agreement with force plates remain unqualified (RES-694/703)", "G/H assessment qualification remains RES-671"]
+blockers = []
 
 [[evidence]]
 subfamily = "force_platform.single"
@@ -3886,3 +3901,633 @@ issue = "RES-669"
 independence_from = "imu"
 implementation = "dynamisbench_soccer.reference (RES-669 closed-form substrate; imported only by tests, import boundary enforced)"
 rationale = "Engine outputs are compared with closed forms derived outside the engine; analytical only, no empirical criterion."
+
+[[evidence]]
+subfamily = "force_platform.dual"
+dimension = "C"
+kind = "independent_test"
+ref = "repo:tests/test_force_platform_acquisition.py"
+issue = "RES-693"
+rationale = "Computational verification receipt RCP-force_platform-dual-C (independent audit: SUPPORTED). Software correctness under declared conditions only; no physical-device validity claimed."
+independence_from = "fp_dual"
+implementation = "src/dynamisbench_soccer/reference/kinematics.py"
+
+[[evidence]]
+subfamily = "force_platform.dual"
+dimension = "D"
+kind = "independent_test"
+ref = "repo:tests/test_force_platform_engine.py"
+issue = "RES-670"
+rationale = "Computational verification receipt RCP-force_platform-dual-D (independent audit: SUPPORTED). Software correctness under declared conditions only; no physical-device validity claimed."
+independence_from = "fp_dual"
+implementation = "src/dynamisbench_soccer/reference/kinematics.py"
+
+[[evidence]]
+subfamily = "force_platform.dual"
+dimension = "M"
+kind = "independent_test"
+ref = "repo:tests/test_policy_a_provenance.py"
+issue = "RES-675"
+rationale = "Computational verification receipt RCP-force_platform-dual-M (independent audit: SUPPORTED). Software correctness under declared conditions only; no physical-device validity claimed."
+independence_from = "fp_dual"
+implementation = "src/dynamisbench_soccer/reference/kinematics.py"
+
+[[evidence]]
+subfamily = "force_platform.single"
+dimension = "G"
+kind = "independent_test"
+ref = "repo:tests/test_jump_assessment.py"
+issue = "RES-671"
+rationale = "Computational verification receipt RCP-force_platform-single-G (independent audit: SUPPORTED). Software correctness under declared conditions only; no physical-device validity claimed."
+independence_from = "fp_single"
+implementation = "src/dynamisbench_soccer/reference/kinematics.py"
+
+[[evidence]]
+subfamily = "force_platform.single"
+dimension = "L"
+kind = "independent_test"
+ref = "repo:tests/test_cross_device_agreement.py"
+issue = "RES-703"
+rationale = "Computational verification receipt RCP-force_platform-single-L (independent audit: SUPPORTED). Software correctness under declared conditions only; no physical-device validity claimed."
+independence_from = "fp_single"
+implementation = "src/dynamisbench_soccer/reference/kinematics.py"
+
+[[evidence]]
+subfamily = "force_platform.single"
+dimension = "M"
+kind = "independent_test"
+ref = "repo:tests/test_policy_a_provenance.py"
+issue = "RES-675"
+rationale = "Computational verification receipt RCP-force_platform-single-M (independent audit: SUPPORTED). Software correctness under declared conditions only; no physical-device validity claimed."
+independence_from = "fp_single"
+implementation = "src/dynamisbench_soccer/reference/kinematics.py"
+
+[[evidence]]
+subfamily = "gnss_lps.gnss"
+dimension = "A"
+kind = "independent_test"
+ref = "repo:tests/test_gnss_lps_acquisition.py"
+issue = "RES-693"
+rationale = "Computational verification receipt RCP-gnss_lps-gnss-A (independent audit: SUPPORTED). Software correctness under declared conditions only; no physical-device validity claimed."
+independence_from = "gnss"
+implementation = "src/dynamisbench_soccer/reference/spatial.py"
+
+[[evidence]]
+subfamily = "gnss_lps.gnss"
+dimension = "C"
+kind = "independent_test"
+ref = "repo:tests/test_gnss_lps_acquisition.py"
+issue = "RES-693"
+rationale = "Computational verification receipt RCP-gnss_lps-gnss-C (independent audit: SUPPORTED). Software correctness under declared conditions only; no physical-device validity claimed."
+independence_from = "gnss"
+implementation = "src/dynamisbench_soccer/reference/spatial.py"
+
+[[evidence]]
+subfamily = "gnss_lps.gnss"
+dimension = "F"
+kind = "independent_test"
+ref = "repo:tests/test_gnss_lps_processing.py"
+issue = "RES-700"
+rationale = "Computational verification receipt RCP-gnss_lps-gnss-F (independent audit: SUPPORTED). Software correctness under declared conditions only; no physical-device validity claimed."
+independence_from = "gnss"
+implementation = "src/dynamisbench_soccer/reference/spatial.py"
+
+[[evidence]]
+subfamily = "gnss_lps.gnss"
+dimension = "G"
+kind = "independent_test"
+ref = "repo:tests/test_gnss_lps_processing.py"
+issue = "RES-673"
+rationale = "Computational verification receipt RCP-gnss_lps-gnss-G (independent audit: SUPPORTED). Software correctness under declared conditions only; no physical-device validity claimed."
+independence_from = "gnss"
+implementation = "src/dynamisbench_soccer/reference/spatial.py"
+
+[[evidence]]
+subfamily = "gnss_lps.gnss"
+dimension = "J"
+kind = "independent_test"
+ref = "repo:tests/test_gnss_lps_processing.py"
+issue = "RES-669"
+rationale = "Computational verification receipt RCP-gnss_lps-gnss-J (independent audit: SUPPORTED). Software correctness under declared conditions only; no physical-device validity claimed."
+independence_from = "gnss"
+implementation = "src/dynamisbench_soccer/reference/coordinates.py"
+
+[[evidence]]
+subfamily = "gnss_lps.gnss"
+dimension = "K"
+kind = "independent_test"
+ref = "repo:tests/test_reference_faults.py"
+issue = "RES-669"
+rationale = "Computational verification receipt RCP-gnss_lps-gnss-K (independent audit: SUPPORTED). Software correctness under declared conditions only; no physical-device validity claimed."
+independence_from = "gnss"
+implementation = "src/dynamisbench_soccer/reference/faults.py"
+
+[[evidence]]
+subfamily = "gnss_lps.gnss"
+dimension = "L"
+kind = "independent_test"
+ref = "repo:tests/test_cross_device_agreement.py"
+issue = "RES-703"
+rationale = "Computational verification receipt RCP-gnss_lps-gnss-L (independent audit: SUPPORTED). Software correctness under declared conditions only; no physical-device validity claimed."
+independence_from = "gnss"
+implementation = "src/dynamisbench_soccer/reference/motion_models.py"
+
+[[evidence]]
+subfamily = "gnss_lps.lps"
+dimension = "F"
+kind = "independent_test"
+ref = "repo:tests/test_gnss_lps_processing.py"
+issue = "RES-700"
+rationale = "Computational verification receipt RCP-gnss_lps-lps-F (independent audit: SUPPORTED). Software correctness under declared conditions only; no physical-device validity claimed."
+independence_from = "lps"
+implementation = "src/dynamisbench_soccer/reference/spatial.py"
+
+[[evidence]]
+subfamily = "gnss_lps.lps"
+dimension = "K"
+kind = "independent_test"
+ref = "repo:tests/test_reference_faults.py"
+issue = "RES-669"
+rationale = "Computational verification receipt RCP-gnss_lps-lps-K (independent audit: SUPPORTED). Software correctness under declared conditions only; no physical-device validity claimed."
+independence_from = "lps"
+implementation = "src/dynamisbench_soccer/reference/faults.py"
+
+[[evidence]]
+subfamily = "imu.inertial"
+dimension = "B"
+kind = "independent_test"
+ref = "repo:tests/test_imu_engine.py"
+issue = "RES-701"
+rationale = "Computational verification receipt RCP-imu-inertial-B (independent audit: SUPPORTED). Software correctness under declared conditions only; no physical-device validity claimed."
+independence_from = "imu"
+implementation = "src/dynamisbench_soccer/reference/spatial.py"
+
+[[evidence]]
+subfamily = "imu.inertial"
+dimension = "D"
+kind = "independent_test"
+ref = "repo:tests/test_imu_engine.py"
+issue = "RES-701"
+rationale = "Computational verification receipt RCP-imu-inertial-D (independent audit: SUPPORTED). Software correctness under declared conditions only; no physical-device validity claimed."
+independence_from = "imu"
+implementation = "src/dynamisbench_soccer/reference/spatial.py"
+
+[[evidence]]
+subfamily = "imu.inertial"
+dimension = "E"
+kind = "independent_test"
+ref = "repo:tests/test_imu_engine.py"
+issue = "RES-701"
+rationale = "Computational verification receipt RCP-imu-inertial-E (independent audit: SUPPORTED). Software correctness under declared conditions only; no physical-device validity claimed."
+independence_from = "imu"
+implementation = "src/dynamisbench_soccer/reference/spatial.py"
+
+[[evidence]]
+subfamily = "imu.inertial"
+dimension = "F"
+kind = "independent_test"
+ref = "repo:tests/test_imu_engine.py"
+issue = "RES-701"
+rationale = "Computational verification receipt RCP-imu-inertial-F (independent audit: SUPPORTED). Software correctness under declared conditions only; no physical-device validity claimed."
+independence_from = "imu"
+implementation = "src/dynamisbench_soccer/reference/spatial.py"
+
+[[evidence]]
+subfamily = "imu.inertial"
+dimension = "I"
+kind = "independent_test"
+ref = "repo:tests/test_imu_engine.py"
+issue = "RES-701"
+rationale = "Computational verification receipt RCP-imu-inertial-I (independent audit: SUPPORTED). Software correctness under declared conditions only; no physical-device validity claimed."
+independence_from = "imu"
+implementation = "src/dynamisbench_soccer/reference/spatial.py"
+
+[[evidence]]
+subfamily = "imu.inertial"
+dimension = "J"
+kind = "independent_test"
+ref = "repo:tests/test_imu_engine.py"
+issue = "RES-669"
+rationale = "Computational verification receipt RCP-imu-inertial-J (independent audit: SUPPORTED). Software correctness under declared conditions only; no physical-device validity claimed."
+independence_from = "imu"
+implementation = "src/dynamisbench_soccer/reference/spatial.py"
+
+[[evidence]]
+subfamily = "load_cell_isometric.isometric_rig"
+dimension = "A"
+kind = "independent_test"
+ref = "repo:tests/test_load_cell_acquisition.py"
+issue = "RES-693"
+rationale = "Computational verification receipt RCP-load_cell_isometric-isometric_rig-A (independent audit: SUPPORTED). Software correctness under declared conditions only; no physical-device validity claimed."
+independence_from = "iso_rig"
+implementation = "src/dynamisbench_soccer/reference/motion_models.py"
+
+[[evidence]]
+subfamily = "load_cell_isometric.isometric_rig"
+dimension = "M"
+kind = "independent_test"
+ref = "repo:tests/test_policy_a_provenance.py"
+issue = "RES-696"
+rationale = "Computational verification receipt RCP-load_cell_isometric-isometric_rig-M (independent audit: SUPPORTED). Software correctness under declared conditions only; no physical-device validity claimed."
+independence_from = "iso_rig"
+implementation = "src/dynamisbench_soccer/reference/motion_models.py"
+
+[[evidence]]
+subfamily = "load_cell_isometric.isometric_rig"
+dimension = "O"
+kind = "independent_test"
+ref = "repo:tests/test_policy_a_provenance.py"
+issue = "RES-696"
+rationale = "Computational verification receipt RCP-load_cell_isometric-isometric_rig-O (independent audit: SUPPORTED). Software correctness under declared conditions only; no physical-device validity claimed."
+independence_from = "iso_rig"
+implementation = "src/dynamisbench_soccer/reference/motion_models.py"
+
+[[evidence]]
+subfamily = "load_cell_isometric.load_cell"
+dimension = "A"
+kind = "independent_test"
+ref = "repo:tests/test_load_cell_acquisition.py"
+issue = "RES-693"
+rationale = "Computational verification receipt RCP-load_cell_isometric-load_cell-A (independent audit: SUPPORTED). Software correctness under declared conditions only; no physical-device validity claimed."
+independence_from = "load_cell"
+implementation = "src/dynamisbench_soccer/reference/motion_models.py"
+
+[[evidence]]
+subfamily = "load_cell_isometric.load_cell"
+dimension = "B"
+kind = "independent_test"
+ref = "repo:tests/test_load_cell_acquisition.py"
+issue = "RES-696"
+rationale = "Computational verification receipt RCP-load_cell_isometric-load_cell-B (independent audit: SUPPORTED). Software correctness under declared conditions only; no physical-device validity claimed."
+independence_from = "load_cell"
+implementation = "src/dynamisbench_soccer/reference/motion_models.py"
+
+[[evidence]]
+subfamily = "load_cell_isometric.load_cell"
+dimension = "D"
+kind = "independent_test"
+ref = "repo:tests/test_load_cell_acquisition.py"
+issue = "RES-696"
+rationale = "Computational verification receipt RCP-load_cell_isometric-load_cell-D (independent audit: SUPPORTED). Software correctness under declared conditions only; no physical-device validity claimed."
+independence_from = "load_cell"
+implementation = "src/dynamisbench_soccer/reference/motion_models.py"
+
+[[evidence]]
+subfamily = "load_cell_isometric.load_cell"
+dimension = "F"
+kind = "independent_test"
+ref = "repo:tests/test_load_cell_engine.py"
+issue = "RES-696"
+rationale = "Computational verification receipt RCP-load_cell_isometric-load_cell-F (independent audit: SUPPORTED). Software correctness under declared conditions only; no physical-device validity claimed."
+independence_from = "load_cell"
+implementation = "src/dynamisbench_soccer/reference/motion_models.py"
+
+[[evidence]]
+subfamily = "load_cell_isometric.load_cell"
+dimension = "G"
+kind = "independent_test"
+ref = "repo:tests/test_load_cell_engine.py"
+issue = "RES-672"
+rationale = "Computational verification receipt RCP-load_cell_isometric-load_cell-G (independent audit: SUPPORTED). Software correctness under declared conditions only; no physical-device validity claimed."
+independence_from = "load_cell"
+implementation = "src/dynamisbench_soccer/reference/motion_models.py"
+
+[[evidence]]
+subfamily = "load_cell_isometric.load_cell"
+dimension = "J"
+kind = "independent_test"
+ref = "repo:tests/test_load_cell_engine.py"
+issue = "RES-669"
+rationale = "Computational verification receipt RCP-load_cell_isometric-load_cell-J (independent audit: SUPPORTED). Software correctness under declared conditions only; no physical-device validity claimed."
+independence_from = "load_cell"
+implementation = "src/dynamisbench_soccer/reference/motion_models.py"
+
+[[evidence]]
+subfamily = "load_cell_isometric.load_cell"
+dimension = "L"
+kind = "independent_test"
+ref = "repo:tests/test_cross_device_agreement.py"
+issue = "RES-703"
+rationale = "Computational verification receipt RCP-load_cell_isometric-load_cell-L (independent audit: SUPPORTED). Software correctness under declared conditions only; no physical-device validity claimed."
+independence_from = "load_cell"
+implementation = "src/dynamisbench_soccer/reference/motion_models.py"
+
+[[evidence]]
+subfamily = "load_cell_isometric.load_cell"
+dimension = "M"
+kind = "independent_test"
+ref = "repo:tests/test_policy_a_provenance.py"
+issue = "RES-696"
+rationale = "Computational verification receipt RCP-load_cell_isometric-load_cell-M (independent audit: SUPPORTED). Software correctness under declared conditions only; no physical-device validity claimed."
+independence_from = "load_cell"
+implementation = "src/dynamisbench_soccer/reference/motion_models.py"
+
+[[evidence]]
+subfamily = "load_cell_isometric.load_cell"
+dimension = "O"
+kind = "independent_test"
+ref = "repo:tests/test_policy_a_provenance.py"
+issue = "RES-696"
+rationale = "Computational verification receipt RCP-load_cell_isometric-load_cell-O (independent audit: SUPPORTED). Software correctness under declared conditions only; no physical-device validity claimed."
+independence_from = "load_cell"
+implementation = "src/dynamisbench_soccer/reference/motion_models.py"
+
+[[evidence]]
+subfamily = "lpt_encoder.encoder"
+dimension = "B"
+kind = "independent_test"
+ref = "repo:tests/test_lpt_acquisition.py"
+issue = "RES-695"
+rationale = "Computational verification receipt RCP-lpt_encoder-encoder-B (independent audit: SUPPORTED). Software correctness under declared conditions only; no physical-device validity claimed."
+independence_from = "encoder"
+implementation = "src/dynamisbench_soccer/reference/spatial_observations.py"
+
+[[evidence]]
+subfamily = "lpt_encoder.lpt"
+dimension = "C"
+kind = "independent_test"
+ref = "repo:tests/test_lpt_acquisition.py"
+issue = "RES-693"
+rationale = "Computational verification receipt RCP-lpt_encoder-lpt-C (independent audit: SUPPORTED). Software correctness under declared conditions only; no physical-device validity claimed."
+independence_from = "lpt"
+implementation = "src/dynamisbench_soccer/reference/spatial.py"
+
+[[evidence]]
+subfamily = "lpt_encoder.lpt"
+dimension = "F"
+kind = "independent_test"
+ref = "repo:tests/test_lpt_engine.py"
+issue = "RES-695"
+rationale = "Computational verification receipt RCP-lpt_encoder-lpt-F (independent audit: SUPPORTED). Software correctness under declared conditions only; no physical-device validity claimed."
+independence_from = "lpt"
+implementation = "src/dynamisbench_soccer/reference/spatial.py"
+
+[[evidence]]
+subfamily = "lpt_encoder.lpt"
+dimension = "J"
+kind = "independent_test"
+ref = "repo:tests/test_lpt_engine.py"
+issue = "RES-669"
+rationale = "Computational verification receipt RCP-lpt_encoder-lpt-J (independent audit: SUPPORTED). Software correctness under declared conditions only; no physical-device validity claimed."
+independence_from = "lpt"
+implementation = "src/dynamisbench_soccer/reference/spatial.py"
+
+[[evidence]]
+subfamily = "lpt_encoder.lpt"
+dimension = "M"
+kind = "independent_test"
+ref = "repo:tests/test_policy_a_provenance.py"
+issue = "RES-695"
+rationale = "Computational verification receipt RCP-lpt_encoder-lpt-M (independent audit: SUPPORTED). Software correctness under declared conditions only; no physical-device validity claimed."
+independence_from = "lpt"
+implementation = "src/dynamisbench_soccer/reference/spatial.py"
+
+[[evidence]]
+subfamily = "nordic_hip.nordic"
+dimension = "F"
+kind = "independent_test"
+ref = "repo:tests/test_nordic_hip.py"
+issue = "RES-697"
+rationale = "Computational verification receipt RCP-nordic_hip-nordic-F (independent audit: SUPPORTED). Software correctness under declared conditions only; no physical-device validity claimed."
+independence_from = "nordic"
+implementation = "src/dynamisbench_soccer/reference/spatial.py"
+
+[[evidence]]
+subfamily = "nordic_hip.nordic"
+dimension = "G"
+kind = "independent_test"
+ref = "repo:tests/test_nordic_hip.py"
+issue = "RES-672"
+rationale = "Computational verification receipt RCP-nordic_hip-nordic-G (independent audit: SUPPORTED). Software correctness under declared conditions only; no physical-device validity claimed."
+independence_from = "nordic"
+implementation = "src/dynamisbench_soccer/reference/spatial.py"
+
+[[evidence]]
+subfamily = "nordic_hip.nordic"
+dimension = "H"
+kind = "independent_test"
+ref = "repo:tests/test_nordic_hip.py"
+issue = "RES-672"
+rationale = "Computational verification receipt RCP-nordic_hip-nordic-H (independent audit: SUPPORTED). Software correctness under declared conditions only; no physical-device validity claimed."
+independence_from = "nordic"
+implementation = "src/dynamisbench_soccer/reference/spatial.py"
+
+[[evidence]]
+subfamily = "nordic_hip.nordic"
+dimension = "J"
+kind = "independent_test"
+ref = "repo:tests/test_nordic_hip.py"
+issue = "RES-669"
+rationale = "Computational verification receipt RCP-nordic_hip-nordic-J (independent audit: SUPPORTED). Software correctness under declared conditions only; no physical-device validity claimed."
+independence_from = "nordic"
+implementation = "src/dynamisbench_soccer/reference/spatial.py"
+
+[[evidence]]
+subfamily = "nordic_hip.nordic"
+dimension = "L"
+kind = "independent_test"
+ref = "repo:tests/test_cross_device_agreement.py"
+issue = "RES-703"
+rationale = "Computational verification receipt RCP-nordic_hip-nordic-L (independent audit: SUPPORTED). Software correctness under declared conditions only; no physical-device validity claimed."
+independence_from = "nordic"
+implementation = "src/dynamisbench_soccer/reference/spatial.py"
+
+[[evidence]]
+subfamily = "radar_laser.laser"
+dimension = "C"
+kind = "independent_test"
+ref = "repo:tests/test_radar_laser_acquisition.py"
+issue = "RES-693"
+rationale = "Computational verification receipt RCP-radar_laser-laser-C (independent audit: SUPPORTED). Software correctness under declared conditions only; no physical-device validity claimed."
+independence_from = "laser"
+implementation = "src/dynamisbench_soccer/reference/motion_models.py"
+
+[[evidence]]
+subfamily = "radar_laser.laser"
+dimension = "L"
+kind = "independent_test"
+ref = "repo:tests/test_cross_device_agreement.py"
+issue = "RES-703"
+rationale = "Computational verification receipt RCP-radar_laser-laser-L (independent audit: SUPPORTED). Software correctness under declared conditions only; no physical-device validity claimed."
+independence_from = "laser"
+implementation = "src/dynamisbench_soccer/reference/motion_models.py"
+
+[[evidence]]
+subfamily = "radar_laser.radar"
+dimension = "A"
+kind = "independent_test"
+ref = "repo:tests/test_radar_laser_acquisition.py"
+issue = "RES-693"
+rationale = "Computational verification receipt RCP-radar_laser-radar-A (independent audit: SUPPORTED). Software correctness under declared conditions only; no physical-device validity claimed."
+independence_from = "radar"
+implementation = "src/dynamisbench_soccer/reference/motion_models.py"
+
+[[evidence]]
+subfamily = "radar_laser.radar"
+dimension = "C"
+kind = "independent_test"
+ref = "repo:tests/test_radar_laser_acquisition.py"
+issue = "RES-693"
+rationale = "Computational verification receipt RCP-radar_laser-radar-C (independent audit: SUPPORTED). Software correctness under declared conditions only; no physical-device validity claimed."
+independence_from = "radar"
+implementation = "src/dynamisbench_soccer/reference/motion_models.py"
+
+[[evidence]]
+subfamily = "radar_laser.radar"
+dimension = "D"
+kind = "independent_test"
+ref = "repo:tests/test_radar_laser_acquisition.py"
+issue = "RES-699"
+rationale = "Computational verification receipt RCP-radar_laser-radar-D (independent audit: SUPPORTED). Software correctness under declared conditions only; no physical-device validity claimed."
+independence_from = "radar"
+implementation = "src/dynamisbench_soccer/reference/motion_models.py"
+
+[[evidence]]
+subfamily = "radar_laser.radar"
+dimension = "F"
+kind = "independent_test"
+ref = "repo:tests/test_radar_laser_processing.py"
+issue = "RES-699"
+rationale = "Computational verification receipt RCP-radar_laser-radar-F (independent audit: SUPPORTED). Software correctness under declared conditions only; no physical-device validity claimed."
+independence_from = "radar"
+implementation = "src/dynamisbench_soccer/reference/motion_models.py"
+
+[[evidence]]
+subfamily = "radar_laser.radar"
+dimension = "G"
+kind = "independent_test"
+ref = "repo:tests/test_sprint_cod_assessment.py"
+issue = "RES-673"
+rationale = "Computational verification receipt RCP-radar_laser-radar-G (independent audit: SUPPORTED). Software correctness under declared conditions only; no physical-device validity claimed."
+independence_from = "radar"
+implementation = "src/dynamisbench_soccer/reference/motion_models.py"
+
+[[evidence]]
+subfamily = "radar_laser.radar"
+dimension = "H"
+kind = "independent_test"
+ref = "repo:tests/test_sprint_cod_assessment.py"
+issue = "RES-673"
+rationale = "Computational verification receipt RCP-radar_laser-radar-H (independent audit: SUPPORTED). Software correctness under declared conditions only; no physical-device validity claimed."
+independence_from = "radar"
+implementation = "src/dynamisbench_soccer/reference/motion_models.py"
+
+[[evidence]]
+subfamily = "radar_laser.radar"
+dimension = "J"
+kind = "independent_test"
+ref = "repo:tests/test_radar_laser_processing.py"
+issue = "RES-669"
+rationale = "Computational verification receipt RCP-radar_laser-radar-J (independent audit: SUPPORTED). Software correctness under declared conditions only; no physical-device validity claimed."
+independence_from = "radar"
+implementation = "src/dynamisbench_soccer/reference/motion_models.py"
+
+[[evidence]]
+subfamily = "timing_contact.contact"
+dimension = "A"
+kind = "independent_test"
+ref = "repo:tests/test_timing_contact.py"
+issue = "RES-693"
+rationale = "Computational verification receipt RCP-timing_contact-contact-A (independent audit: SUPPORTED). Software correctness under declared conditions only; no physical-device validity claimed."
+independence_from = "contact"
+implementation = "src/dynamisbench_soccer/reference/spatial_observations.py"
+
+[[evidence]]
+subfamily = "timing_contact.contact"
+dimension = "D"
+kind = "independent_test"
+ref = "repo:tests/test_timing_contact.py"
+issue = "RES-698"
+rationale = "Computational verification receipt RCP-timing_contact-contact-D (independent audit: SUPPORTED). Software correctness under declared conditions only; no physical-device validity claimed."
+independence_from = "contact"
+implementation = "src/dynamisbench_soccer/reference/spatial_observations.py"
+
+[[evidence]]
+subfamily = "timing_contact.contact"
+dimension = "E"
+kind = "independent_test"
+ref = "repo:tests/test_timing_contact.py"
+issue = "RES-698"
+rationale = "Computational verification receipt RCP-timing_contact-contact-E (independent audit: SUPPORTED). Software correctness under declared conditions only; no physical-device validity claimed."
+independence_from = "contact"
+implementation = "src/dynamisbench_soccer/reference/spatial_observations.py"
+
+[[evidence]]
+subfamily = "timing_contact.contact"
+dimension = "F"
+kind = "independent_test"
+ref = "repo:tests/test_timing_contact.py"
+issue = "RES-698"
+rationale = "Computational verification receipt RCP-timing_contact-contact-F (independent audit: SUPPORTED). Software correctness under declared conditions only; no physical-device validity claimed."
+independence_from = "contact"
+implementation = "src/dynamisbench_soccer/reference/spatial_observations.py"
+
+[[evidence]]
+subfamily = "timing_contact.contact"
+dimension = "H"
+kind = "independent_test"
+ref = "repo:tests/test_timing_contact.py"
+issue = "RES-673"
+rationale = "Computational verification receipt RCP-timing_contact-contact-H (independent audit: SUPPORTED). Software correctness under declared conditions only; no physical-device validity claimed."
+independence_from = "contact"
+implementation = "src/dynamisbench_soccer/reference/spatial_observations.py"
+
+[[evidence]]
+subfamily = "timing_contact.contact"
+dimension = "J"
+kind = "independent_test"
+ref = "repo:tests/test_timing_contact.py"
+issue = "RES-669"
+rationale = "Computational verification receipt RCP-timing_contact-contact-J (independent audit: SUPPORTED). Software correctness under declared conditions only; no physical-device validity claimed."
+independence_from = "contact"
+implementation = "src/dynamisbench_soccer/reference/spatial_observations.py"
+
+[[evidence]]
+subfamily = "timing_contact.contact"
+dimension = "L"
+kind = "independent_test"
+ref = "repo:tests/test_cross_device_agreement.py"
+issue = "RES-703"
+rationale = "Computational verification receipt RCP-timing_contact-contact-L (independent audit: SUPPORTED). Software correctness under declared conditions only; no physical-device validity claimed."
+independence_from = "contact"
+implementation = "src/dynamisbench_soccer/reference/kinematics.py"
+
+[[evidence]]
+subfamily = "timing_contact.gates"
+dimension = "A"
+kind = "independent_test"
+ref = "repo:tests/test_timing_gates.py"
+issue = "RES-693"
+rationale = "Computational verification receipt RCP-timing_contact-gates-A (independent audit: SUPPORTED). Software correctness under declared conditions only; no physical-device validity claimed."
+independence_from = "gates"
+implementation = "src/dynamisbench_soccer/reference/motion_models.py"
+
+[[evidence]]
+subfamily = "timing_contact.gates"
+dimension = "D"
+kind = "independent_test"
+ref = "repo:tests/test_timing_gates.py"
+issue = "RES-698"
+rationale = "Computational verification receipt RCP-timing_contact-gates-D (independent audit: SUPPORTED). Software correctness under declared conditions only; no physical-device validity claimed."
+independence_from = "gates"
+implementation = "src/dynamisbench_soccer/reference/motion_models.py"
+
+[[evidence]]
+subfamily = "timing_contact.gates"
+dimension = "H"
+kind = "independent_test"
+ref = "repo:tests/test_sprint_cod_assessment.py"
+issue = "RES-673"
+rationale = "Computational verification receipt RCP-timing_contact-gates-H (independent audit: SUPPORTED). Software correctness under declared conditions only; no physical-device validity claimed."
+independence_from = "gates"
+implementation = "src/dynamisbench_soccer/reference/motion_models.py"
+
+[[evidence]]
+subfamily = "timing_contact.gates"
+dimension = "L"
+kind = "independent_test"
+ref = "repo:tests/test_cross_device_agreement.py"
+issue = "RES-703"
+rationale = "Computational verification receipt RCP-timing_contact-gates-L (independent audit: SUPPORTED). Software correctness under declared conditions only; no physical-device validity claimed."
+independence_from = "gates"
+implementation = "src/dynamisbench_soccer/reference/motion_models.py"

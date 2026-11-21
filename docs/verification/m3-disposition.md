@@ -1,37 +1,76 @@
-# M3 disposition (RES-675 follow-up)
+# M3 disposition under Policy A (RES-675)
 
-Computed from `qualification/ledger.toml` on the integrated candidate (RES-671/672/673/675/703 heads
-on `f0eea0d`) under the **current approved policy**. No rating, threshold or blocker was changed.
+Computed from `qualification/ledger.toml`, `receipts.toml` and `empirical.toml` by the canonical evaluator (`dbs qualification states`). Policy A: M3 = computational-reference readiness. Physical-device validity is reported separately and is not an M3 pass condition.
 
-**Result: M3 FAIL, 0 of 15 subfamilies `ENGINEERING_VERIFIED`.** Both commands agree:
-`dbs qualification gate --stage M3` exits 1 (0/8 families) and `dbs qualification states` exits 1
-(`SPECIFIED` = 15). RES-676 stays blocked by RES-675; M4 is not started.
+## Result
 
-## Per-subfamily state (A-M and O; N is excluded from M3)
+**M3 FAIL: 0 of 15 subfamilies are `ENGINEERING_VERIFIED`.** Both `dbs qualification gate --stage M3` and `dbs qualification states` exit 1. RES-675 stays In Progress and RES-676 stays blocked.
 
-| Subfamily | State | Dimensions at `specified` | Dimensions `partial` | Blockers |
-| --- | --- | --- | --- | --- |
-| all 15 | SPECIFIED | A, B, C | D-M, O | 2 each |
+No rating was promoted on an unaudited receipt. 63 of 210 A-M/O cells are verified, each by a receipt that a separate-model auditor judged SUPPORTED (`m3-receipt-audit.md`). The other cells stay open and are listed below as computational blockers, with the auditor's description of what would close each.
 
-No dimension of any subfamily is rated `verified` or `not_applicable`. The ledger holds no
-`empirical_study` evidence, so every device-validity dimension is missing.
+## 1. Computational-reference status (15 subfamilies)
 
-## Computation versus device validity
+| Subfamily | State | Verified (computational) | Open |
+| -- | -- | -- | -- |
+| force_platform.dual | SPECIFIED | C, D, M | A, B, E, F, G, H, I, J, K, L, O |
+| force_platform.single | SPECIFIED | G, L, M | A, B, C, D, E, F, H, I, J, K, O |
+| gnss_lps.gnss | SPECIFIED | A, C, F, G, J, K, L | B, D, E, H, I, M, O |
+| gnss_lps.lps | SPECIFIED | F, K | A, B, C, D, E, G, H, I, J, L, M, O |
+| imu.inertial | SPECIFIED | B, D, E, F, I, J | A, C, G, H, K, L, M, O |
+| load_cell_isometric.isometric_rig | SPECIFIED | A, M, O | B, C, D, E, F, G, H, I, J, K, L |
+| load_cell_isometric.load_cell | SPECIFIED | A, B, D, F, G, J, L, M, O | C, E, H, I, K |
+| lpt_encoder.encoder | SPECIFIED | B | A, C, D, E, F, G, H, I, J, K, L, M, O |
+| lpt_encoder.lpt | SPECIFIED | C, F, J, M | A, B, D, E, G, H, I, K, L, O |
+| nordic_hip.hip | SPECIFIED | none | A, B, C, D, E, F, G, H, I, J, K, L, M, O |
+| nordic_hip.nordic | SPECIFIED | F, G, H, J, L | A, B, C, D, E, I, K, M, O |
+| radar_laser.laser | SPECIFIED | C, L | A, B, D, E, F, G, H, I, J, K, M, O |
+| radar_laser.radar | SPECIFIED | A, C, D, F, G, H, J | B, E, I, K, L, M, O |
+| timing_contact.contact | SPECIFIED | A, D, E, F, H, J, L | B, C, G, I, K, M, O |
+| timing_contact.gates | SPECIFIED | A, D, H, L | B, C, E, F, G, I, J, K, M, O |
 
-| Aspect | Status for all 15 subfamilies |
-| --- | --- |
-| Analytical correctness and independent computational reference | Present for the engines and assessments (independent tests and analytical references); rating still `partial` because the ledger has not been re-rated |
-| Method/rate/artifact coverage | The 83-case matrix is not exhaustive evidence; coverage is bounded to declared fixtures |
-| Native physical records, calibration, geometry validation, timing characterisation | Absent (no audited native acquisition, no metrology) |
-| Paired empirical agreement | Absent; all agreement studies are analytical or diagnostic; every interchangeability verdict is `unknown` |
-| Scientific review | Absent (M8) |
+Verified cells: 63 of 210.
 
-Subfamilies with an independent J reference: 15 of 15. In the ledger, the two force-platform subfamilies
-have no independent-test or analytical-reference evidence tagged on D, E or F, and the two timing/contact
-subfamilies have none on E.
+## 2. Empirical device-validity status (15 subfamilies)
 
-## What would change the outcome
+`qualification/empirical.toml` holds **no record**. Every subfamily therefore has no measured evidence for any dimension. Synthetic, analytical, simulated and vendor-reported data are rejected by the validator and can never fill it.
 
-Under Policy A (computational readiness), re-rating requires an owner-authorised change plus
-per-dimension evidence receipts. Under Policy B (empirical qualification), measured data and
-rights clearance are required (RES-694, RES-703, RES-720/721). See `m3-gate-policy-decision.md`.
+| Subfamily | Measured records | Interchangeability | Known empirical gaps |
+| -- | -- | -- | -- |
+| force_platform.dual | 0 | unknown | 2 recorded (see ledger) |
+| force_platform.single | 0 | unknown | 2 recorded (see ledger) |
+| gnss_lps.gnss | 0 | unknown | 2 recorded (see ledger) |
+| gnss_lps.lps | 0 | unknown | 2 recorded (see ledger) |
+| imu.inertial | 0 | unknown | 2 recorded (see ledger) |
+| load_cell_isometric.isometric_rig | 0 | unknown | 2 recorded (see ledger) |
+| load_cell_isometric.load_cell | 0 | unknown | 2 recorded (see ledger) |
+| lpt_encoder.encoder | 0 | unknown | 2 recorded (see ledger) |
+| lpt_encoder.lpt | 0 | unknown | 2 recorded (see ledger) |
+| nordic_hip.hip | 0 | unknown | 2 recorded (see ledger) |
+| nordic_hip.nordic | 0 | unknown | 2 recorded (see ledger) |
+| radar_laser.laser | 0 | unknown | 2 recorded (see ledger) |
+| radar_laser.radar | 0 | unknown | 2 recorded (see ledger) |
+| timing_contact.contact | 0 | unknown | 2 recorded (see ledger) |
+| timing_contact.gates | 0 | unknown | 2 recorded (see ledger) |
+
+The previous per-subfamily `blockers` text is preserved verbatim as `empirical_gaps` in the ledger; `blockers` now holds computational blockers only (none are declared beyond the unverified cells).
+
+## 3. Open computational work, from the independent audit
+
+Cells below have a draft receipt that the auditors judged PARTIAL or UNSUPPORTED, or no draft because no test covers them. Details per cell: `m3-receipt-audit.md`.
+
+Recurring gaps (each is concrete engineering, owned by the existing issue for that engine):
+
+* Tests run the *other* subfamily's fixture (single vs dual plate, load cell vs isometric rig, nordic vs hip, LPT vs encoder, GNSS vs LPS, radar vs laser), so the cited evidence does not exercise the subfamily it is filed under.
+* Fault-injection coverage asserts injected bytes but not the engine's verdict for most fault classes (nordic/hip clipping is accepted; load-cell drift/noise/resample/drop; contact double-contact and latency).
+* Tolerance bookkeeping: several receipts record a reference self-test bound instead of the bound the engine tests assert.
+* Metric-definition cells (H) lack a test binding each estimand to a sourced registry claim.
+* Uncertainty cells (I) mostly assert that sensitivity exists, not that it equals an analytical expectation.
+* Provenance (M) and limitations (O) are emitted by only some engines. Radar, laser, IMU, nordic, hip, gates, contact and encoder results do not record the source bundle hash; the force-platform, nordic, hip and timing results emit no limitation statements.
+
+## 4. Analytical versus empirical interchangeability
+
+Dimension L is verified only where the analytical study was executed and classified. Every comparison's empirical verdict stays `unknown`; no comparison is `conditionally_interchangeable`.
+
+## 5. Roadmap consequence
+
+M4 stays BLOCKED: RES-676 is blocked by RES-675, which does not pass. The RES-737 development-only prototype is unchanged and unqualified.

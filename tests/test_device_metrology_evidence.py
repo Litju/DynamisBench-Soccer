@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 
 from dynamisbench_soccer.qualification.ledger import load as load_ledger
+from dynamisbench_soccer.qualification.state import computed_states
 from dynamisbench_soccer.registry.models import load, validate
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -28,6 +29,7 @@ def test_every_subfamily_has_claim_and_explicit_gap_for_metrology() -> None:
     registry = load(ROOT / "registry")
     gaps = {g.subject for g in registry.gaps}
     claims = {c.id for c in registry.claims}
+    states = {s.subfamily: s for s in computed_states(ledger, ROOT)}
     assert "iso_ham" in gaps
     for sub in ledger.subfamilies:
         for dimension in "IJLO":
@@ -39,4 +41,9 @@ def test_every_subfamily_has_claim_and_explicit_gap_for_metrology() -> None:
                 e.kind == "registry_gap" and e.ref == f"metrology.{sub.id}" and e.ref in gaps
                 for e in refs
             )
-            assert sub.ratings[dimension].value != "verified"
+            # Policy A: the metrology gap is an *empirical* requirement and stays open. A verified
+            # rating here is computational only and must never rest on empirical records.
+            if sub.ratings[dimension].value == "verified":
+                assert dimension in states[sub.id].analytical_only_dimensions
+                assert dimension not in states[sub.id].empirical_dimensions_covered
+            assert dimension in states[sub.id].empirical_requirements
