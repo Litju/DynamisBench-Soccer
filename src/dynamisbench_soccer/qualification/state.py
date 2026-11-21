@@ -1,23 +1,32 @@
-"""Computed per-subfamily qualification states and the M3 gate (RES-675).
+"""Computed per-subfamily states and the M3 gate (RES-675), under Policy A.
 
-Nothing here is declared. A state is a pure function of the ledger's per-dimension ratings,
-evidence kinds and blockers, so changing the evidence changes the state and an unproven
-subfamily can never read as verified. Rules follow docs/m3-architecture.md.
+Nothing here is declared. A state is a pure function of the ledger ratings, the validated
+independent receipts and the blockers; the decision itself is made once, in ``gate.py``.
+This module only reshapes that report for the ``states`` command and the verification
+report. ``ENGINEERING_VERIFIED`` means computational-reference readiness. Physical-device
+validity is reported separately (``empirical_*`` fields), never folded into the state.
 """
 
 from __future__ import annotations
 
+import dataclasses
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Literal
 
-from dynamisbench_soccer.qualification.ledger import (
-    DIMENSIONS,
-    M3_DIMENSIONS,
-    Ledger,
-    Rating,
-    Subfamily,
-    validate,
+from dynamisbench_soccer.qualification import empirical as empirical_mod
+from dynamisbench_soccer.qualification import receipts as receipts_mod
+from dynamisbench_soccer.qualification.gate import (
+    COMPUTATIONAL,
+    EMPIRICAL,
+    INDEPENDENT,
+    NON_ANALYTICAL,
+    SubfamilyStatus,
+    _valid_receipts,
+    evaluate_m3,
+    subfamily_status,
 )
+from dynamisbench_soccer.qualification.ledger import Ledger, Subfamily
 
 State = Literal[
     "NOT_STARTED",
@@ -26,25 +35,19 @@ State = Literal[
     "ENGINEERING_VERIFIED",
     "SCIENTIFICALLY_QUALIFIED",
 ]
-NON_ANALYTICAL = frozenset({"empirical_study", "external_review"})
-INDEPENDENT = frozenset({"independent_test", "analytical_reference", *NON_ANALYTICAL})
-REQUIRED_EXPERIMENT: dict[str, str] = {
-    "A": "audited native raw-data acquisition from the device",
-    "B": "measured calibration, axes and geometry records for the device",
-    "C": "measured clock, latency and synchronisation characterisation",
-    "D": "empirical signal-integrity study with real fault occurrences",
-    "E": "method comparison on measured data with accepted sensitivity bounds",
-    "F": "device-specific reconstruction checked against a criterion measure",
-    "G": "protocol event detection checked against adjudicated events",
-    "H": "metric-definition review against the protocol literature",
-    "I": "measurement-uncertainty budget from device metrology",
-    "J": "independent reference implementation or empirical criterion",
-    "K": "fixtures covering measured fault classes",
-    "L": "paired measured cross-device agreement study (at least 20 independent subjects)",
-    "M": "seeded bundle chain with provenance for every processing stage",
-    "N": "AI task set with qualified grader controls (M4/M5)",
-    "O": "sourced limitation statement reviewed by a domain expert",
-}
+REQUIRED_EXPERIMENT = EMPIRICAL  # backwards-compatible name for the empirical requirements
+__all__ = [
+    "COMPUTATIONAL",
+    "EMPIRICAL",
+    "INDEPENDENT",
+    "NON_ANALYTICAL",
+    "REQUIRED_EXPERIMENT",
+    "M3Gate",
+    "SubfamilyState",
+    "computed_states",
+    "m3_gate",
+    "subfamily_state",
+]
 
 
 @dataclass(frozen=True)
@@ -57,70 +60,16 @@ class SubfamilyState:
     ratings: dict[str, str]
     blockers: tuple[str, ...]
     owners: dict[str, str]
-    required_experiments: dict[str, str]
+    required_computational: dict[str, str]
+    empirical_requirements: dict[str, str]
     independent_reference: bool
     non_analytical_reference: bool
-    analytical_only_dimensions: tuple[str, ...] = ()
-
-
-def subfamily_state(model: Ledger, sub: Subfamily) -> SubfamilyState:
-    ratings = sub.ratings
-    evidence = [e for e in model.evidence if e.subfamily == sub.id]
-    verified = tuple(
-        d for d in M3_DIMENSIONS if ratings[d] in {Rating.VERIFIED, Rating.NOT_APPLICABLE}
-    )
-    unverified = tuple(d for d in M3_DIMENSIONS if d not in verified)
-    independent = any(
-        e.dimension == "J" and e.kind in INDEPENDENT and e.independence_from == sub.engine_id
-        for e in evidence
-    )
-    non_analytical = any(e.dimension == "J" and e.kind in NON_ANALYTICAL for e in evidence)
-    all_verified = all(ratings[d] in {Rating.VERIFIED, Rating.NOT_APPLICABLE} for d in DIMENSIONS)
-    if all(ratings[d] == Rating.ABSENT for d in M3_DIMENSIONS):
-        state: State = "NOT_STARTED"
-    elif not unverified and not sub.blockers and independent:
-        state = (
-            "SCIENTIFICALLY_QUALIFIED"
-            if all_verified and non_analytical and _reviewed(model, sub)
-            else "ENGINEERING_VERIFIED"
-        )
-    elif all(ratings[d] != Rating.ABSENT for d in M3_DIMENSIONS):
-        state = "SPECIFIED"  # every M3 dimension has at least a specification or partial evidence
-    else:
-        state = "IN_PROGRESS"
-    analytical_only = tuple(
-        d
-        for d in verified
-        if ratings[d] == Rating.VERIFIED
-        and not any(e.dimension == d and e.kind in NON_ANALYTICAL for e in evidence)
-    )
-    return SubfamilyState(
-        sub.id,
-        sub.family,
-        state,
-        verified,
-        unverified,
-        {d: ratings[d].value for d in DIMENSIONS},
-        sub.blockers,
-        dict(sub.owners),
-        {d: REQUIRED_EXPERIMENT[d] for d in unverified},
-        independent,
-        non_analytical,
-        analytical_only,
-    )
-
-
-def _reviewed(model: Ledger, sub: Subfamily) -> bool:
-    accepted = {
-        r.identity
-        for r in model.reviewers
-        if r.family == sub.family and r.independent and r.decision == "accepted" and r.evidence_ref
-    }
-    return len(accepted) >= 2
-
-
-def computed_states(model: Ledger) -> list[SubfamilyState]:
-    return [subfamily_state(model, s) for s in sorted(model.subfamilies, key=lambda s: s.id)]
+    analytical_only_dimensions: tuple[str, ...]
+    receipts: dict[str, tuple[str, ...]]
+    empirical_records: tuple[str, ...]
+    empirical_dimensions_covered: tuple[str, ...]
+    empirical_interchangeability: str
+    empirical_gaps: tuple[str, ...]
 
 
 @dataclass(frozen=True)
@@ -131,27 +80,91 @@ class M3Gate:
     by_state: dict[str, int]
     structural_problems: tuple[str, ...]
     blocking: dict[str, tuple[str, ...]]
+    empirical_requirements: dict[str, dict[str, str]]
+    receipt_problems: dict[str, tuple[str, ...]]
+    empirical_problems: dict[str, tuple[str, ...]]
 
 
-def m3_gate(model: Ledger, root: object | None = None) -> M3Gate:
-    from pathlib import Path
+def _shape(model: Ledger, sub: Subfamily, st: SubfamilyStatus) -> SubfamilyState:
+    return SubfamilyState(
+        sub.id,
+        sub.family,
+        st.state,  # type: ignore[arg-type]
+        st.verified_dimensions,
+        st.unverified_dimensions,
+        {d: r.value for d, r in sub.ratings.items()},
+        st.computational_blockers,
+        dict(sub.owners),
+        {d: COMPUTATIONAL[d] for d in st.unverified_dimensions},
+        st.empirical_requirements,
+        st.independent_reference,
+        any(
+            e.subfamily == sub.id and e.dimension == "J" and e.kind in NON_ANALYTICAL
+            for e in model.evidence
+        ),
+        st.analytical_only_dimensions,
+        {d: c.receipts for d, c in st.cells.items() if c.receipts},
+        st.empirical_records,
+        st.empirical_dimensions_covered,
+        st.empirical_interchangeability,
+        sub.empirical_gaps,
+    )
 
-    problems = tuple(validate(model, Path(str(root)) if root is not None else None))
-    states = computed_states(model)
-    counts: dict[str, int] = {}
-    for s in states:
-        counts[s.state] = counts.get(s.state, 0) + 1
-    verified = counts.get("ENGINEERING_VERIFIED", 0) + counts.get("SCIENTIFICALLY_QUALIFIED", 0)
+
+def computed_states(
+    model: Ledger,
+    root: Path | None = None,
+    *,
+    receipts: tuple[receipts_mod.Receipt, ...] | None = None,
+    empirical: tuple[empirical_mod.EmpiricalRecord, ...] | None = None,
+) -> list[SubfamilyState]:
+    root = root if root is not None else Path(".")
+    if receipts is None:
+        receipts = receipts_mod.load(root / "qualification" / "receipts.toml")
+    if empirical is None:
+        empirical = empirical_mod.load(root / "qualification" / "empirical.toml")
+    index, _problems, _global = _valid_receipts(model, receipts, root)
+    ids = {s.id for s in model.subfamilies}
+    valid = {
+        rid for rid, errs in empirical_mod.verify_all(empirical, ids, root).items() if not errs
+    }
+    return [
+        _shape(model, s, subfamily_status(model, s, index, empirical, valid))
+        for s in sorted(model.subfamilies, key=lambda s: s.id)
+    ]
+
+
+def subfamily_state(
+    model: Ledger,
+    sub: Subfamily,
+    root: Path | None = None,
+    *,
+    receipts: tuple[receipts_mod.Receipt, ...] | None = None,
+) -> SubfamilyState:
+    """State of ``sub`` as if it replaced the model's entry of the same id (what-if checks)."""
+    others = tuple(s for s in model.subfamilies if s.id != sub.id)
+    candidate = dataclasses.replace(model, subfamilies=(*others, sub))
+    return next(
+        s for s in computed_states(candidate, root, receipts=receipts) if s.subfamily == sub.id
+    )
+
+
+def m3_gate(
+    model: Ledger,
+    root: object | None = None,
+    *,
+    receipts: tuple[receipts_mod.Receipt, ...] | None = None,
+    empirical: tuple[empirical_mod.EmpiricalRecord, ...] | None = None,
+) -> M3Gate:
+    report = evaluate_m3(model, receipts, empirical, Path(str(root)) if root is not None else None)
     return M3Gate(
-        passed=verified == len(states) and not problems,
-        total_subfamilies=len(states),
-        engineering_verified=verified,
-        by_state=counts,
-        structural_problems=problems,
-        blocking={
-            s.subfamily: tuple(f"{d}: {s.required_experiments[d]}" for d in s.unverified_m3)
-            + tuple(f"blocker: {b}" for b in s.blockers)
-            for s in states
-            if s.state not in {"ENGINEERING_VERIFIED", "SCIENTIFICALLY_QUALIFIED"}
-        },
+        passed=report.passed,
+        total_subfamilies=report.total_subfamilies,
+        engineering_verified=report.engineering_verified,
+        by_state=report.by_state,
+        structural_problems=report.structural_problems,
+        blocking=report.computational_blockers,
+        empirical_requirements=report.empirical_requirements,
+        receipt_problems=report.receipt_problems,
+        empirical_problems=report.empirical_problems,
     )

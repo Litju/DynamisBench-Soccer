@@ -4,6 +4,7 @@ from dataclasses import replace
 from pathlib import Path
 
 import pytest
+from receipt_fixtures import fixture_empirical, fixture_receipts
 
 from dynamisbench_soccer.cli import main
 from dynamisbench_soccer.qualification.ledger import (
@@ -21,6 +22,20 @@ from dynamisbench_soccer.qualification.ledger import (
 )
 
 ROOT = Path(__file__).resolve().parents[1]
+
+
+def vvalidate(model: Ledger, root: Path | None = None) -> list[str]:
+    return validate(model, root, receipts=fixture_receipts(model))
+
+
+def vgate(model: Ledger, stage: Stage, root: Path = Path(".")):  # type: ignore[no-untyped-def]
+    return gate(
+        model,
+        stage,
+        root,
+        receipts=fixture_receipts(model),
+        empirical=fixture_empirical(model) if stage == Stage.M8 else (),
+    )
 
 
 @pytest.fixture
@@ -48,7 +63,9 @@ def verified(ledger: Ledger) -> Ledger:
         for d in DIMENSIONS
     )
     comparisons = tuple(replace(c, verdict="not_interchangeable") for c in ledger.comparisons)
-    return replace(ledger, subfamilies=subs, evidence=evidence, comparisons=comparisons)
+    return replace(
+        ledger, subfamilies=subs, evidence=(*ledger.evidence, *evidence), comparisons=comparisons
+    )
 
 
 def test_current_ledger_and_generated_report(ledger: Ledger) -> None:
@@ -71,16 +88,16 @@ def test_every_subfamily_required(ledger: Ledger, dropped: str) -> None:
 
 def test_stages_and_specified_are_separate(ledger: Ledger) -> None:
     obj = verified(ledger)
-    assert not validate(obj, ROOT)
-    assert gate(obj, Stage.M3).passed
-    assert gate(obj, Stage.M5).passed
-    assert not gate(obj, Stage.M8).passed
+    assert not vvalidate(obj, ROOT)
+    assert vgate(obj, Stage.M3).passed
+    assert vgate(obj, Stage.M5).passed
+    assert not vgate(obj, Stage.M8).passed
     subs = tuple(replace(s, ratings={**s.ratings, "N": Rating.ABSENT}) for s in obj.subfamilies)
     obj = replace(obj, subfamilies=subs)
-    assert gate(obj, Stage.M3).passed
-    assert not gate(obj, Stage.M5).passed
+    assert vgate(obj, Stage.M3).passed
+    assert not vgate(obj, Stage.M5).passed
     subs = tuple(replace(s, ratings={**s.ratings, "A": Rating.SPECIFIED}) for s in subs)
-    assert not gate(replace(obj, subfamilies=subs), Stage.M3).passed
+    assert not vgate(replace(obj, subfamilies=subs), Stage.M3).passed
 
 
 def test_m8_requires_two_distinct_reviewers_per_family(ledger: Ledger) -> None:
@@ -90,9 +107,9 @@ def test_m8_requires_two_distinct_reviewers_per_family(ledger: Ledger) -> None:
         for f in {s.family for s in obj.subfamilies}
         for who in ("A", "B")
     )
-    assert gate(replace(obj, reviewers=reviewers), Stage.M8).passed
-    assert not gate(replace(obj, reviewers=reviewers[:-1]), Stage.M8).passed
-    assert not gate(
+    assert vgate(replace(obj, reviewers=reviewers), Stage.M8).passed
+    assert not vgate(replace(obj, reviewers=reviewers[:-1]), Stage.M8).passed
+    assert not vgate(
         replace(obj, reviewers=tuple(replace(r, identity="A") for r in reviewers)), Stage.M8
     ).passed
 
@@ -101,8 +118,8 @@ def test_m8_requires_two_distinct_reviewers_per_family(ledger: Ledger) -> None:
 def test_import_and_vendor_evidence_cannot_qualify(ledger: Ledger, kind: str) -> None:
     obj = verified(ledger)
     obj = replace(obj, evidence=tuple(replace(e, kind=kind) for e in obj.evidence))
-    assert any("adapter/vendor-only" in e for e in validate(obj))
-    assert not gate(obj, Stage.M3).passed
+    assert any("adapter/vendor-only" in e for e in vvalidate(obj))
+    assert not vgate(obj, Stage.M3).passed
 
 
 def test_blockers_prevent_gate_and_report_promotion(ledger: Ledger) -> None:
@@ -110,7 +127,7 @@ def test_blockers_prevent_gate_and_report_promotion(ledger: Ledger) -> None:
     obj = replace(
         obj, subfamilies=(replace(obj.subfamilies[0], blockers=("open",)), *obj.subfamilies[1:])
     )
-    assert not gate(obj, Stage.M3).passed
+    assert not vgate(obj, Stage.M3).passed
     assert "| force_platform | single, dual | IN_PROGRESS" in markdown(obj)
 
 
@@ -130,7 +147,7 @@ def test_circular_or_wrong_reference_rejected(ledger: Ledger, field: str, value:
         else e
         for e in obj.evidence
     )
-    assert any("circular" in e for e in validate(replace(obj, evidence=evidence)))
+    assert any("circular" in e for e in vvalidate(replace(obj, evidence=evidence)))
 
 
 @pytest.mark.parametrize("method", ["butterworth", "moving_average", "filter", "magic"])
@@ -147,7 +164,13 @@ def test_unresolved_agreement_rejected(ledger: Ledger) -> None:
         verified(ledger),
         comparisons=tuple(replace(c, verdict="unknown") for c in ledger.comparisons),
     )
-    assert any("unresolved non-equivalence" in e for e in validate(obj))
+    # Policy A: an analytical study with an unknown *empirical* verdict is allowed for L ...
+    assert not vvalidate(obj)
+    # ... but a declared non-equivalence with no executed study is not.
+    unexecuted = replace(
+        obj, comparisons=tuple(replace(c, evidence_level="none") for c in obj.comparisons)
+    )
+    assert any("no executed study" in e for e in vvalidate(unexecuted))
     comparisons = tuple(
         replace(
             c,
@@ -158,7 +181,7 @@ def test_unresolved_agreement_rejected(ledger: Ledger) -> None:
         )
         for c in obj.comparisons
     )
-    assert any("analytical-only" in e for e in validate(replace(obj, comparisons=comparisons)))
+    assert any("analytical-only" in e for e in vvalidate(replace(obj, comparisons=comparisons)))
 
 
 @pytest.mark.parametrize(
@@ -180,7 +203,7 @@ def test_not_applicable_needs_review(ledger: Ledger) -> None:
     subs = tuple(
         replace(s, ratings={**s.ratings, "B": Rating.NOT_APPLICABLE}) for s in obj.subfamilies
     )
-    assert any("N/A without" in e for e in validate(replace(obj, subfamilies=subs)))
+    assert any("N/A without" in e for e in vvalidate(replace(obj, subfamilies=subs)))
 
 
 def test_cli_validation_and_computed_gate(ledger: Ledger) -> None:
@@ -192,12 +215,12 @@ def test_cli_validation_and_computed_gate(ledger: Ledger) -> None:
 def test_gate_resolves_evidence_not_only_structure(ledger: Ledger) -> None:
     obj = verified(ledger)
     obj = replace(obj, evidence=tuple(replace(e, ref="repo:missing") for e in obj.evidence))
-    assert not gate(obj, Stage.M3, ROOT).passed
+    assert not vgate(obj, Stage.M3, ROOT).passed
 
 
 def test_study_and_review_references_resolve(ledger: Ledger) -> None:
     obj = verified(ledger)
-    assert validate(
+    assert vvalidate(
         replace(
             obj,
             evidence=(
@@ -217,5 +240,7 @@ def test_study_and_review_references_resolve(ledger: Ledger) -> None:
         ),
         *obj.comparisons[1:],
     )
-    assert validate(replace(obj, comparisons=comparisons), ROOT)
-    assert validate(replace(obj, reviewers=(Reviewer("imu", "A", True, "accepted", "fake"),)), ROOT)
+    assert vvalidate(replace(obj, comparisons=comparisons), ROOT)
+    assert vvalidate(
+        replace(obj, reviewers=(Reviewer("imu", "A", True, "accepted", "fake"),)), ROOT
+    )

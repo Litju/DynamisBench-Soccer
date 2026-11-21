@@ -1,6 +1,8 @@
 # M3 gate policy: owner decision record (RES-675 / RES-692)
 
-Status: **PROPOSED. Not authoritative. No gate semantics, rating or threshold changed.**
+Status: **APPROVED by the owner: Policy A** (owner instruction, 2026-11-21, RES-675/RES-692). Implemented by
+`qualification/gate.py`, `receipts.py` and `empirical.py`; see `docs/m3-architecture.md`, "M3 contract (Policy A)".
+The text below is the original decision record, kept for history.
 
 ## Finding
 

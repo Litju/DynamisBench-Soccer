@@ -8,6 +8,7 @@ from collections import Counter
 from dataclasses import dataclass
 from enum import StrEnum
 from pathlib import Path
+from typing import Any
 
 DIMENSIONS = tuple("ABCDEFGHIJKLMNO")
 M3_DIMENSIONS = tuple(d for d in DIMENSIONS if d != "N")
@@ -116,6 +117,9 @@ class Subfamily:
     ratings: dict[str, Rating]
     blockers: tuple[str, ...]
     owners: dict[str, str]
+    # Policy A: what only measured, criterion-referenced evidence can close. Reported next to,
+    # never merged into, the computational blockers.
+    empirical_gaps: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -171,6 +175,7 @@ def load(path: Path) -> Ledger:
                 ratings={str(k): Rating(v) for k, v in row["ratings"].items()},
                 blockers=tuple(row.get("blockers", [])),
                 owners=row["owners"],
+                empirical_gaps=tuple(row.get("empirical_gaps", [])),
             )
         )
     evidence = tuple(Evidence(**e) for e in raw.get("evidence", []))
@@ -196,7 +201,13 @@ def load(path: Path) -> Ledger:
     )
 
 
-def validate(model: Ledger, root: Path | None = None) -> list[str]:
+def validate(
+    model: Ledger,
+    root: Path | None = None,
+    *,
+    receipts: tuple[Any, ...] | None = None,
+    empirical: tuple[Any, ...] | None = None,
+) -> list[str]:
     errors: list[str] = []
     ids = [s.id for s in model.subfamilies]
     for key, count in Counter(ids).items():
@@ -330,46 +341,94 @@ def validate(model: Ledger, root: Path | None = None) -> list[str]:
         ):
             errors.append(f"{c.left}/{c.right}: analytical-only interchangeability")
     for s in model.subfamilies:
+        # Policy A: L verified means the analytical cross-device study was executed and
+        # classified. The empirical interchangeability verdict may legitimately stay unknown.
         if s.ratings.get("L") == Rating.VERIFIED and any(
-            s.id in (c.left, c.right) and c.verdict == "unknown" for c in model.comparisons
+            s.id in (c.left, c.right) and c.evidence_level == "none" for c in model.comparisons
         ):
-            errors.append(f"{s.id}/L: unresolved non-equivalence")
+            errors.append(f"{s.id}/L: a declared non-equivalence has no executed study")
     for r in model.reviewers:
         if not r.identity.strip() or not study_exists(r.evidence_ref):
             errors.append(f"unresolved reviewer evidence {r.family}")
         if r.family not in families:
             errors.append(f"unknown reviewer family {r.family}")
+    if root is not None or receipts is not None:
+        from dynamisbench_soccer.qualification import empirical as empirical_mod
+        from dynamisbench_soccer.qualification import receipts as receipts_mod
+        from dynamisbench_soccer.qualification.gate import receipt_structure_problems
+
+        base = root if root is not None else Path(".")
+        loaded_receipts = (
+            receipts
+            if receipts is not None
+            else receipts_mod.load(base / "qualification" / "receipts.toml")
+        )
+        loaded_empirical = (
+            empirical
+            if empirical is not None
+            else empirical_mod.load(base / "qualification" / "empirical.toml")
+        )
+        errors.extend(receipt_structure_problems(model, loaded_receipts, loaded_empirical, base))
     return errors
 
 
-def gate(model: Ledger, stage: Stage, root: Path = Path(".")) -> GateResult:
-    required = M3_DIMENSIONS if stage == Stage.M3 else DIMENSIONS
+def gate(
+    model: Ledger,
+    stage: Stage,
+    root: Path = Path("."),
+    *,
+    receipts: tuple[Any, ...] | None = None,
+    empirical: tuple[Any, ...] | None = None,
+) -> GateResult:
+    if stage == Stage.M3:
+        # One canonical evaluator (gate.py) decides M3, for both gate commands.
+        from dynamisbench_soccer.qualification.gate import evaluate_m3
+
+        report = evaluate_m3(model, receipts, empirical, root)
+        families = {s.family for s in model.subfamilies}
+        blocked: dict[str, list[str]] = {}
+        for st in report.subfamilies:
+            if st.state not in {"ENGINEERING_VERIFIED", "SCIENTIFICALLY_QUALIFIED"}:
+                blocked.setdefault(st.family, []).extend(
+                    f"{st.subfamily}: {b}" for b in st.computational_blockers
+                )
+        if report.structural_problems:
+            blocked.setdefault("__ledger__", []).extend(report.structural_problems)
+        ready = len(families - set(blocked))
+        return GateResult(
+            Stage.M3,
+            report.passed,
+            ready,
+            len(families),
+            {name: tuple(v) for name, v in sorted(blocked.items())},
+        )
+    # M5 and M8 build on the same canonical evaluator: M5 needs the M3 computational state plus
+    # a verified N; M8 needs the full scientific state (measured empirical records, N, review).
+    from dynamisbench_soccer.qualification.gate import evaluate_m3
+
+    report = evaluate_m3(model, receipts, empirical, root)
+    sub_by_id = {x.id: x for x in model.subfamilies}
     missing: dict[str, list[str]] = {}
-    for s in model.subfamilies:
-        for d in required:
-            if s.ratings.get(d) not in {Rating.VERIFIED, Rating.NOT_APPLICABLE}:
-                missing.setdefault(s.family, []).append(f"{s.id}/{d}")
-        if s.blockers:
-            missing.setdefault(s.family, []).extend(f"{s.id}: {b}" for b in s.blockers)
-        if stage == Stage.M8:
-            accepted = {
-                r.identity
-                for r in model.reviewers
-                if r.family == s.family
-                and r.independent
-                and r.decision == "accepted"
-                and r.evidence_ref
-            }
-            if len(accepted) < 2:
-                missing.setdefault(s.family, []).append("two independent reviewers")
+    for st in report.subfamilies:
+        sub = sub_by_id[st.subfamily]
+        if stage == Stage.M5:
+            ok = st.state in {
+                "ENGINEERING_VERIFIED",
+                "SCIENTIFICALLY_QUALIFIED",
+            } and sub.ratings.get("N") in {Rating.VERIFIED, Rating.NOT_APPLICABLE}
+            reasons = [f"{st.subfamily}: M3 state {st.state} / N {sub.ratings.get('N')}"]
+        else:
+            ok = st.state == "SCIENTIFICALLY_QUALIFIED"
+            reasons = [f"{st.subfamily}: state {st.state}, needs measured records and review"]
+        if not ok:
+            missing.setdefault(st.family, []).extend(reasons)
     families = {s.family for s in model.subfamilies}
     ready = len(families - set(missing))
-    structural = validate(model, root)
-    if structural:
-        missing.setdefault("__ledger__", []).extend(structural)
+    if report.structural_problems:
+        missing.setdefault("__ledger__", []).extend(report.structural_problems)
     return GateResult(
         stage,
-        ready == len(families) and not structural,
+        ready == len(families) and not report.structural_problems,
         ready,
         len(families),
         {name: tuple(v) for name, v in sorted(missing.items())},
@@ -382,7 +441,8 @@ def markdown(model: Ledger) -> str:
         "",
         "<!-- GENERATED by dbs qualification ledger --write -->",
         "",
-        "M3 verifies A-M and O; M5 additionally verifies N; M8 adds scientific review.",
+        "M3 verifies A-M and O computationally (Policy A); M5 additionally verifies N; M8 adds",
+        "scientific review. Physical-device validity is a separate, empirical status.",
         "Specified is NOT verified. Analytical agreement is NOT empirical equivalence.",
         "",
         "| Family | Subfamilies | M3 | M5 | M8 |",
@@ -406,7 +466,8 @@ def markdown(model: Ledger) -> str:
     for s in model.subfamilies:
         ratings = ", ".join(f"{d}:{s.ratings[d].value} ({s.owners[d]})" for d in DIMENSIONS)
         lines.append(f"- {s.id} ({s.issue}): {ratings}")
-        lines += [f"  - {b}" for b in s.blockers]
+        lines += [f"  - computational blocker: {b}" for b in s.blockers]
+        lines += [f"  - empirical gap: {g}" for g in s.empirical_gaps]
     lines += ["", "## Interchangeability studies", ""]
     for c in model.comparisons:
         lines.append(

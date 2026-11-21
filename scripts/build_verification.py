@@ -47,7 +47,7 @@ def _round(value, digits=6):
 
 def build() -> tuple[dict, str]:
     model = ledger_model.load(ROOT / "qualification/ledger.toml")
-    states = computed_states(model)
+    states = computed_states(model, ROOT)
     gate = m3_gate(model, ROOT)
     rows = e2e_cases.run_all()
     coverage: dict[str, dict[str, list[str]]] = {}
@@ -100,8 +100,12 @@ def markdown(p: dict, agreement: dict) -> str:
         f"* **M3 gate passed: {gate['passed']}.** {gate['engineering_verified']}/{gate['total_subfamilies']}"
         f" subfamilies are ENGINEERING_VERIFIED. State counts: {json.dumps(gate['by_state'], sort_keys=True)}.",
         f"* Ledger structural problems: {len(gate['structural_problems'])}.",
-        "* ENGINEERING_VERIFIED requires dimensions A-M and O verified, an independent reference",
-        "  and no open blockers. N belongs to M4/M5 and independent scientific sign-off to M8.",
+        "* Policy A: ENGINEERING_VERIFIED means computational-reference readiness. It requires A-M",
+        "  and O verified by substantive independent receipts, an independent reference and no",
+        "  open computational blocker. It says nothing about physical-device validity, which is",
+        "  reported separately (section 2b). N belongs to M4/M5 and sign-off to M8.",
+        f"* Receipt problems: {sum(len(v) for v in gate['receipt_problems'].values())}; "
+        f"empirical-record problems: {sum(len(v) for v in gate['empirical_problems'].values())}.",
         "",
         "## 2. Subfamily states, blockers, owners and required experiments",
         "",
@@ -117,12 +121,35 @@ def markdown(p: dict, agreement: dict) -> str:
     for s in p["states"]:
         out.append(f"**{s['subfamily']}** ({s['state']})")
         for b in s["blockers"]:
-            out.append(f"* blocker: {b}")
+            out.append(f"* computational blocker: {b}")
         owners = {}
         for d in s["unverified_m3"]:
-            owners.setdefault((s["owners"][d], s["required_experiments"][d]), []).append(d)
-        for (owner, experiment), dims in sorted(owners.items()):
-            out.append(f"* {','.join(dims)} - owner {owner}: {experiment}")
+            owners.setdefault((s["owners"][d], s["required_computational"][d]), []).append(d)
+        for (owner, requirement), dims in sorted(owners.items()):
+            out.append(f"* {','.join(dims)} - owner {owner}: {requirement}")
+        out.append("")
+    out += [
+        "## 2b. Empirical device-validity evidence (separate from the computational gate)",
+        "",
+        "| Subfamily | Measured records | Dimensions covered | Interchangeability |",
+        "| -- | -- | -- | -- |",
+    ]
+    for s in p["states"]:
+        out.append(
+            f"| {s['subfamily']} | {len(s['empirical_records'])} "
+            f"| {','.join(s['empirical_dimensions_covered']) or 'none'} "
+            f"| {s['empirical_interchangeability']} |"
+        )
+    out += ["", "Open empirical requirements (what only physical measurement can close):", ""]
+    for s in p["states"]:
+        out.append(f"**{s['subfamily']}**")
+        for g in s["empirical_gaps"]:
+            out.append(f"* gap: {g}")
+        out.append(
+            "* needs measured evidence for: "
+            + ", ".join(sorted(s["empirical_requirements"]))
+            + " (see docs/verification/m3-gate-policy-decision.md)"
+        )
         out.append("")
     out += [
         "## 3. Dimension ratings by subfamily",
