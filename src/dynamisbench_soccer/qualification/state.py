@@ -125,7 +125,9 @@ def computed_states(
         empirical = empirical_mod.load(root / "qualification" / "empirical.toml")
     index, _problems, _global = _valid_receipts(model, receipts, root)
     ids = {s.id for s in model.subfamilies}
-    valid = {rid for rid, errs in empirical_mod.verify_all(empirical, ids).items() if not errs}
+    valid = {
+        rid for rid, errs in empirical_mod.verify_all(empirical, ids, root).items() if not errs
+    }
     return [
         _shape(model, s, subfamily_status(model, s, index, empirical, valid))
         for s in sorted(model.subfamilies, key=lambda s: s.id)

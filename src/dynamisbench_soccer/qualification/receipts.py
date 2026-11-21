@@ -27,7 +27,17 @@ REFERENCE_KINDS = frozenset(
     {"closed_form", "independent_implementation", "published_worked_example"}
 )
 # A reference must not be computed by the code it verifies.
-FORBIDDEN_REFERENCE_IMPORTS = ("dynamisbench_soccer.engines", "dynamisbench_soccer.assessment")
+FORBIDDEN_REFERENCE_IMPORTS = (
+    "dynamisbench_soccer.engines",
+    "dynamisbench_soccer.assessment",
+    "dynamisbench_soccer.agreement",
+)
+FORBIDDEN_PACKAGES = frozenset({"engines", "assessment", "agreement"})
+IMPLEMENTATION_PACKAGES = (
+    "src/dynamisbench_soccer/engines/",
+    "src/dynamisbench_soccer/assessment/",
+    "src/dynamisbench_soccer/agreement/",
+)
 SKIP_MARKERS = frozenset({"skip", "skipif", "xfail"})
 MIN_CLAIM_CHARS = 60
 
@@ -116,9 +126,48 @@ def _find(tree: ast.Module, symbol: str) -> ast.AST | None:
     return node
 
 
-def digest_node(node: ast.AST) -> str:
-    """Digest of the symbol's syntax tree: stable under comments and formatting only."""
-    return hashlib.sha256(ast.dump(node, include_attributes=False).encode()).hexdigest()
+def _module_level(tree: ast.Module) -> dict[str, ast.AST]:
+    out: dict[str, ast.AST] = {}
+    for stmt in tree.body:
+        if isinstance(stmt, ast.FunctionDef | ast.AsyncFunctionDef | ast.ClassDef):
+            out[stmt.name] = stmt
+        elif isinstance(stmt, ast.Assign):
+            for t in stmt.targets:
+                if isinstance(t, ast.Name):
+                    out[t.id] = stmt
+        elif isinstance(stmt, ast.AnnAssign) and isinstance(stmt.target, ast.Name):
+            out[stmt.target.id] = stmt
+    return out
+
+
+def closure(tree: ast.Module, node: ast.AST) -> dict[str, ast.AST]:
+    """Module-level definitions in the same file that the symbol (transitively) uses."""
+    defs = _module_level(tree)
+    seen: dict[str, ast.AST] = {}
+    todo = [node]
+    while todo:
+        current = todo.pop()
+        for sub in ast.walk(current):
+            if isinstance(sub, ast.Name) and sub.id in defs and sub.id not in seen:
+                if defs[sub.id] is node:
+                    continue
+                seen[sub.id] = defs[sub.id]
+                todo.append(defs[sub.id])
+    return seen
+
+
+def digest_node(node: ast.AST, tree: ast.Module | None = None) -> str:
+    """Digest of the symbol and of every same-file definition it transitively uses.
+
+    Stable under comments and formatting only. Code reached through other modules is not
+    covered here; ``tests/test_receipts_execute.py`` runs the cited tests to catch that.
+    """
+    digest = hashlib.sha256(ast.dump(node, include_attributes=False).encode())
+    if tree is not None:
+        for name, dep in sorted(closure(tree, node).items()):
+            digest.update(name.encode())
+            digest.update(ast.dump(dep, include_attributes=False).encode())
+    return digest.hexdigest()
 
 
 def _stamp(target: Path) -> tuple[int, int]:
@@ -153,9 +202,10 @@ def _info_cached(target: str, stamp: tuple[int, int], symbol: str) -> SymbolInfo
     node = _find(tree, symbol)
     if node is None:
         return None
+    reached = [node, *closure(tree, node).values()]
     return SymbolInfo(
-        digest_node(node),
-        frozenset(n.id for n in ast.walk(node) if isinstance(n, ast.Name)),
+        digest_node(node, tree),
+        frozenset(n.id for part in reached for n in ast.walk(part) if isinstance(n, ast.Name)),
         frozenset(_engine_names(tree)),
         frozenset(_marks(node)),
         _has_assertion(node),
@@ -181,6 +231,8 @@ def _engine_names(tree: ast.Module) -> set[str]:
         if isinstance(node, ast.ImportFrom) and node.module:
             if node.module.startswith(FORBIDDEN_REFERENCE_IMPORTS):
                 names.update(a.asname or a.name for a in node.names)
+            elif node.module == "dynamisbench_soccer":
+                names.update(a.asname or a.name for a in node.names if a.name in FORBIDDEN_PACKAGES)
         elif isinstance(node, ast.Import):
             for a in node.names:
                 if a.name.startswith(FORBIDDEN_REFERENCE_IMPORTS):
@@ -200,9 +252,16 @@ def _marks(node: ast.AST) -> set[str]:
 ASSERTING_CALLS = frozenset({"approx", "raises", "allclose", "isclose", "array_equal", "warns"})
 
 
+def _substantive(expr: ast.AST) -> bool:
+    """An assertion about nothing computed (``assert True``, ``assert 1 + 1 == 2``) is vacuous."""
+    return any(
+        isinstance(n, ast.Name | ast.Call | ast.Attribute | ast.Subscript) for n in ast.walk(expr)
+    )
+
+
 def _has_assertion(node: ast.AST) -> bool:
     for sub in ast.walk(node):
-        if isinstance(sub, ast.Assert):
+        if isinstance(sub, ast.Assert) and _substantive(sub.test):
             return True
         name = None
         if isinstance(sub, ast.Attribute):
@@ -249,8 +308,10 @@ def verify(receipt: Receipt, root: Path, subfamily_ids: set[str]) -> list[str]:
             errors.append(f"{rid}: {exc}")
             continue
         impl_files.add(path)
-        if not path.startswith("src/"):
-            errors.append(f"{rid}: implementation {ref} must live under src/")
+        if not path.startswith(IMPLEMENTATION_PACKAGES):
+            errors.append(
+                f"{rid}: implementation {ref} must be engine, assessment or agreement code"
+            )
     for ref in (*receipt.implementation, *receipt.reference, *receipt.tests):
         try:
             current = resolve_digest(root, ref)
@@ -275,6 +336,26 @@ def verify(receipt: Receipt, root: Path, subfamily_ids: set[str]) -> list[str]:
             errors.append(f"{rid}: reference {ref} calls engine/assessment code {sorted(used)}")
         if path.startswith("src/") and info.banned_imports:
             errors.append(f"{rid}: reference file {path} imports engine/assessment code")
+    reference_modules = set()
+    for ref in receipt.reference:
+        try:
+            ref_path = _split(ref)[0]
+        except ValueError:
+            continue
+        if ref_path.startswith("src/") and ref_path.endswith(".py"):
+            reference_modules.add(ref_path[4:-3].replace("/", "."))
+    for path in sorted(impl_files):
+        tree = _parse(root, path)
+        if tree is None:
+            continue
+        for node in ast.walk(tree):
+            module = node.module if isinstance(node, ast.ImportFrom) else None
+            if isinstance(node, ast.Import):
+                for alias in node.names:
+                    if alias.name in reference_modules:
+                        errors.append(f"{rid}: implementation {path} imports its own reference")
+            elif module in reference_modules:
+                errors.append(f"{rid}: implementation {path} imports its own reference")
     for ref in receipt.tests:
         try:
             path, symbol = _split(ref)
@@ -295,13 +376,20 @@ def verify(receipt: Receipt, root: Path, subfamily_ids: set[str]) -> list[str]:
 def verify_all(
     receipts: tuple[Receipt, ...], root: Path, subfamily_ids: set[str]
 ) -> tuple[dict[str, list[str]], list[str]]:
-    """(errors per receipt id, global errors such as duplicate ids)."""
+    """(errors per receipt id, global errors such as duplicate ids).
+
+    Every receipt that shares an id is invalid: a broken copy can never hide behind, or be
+    counted as, a valid one.
+    """
     problems: dict[str, list[str]] = {}
     global_errors: list[str] = []
-    seen: set[str] = set()
+    counts: dict[str, int] = {}
     for r in receipts:
-        if r.id in seen:
-            global_errors.append(f"duplicate receipt id {r.id}")
-        seen.add(r.id)
-        problems[r.id] = verify(r, root, subfamily_ids)
+        counts[r.id] = counts.get(r.id, 0) + 1
+    for r in receipts:
+        errs = verify(r, root, subfamily_ids)
+        if counts[r.id] > 1:
+            errs = [*errs, f"{r.id}: duplicate receipt id"]
+        problems.setdefault(r.id, []).extend(errs)
+    global_errors.extend(f"duplicate receipt id {rid}" for rid, n in counts.items() if n > 1)
     return problems, global_errors

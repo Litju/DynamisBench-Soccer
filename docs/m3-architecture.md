@@ -246,11 +246,24 @@ when its rating is `verified` **and** at least one valid receipt covers it. A re
 * the tests that compare them (real `test_*` functions with assertions, not skipped);
 * a positive numeric tolerance with unit and basis, a substantive claim and independence
   statement; and
-* SHA-256 digests of the syntax tree of every cited symbol, so any edit invalidates the receipt
-  until it is re-issued and independently re-reviewed.
+* SHA-256 digests of every cited symbol *and of the same-file functions, classes and constants it
+  transitively uses*, so an edit to any of them invalidates the receipt until it is re-issued and
+  re-reviewed. Digests do not follow imports into other modules; a change there is caught only by
+  executing the cited tests (`tests/test_receipts_execute.py`), which is a failure, not a re-review
+  trigger.
 
 `tests/test_receipts_execute.py` additionally runs every cited test, so no receipt can rest on
 a failing test.
+
+Additional rules (independent review, RES-692): a reference may not import or call
+engine/assessment/agreement code directly, through `from dynamisbench_soccer import engines`, or via
+a same-file helper; an implementation must be engine, assessment or agreement code and may not import
+its own reference; assertions about constants (`assert True`) are not assertions; every receipt
+sharing a duplicated id is invalid; `not_applicable` is a claim like any other (reviewed *and*
+demonstrated by a receipt) and is never allowed for J. M5 requires the M3 computational state plus a
+verified N; M8 requires the full scientific state (measured empirical records, N and two independent
+reviewers). Empirical records need an existing rights/provenance clearance file, a valid M3
+dimension, and for L a paired-instrument criterion with at least 20 independent units.
 
 ### Computational reading of A–M and O
 
