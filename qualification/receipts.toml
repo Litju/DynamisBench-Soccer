@@ -1,4 +1,1499 @@
 # Independent computational-verification receipts (Policy A, RES-692 / RES-675).
-# One [[receipt]] per (dimension, subfamilies) claim. See docs/m3-architecture.md.
-# Digests are filled by scripts/issue_receipts.py and checked on every validation: editing a
-# cited symbol invalidates its receipts until they are re-issued and re-reviewed.
+# Draft cells -> digests are filled by scripts/issue_receipts.py. Independent review
+# status of each receipt is recorded in the pull request, not here.
+
+[[receipt]]
+id = "RCP-force_platform-single-G"
+dimension = "G"
+claim = "Force plate (single). Protocol events and phases are recovered at the analytically known times, with eligibility refusals."
+issue = "RES-671"
+reference_kind = "closed_form"
+independence = "The closed-form jump trajectory is defined in the reference substrate by piecewise constant acceleration; that module imports no engine or assessment code."
+check_kind = "numeric"
+tolerance_unit = "as asserted in the cited tests (absolute)"
+tolerance_basis = "largest absolute bound asserted in the cited tests: 0.01; largest relative bound 0.03"
+tolerance = 0.01
+subfamilies = ["force_platform.single"]
+implementation = ["src/dynamisbench_soccer/assessment/jumps.py::assess", "src/dynamisbench_soccer/engines/force_platform.py::process"]
+reference = ["src/dynamisbench_soccer/reference/kinematics.py::Trajectory"]
+tests = ["tests/test_jump_assessment.py::test_cmj_events_phases_and_estimands_match_closed_forms", "tests/test_jump_assessment.py::test_squat_jump_values_and_countermovement_eligibility_both_ways", "tests/test_jump_assessment.py::test_drop_jump_contact_time_height_and_rsi_variants", "tests/test_jump_assessment.py::test_repeated_hops_per_hop_and_aggregate_values", "tests/test_jump_assessment.py::test_no_flight_is_refused_not_estimated", "tests/test_force_platform_engine.py::test_no_onset_is_absent_not_index_zero"]
+
+[receipt.digests]
+"src/dynamisbench_soccer/assessment/jumps.py::assess" = "b7d34beb6df5ff0c4de32b57b1e48f59b959aeee04280d807512de268adc0ec8"
+"src/dynamisbench_soccer/engines/force_platform.py::process" = "c5080deb1140c6f84a3326a1faa5443b41897c96fba6f7145892ff378c232e26"
+"src/dynamisbench_soccer/reference/kinematics.py::Trajectory" = "6fd262b8d895af9de34578e32afcad3bb0f961993d30ca48cc17e522399a057e"
+"tests/test_force_platform_engine.py::test_no_onset_is_absent_not_index_zero" = "4282f563c0f757570b01e28aea72f8358225c3081a8b5f2c7ba3f435bb25a7e9"
+"tests/test_jump_assessment.py::test_cmj_events_phases_and_estimands_match_closed_forms" = "6176e029fe346af4d78dd7354d78e41112a40a81be5e2e3e99dd488d667215cd"
+"tests/test_jump_assessment.py::test_drop_jump_contact_time_height_and_rsi_variants" = "f40c37222b844306d53368201c335b521fd627304dfccfe68aca4ade10712523"
+"tests/test_jump_assessment.py::test_no_flight_is_refused_not_estimated" = "4c286acdf0448de4ffc3635809f9ee9da9eeaa90ff3d200806f62ea9195fe3da"
+"tests/test_jump_assessment.py::test_repeated_hops_per_hop_and_aggregate_values" = "49b362e3311680bfa2843fd7f531fbef95ecd4decbd8ad10762fcd3a1b286d7d"
+"tests/test_jump_assessment.py::test_squat_jump_values_and_countermovement_eligibility_both_ways" = "b09294000e5de115cc9bea8443716710f81025e2a987f0ae6178a1a93a78cc78"
+
+[[receipt]]
+id = "RCP-force_platform-dual-C"
+dimension = "C"
+claim = "Force plate (dual). Clock, latency and synchronisation handling is exact against the declared timing model and bad timing is refused."
+issue = "RES-693"
+reference_kind = "closed_form"
+independence = "The closed-form jump trajectory is defined in the reference substrate by piecewise constant acceleration; that module imports no engine or assessment code."
+check_kind = "numeric"
+tolerance_unit = "as asserted in the cited tests (absolute)"
+tolerance_basis = "largest absolute bound asserted in the cited tests: 1e-10"
+tolerance = 1e-10
+subfamilies = ["force_platform.dual"]
+implementation = ["src/dynamisbench_soccer/engines/force_platform_acquisition.py::acquire"]
+reference = ["src/dynamisbench_soccer/reference/kinematics.py::Trajectory"]
+tests = ["tests/test_force_platform_acquisition.py::test_bad_timebase_rejects", "tests/test_force_platform_acquisition.py::test_dual_clock_mapping_and_explicit_overlap_resampling", "tests/test_force_platform_acquisition.py::test_unknown_reference_clock_cannot_certify_dual_synchronization"]
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/force_platform_acquisition.py::acquire" = "8971c66e983390fb2830afef4f3fa1f8657c556c2a6eaf702bbfbbd8b9dd2ab4"
+"src/dynamisbench_soccer/reference/kinematics.py::Trajectory" = "6fd262b8d895af9de34578e32afcad3bb0f961993d30ca48cc17e522399a057e"
+"tests/test_force_platform_acquisition.py::test_bad_timebase_rejects" = "f08e1ef85c6b16e0395ff545af69db98503940423fbda2e9355a7179d19fb4ef"
+"tests/test_force_platform_acquisition.py::test_dual_clock_mapping_and_explicit_overlap_resampling" = "38953621964a7008629280597d2556edd1637a53530e303e8bda70456b0b21ed"
+"tests/test_force_platform_acquisition.py::test_unknown_reference_clock_cannot_certify_dual_synchronization" = "5cbc9a6b34e2aeccb44b6788807998e7c37ff94573bf09e60f50177aeb2119ba"
+
+[[receipt]]
+id = "RCP-force_platform-dual-D"
+dimension = "D"
+claim = "Force plate (dual). Injected integrity faults are detected and clean controls are not rejected, with the expected QC verdicts."
+issue = "RES-670"
+reference_kind = "closed_form"
+independence = "The closed-form jump trajectory is defined in the reference substrate by piecewise constant acceleration; that module imports no engine or assessment code."
+check_kind = "categorical"
+tolerance_unit = ""
+tolerance_basis = "Exact outcomes asserted by the cited tests: expected refusals, verdicts, classifications and counts, with no numeric tolerance."
+tolerance = 0.0
+subfamilies = ["force_platform.dual"]
+implementation = ["src/dynamisbench_soccer/engines/force_platform.py::process"]
+reference = ["src/dynamisbench_soccer/reference/kinematics.py::Trajectory"]
+tests = ["tests/test_force_platform_engine.py::test_production_qc_rejects_observable_faults_and_uses_assignment_and_isolated_loads", "tests/test_force_platform_engine.py::test_resolved_qc_rules_are_validated_and_bound_to_result", "tests/test_force_platform_engine.py::test_invalid_processing_parameters_and_data_reject"]
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/force_platform.py::process" = "c5080deb1140c6f84a3326a1faa5443b41897c96fba6f7145892ff378c232e26"
+"src/dynamisbench_soccer/reference/kinematics.py::Trajectory" = "6fd262b8d895af9de34578e32afcad3bb0f961993d30ca48cc17e522399a057e"
+"tests/test_force_platform_engine.py::test_invalid_processing_parameters_and_data_reject" = "363cd5f1782f75b7c880a80a3636e7627a15f57cd7c01c01b1e77cb9051b2cbc"
+"tests/test_force_platform_engine.py::test_production_qc_rejects_observable_faults_and_uses_assignment_and_isolated_loads" = "aff73ee27c585d30cc0d6f5a1cb093da569d643a137fc5611f7733a2e4c7f591"
+"tests/test_force_platform_engine.py::test_resolved_qc_rules_are_validated_and_bound_to_result" = "b5ec7a644cf211d79aa52f39abfbd55c1f40f7417cac6aaeee9356514b5bc5f8"
+
+[[receipt]]
+id = "RCP-force_platform-single-L"
+dimension = "L"
+claim = "Force plate (single). Analytical cross-device comparisons are executed and classified and never declare empirical interchangeability."
+issue = "RES-703"
+reference_kind = "closed_form"
+independence = "The closed-form jump trajectory is defined in the reference substrate by piecewise constant acceleration; that module imports no engine or assessment code."
+check_kind = "numeric"
+tolerance_unit = "s (flight-time bias bound)"
+tolerance_basis = "largest absolute bias bound asserted by the flight-time agreement studies: 0.006 s"
+tolerance = 0.006
+subfamilies = ["force_platform.single"]
+implementation = ["src/dynamisbench_soccer/agreement/studies.py::run_all"]
+reference = ["src/dynamisbench_soccer/reference/kinematics.py::Trajectory"]
+tests = ["tests/test_cross_device_agreement.py::test_flight_time_studies_agree_within_resolution_and_not_beyond", "tests/test_cross_device_agreement.py::test_every_declared_non_equivalence_has_a_study_and_none_claims_empirical_agreement", "tests/test_cross_device_agreement.py::test_isometric_force_study_is_exact_only_under_ideal_assumptions", "tests/test_cross_device_agreement.py::test_positional_gate_cable_and_attachment_studies_match_closed_forms", "tests/test_agreement_evidence_integrity.py::test_rejected_force_trials_make_the_study_diagnostic_only", "tests/test_agreement_evidence_integrity.py::test_execution_basis_and_evidence_class_agree_for_every_study"]
+
+[receipt.digests]
+"src/dynamisbench_soccer/agreement/studies.py::run_all" = "b3693d85d3de83221bd5e8f56727c7d42bdf47ec121de9d50b6c951c6254c7ff"
+"src/dynamisbench_soccer/reference/kinematics.py::Trajectory" = "6fd262b8d895af9de34578e32afcad3bb0f961993d30ca48cc17e522399a057e"
+"tests/test_agreement_evidence_integrity.py::test_execution_basis_and_evidence_class_agree_for_every_study" = "6e1cbda5fccb2397e5e1cc36b6ea5ebaaaf899d91dae88934af3e515f639476a"
+"tests/test_agreement_evidence_integrity.py::test_rejected_force_trials_make_the_study_diagnostic_only" = "ff80caeafcffe50f7e1f07ad9af54df8cfca878a3a9fa5660b59128c05213437"
+"tests/test_cross_device_agreement.py::test_every_declared_non_equivalence_has_a_study_and_none_claims_empirical_agreement" = "465de1b8d41e9b31c73bf63958fd413dd46e68a0e13d70318d08548f5a23d8af"
+"tests/test_cross_device_agreement.py::test_flight_time_studies_agree_within_resolution_and_not_beyond" = "a1a3aac80bb99040060bb27b274cbab157d71192b14cf84639b95d3e32be8825"
+"tests/test_cross_device_agreement.py::test_isometric_force_study_is_exact_only_under_ideal_assumptions" = "99f9aee139f5f1c9a729e150795f8c6ff049f6d806bc6b61abf8cd10010f8849"
+"tests/test_cross_device_agreement.py::test_positional_gate_cable_and_attachment_studies_match_closed_forms" = "b2b77a92f4695cd79262fd3d707e878162fce4fbf0683d61142885e11e8f3f79"
+
+[[receipt]]
+id = "RCP-lpt_encoder-lpt-C"
+dimension = "C"
+claim = "LPT. Clock, latency and synchronisation handling is exact against the declared timing model and bad timing is refused."
+issue = "RES-693"
+reference_kind = "closed_form"
+independence = "The rigid-body kinematics are closed forms in the reference substrate; that module imports no engine or assessment code."
+check_kind = "numeric"
+tolerance_unit = "as asserted in the cited tests (absolute)"
+tolerance_basis = "largest absolute bound asserted in the cited tests: 4e-15"
+tolerance = 4e-15
+subfamilies = ["lpt_encoder.lpt"]
+implementation = ["src/dynamisbench_soccer/engines/lpt_acquisition.py::acquire"]
+reference = ["src/dynamisbench_soccer/reference/spatial.py::RigidBody"]
+tests = ["tests/test_lpt_acquisition.py::test_dual_rejects_unsynchronized_clocks", "tests/test_lpt_acquisition.py::test_dual_reconstruction_with_lateral_motion_and_offset_clocks", "tests/test_lpt_acquisition.py::test_native_irregular_timing_and_indexed_integrity_diagnostics"]
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/lpt_acquisition.py::acquire" = "404be515c094489ad4421b3b583c2699f1cad4aa59575efc769419aac684eca4"
+"src/dynamisbench_soccer/reference/spatial.py::RigidBody" = "a3e40bf665553c941cc03fb7f4ebe13bb5942b47b12808e890e09b74b57720cb"
+"tests/test_lpt_acquisition.py::test_dual_reconstruction_with_lateral_motion_and_offset_clocks" = "e472bcf1eef12f8635f2be66cea454d458fbcd6b806715101dbd17d1a39acf06"
+"tests/test_lpt_acquisition.py::test_dual_rejects_unsynchronized_clocks" = "ba5268f10590ec5f69d1192837e2cbb54174e8c367a22cb1a5b59d5fe1efce4e"
+"tests/test_lpt_acquisition.py::test_native_irregular_timing_and_indexed_integrity_diagnostics" = "2ad0275903774f8b80bffb9d153b9aad9d5ca6c7cd4df592ffe55069d8d91c5e"
+
+[[receipt]]
+id = "RCP-lpt_encoder-lpt-F"
+dimension = "F"
+claim = "LPT. Reconstructed quantities equal the independent analytical truth within the asserted tolerance."
+issue = "RES-695"
+reference_kind = "closed_form"
+independence = "The rigid-body kinematics are closed forms in the reference substrate; that module imports no engine or assessment code."
+check_kind = "numeric"
+tolerance_unit = "as asserted in the cited tests (absolute)"
+tolerance_basis = "largest absolute bound asserted in the cited tests: 1"
+tolerance = 1.0
+subfamilies = ["lpt_encoder.lpt"]
+implementation = ["src/dynamisbench_soccer/engines/lpt_acquisition.py::acquire", "src/dynamisbench_soccer/engines/lpt.py::process"]
+reference = ["src/dynamisbench_soccer/reference/spatial.py::RigidBody"]
+tests = ["tests/test_lpt_engine.py::test_methods_against_independent_analytic_irregular_quantized_motion", "tests/test_lpt_engine.py::test_dual_methods_recover_independent_bar_trajectory", "tests/test_lpt_acquisition.py::test_fixed_vertical_line_using_res669_observation_and_separate_com_oracle"]
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/lpt.py::process" = "25a519e5f2a5be3d743f8e7a89bcb8020d4417b21af6bc1802aa34dddb80ecc1"
+"src/dynamisbench_soccer/engines/lpt_acquisition.py::acquire" = "404be515c094489ad4421b3b583c2699f1cad4aa59575efc769419aac684eca4"
+"src/dynamisbench_soccer/reference/spatial.py::RigidBody" = "a3e40bf665553c941cc03fb7f4ebe13bb5942b47b12808e890e09b74b57720cb"
+"tests/test_lpt_acquisition.py::test_fixed_vertical_line_using_res669_observation_and_separate_com_oracle" = "fc6838117ca453bd7868cf60f27888969297575fbd5f18eefa0acf20b2110bd1"
+"tests/test_lpt_engine.py::test_dual_methods_recover_independent_bar_trajectory" = "188222b0f2ba97069622cc5214adfddeb2d3852f34e74f291568639e6fca6831"
+"tests/test_lpt_engine.py::test_methods_against_independent_analytic_irregular_quantized_motion" = "3967825e8113067a580a10f585d250984e30f6daefcf471f724a7c3e5bca4fc3"
+
+[[receipt]]
+id = "RCP-lpt_encoder-lpt-J"
+dimension = "J"
+claim = "LPT. The engine agrees with a reference that shares no code with it; the reference substrate imports no engine code."
+issue = "RES-669"
+reference_kind = "closed_form"
+independence = "The rigid-body kinematics are closed forms in the reference substrate; that module imports no engine or assessment code."
+check_kind = "numeric"
+tolerance_unit = "as asserted in the cited tests (absolute)"
+tolerance_basis = "largest absolute bound asserted in the cited tests: 1"
+tolerance = 1.0
+subfamilies = ["lpt_encoder.lpt"]
+implementation = ["src/dynamisbench_soccer/engines/lpt.py::process"]
+reference = ["src/dynamisbench_soccer/reference/spatial.py::RigidBody"]
+tests = ["tests/test_lpt_engine.py::test_methods_against_independent_analytic_irregular_quantized_motion", "tests/test_lpt_engine.py::test_dual_methods_recover_independent_bar_trajectory", "tests/test_lpt_engine.py::test_cli_processes_verified_bundle_and_keeps_reference_separate", "tests/test_reference_spatial_observations.py::test_import_boundary_between_references_and_engines"]
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/lpt.py::process" = "25a519e5f2a5be3d743f8e7a89bcb8020d4417b21af6bc1802aa34dddb80ecc1"
+"src/dynamisbench_soccer/reference/spatial.py::RigidBody" = "a3e40bf665553c941cc03fb7f4ebe13bb5942b47b12808e890e09b74b57720cb"
+"tests/test_lpt_engine.py::test_cli_processes_verified_bundle_and_keeps_reference_separate" = "66ee35121e917438d2c74ba268e7d0c3249396ae9f8912cbfd2abeeb53af818b"
+"tests/test_lpt_engine.py::test_dual_methods_recover_independent_bar_trajectory" = "188222b0f2ba97069622cc5214adfddeb2d3852f34e74f291568639e6fca6831"
+"tests/test_lpt_engine.py::test_methods_against_independent_analytic_irregular_quantized_motion" = "3967825e8113067a580a10f585d250984e30f6daefcf471f724a7c3e5bca4fc3"
+"tests/test_reference_spatial_observations.py::test_import_boundary_between_references_and_engines" = "9da921ff81d53361dc6491bd84940e7f356b20de83804dc104d8d502e812e54a"
+
+[[receipt]]
+id = "RCP-lpt_encoder-encoder-B"
+dimension = "B"
+claim = "Encoder. Calibration and geometry records are applied exactly and missing or contradictory records are refused."
+issue = "RES-695"
+reference_kind = "closed_form"
+independence = "The rigid-body kinematics are closed forms in the reference substrate; that module imports no engine or assessment code."
+check_kind = "numeric"
+tolerance_unit = "m"
+tolerance_basis = "largest bound asserted: encoder quantization resolution 0.0005 m"
+tolerance = 0.0005
+subfamilies = ["lpt_encoder.encoder"]
+implementation = ["src/dynamisbench_soccer/engines/lpt_acquisition.py::acquire"]
+reference = ["src/dynamisbench_soccer/reference/spatial_observations.py::encoder_counts"]
+tests = ["tests/test_lpt_acquisition.py::test_signed_encoder_affine_calibration_and_count_jump", "tests/test_lpt_acquisition.py::test_counts_quantization_and_missing_geometry_stay_in_cable_coordinates"]
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/lpt_acquisition.py::acquire" = "404be515c094489ad4421b3b583c2699f1cad4aa59575efc769419aac684eca4"
+"src/dynamisbench_soccer/reference/spatial_observations.py::encoder_counts" = "0dfced833275d92cc228956a663bf16bc8ed22ba23b8fb546ef8b94b9a0c8ac8"
+"tests/test_lpt_acquisition.py::test_counts_quantization_and_missing_geometry_stay_in_cable_coordinates" = "6a162614ddd1c15dfe444ad6663b580903669bc41c9e8bfa69fee9de767379c7"
+"tests/test_lpt_acquisition.py::test_signed_encoder_affine_calibration_and_count_jump" = "4f472a3925df8faf032694f37c0373e825c32775b43a32de5f2c4801088c35b3"
+
+[[receipt]]
+id = "RCP-load_cell_isometric-load_cell-A"
+dimension = "A"
+claim = "Load cell. Admission contract: invalid, mislabelled or unadmitted inputs are refused by the acquisition code."
+issue = "RES-693"
+reference_kind = "closed_form"
+independence = "The isometric ramp, RFD and impulse are closed forms in the reference substrate; that module imports no engine or assessment code."
+check_kind = "categorical"
+tolerance_unit = ""
+tolerance_basis = "Exact outcomes asserted by the cited tests: expected refusals, verdicts, classifications and counts, with no numeric tolerance."
+tolerance = 0.0
+subfamilies = ["load_cell_isometric.load_cell"]
+implementation = ["src/dynamisbench_soccer/engines/load_cell_acquisition.py::acquire"]
+reference = ["src/dynamisbench_soccer/reference/motion_models.py::IsometricRamp"]
+tests = ["tests/test_load_cell_acquisition.py::test_unknown_units_and_missing_calibration_are_refused", "tests/test_load_cell_acquisition.py::test_wrong_device_and_ambiguous_inputs_are_refused", "tests/test_load_cell_acquisition.py::test_non_finite_samples_are_rejected_on_both_paths", "tests/test_load_cell_acquisition.py::test_isometric_dynamometer_newton_channel_passes_through_without_reapplying_records"]
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/load_cell_acquisition.py::acquire" = "688e3ee7f05778669b16b72358d0bad1e727e46effa89a04eed502c7b97ace8d"
+"src/dynamisbench_soccer/reference/motion_models.py::IsometricRamp" = "fb30c889a909acd458dae981957a34ea33ce883f396d88610ac5ec87d75cb710"
+"tests/test_load_cell_acquisition.py::test_isometric_dynamometer_newton_channel_passes_through_without_reapplying_records" = "bc7d24ea5a0fd8dcea5c033da2d25dd685a2604be2e5e6a8a766b10142f5c4bf"
+"tests/test_load_cell_acquisition.py::test_non_finite_samples_are_rejected_on_both_paths" = "6f0556b6110adeda535607bffa7666ae3d202dd89c8770e871abb1319ba3f7f5"
+"tests/test_load_cell_acquisition.py::test_unknown_units_and_missing_calibration_are_refused" = "56a5bb61ba7114cfa36a51aaba9fec36ad601e9ada29540becab9c28c45f08be"
+"tests/test_load_cell_acquisition.py::test_wrong_device_and_ambiguous_inputs_are_refused" = "efcedd9f26ab3d7379aca5703094b61ed294051575a62109e5cb61dd919d8e25"
+
+[[receipt]]
+id = "RCP-load_cell_isometric-load_cell-B"
+dimension = "B"
+claim = "Load cell. Calibration and geometry records are applied exactly and missing or contradictory records are refused."
+issue = "RES-696"
+reference_kind = "closed_form"
+independence = "The isometric ramp, RFD and impulse are closed forms in the reference substrate; that module imports no engine or assessment code."
+check_kind = "numeric"
+tolerance_unit = "as asserted in the cited tests (absolute)"
+tolerance_basis = "largest absolute bound asserted in the cited tests: 1e-08; largest relative bound 1e-06"
+tolerance = 1e-08
+subfamilies = ["load_cell_isometric.load_cell"]
+implementation = ["src/dynamisbench_soccer/engines/load_cell_acquisition.py::acquire", "src/dynamisbench_soccer/engines/load_cell.py::process"]
+reference = ["src/dynamisbench_soccer/reference/motion_models.py::IsometricRamp"]
+tests = ["tests/test_load_cell_acquisition.py::test_exported_voltage_recovers_closed_form_force", "tests/test_load_cell_acquisition.py::test_two_point_calibration_recovers_sensitivity_exactly", "tests/test_load_cell_acquisition.py::test_multi_point_least_squares_reports_residuals_and_fit_quality", "tests/test_load_cell_acquisition.py::test_kgf_points_and_inputs_use_exact_factor", "tests/test_load_cell_acquisition.py::test_calibration_record_forms_and_unit_checks", "tests/test_load_cell_engine.py::test_torque_requires_declared_lever_arm_and_definition_and_scales_with_it"]
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/load_cell.py::process" = "c79bdbf709f74b295903f4bc611bf38edf9b71ae59098fb190a34db78b2297f7"
+"src/dynamisbench_soccer/engines/load_cell_acquisition.py::acquire" = "688e3ee7f05778669b16b72358d0bad1e727e46effa89a04eed502c7b97ace8d"
+"src/dynamisbench_soccer/reference/motion_models.py::IsometricRamp" = "fb30c889a909acd458dae981957a34ea33ce883f396d88610ac5ec87d75cb710"
+"tests/test_load_cell_acquisition.py::test_calibration_record_forms_and_unit_checks" = "569d4770f709894ea01efdf75a40957ea865cdb3831bd1c73bf237a4dbb2e7b4"
+"tests/test_load_cell_acquisition.py::test_exported_voltage_recovers_closed_form_force" = "7a49d53824c0aa2a56c6219962f6cf7be74541bac7f98b20246215e1b01abeb6"
+"tests/test_load_cell_acquisition.py::test_kgf_points_and_inputs_use_exact_factor" = "80462da5f05446208f1249c64244cce63b0b727c2bd06bcbc75bf99ff5260fb0"
+"tests/test_load_cell_acquisition.py::test_multi_point_least_squares_reports_residuals_and_fit_quality" = "d0a0bf6834e353c4a2caf36226b06e9ddaed8d01aaeb048613dfe5c87a6e4a8c"
+"tests/test_load_cell_acquisition.py::test_two_point_calibration_recovers_sensitivity_exactly" = "1d241a6aade17e2359350074c3da1f9322e847068815d61be54c650001a4da36"
+"tests/test_load_cell_engine.py::test_torque_requires_declared_lever_arm_and_definition_and_scales_with_it" = "2f880dddaa9cd539fa0cd87739ba79246b5e41c96419f4489ff7145b796d7944"
+
+[[receipt]]
+id = "RCP-load_cell_isometric-load_cell-D"
+dimension = "D"
+claim = "Load cell. Injected integrity faults are detected and clean controls are not rejected, with the expected QC verdicts."
+issue = "RES-696"
+reference_kind = "closed_form"
+independence = "The isometric ramp, RFD and impulse are closed forms in the reference substrate; that module imports no engine or assessment code."
+check_kind = "categorical"
+tolerance_unit = ""
+tolerance_basis = "Exact outcomes asserted by the cited tests: expected refusals, verdicts, classifications and counts, with no numeric tolerance."
+tolerance = 0.0
+subfamilies = ["load_cell_isometric.load_cell"]
+implementation = ["src/dynamisbench_soccer/engines/load_cell_acquisition.py::acquire", "src/dynamisbench_soccer/engines/load_cell.py::process"]
+reference = ["src/dynamisbench_soccer/reference/motion_models.py::IsometricRamp"]
+tests = ["tests/test_load_cell_acquisition.py::test_unzeroed_cell_is_flagged_by_pre_tension_check", "tests/test_load_cell_acquisition.py::test_zero_drift_between_declared_windows", "tests/test_load_cell_acquisition.py::test_saturation_and_clipping_are_flagged_against_declared_range_and_capacity", "tests/test_load_cell_acquisition.py::test_unit_mislabel_is_caught_against_declared_plausibility_and_capacity", "tests/test_load_cell_engine.py::test_unzeroed_saturated_and_mislabelled_inputs_are_flagged_end_to_end", "tests/test_load_cell_engine.py::test_creep_and_drift_flags_on_declared_windows"]
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/load_cell.py::process" = "c79bdbf709f74b295903f4bc611bf38edf9b71ae59098fb190a34db78b2297f7"
+"src/dynamisbench_soccer/engines/load_cell_acquisition.py::acquire" = "688e3ee7f05778669b16b72358d0bad1e727e46effa89a04eed502c7b97ace8d"
+"src/dynamisbench_soccer/reference/motion_models.py::IsometricRamp" = "fb30c889a909acd458dae981957a34ea33ce883f396d88610ac5ec87d75cb710"
+"tests/test_load_cell_acquisition.py::test_saturation_and_clipping_are_flagged_against_declared_range_and_capacity" = "30cf267969b38a8694e2efa682e89e06e5bb28d8333da8381e8b68e333515b0c"
+"tests/test_load_cell_acquisition.py::test_unit_mislabel_is_caught_against_declared_plausibility_and_capacity" = "9c6c6e6acbc35cd43a3e2bae0e50aafc8e61ef70ca189715bc1fe408b959ab16"
+"tests/test_load_cell_acquisition.py::test_unzeroed_cell_is_flagged_by_pre_tension_check" = "afcda5de90a8854e73a909a861a19ff9eb47b30326122d691119a241b78507b7"
+"tests/test_load_cell_acquisition.py::test_zero_drift_between_declared_windows" = "f857fe7fe4f3da30383690c1c774d2de779433954646b57e119b05c0cfc32085"
+"tests/test_load_cell_engine.py::test_creep_and_drift_flags_on_declared_windows" = "3626a7a755aed14ed7a50cc87ffcb1be757e18aa425ed98408ff9393d0c15eed"
+"tests/test_load_cell_engine.py::test_unzeroed_saturated_and_mislabelled_inputs_are_flagged_end_to_end" = "9c8031b71c6a7e3c0e9bd82bddada840b4693e4399c4aee20d4e3cf2f74bcd0d"
+
+[[receipt]]
+id = "RCP-load_cell_isometric-load_cell-F"
+dimension = "F"
+claim = "Load cell. Reconstructed quantities equal the independent analytical truth within the asserted tolerance."
+issue = "RES-696"
+reference_kind = "closed_form"
+independence = "The isometric ramp, RFD and impulse are closed forms in the reference substrate; that module imports no engine or assessment code."
+check_kind = "numeric"
+tolerance_unit = "as asserted in the cited tests (absolute)"
+tolerance_basis = "largest absolute bound asserted in the cited tests: 1e-08; largest relative bound 1e-06"
+tolerance = 1e-08
+subfamilies = ["load_cell_isometric.load_cell"]
+implementation = ["src/dynamisbench_soccer/engines/load_cell.py::process"]
+reference = ["src/dynamisbench_soccer/reference/motion_models.py::IsometricRamp"]
+tests = ["tests/test_load_cell_engine.py::test_analytical_recovery_of_peak_onset_rfd_and_impulse", "tests/test_load_cell_engine.py::test_isometric_baseline_does_not_use_body_weight", "tests/test_load_cell_engine.py::test_exported_bundle_end_to_end_with_declared_definition"]
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/load_cell.py::process" = "c79bdbf709f74b295903f4bc611bf38edf9b71ae59098fb190a34db78b2297f7"
+"src/dynamisbench_soccer/reference/motion_models.py::IsometricRamp" = "fb30c889a909acd458dae981957a34ea33ce883f396d88610ac5ec87d75cb710"
+"tests/test_load_cell_engine.py::test_analytical_recovery_of_peak_onset_rfd_and_impulse" = "39d44d30673aaf2564073d9fa4ec0dacbb0a06a2b01c5c1b1b8b2d26323750ba"
+"tests/test_load_cell_engine.py::test_exported_bundle_end_to_end_with_declared_definition" = "aaab6152537dbe65873933f66d9e6f481d2e2b6da8b72e70ba7ec6eb48ee1079"
+"tests/test_load_cell_engine.py::test_isometric_baseline_does_not_use_body_weight" = "28cf808864745bf2ed108358c99e266d0a49ff053cb14a42cbebae53a089d845"
+
+[[receipt]]
+id = "RCP-load_cell_isometric-load_cell-G"
+dimension = "G"
+claim = "Load cell. Protocol events and phases are recovered at the analytically known times, with eligibility refusals."
+issue = "RES-672"
+reference_kind = "closed_form"
+independence = "The isometric ramp, RFD and impulse are closed forms in the reference substrate; that module imports no engine or assessment code."
+check_kind = "numeric"
+tolerance_unit = "as asserted in the cited tests (absolute)"
+tolerance_basis = "largest absolute bound asserted in the cited tests: 0.002; largest relative bound 1e-06"
+tolerance = 0.002
+subfamilies = ["load_cell_isometric.load_cell"]
+implementation = ["src/dynamisbench_soccer/assessment/isometric.py::assess", "src/dynamisbench_soccer/engines/load_cell.py::process"]
+reference = ["src/dynamisbench_soccer/reference/motion_models.py::IsometricRamp"]
+tests = ["tests/test_load_cell_engine.py::test_analytical_recovery_of_peak_onset_rfd_and_impulse", "tests/test_load_cell_engine.py::test_absent_effort_reports_no_onset_and_refuses_windows", "tests/test_isometric_assessment.py::test_imtp_quantities_match_ramp_closed_forms", "tests/test_isometric_assessment.py::test_trials_that_peak_at_the_record_edge_or_start_loaded_are_invalid", "tests/test_isometric_assessment.py::test_protocol_geometry_eligibility_is_declared_not_assumed"]
+
+[receipt.digests]
+"src/dynamisbench_soccer/assessment/isometric.py::assess" = "306add80cf02672a73033395d06ef243395f76e5d15f91c953acd46160e0bd8d"
+"src/dynamisbench_soccer/engines/load_cell.py::process" = "c79bdbf709f74b295903f4bc611bf38edf9b71ae59098fb190a34db78b2297f7"
+"src/dynamisbench_soccer/reference/motion_models.py::IsometricRamp" = "fb30c889a909acd458dae981957a34ea33ce883f396d88610ac5ec87d75cb710"
+"tests/test_isometric_assessment.py::test_imtp_quantities_match_ramp_closed_forms" = "f31e594bf8721a450e5660c76a7e4450f67846765de33f6b78091f7b034a3cdb"
+"tests/test_isometric_assessment.py::test_protocol_geometry_eligibility_is_declared_not_assumed" = "8daac94fbc00f99caa9831a8311e41c6be2da519a93da5bdc9c771b8725d20b2"
+"tests/test_isometric_assessment.py::test_trials_that_peak_at_the_record_edge_or_start_loaded_are_invalid" = "072f5c265ec03b7b02ac422e306f0235d19cdae553a318fbc21b83537150ffa0"
+"tests/test_load_cell_engine.py::test_absent_effort_reports_no_onset_and_refuses_windows" = "14a1e1e7a2387a9ad32a12290d9ceeaa2c0118b8f1c425849724b2df96a7dcb9"
+"tests/test_load_cell_engine.py::test_analytical_recovery_of_peak_onset_rfd_and_impulse" = "39d44d30673aaf2564073d9fa4ec0dacbb0a06a2b01c5c1b1b8b2d26323750ba"
+
+[[receipt]]
+id = "RCP-load_cell_isometric-load_cell-J"
+dimension = "J"
+claim = "Load cell. The engine agrees with a reference that shares no code with it; the reference substrate imports no engine code."
+issue = "RES-669"
+reference_kind = "closed_form"
+independence = "The isometric ramp, RFD and impulse are closed forms in the reference substrate; that module imports no engine or assessment code."
+check_kind = "numeric"
+tolerance_unit = "as asserted in the cited tests (absolute)"
+tolerance_basis = "largest absolute bound asserted in the cited tests: 1e-08; largest relative bound 1e-06"
+tolerance = 1e-08
+subfamilies = ["load_cell_isometric.load_cell"]
+implementation = ["src/dynamisbench_soccer/engines/load_cell.py::process"]
+reference = ["src/dynamisbench_soccer/reference/motion_models.py::IsometricRamp"]
+tests = ["tests/test_load_cell_engine.py::test_analytical_recovery_of_peak_onset_rfd_and_impulse", "tests/test_load_cell_engine.py::test_engine_never_imports_reference_substrate", "tests/test_reference_observations.py::test_isometric_rfd_and_impulse_are_exact"]
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/load_cell.py::process" = "c79bdbf709f74b295903f4bc611bf38edf9b71ae59098fb190a34db78b2297f7"
+"src/dynamisbench_soccer/reference/motion_models.py::IsometricRamp" = "fb30c889a909acd458dae981957a34ea33ce883f396d88610ac5ec87d75cb710"
+"tests/test_load_cell_engine.py::test_analytical_recovery_of_peak_onset_rfd_and_impulse" = "39d44d30673aaf2564073d9fa4ec0dacbb0a06a2b01c5c1b1b8b2d26323750ba"
+"tests/test_load_cell_engine.py::test_engine_never_imports_reference_substrate" = "210915facce1bf2c5e02dc1275d4af9a966b2ebc18b63e17c2473135a35cab2a"
+"tests/test_reference_observations.py::test_isometric_rfd_and_impulse_are_exact" = "c1199428426bf9d3a2419148112c6ac552da6a4cdb1b621bf780f19cd8293387"
+
+[[receipt]]
+id = "RCP-load_cell_isometric-load_cell-O"
+dimension = "O"
+claim = "Load cell. Result objects carry the sourced limitation statements for every output."
+issue = "RES-696"
+reference_kind = "closed_form"
+independence = "The isometric ramp, RFD and impulse are closed forms in the reference substrate; that module imports no engine or assessment code."
+check_kind = "categorical"
+tolerance_unit = ""
+tolerance_basis = "Substantive, non-duplicated limitation statements are present in every result of the engine, and none claims interchangeability."
+tolerance = 0.0
+subfamilies = ["load_cell_isometric.load_cell"]
+implementation = ["src/dynamisbench_soccer/engines/load_cell.py::process"]
+reference = ["src/dynamisbench_soccer/reference/motion_models.py::IsometricRamp"]
+tests = ["tests/test_policy_a_provenance.py::test_every_result_carries_substantive_limitation_statements", "tests/test_load_cell_engine.py::test_limitations_are_recorded_in_outputs"]
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/load_cell.py::process" = "c79bdbf709f74b295903f4bc611bf38edf9b71ae59098fb190a34db78b2297f7"
+"src/dynamisbench_soccer/reference/motion_models.py::IsometricRamp" = "fb30c889a909acd458dae981957a34ea33ce883f396d88610ac5ec87d75cb710"
+"tests/test_load_cell_engine.py::test_limitations_are_recorded_in_outputs" = "6224725dd089ca35dc58486bf85935c9e87a507d17aee1dc53e934533834b8df"
+"tests/test_policy_a_provenance.py::test_every_result_carries_substantive_limitation_statements" = "ca02f6f0742f9ddcfcbdf66c72a0769aee11a184c0e97de6a2123e3522440f45"
+
+[[receipt]]
+id = "RCP-load_cell_isometric-isometric_rig-A"
+dimension = "A"
+claim = "Isometric rig. Admission contract: invalid, mislabelled or unadmitted inputs are refused by the acquisition code."
+issue = "RES-693"
+reference_kind = "closed_form"
+independence = "The isometric ramp, RFD and impulse are closed forms in the reference substrate; that module imports no engine or assessment code."
+check_kind = "categorical"
+tolerance_unit = ""
+tolerance_basis = "Exact outcomes asserted by the cited tests: expected refusals, verdicts, classifications and counts, with no numeric tolerance."
+tolerance = 0.0
+subfamilies = ["load_cell_isometric.isometric_rig"]
+implementation = ["src/dynamisbench_soccer/engines/load_cell_acquisition.py::acquire"]
+reference = ["src/dynamisbench_soccer/reference/motion_models.py::IsometricRamp"]
+tests = ["tests/test_load_cell_acquisition.py::test_unknown_units_and_missing_calibration_are_refused", "tests/test_load_cell_acquisition.py::test_wrong_device_and_ambiguous_inputs_are_refused", "tests/test_load_cell_acquisition.py::test_non_finite_samples_are_rejected_on_both_paths", "tests/test_load_cell_acquisition.py::test_isometric_dynamometer_newton_channel_passes_through_without_reapplying_records"]
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/load_cell_acquisition.py::acquire" = "688e3ee7f05778669b16b72358d0bad1e727e46effa89a04eed502c7b97ace8d"
+"src/dynamisbench_soccer/reference/motion_models.py::IsometricRamp" = "fb30c889a909acd458dae981957a34ea33ce883f396d88610ac5ec87d75cb710"
+"tests/test_load_cell_acquisition.py::test_isometric_dynamometer_newton_channel_passes_through_without_reapplying_records" = "bc7d24ea5a0fd8dcea5c033da2d25dd685a2604be2e5e6a8a766b10142f5c4bf"
+"tests/test_load_cell_acquisition.py::test_non_finite_samples_are_rejected_on_both_paths" = "6f0556b6110adeda535607bffa7666ae3d202dd89c8770e871abb1319ba3f7f5"
+"tests/test_load_cell_acquisition.py::test_unknown_units_and_missing_calibration_are_refused" = "56a5bb61ba7114cfa36a51aaba9fec36ad601e9ada29540becab9c28c45f08be"
+"tests/test_load_cell_acquisition.py::test_wrong_device_and_ambiguous_inputs_are_refused" = "efcedd9f26ab3d7379aca5703094b61ed294051575a62109e5cb61dd919d8e25"
+
+[[receipt]]
+id = "RCP-load_cell_isometric-isometric_rig-O"
+dimension = "O"
+claim = "Isometric rig. Result objects carry the sourced limitation statements for every output."
+issue = "RES-696"
+reference_kind = "closed_form"
+independence = "The isometric ramp, RFD and impulse are closed forms in the reference substrate; that module imports no engine or assessment code."
+check_kind = "categorical"
+tolerance_unit = ""
+tolerance_basis = "Substantive, non-duplicated limitation statements are present in every result of the engine, and none claims interchangeability."
+tolerance = 0.0
+subfamilies = ["load_cell_isometric.isometric_rig"]
+implementation = ["src/dynamisbench_soccer/engines/load_cell.py::process"]
+reference = ["src/dynamisbench_soccer/reference/motion_models.py::IsometricRamp"]
+tests = ["tests/test_policy_a_provenance.py::test_every_result_carries_substantive_limitation_statements", "tests/test_load_cell_engine.py::test_limitations_are_recorded_in_outputs"]
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/load_cell.py::process" = "c79bdbf709f74b295903f4bc611bf38edf9b71ae59098fb190a34db78b2297f7"
+"src/dynamisbench_soccer/reference/motion_models.py::IsometricRamp" = "fb30c889a909acd458dae981957a34ea33ce883f396d88610ac5ec87d75cb710"
+"tests/test_load_cell_engine.py::test_limitations_are_recorded_in_outputs" = "6224725dd089ca35dc58486bf85935c9e87a507d17aee1dc53e934533834b8df"
+"tests/test_policy_a_provenance.py::test_every_result_carries_substantive_limitation_statements" = "ca02f6f0742f9ddcfcbdf66c72a0769aee11a184c0e97de6a2123e3522440f45"
+
+[[receipt]]
+id = "RCP-load_cell_isometric-load_cell-L"
+dimension = "L"
+claim = "Load cell. Analytical cross-device comparisons are executed and classified and never declare empirical interchangeability."
+issue = "RES-703"
+reference_kind = "closed_form"
+independence = "The isometric ramp, RFD and impulse are closed forms in the reference substrate; that module imports no engine or assessment code."
+check_kind = "numeric"
+tolerance_unit = "as asserted in the cited tests (absolute)"
+tolerance_basis = "largest absolute bound asserted in the cited tests: 1e-06"
+tolerance = 1e-06
+subfamilies = ["load_cell_isometric.load_cell"]
+implementation = ["src/dynamisbench_soccer/agreement/studies.py::run_all"]
+reference = ["src/dynamisbench_soccer/reference/motion_models.py::IsometricRamp"]
+tests = ["tests/test_cross_device_agreement.py::test_isometric_force_study_is_exact_only_under_ideal_assumptions", "tests/test_cross_device_agreement.py::test_every_declared_non_equivalence_has_a_study_and_none_claims_empirical_agreement"]
+
+[receipt.digests]
+"src/dynamisbench_soccer/agreement/studies.py::run_all" = "b3693d85d3de83221bd5e8f56727c7d42bdf47ec121de9d50b6c951c6254c7ff"
+"src/dynamisbench_soccer/reference/motion_models.py::IsometricRamp" = "fb30c889a909acd458dae981957a34ea33ce883f396d88610ac5ec87d75cb710"
+"tests/test_cross_device_agreement.py::test_every_declared_non_equivalence_has_a_study_and_none_claims_empirical_agreement" = "465de1b8d41e9b31c73bf63958fd413dd46e68a0e13d70318d08548f5a23d8af"
+"tests/test_cross_device_agreement.py::test_isometric_force_study_is_exact_only_under_ideal_assumptions" = "99f9aee139f5f1c9a729e150795f8c6ff049f6d806bc6b61abf8cd10010f8849"
+
+[[receipt]]
+id = "RCP-nordic_hip-nordic-F"
+dimension = "F"
+claim = "Nordic. Reconstructed quantities equal the independent analytical truth within the asserted tolerance."
+issue = "RES-697"
+reference_kind = "closed_form"
+independence = "The eccentric curve and torque are closed forms in the reference substrate; that module imports no engine or assessment code."
+check_kind = "numeric"
+tolerance_unit = "as asserted in the cited tests (absolute)"
+tolerance_basis = "largest absolute bound asserted in the cited tests: 0.1; largest relative bound 0.001"
+tolerance = 0.1
+subfamilies = ["nordic_hip.nordic"]
+implementation = ["src/dynamisbench_soccer/engines/nordic_hip.py::process"]
+reference = ["src/dynamisbench_soccer/reference/spatial.py::EccentricCurve"]
+tests = ["tests/test_nordic_hip.py::test_peak_torque_impulse_and_asymmetry_match_closed_forms", "tests/test_nordic_hip.py::test_measured_angle_gives_work_and_peak_force_angle"]
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/nordic_hip.py::process" = "b67b0d0b3ed559e91079b3ed65aad2b8538d9e5327919dd4056e2689485707e5"
+"src/dynamisbench_soccer/reference/spatial.py::EccentricCurve" = "c8d048238d74c46c91862d669447995a58755e70c9c9b07393bab023fd1e2596"
+"tests/test_nordic_hip.py::test_measured_angle_gives_work_and_peak_force_angle" = "c31fc253ef77224a67bf8e03585cb197bcf8f9753c3a3872b0ee061e091fe113"
+"tests/test_nordic_hip.py::test_peak_torque_impulse_and_asymmetry_match_closed_forms" = "464e2c2ab622798524cd4d478ab3cc3bdb7206daa7d6488a80f54814f655e4a4"
+
+[[receipt]]
+id = "RCP-nordic_hip-nordic-G"
+dimension = "G"
+claim = "Nordic. Protocol events and phases are recovered at the analytically known times, with eligibility refusals."
+issue = "RES-672"
+reference_kind = "closed_form"
+independence = "The eccentric curve and torque are closed forms in the reference substrate; that module imports no engine or assessment code."
+check_kind = "numeric"
+tolerance_unit = "as asserted in the cited tests (absolute)"
+tolerance_basis = "largest absolute bound asserted in the cited tests: 0.5"
+tolerance = 0.5
+subfamilies = ["nordic_hip.nordic"]
+implementation = ["src/dynamisbench_soccer/engines/nordic_hip.py::process"]
+reference = ["src/dynamisbench_soccer/reference/spatial.py::EccentricCurve"]
+tests = ["tests/test_nordic_hip.py::test_repetition_detection_finds_each_effort", "tests/test_nordic_hip.py::test_kinematic_break_point_from_independent_angle_fixture", "tests/test_nordic_hip.py::test_kinematic_break_refused_without_controlled_descent", "tests/test_nordic_hip.py::test_angle_is_never_recovered_from_force_or_time"]
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/nordic_hip.py::process" = "b67b0d0b3ed559e91079b3ed65aad2b8538d9e5327919dd4056e2689485707e5"
+"src/dynamisbench_soccer/reference/spatial.py::EccentricCurve" = "c8d048238d74c46c91862d669447995a58755e70c9c9b07393bab023fd1e2596"
+"tests/test_nordic_hip.py::test_angle_is_never_recovered_from_force_or_time" = "95a9d6d45a187c2b852767cd82341dee6fd44d8ccc129404d4bbf78f65837bb1"
+"tests/test_nordic_hip.py::test_kinematic_break_point_from_independent_angle_fixture" = "5b5890a0acb6a133357ce43626e0b2a5e139422e943e138963e36ef605318138"
+"tests/test_nordic_hip.py::test_kinematic_break_refused_without_controlled_descent" = "0420c9b318051f89b915db507e314aa6ec4c62b4f8d1624b123cd76e1ee78570"
+"tests/test_nordic_hip.py::test_repetition_detection_finds_each_effort" = "f3a4f3a8da4a2dca336cc991ad3aacb89166ec3a57bacd0e97ba1d0c00e667e3"
+
+[[receipt]]
+id = "RCP-nordic_hip-nordic-H"
+dimension = "H"
+claim = "Nordic. Metric definitions are executed exactly as specified and estimands are kept separate and named."
+issue = "RES-672"
+reference_kind = "closed_form"
+independence = "The eccentric curve and torque are closed forms in the reference substrate; that module imports no engine or assessment code."
+check_kind = "numeric"
+tolerance_unit = "as asserted in the cited tests (absolute)"
+tolerance_basis = "largest absolute bound asserted in the cited tests: 0.1; largest relative bound 0.0002"
+tolerance = 0.1
+subfamilies = ["nordic_hip.nordic"]
+implementation = ["src/dynamisbench_soccer/engines/nordic_hip.py::process"]
+reference = ["src/dynamisbench_soccer/reference/spatial.py::EccentricCurve"]
+tests = ["tests/test_nordic_hip.py::test_difference_over_mean_asymmetry_variant_is_distinct", "tests/test_nordic_hip.py::test_peak_torque_impulse_and_asymmetry_match_closed_forms", "tests/test_nordic_hip.py::test_force_basis_is_mandatory_and_carried_through", "tests/test_nordic_hip.py::test_engine_does_not_import_reference_or_claim_muscle_force"]
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/nordic_hip.py::process" = "b67b0d0b3ed559e91079b3ed65aad2b8538d9e5327919dd4056e2689485707e5"
+"src/dynamisbench_soccer/reference/spatial.py::EccentricCurve" = "c8d048238d74c46c91862d669447995a58755e70c9c9b07393bab023fd1e2596"
+"tests/test_nordic_hip.py::test_difference_over_mean_asymmetry_variant_is_distinct" = "2fe64664a27c08b799b5e9040f5bb849a36617b44ae8b58f27c9ac7e658a6715"
+"tests/test_nordic_hip.py::test_engine_does_not_import_reference_or_claim_muscle_force" = "e7941cb6f51b9da4622323291a1280542de7a13fd97914b55ca8802c89c33fe7"
+"tests/test_nordic_hip.py::test_force_basis_is_mandatory_and_carried_through" = "4040bf302af816656dcd998a4c5c617995a96423b02a7c56abc132f2b94c3274"
+"tests/test_nordic_hip.py::test_peak_torque_impulse_and_asymmetry_match_closed_forms" = "464e2c2ab622798524cd4d478ab3cc3bdb7206daa7d6488a80f54814f655e4a4"
+
+[[receipt]]
+id = "RCP-nordic_hip-nordic-J"
+dimension = "J"
+claim = "Nordic. The engine agrees with a reference that shares no code with it; the reference substrate imports no engine code."
+issue = "RES-669"
+reference_kind = "closed_form"
+independence = "The eccentric curve and torque are closed forms in the reference substrate; that module imports no engine or assessment code."
+check_kind = "numeric"
+tolerance_unit = "as asserted in the cited tests (absolute)"
+tolerance_basis = "largest absolute bound asserted in the cited tests: 0.1; largest relative bound 0.0002"
+tolerance = 0.1
+subfamilies = ["nordic_hip.nordic"]
+implementation = ["src/dynamisbench_soccer/engines/nordic_hip.py::process"]
+reference = ["src/dynamisbench_soccer/reference/spatial.py::EccentricCurve"]
+tests = ["tests/test_nordic_hip.py::test_peak_torque_impulse_and_asymmetry_match_closed_forms", "tests/test_nordic_hip.py::test_engine_does_not_import_reference_or_claim_muscle_force", "tests/test_reference_spatial_observations.py::test_import_boundary_between_references_and_engines"]
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/nordic_hip.py::process" = "b67b0d0b3ed559e91079b3ed65aad2b8538d9e5327919dd4056e2689485707e5"
+"src/dynamisbench_soccer/reference/spatial.py::EccentricCurve" = "c8d048238d74c46c91862d669447995a58755e70c9c9b07393bab023fd1e2596"
+"tests/test_nordic_hip.py::test_engine_does_not_import_reference_or_claim_muscle_force" = "e7941cb6f51b9da4622323291a1280542de7a13fd97914b55ca8802c89c33fe7"
+"tests/test_nordic_hip.py::test_peak_torque_impulse_and_asymmetry_match_closed_forms" = "464e2c2ab622798524cd4d478ab3cc3bdb7206daa7d6488a80f54814f655e4a4"
+"tests/test_reference_spatial_observations.py::test_import_boundary_between_references_and_engines" = "9da921ff81d53361dc6491bd84940e7f356b20de83804dc104d8d502e812e54a"
+
+[[receipt]]
+id = "RCP-nordic_hip-nordic-L"
+dimension = "L"
+claim = "Nordic. Analytical cross-device comparisons are executed and classified and never declare empirical interchangeability."
+issue = "RES-703"
+reference_kind = "closed_form"
+independence = "The eccentric curve and torque are closed forms in the reference substrate; that module imports no engine or assessment code."
+check_kind = "categorical"
+tolerance_unit = ""
+tolerance_basis = "Exact outcomes asserted by the cited tests: expected refusals, verdicts, classifications and counts, with no numeric tolerance."
+tolerance = 0.0
+subfamilies = ["nordic_hip.nordic"]
+implementation = ["src/dynamisbench_soccer/agreement/studies.py::run_all"]
+reference = ["src/dynamisbench_soccer/reference/spatial.py::EccentricCurve"]
+tests = ["tests/test_cross_device_agreement.py::test_nordic_raw_versus_vendor_corrected_is_unsupported_and_pooling_is_refused", "tests/test_cross_device_agreement.py::test_every_declared_non_equivalence_has_a_study_and_none_claims_empirical_agreement"]
+
+[receipt.digests]
+"src/dynamisbench_soccer/agreement/studies.py::run_all" = "b3693d85d3de83221bd5e8f56727c7d42bdf47ec121de9d50b6c951c6254c7ff"
+"src/dynamisbench_soccer/reference/spatial.py::EccentricCurve" = "c8d048238d74c46c91862d669447995a58755e70c9c9b07393bab023fd1e2596"
+"tests/test_cross_device_agreement.py::test_every_declared_non_equivalence_has_a_study_and_none_claims_empirical_agreement" = "465de1b8d41e9b31c73bf63958fd413dd46e68a0e13d70318d08548f5a23d8af"
+"tests/test_cross_device_agreement.py::test_nordic_raw_versus_vendor_corrected_is_unsupported_and_pooling_is_refused" = "b9023dac6039bc4c131848de2d246f9a350f95b6be4125121638e9144e9a7116"
+
+[[receipt]]
+id = "RCP-timing_contact-gates-A"
+dimension = "A"
+claim = "Gates. Admission contract: invalid, mislabelled or unadmitted inputs are refused by the acquisition code."
+issue = "RES-693"
+reference_kind = "closed_form"
+independence = "The mono-exponential sprint and its gate-time inverse are closed forms in the reference substrate; that module imports no engine or assessment code."
+check_kind = "categorical"
+tolerance_unit = ""
+tolerance_basis = "Exact outcomes asserted by the cited tests: expected refusals, verdicts, classifications and counts, with no numeric tolerance."
+tolerance = 0.0
+subfamilies = ["timing_contact.gates"]
+implementation = ["src/dynamisbench_soccer/engines/timing_gates.py::sprint"]
+reference = ["src/dynamisbench_soccer/reference/motion_models.py::MonoExponentialSprint"]
+tests = ["tests/test_timing_gates.py::test_adversarial_reference_faults_are_refused", "tests/test_timing_gates.py::test_external_start_requires_matching_native_trigger_without_first_velocity", "tests/test_timing_gates.py::test_impossible_route_even_with_monotonic_rows_and_plausible_total"]
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/timing_gates.py::sprint" = "1a9b3b66d481ab3be5d3c8243bd5defcf8a370d17f248ea0110924349afc7f06"
+"src/dynamisbench_soccer/reference/motion_models.py::MonoExponentialSprint" = "6f5cf86ba81df676877c7e99492f9df0400e35228a59a0f34a1d65bba5e3d493"
+"tests/test_timing_gates.py::test_adversarial_reference_faults_are_refused" = "750b4eeb3a9295c85b0e586bbf649b3d6a5f25fe08874a0e84a236ff9a469f50"
+"tests/test_timing_gates.py::test_external_start_requires_matching_native_trigger_without_first_velocity" = "b2ad9e222c0c6d38918ba9cd10199cdeb7e4bdb270f225ad138ca5eaad0d757e"
+"tests/test_timing_gates.py::test_impossible_route_even_with_monotonic_rows_and_plausible_total" = "3f8def556ca87ae3e0c15f701e37da13bf2efc7b22e9892409f4ad7194dec7fa"
+
+[[receipt]]
+id = "RCP-timing_contact-gates-D"
+dimension = "D"
+claim = "Gates. Injected integrity faults are detected and clean controls are not rejected, with the expected QC verdicts."
+issue = "RES-698"
+reference_kind = "closed_form"
+independence = "The mono-exponential sprint and its gate-time inverse are closed forms in the reference substrate; that module imports no engine or assessment code."
+check_kind = "categorical"
+tolerance_unit = ""
+tolerance_basis = "Exact outcomes asserted by the cited tests: expected refusals, verdicts, classifications and counts, with no numeric tolerance."
+tolerance = 0.0
+subfamilies = ["timing_contact.gates"]
+implementation = ["src/dynamisbench_soccer/engines/timing_gates.py::sprint"]
+reference = ["src/dynamisbench_soccer/reference/motion_models.py::MonoExponentialSprint"]
+tests = ["tests/test_timing_gates.py::test_adversarial_reference_faults_are_refused", "tests/test_timing_gates.py::test_impossible_route_even_with_monotonic_rows_and_plausible_total", "tests/test_timing_gates.py::test_declared_refractory_removes_duplicate_but_does_not_select_between_crossings"]
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/timing_gates.py::sprint" = "1a9b3b66d481ab3be5d3c8243bd5defcf8a370d17f248ea0110924349afc7f06"
+"src/dynamisbench_soccer/reference/motion_models.py::MonoExponentialSprint" = "6f5cf86ba81df676877c7e99492f9df0400e35228a59a0f34a1d65bba5e3d493"
+"tests/test_timing_gates.py::test_adversarial_reference_faults_are_refused" = "750b4eeb3a9295c85b0e586bbf649b3d6a5f25fe08874a0e84a236ff9a469f50"
+"tests/test_timing_gates.py::test_declared_refractory_removes_duplicate_but_does_not_select_between_crossings" = "5514d663114aaf3b1d4ea67916ac21ce84a047e38aa84dbd4a90d5c934769895"
+"tests/test_timing_gates.py::test_impossible_route_even_with_monotonic_rows_and_plausible_total" = "3f8def556ca87ae3e0c15f701e37da13bf2efc7b22e9892409f4ad7194dec7fa"
+
+[[receipt]]
+id = "RCP-timing_contact-gates-H"
+dimension = "H"
+claim = "Gates. Metric definitions are executed exactly as specified and estimands are kept separate and named."
+issue = "RES-673"
+reference_kind = "closed_form"
+independence = "The mono-exponential sprint and its gate-time inverse are closed forms in the reference substrate; that module imports no engine or assessment code."
+check_kind = "numeric"
+tolerance_unit = "relative"
+tolerance_basis = "largest relative bound asserted in the cited tests: 0.001"
+tolerance = 0.001
+subfamilies = ["timing_contact.gates"]
+implementation = ["src/dynamisbench_soccer/engines/timing_gates.py::sprint", "src/dynamisbench_soccer/assessment/sprint.py::fit_split_times"]
+reference = ["src/dynamisbench_soccer/reference/motion_models.py::MonoExponentialSprint"]
+tests = ["tests/test_sprint_cod_assessment.py::test_gates_never_yield_instantaneous_velocity_and_sources_stay_labelled", "tests/test_sprint_cod_assessment.py::test_distance_fit_from_gate_splits_and_refusal_with_too_few_points", "tests/test_timing_gates.py::test_splits_use_beam_times_and_segment_average_after_wheel_compatible_round_trip"]
+
+[receipt.digests]
+"src/dynamisbench_soccer/assessment/sprint.py::fit_split_times" = "576f4176704824ce84bc384d272ab0a1d5f17e394e5b1ba89bcc9c61eed2a2c7"
+"src/dynamisbench_soccer/engines/timing_gates.py::sprint" = "1a9b3b66d481ab3be5d3c8243bd5defcf8a370d17f248ea0110924349afc7f06"
+"src/dynamisbench_soccer/reference/motion_models.py::MonoExponentialSprint" = "6f5cf86ba81df676877c7e99492f9df0400e35228a59a0f34a1d65bba5e3d493"
+"tests/test_sprint_cod_assessment.py::test_distance_fit_from_gate_splits_and_refusal_with_too_few_points" = "4ad5ab9d8f1f89237ce53f6c14b39cdfd5ddf81107486de8b1308cea9bfde628"
+"tests/test_sprint_cod_assessment.py::test_gates_never_yield_instantaneous_velocity_and_sources_stay_labelled" = "be83834f442a7c3d626364507945378ef726d65a35a57d5a6ba255bfe05868c0"
+"tests/test_timing_gates.py::test_splits_use_beam_times_and_segment_average_after_wheel_compatible_round_trip" = "d12b6e8e0987e408b0ccf5f9e9d9dfe29f323dfc429b5ba5dacdba6ec4c22822"
+
+[[receipt]]
+id = "RCP-timing_contact-gates-L"
+dimension = "L"
+claim = "Gates. Analytical cross-device comparisons are executed and classified and never declare empirical interchangeability."
+issue = "RES-703"
+reference_kind = "closed_form"
+independence = "The mono-exponential sprint and its gate-time inverse are closed forms in the reference substrate; that module imports no engine or assessment code."
+check_kind = "numeric"
+tolerance_unit = "as asserted in the cited tests (absolute)"
+tolerance_basis = "largest absolute bound asserted in the cited tests: 0.0002; largest relative bound 0.001"
+tolerance = 0.0002
+subfamilies = ["timing_contact.gates"]
+implementation = ["src/dynamisbench_soccer/agreement/studies.py::run_all"]
+reference = ["src/dynamisbench_soccer/reference/motion_models.py::MonoExponentialSprint"]
+tests = ["tests/test_cross_device_agreement.py::test_gate_split_times_agree_with_integrated_radar_speed", "tests/test_cross_device_agreement.py::test_positional_gate_cable_and_attachment_studies_match_closed_forms", "tests/test_cross_device_agreement.py::test_every_declared_non_equivalence_has_a_study_and_none_claims_empirical_agreement"]
+
+[receipt.digests]
+"src/dynamisbench_soccer/agreement/studies.py::run_all" = "b3693d85d3de83221bd5e8f56727c7d42bdf47ec121de9d50b6c951c6254c7ff"
+"src/dynamisbench_soccer/reference/motion_models.py::MonoExponentialSprint" = "6f5cf86ba81df676877c7e99492f9df0400e35228a59a0f34a1d65bba5e3d493"
+"tests/test_cross_device_agreement.py::test_every_declared_non_equivalence_has_a_study_and_none_claims_empirical_agreement" = "465de1b8d41e9b31c73bf63958fd413dd46e68a0e13d70318d08548f5a23d8af"
+"tests/test_cross_device_agreement.py::test_gate_split_times_agree_with_integrated_radar_speed" = "db4b60120b29dd8c0e645459abba0912de487b59e10501d43110e3df3afd5212"
+"tests/test_cross_device_agreement.py::test_positional_gate_cable_and_attachment_studies_match_closed_forms" = "b2b77a92f4695cd79262fd3d707e878162fce4fbf0683d61142885e11e8f3f79"
+
+[[receipt]]
+id = "RCP-timing_contact-contact-A"
+dimension = "A"
+claim = "Contact. Admission contract: invalid, mislabelled or unadmitted inputs are refused by the acquisition code."
+issue = "RES-693"
+reference_kind = "closed_form"
+independence = "Contact switching events are generated from the reference trajectory with a declared latency model; that module imports no engine or assessment code."
+check_kind = "categorical"
+tolerance_unit = ""
+tolerance_basis = "Exact outcomes asserted by the cited tests: expected refusals, verdicts, classifications and counts, with no numeric tolerance."
+tolerance = 0.0
+subfamilies = ["timing_contact.contact"]
+implementation = ["src/dynamisbench_soccer/engines/contact.py::contact"]
+reference = ["src/dynamisbench_soccer/reference/spatial_observations.py::contact_events"]
+tests = ["tests/test_timing_contact.py::test_plausible_but_extra_flight_and_wrong_device_are_refused", "tests/test_timing_contact.py::test_refuses_independent_contact_event_faults", "tests/test_timing_contact.py::test_contact_cli_reports_sensitivity_and_refuses_tampered_parquet"]
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/contact.py::contact" = "d6b8708dfb2ef5bb1ebaa6d516711ca2c39eaa106a7460622b5172d312137f2d"
+"src/dynamisbench_soccer/reference/spatial_observations.py::contact_events" = "226173ea25f5ef36da8d4c510519743351e1cb70235f071d37999eef5b1df52d"
+"tests/test_timing_contact.py::test_contact_cli_reports_sensitivity_and_refuses_tampered_parquet" = "bed0afde2a36dbade378229ea6befa2b1714eec40d7a68ea8a9f9595ca0307f9"
+"tests/test_timing_contact.py::test_plausible_but_extra_flight_and_wrong_device_are_refused" = "0c75bb4de138acd15f672c518baa96d7b36fa8bc786fbe93ca186cd738ae648a"
+"tests/test_timing_contact.py::test_refuses_independent_contact_event_faults" = "cffd78c6528ea0345f8b1302d3f2b24ae08f9db9fc6f43d927785555596b7448"
+
+[[receipt]]
+id = "RCP-timing_contact-contact-D"
+dimension = "D"
+claim = "Contact. Injected integrity faults are detected and clean controls are not rejected, with the expected QC verdicts."
+issue = "RES-698"
+reference_kind = "closed_form"
+independence = "Contact switching events are generated from the reference trajectory with a declared latency model; that module imports no engine or assessment code."
+check_kind = "categorical"
+tolerance_unit = ""
+tolerance_basis = "Exact outcomes asserted by the cited tests: expected refusals, verdicts, classifications and counts, with no numeric tolerance."
+tolerance = 0.0
+subfamilies = ["timing_contact.contact"]
+implementation = ["src/dynamisbench_soccer/engines/contact.py::contact"]
+reference = ["src/dynamisbench_soccer/reference/spatial_observations.py::contact_events"]
+tests = ["tests/test_timing_contact.py::test_refuses_independent_contact_event_faults", "tests/test_timing_contact.py::test_declared_contact_bounce_and_same_state_repeat_are_auditable", "tests/test_timing_contact.py::test_plausible_but_extra_flight_and_wrong_device_are_refused"]
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/contact.py::contact" = "d6b8708dfb2ef5bb1ebaa6d516711ca2c39eaa106a7460622b5172d312137f2d"
+"src/dynamisbench_soccer/reference/spatial_observations.py::contact_events" = "226173ea25f5ef36da8d4c510519743351e1cb70235f071d37999eef5b1df52d"
+"tests/test_timing_contact.py::test_declared_contact_bounce_and_same_state_repeat_are_auditable" = "7863fd6d67e2309a54539123364479e9eda02cb87014e96374932293e66cc7ae"
+"tests/test_timing_contact.py::test_plausible_but_extra_flight_and_wrong_device_are_refused" = "0c75bb4de138acd15f672c518baa96d7b36fa8bc786fbe93ca186cd738ae648a"
+"tests/test_timing_contact.py::test_refuses_independent_contact_event_faults" = "cffd78c6528ea0345f8b1302d3f2b24ae08f9db9fc6f43d927785555596b7448"
+
+[[receipt]]
+id = "RCP-timing_contact-contact-E"
+dimension = "E"
+claim = "Contact. Each named processing variant reproduces the independent truth within the asserted tolerance and reports its sensitivity."
+issue = "RES-698"
+reference_kind = "closed_form"
+independence = "Contact switching events are generated from the reference trajectory with a declared latency model; that module imports no engine or assessment code."
+check_kind = "numeric"
+tolerance_unit = "as asserted in the cited tests (absolute)"
+tolerance_basis = "largest absolute bound asserted in the cited tests: 0.005"
+tolerance = 0.005
+subfamilies = ["timing_contact.contact"]
+implementation = ["src/dynamisbench_soccer/engines/contact.py::contact"]
+reference = ["src/dynamisbench_soccer/reference/spatial_observations.py::contact_events"]
+tests = ["tests/test_timing_contact.py::test_declared_contact_bounce_and_same_state_repeat_are_auditable", "tests/test_timing_contact.py::test_contact_cli_reports_sensitivity_and_refuses_tampered_parquet", "tests/test_timing_contact.py::test_asymmetric_switch_latency_and_quantized_shared_clock"]
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/contact.py::contact" = "d6b8708dfb2ef5bb1ebaa6d516711ca2c39eaa106a7460622b5172d312137f2d"
+"src/dynamisbench_soccer/reference/spatial_observations.py::contact_events" = "226173ea25f5ef36da8d4c510519743351e1cb70235f071d37999eef5b1df52d"
+"tests/test_timing_contact.py::test_asymmetric_switch_latency_and_quantized_shared_clock" = "394bb98453d81d23893efd73f4da4a89053fb0283fc423338b49e46d3862eaca"
+"tests/test_timing_contact.py::test_contact_cli_reports_sensitivity_and_refuses_tampered_parquet" = "bed0afde2a36dbade378229ea6befa2b1714eec40d7a68ea8a9f9595ca0307f9"
+"tests/test_timing_contact.py::test_declared_contact_bounce_and_same_state_repeat_are_auditable" = "7863fd6d67e2309a54539123364479e9eda02cb87014e96374932293e66cc7ae"
+
+[[receipt]]
+id = "RCP-timing_contact-contact-F"
+dimension = "F"
+claim = "Contact. Reconstructed quantities equal the independent analytical truth within the asserted tolerance."
+issue = "RES-698"
+reference_kind = "closed_form"
+independence = "Contact switching events are generated from the reference trajectory with a declared latency model; that module imports no engine or assessment code."
+check_kind = "numeric"
+tolerance_unit = "as asserted in the cited tests (absolute)"
+tolerance_basis = "largest absolute bound asserted in the cited tests: 0.005"
+tolerance = 0.005
+subfamilies = ["timing_contact.contact"]
+implementation = ["src/dynamisbench_soccer/engines/contact.py::contact"]
+reference = ["src/dynamisbench_soccer/reference/spatial_observations.py::contact_events", "src/dynamisbench_soccer/reference/kinematics.py::Trajectory"]
+tests = ["tests/test_timing_contact.py::test_standing_jumps_report_flight_height_but_no_contact_phase_or_rsi", "tests/test_timing_contact.py::test_asymmetric_switch_latency_and_quantized_shared_clock"]
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/contact.py::contact" = "d6b8708dfb2ef5bb1ebaa6d516711ca2c39eaa106a7460622b5172d312137f2d"
+"src/dynamisbench_soccer/reference/kinematics.py::Trajectory" = "6fd262b8d895af9de34578e32afcad3bb0f961993d30ca48cc17e522399a057e"
+"src/dynamisbench_soccer/reference/spatial_observations.py::contact_events" = "226173ea25f5ef36da8d4c510519743351e1cb70235f071d37999eef5b1df52d"
+"tests/test_timing_contact.py::test_asymmetric_switch_latency_and_quantized_shared_clock" = "394bb98453d81d23893efd73f4da4a89053fb0283fc423338b49e46d3862eaca"
+"tests/test_timing_contact.py::test_standing_jumps_report_flight_height_but_no_contact_phase_or_rsi" = "60ea8f1021082bcf84f630f7adab8073ec0b6508bf4cdb357b685286fc1f3d54"
+
+[[receipt]]
+id = "RCP-timing_contact-contact-H"
+dimension = "H"
+claim = "Contact. Metric definitions are executed exactly as specified and estimands are kept separate and named."
+issue = "RES-673"
+reference_kind = "closed_form"
+independence = "Contact switching events are generated from the reference trajectory with a declared latency model; that module imports no engine or assessment code."
+check_kind = "numeric"
+tolerance_unit = "as asserted in the cited tests (absolute)"
+tolerance_basis = "largest absolute bound asserted in the cited tests: 0.002"
+tolerance = 0.002
+subfamilies = ["timing_contact.contact"]
+implementation = ["src/dynamisbench_soccer/engines/contact.py::contact", "src/dynamisbench_soccer/assessment/jumps.py::contact_system_estimates"]
+reference = ["src/dynamisbench_soccer/reference/spatial_observations.py::contact_events", "src/dynamisbench_soccer/reference/kinematics.py::Trajectory"]
+tests = ["tests/test_timing_contact.py::test_standing_jumps_report_flight_height_but_no_contact_phase_or_rsi", "tests/test_timing_contact.py::test_repeated_hops_keep_the_unobserved_initial_stance_and_posture_out_of_rsi", "tests/test_jump_assessment.py::test_latency_bias_shows_up_as_a_difference_not_a_correction"]
+
+[receipt.digests]
+"src/dynamisbench_soccer/assessment/jumps.py::contact_system_estimates" = "6758e3794dde7b9dcb0881fd411eef80fec6c0475427446d37ab4bdb079d4203"
+"src/dynamisbench_soccer/engines/contact.py::contact" = "d6b8708dfb2ef5bb1ebaa6d516711ca2c39eaa106a7460622b5172d312137f2d"
+"src/dynamisbench_soccer/reference/kinematics.py::Trajectory" = "6fd262b8d895af9de34578e32afcad3bb0f961993d30ca48cc17e522399a057e"
+"src/dynamisbench_soccer/reference/spatial_observations.py::contact_events" = "226173ea25f5ef36da8d4c510519743351e1cb70235f071d37999eef5b1df52d"
+"tests/test_jump_assessment.py::test_latency_bias_shows_up_as_a_difference_not_a_correction" = "df8f5bb5ff536ac43f42d02fdb4abe4f3a1cce034862806e9bfa4ae4fb1fd218"
+"tests/test_timing_contact.py::test_repeated_hops_keep_the_unobserved_initial_stance_and_posture_out_of_rsi" = "0aa4be13bb2bf8e5d8ad39c742bd5a45f4153d61a0a369158f718713797d7c87"
+"tests/test_timing_contact.py::test_standing_jumps_report_flight_height_but_no_contact_phase_or_rsi" = "60ea8f1021082bcf84f630f7adab8073ec0b6508bf4cdb357b685286fc1f3d54"
+
+[[receipt]]
+id = "RCP-timing_contact-contact-J"
+dimension = "J"
+claim = "Contact. The engine agrees with a reference that shares no code with it; the reference substrate imports no engine code."
+issue = "RES-669"
+reference_kind = "closed_form"
+independence = "Contact switching events are generated from the reference trajectory with a declared latency model; that module imports no engine or assessment code."
+check_kind = "numeric"
+tolerance_unit = "as asserted in the cited tests (absolute)"
+tolerance_basis = "largest absolute bound asserted in the cited tests: 0.005"
+tolerance = 0.005
+subfamilies = ["timing_contact.contact"]
+implementation = ["src/dynamisbench_soccer/engines/contact.py::contact"]
+reference = ["src/dynamisbench_soccer/reference/spatial_observations.py::contact_events", "src/dynamisbench_soccer/reference/kinematics.py::Trajectory"]
+tests = ["tests/test_timing_contact.py::test_asymmetric_switch_latency_and_quantized_shared_clock", "tests/test_timing_contact.py::test_standing_jumps_report_flight_height_but_no_contact_phase_or_rsi", "tests/test_reference_spatial_observations.py::test_import_boundary_between_references_and_engines"]
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/contact.py::contact" = "d6b8708dfb2ef5bb1ebaa6d516711ca2c39eaa106a7460622b5172d312137f2d"
+"src/dynamisbench_soccer/reference/kinematics.py::Trajectory" = "6fd262b8d895af9de34578e32afcad3bb0f961993d30ca48cc17e522399a057e"
+"src/dynamisbench_soccer/reference/spatial_observations.py::contact_events" = "226173ea25f5ef36da8d4c510519743351e1cb70235f071d37999eef5b1df52d"
+"tests/test_reference_spatial_observations.py::test_import_boundary_between_references_and_engines" = "9da921ff81d53361dc6491bd84940e7f356b20de83804dc104d8d502e812e54a"
+"tests/test_timing_contact.py::test_asymmetric_switch_latency_and_quantized_shared_clock" = "394bb98453d81d23893efd73f4da4a89053fb0283fc423338b49e46d3862eaca"
+"tests/test_timing_contact.py::test_standing_jumps_report_flight_height_but_no_contact_phase_or_rsi" = "60ea8f1021082bcf84f630f7adab8073ec0b6508bf4cdb357b685286fc1f3d54"
+
+[[receipt]]
+id = "RCP-timing_contact-contact-L"
+dimension = "L"
+claim = "Contact. Analytical cross-device comparisons are executed and classified and never declare empirical interchangeability."
+issue = "RES-703"
+reference_kind = "closed_form"
+independence = "The closed-form jump trajectory is defined in the reference substrate by piecewise constant acceleration; that module imports no engine or assessment code."
+check_kind = "numeric"
+tolerance_unit = "as asserted in the cited tests (absolute)"
+tolerance_basis = "largest absolute bound asserted in the cited tests: 0.002"
+tolerance = 0.002
+subfamilies = ["timing_contact.contact"]
+implementation = ["src/dynamisbench_soccer/agreement/studies.py::run_all"]
+reference = ["src/dynamisbench_soccer/reference/kinematics.py::Trajectory"]
+tests = ["tests/test_cross_device_agreement.py::test_flight_time_studies_agree_within_resolution_and_not_beyond", "tests/test_cross_device_agreement.py::test_every_declared_non_equivalence_has_a_study_and_none_claims_empirical_agreement", "tests/test_agreement_evidence_integrity.py::test_accepted_force_trials_give_engine_to_engine_evidence_with_full_context"]
+
+[receipt.digests]
+"src/dynamisbench_soccer/agreement/studies.py::run_all" = "b3693d85d3de83221bd5e8f56727c7d42bdf47ec121de9d50b6c951c6254c7ff"
+"src/dynamisbench_soccer/reference/kinematics.py::Trajectory" = "6fd262b8d895af9de34578e32afcad3bb0f961993d30ca48cc17e522399a057e"
+"tests/test_agreement_evidence_integrity.py::test_accepted_force_trials_give_engine_to_engine_evidence_with_full_context" = "d25d593faf7e03bf8c79df49a269311160dd2b354f0df9141dbf8564ccfcb324"
+"tests/test_cross_device_agreement.py::test_every_declared_non_equivalence_has_a_study_and_none_claims_empirical_agreement" = "465de1b8d41e9b31c73bf63958fd413dd46e68a0e13d70318d08548f5a23d8af"
+"tests/test_cross_device_agreement.py::test_flight_time_studies_agree_within_resolution_and_not_beyond" = "a1a3aac80bb99040060bb27b274cbab157d71192b14cf84639b95d3e32be8825"
+
+[[receipt]]
+id = "RCP-radar_laser-radar-A"
+dimension = "A"
+claim = "Radar. Admission contract: invalid, mislabelled or unadmitted inputs are refused by the acquisition code."
+issue = "RES-693"
+reference_kind = "closed_form"
+independence = "The mono-exponential sprint and its gate-time inverse are closed forms in the reference substrate; that module imports no engine or assessment code."
+check_kind = "categorical"
+tolerance_unit = ""
+tolerance_basis = "Exact outcomes asserted by the cited tests: expected refusals, verdicts, classifications and counts, with no numeric tolerance."
+tolerance = 0.0
+subfamilies = ["radar_laser.radar"]
+implementation = ["src/dynamisbench_soccer/engines/radar_laser_acquisition.py::admit"]
+reference = ["src/dynamisbench_soccer/reference/motion_models.py::MonoExponentialSprint"]
+tests = ["tests/test_radar_laser_acquisition.py::test_admits_distinct_native_measurands_and_affine_clocks", "tests/test_radar_laser_acquisition.py::test_rejects_truth_wrong_device_and_undeclared_processing_stage", "tests/test_radar_laser_acquisition.py::test_processed_data_are_admitted_only_under_honest_stage", "tests/test_radar_laser_acquisition.py::test_source_calibration_ambiguity_refuses"]
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/radar_laser_acquisition.py::admit" = "fcd77758a19ec8fbfce5eac2d5108c0748ecaa5ffbaf4b7a338667f763cff06e"
+"src/dynamisbench_soccer/reference/motion_models.py::MonoExponentialSprint" = "6f5cf86ba81df676877c7e99492f9df0400e35228a59a0f34a1d65bba5e3d493"
+"tests/test_radar_laser_acquisition.py::test_admits_distinct_native_measurands_and_affine_clocks" = "ae3f7848d4dd6713e4102793ab6fde1cfa11e1397f00c9fecf8246c10577060f"
+"tests/test_radar_laser_acquisition.py::test_processed_data_are_admitted_only_under_honest_stage" = "10f80245669e29054a51c797f12d105644d18a39ad4fb231e61bd874ec9337f5"
+"tests/test_radar_laser_acquisition.py::test_rejects_truth_wrong_device_and_undeclared_processing_stage" = "e8915232ae59223e78883a82e386d3b8ea6011b5d1595e5a8190a49b73e3f4d6"
+"tests/test_radar_laser_acquisition.py::test_source_calibration_ambiguity_refuses" = "169df96c4e5ee7af397119ed0ba44846692ad951f11a823a47f35adca7e8536a"
+
+[[receipt]]
+id = "RCP-radar_laser-radar-C"
+dimension = "C"
+claim = "Radar. Clock, latency and synchronisation handling is exact against the declared timing model and bad timing is refused."
+issue = "RES-693"
+reference_kind = "closed_form"
+independence = "The mono-exponential sprint and its gate-time inverse are closed forms in the reference substrate; that module imports no engine or assessment code."
+check_kind = "numeric"
+tolerance_unit = "as asserted in the cited tests (absolute)"
+tolerance_basis = "largest absolute bound asserted in the cited tests: 1e-12; largest relative bound 1e-10"
+tolerance = 1e-12
+subfamilies = ["radar_laser.radar"]
+implementation = ["src/dynamisbench_soccer/engines/radar_laser_acquisition.py::admit", "src/dynamisbench_soccer/engines/radar_laser.py::process"]
+reference = ["src/dynamisbench_soccer/reference/motion_models.py::MonoExponentialSprint"]
+tests = ["tests/test_radar_laser_acquisition.py::test_native_timestamp_fault_and_dropouts_refuse", "tests/test_radar_laser_acquisition.py::test_admits_distinct_native_measurands_and_affine_clocks", "tests/test_radar_laser_processing.py::test_start_modes_are_distinct_and_refuse_missing_triggers"]
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/radar_laser.py::process" = "137e921a52f17c44051f289ff850fe08c31af17ee75b1bc392a91941cb4ca274"
+"src/dynamisbench_soccer/engines/radar_laser_acquisition.py::admit" = "fcd77758a19ec8fbfce5eac2d5108c0748ecaa5ffbaf4b7a338667f763cff06e"
+"src/dynamisbench_soccer/reference/motion_models.py::MonoExponentialSprint" = "6f5cf86ba81df676877c7e99492f9df0400e35228a59a0f34a1d65bba5e3d493"
+"tests/test_radar_laser_acquisition.py::test_admits_distinct_native_measurands_and_affine_clocks" = "ae3f7848d4dd6713e4102793ab6fde1cfa11e1397f00c9fecf8246c10577060f"
+"tests/test_radar_laser_acquisition.py::test_native_timestamp_fault_and_dropouts_refuse" = "f84a419c7f30cb432d673ab2276d866cbea261e73ff57d0dd26ae47f1b49b9cb"
+"tests/test_radar_laser_processing.py::test_start_modes_are_distinct_and_refuse_missing_triggers" = "f366ba6d5bdd6c6a84ce142717464138b610c95267091673dcceedc8e4c71431"
+
+[[receipt]]
+id = "RCP-radar_laser-radar-D"
+dimension = "D"
+claim = "Radar. Injected integrity faults are detected and clean controls are not rejected, with the expected QC verdicts."
+issue = "RES-699"
+reference_kind = "closed_form"
+independence = "The mono-exponential sprint and its gate-time inverse are closed forms in the reference substrate; that module imports no engine or assessment code."
+check_kind = "categorical"
+tolerance_unit = ""
+tolerance_basis = "Exact outcomes asserted by the cited tests: expected refusals, verdicts, classifications and counts, with no numeric tolerance."
+tolerance = 0.0
+subfamilies = ["radar_laser.radar"]
+implementation = ["src/dynamisbench_soccer/engines/radar_laser_acquisition.py::admit", "src/dynamisbench_soccer/engines/radar_laser.py::process"]
+reference = ["src/dynamisbench_soccer/reference/motion_models.py::MonoExponentialSprint"]
+tests = ["tests/test_radar_laser_acquisition.py::test_native_timestamp_fault_and_dropouts_refuse", "tests/test_radar_laser_processing.py::test_second_athlete_reflection_and_target_switch_refuse_without_repair", "tests/test_radar_laser_processing.py::test_clipped_native_radar_plateau_refuses_without_inventing_speed", "tests/test_radar_laser_processing.py::test_stationary_prestart_zeros_are_not_false_clipping"]
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/radar_laser.py::process" = "137e921a52f17c44051f289ff850fe08c31af17ee75b1bc392a91941cb4ca274"
+"src/dynamisbench_soccer/engines/radar_laser_acquisition.py::admit" = "fcd77758a19ec8fbfce5eac2d5108c0748ecaa5ffbaf4b7a338667f763cff06e"
+"src/dynamisbench_soccer/reference/motion_models.py::MonoExponentialSprint" = "6f5cf86ba81df676877c7e99492f9df0400e35228a59a0f34a1d65bba5e3d493"
+"tests/test_radar_laser_acquisition.py::test_native_timestamp_fault_and_dropouts_refuse" = "f84a419c7f30cb432d673ab2276d866cbea261e73ff57d0dd26ae47f1b49b9cb"
+"tests/test_radar_laser_processing.py::test_clipped_native_radar_plateau_refuses_without_inventing_speed" = "00742b56b17eb9c3b58411bf7f9618be067c4dd4c9e8aa8089761ad6ead2410b"
+"tests/test_radar_laser_processing.py::test_second_athlete_reflection_and_target_switch_refuse_without_repair" = "7a6a3ad44d0b30ea058a8427cc076832dfb69e3e385e0a671fc9a7a5b6b9cecd"
+"tests/test_radar_laser_processing.py::test_stationary_prestart_zeros_are_not_false_clipping" = "d8575330e1265f94a1ea0f3fffe1b3892cb207f581f1bb9fdfe02e072ae5042d"
+
+[[receipt]]
+id = "RCP-radar_laser-radar-F"
+dimension = "F"
+claim = "Radar. Reconstructed quantities equal the independent analytical truth within the asserted tolerance."
+issue = "RES-699"
+reference_kind = "closed_form"
+independence = "The mono-exponential sprint and its gate-time inverse are closed forms in the reference substrate; that module imports no engine or assessment code."
+check_kind = "numeric"
+tolerance_unit = "as asserted in the cited tests (absolute)"
+tolerance_basis = "largest absolute bound asserted in the cited tests: 2e-12"
+tolerance = 2e-12
+subfamilies = ["radar_laser.radar"]
+implementation = ["src/dynamisbench_soccer/engines/radar_laser.py::process"]
+reference = ["src/dynamisbench_soccer/reference/motion_models.py::MonoExponentialSprint"]
+tests = ["tests/test_radar_laser_processing.py::test_radar_recovers_independent_exact_velocity_at_native_rate", "tests/test_radar_laser_processing.py::test_smooth_aiming_drift_is_not_improperly_corrected"]
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/radar_laser.py::process" = "137e921a52f17c44051f289ff850fe08c31af17ee75b1bc392a91941cb4ca274"
+"src/dynamisbench_soccer/reference/motion_models.py::MonoExponentialSprint" = "6f5cf86ba81df676877c7e99492f9df0400e35228a59a0f34a1d65bba5e3d493"
+"tests/test_radar_laser_processing.py::test_radar_recovers_independent_exact_velocity_at_native_rate" = "32e575cd2abf69a18ddad769aa829faa1c1f53b30cc083194e69d8f58d0c1dbe"
+"tests/test_radar_laser_processing.py::test_smooth_aiming_drift_is_not_improperly_corrected" = "ba8cfa88b64049dec9c61624869e3913ef5e9f16a367d609a13337a50694658e"
+
+[[receipt]]
+id = "RCP-radar_laser-radar-G"
+dimension = "G"
+claim = "Radar. Protocol events and phases are recovered at the analytically known times, with eligibility refusals."
+issue = "RES-673"
+reference_kind = "closed_form"
+independence = "The mono-exponential sprint and its gate-time inverse are closed forms in the reference substrate; that module imports no engine or assessment code."
+check_kind = "numeric"
+tolerance_unit = "as asserted in the cited tests (absolute)"
+tolerance_basis = "largest absolute bound asserted in the cited tests: 0.02; largest relative bound 0.05"
+tolerance = 0.02
+subfamilies = ["radar_laser.radar"]
+implementation = ["src/dynamisbench_soccer/assessment/sprint.py::milestones", "src/dynamisbench_soccer/assessment/cod.py::assess_trace", "src/dynamisbench_soccer/engines/radar_laser.py::process"]
+reference = ["src/dynamisbench_soccer/reference/motion_models.py::MonoExponentialSprint"]
+tests = ["tests/test_sprint_cod_assessment.py::test_start_definitions_are_reported_and_change_the_answer", "tests/test_sprint_cod_assessment.py::test_milestone_times_match_exact_position_inverse", "tests/test_sprint_cod_assessment.py::test_cod_trace_metrics_match_piecewise_closed_form", "tests/test_sprint_cod_assessment.py::test_native_radar_to_fv_pipeline_and_cli", "tests/test_sprint_milestones.py::test_stationary_tail_does_not_move_the_first_arrival", "tests/test_sprint_milestones.py::test_milestones_for_a_linear_ramp_are_exact_between_samples"]
+
+[receipt.digests]
+"src/dynamisbench_soccer/assessment/cod.py::assess_trace" = "f698c71da7e083dd9766d4df211a10a6872c3d2674e2955e16a95c27ea1d6714"
+"src/dynamisbench_soccer/assessment/sprint.py::milestones" = "5de3e502dd0a97884a3a89bccbe3196b431b42f83bbfd2b5eb070863d9d65cdd"
+"src/dynamisbench_soccer/engines/radar_laser.py::process" = "137e921a52f17c44051f289ff850fe08c31af17ee75b1bc392a91941cb4ca274"
+"src/dynamisbench_soccer/reference/motion_models.py::MonoExponentialSprint" = "6f5cf86ba81df676877c7e99492f9df0400e35228a59a0f34a1d65bba5e3d493"
+"tests/test_sprint_cod_assessment.py::test_cod_trace_metrics_match_piecewise_closed_form" = "19f7440783a0f8fc1f7940f2c4fdc5a35f105239512e12b596adf9884d334667"
+"tests/test_sprint_cod_assessment.py::test_milestone_times_match_exact_position_inverse" = "0df75d7d059cb24fc421f9b999c4071b4ef4996a1b38c0186abc87d93005932f"
+"tests/test_sprint_cod_assessment.py::test_native_radar_to_fv_pipeline_and_cli" = "c008ab397ae78f971f24eb24f3105d7058021325df2b50384df1782c79bc41c8"
+"tests/test_sprint_cod_assessment.py::test_start_definitions_are_reported_and_change_the_answer" = "24b1cbaa00af5d42820e2414f02bdeda7114aac95db910f0fe633c1b8339cc76"
+"tests/test_sprint_milestones.py::test_milestones_for_a_linear_ramp_are_exact_between_samples" = "6a9581c66b9f8febdbd75f1436217a54f1273ac0b783231c72f60e87b61f4d92"
+"tests/test_sprint_milestones.py::test_stationary_tail_does_not_move_the_first_arrival" = "81ad403bb204d4891383f60a79b86598edc285f45d8a28f81c0337bdec76ddaf"
+
+[[receipt]]
+id = "RCP-radar_laser-radar-H"
+dimension = "H"
+claim = "Radar. Metric definitions are executed exactly as specified and estimands are kept separate and named."
+issue = "RES-673"
+reference_kind = "closed_form"
+independence = "The mono-exponential sprint and its gate-time inverse are closed forms in the reference substrate; that module imports no engine or assessment code."
+check_kind = "numeric"
+tolerance_unit = "relative"
+tolerance_basis = "largest relative bound asserted in the cited tests: 1e-06"
+tolerance = 1e-06
+subfamilies = ["radar_laser.radar"]
+implementation = ["src/dynamisbench_soccer/assessment/sprint.py::fit_velocity_trace", "src/dynamisbench_soccer/assessment/handoff.py::load_speed_report"]
+reference = ["src/dynamisbench_soccer/reference/motion_models.py::MonoExponentialSprint"]
+tests = ["tests/test_sprint_cod_assessment.py::test_gates_never_yield_instantaneous_velocity_and_sources_stay_labelled", "tests/test_sprint_cod_assessment.py::test_noiseless_velocity_fit_recovers_parameters_and_fv_quantities", "tests/test_assessment_handoff.py::test_radar_trace_with_a_wrong_source_label_is_refused"]
+
+[receipt.digests]
+"src/dynamisbench_soccer/assessment/handoff.py::load_speed_report" = "8c9152270dd03d99c7ccce38b683e1bfc97a71c0d95053c8fd73a9fd4c7297d6"
+"src/dynamisbench_soccer/assessment/sprint.py::fit_velocity_trace" = "74468093bc216cd08d1135b505fb321dd58a35b65333006fc85602c54a5ebe89"
+"src/dynamisbench_soccer/reference/motion_models.py::MonoExponentialSprint" = "6f5cf86ba81df676877c7e99492f9df0400e35228a59a0f34a1d65bba5e3d493"
+"tests/test_assessment_handoff.py::test_radar_trace_with_a_wrong_source_label_is_refused" = "60537380e5a745fe96b7f656a1309591e472ca115c7674c3f786fff0ba6dd63c"
+"tests/test_sprint_cod_assessment.py::test_gates_never_yield_instantaneous_velocity_and_sources_stay_labelled" = "be83834f442a7c3d626364507945378ef726d65a35a57d5a6ba255bfe05868c0"
+"tests/test_sprint_cod_assessment.py::test_noiseless_velocity_fit_recovers_parameters_and_fv_quantities" = "52bcca55569728cd24bf2884bfd46f28beab71297e727741d2d88bb54b1cb859"
+
+[[receipt]]
+id = "RCP-radar_laser-radar-J"
+dimension = "J"
+claim = "Radar. The engine agrees with a reference that shares no code with it; the reference substrate imports no engine code."
+issue = "RES-669"
+reference_kind = "closed_form"
+independence = "The mono-exponential sprint and its gate-time inverse are closed forms in the reference substrate; that module imports no engine or assessment code."
+check_kind = "numeric"
+tolerance_unit = "as asserted in the cited tests (absolute)"
+tolerance_basis = "largest absolute bound asserted in the cited tests: 2e-12"
+tolerance = 2e-12
+subfamilies = ["radar_laser.radar"]
+implementation = ["src/dynamisbench_soccer/engines/radar_laser.py::process"]
+reference = ["src/dynamisbench_soccer/reference/motion_models.py::MonoExponentialSprint"]
+tests = ["tests/test_radar_laser_processing.py::test_radar_recovers_independent_exact_velocity_at_native_rate", "tests/test_radar_laser_processing.py::test_laser_distance_derivative_recovers_analytical_speed", "tests/test_radar_laser_processing.py::test_no_reference_imports_in_engine_files", "tests/test_radar_laser_acquisition.py::test_engine_is_independent_of_reference_generators"]
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/radar_laser.py::process" = "137e921a52f17c44051f289ff850fe08c31af17ee75b1bc392a91941cb4ca274"
+"src/dynamisbench_soccer/reference/motion_models.py::MonoExponentialSprint" = "6f5cf86ba81df676877c7e99492f9df0400e35228a59a0f34a1d65bba5e3d493"
+"tests/test_radar_laser_acquisition.py::test_engine_is_independent_of_reference_generators" = "d36d621205ece2043f99501f2aa9fc38bedfef55b82c50d95a764d871c3404b6"
+"tests/test_radar_laser_processing.py::test_laser_distance_derivative_recovers_analytical_speed" = "762b92d09bce8a2b1d3b2e8c19eda8de88f8e77121aa28e9c6fa8609808099d7"
+"tests/test_radar_laser_processing.py::test_no_reference_imports_in_engine_files" = "6a51f2c8522d93cf7765b701c04673384ab8e7ca003c1b7a2473439b2ed63d55"
+"tests/test_radar_laser_processing.py::test_radar_recovers_independent_exact_velocity_at_native_rate" = "32e575cd2abf69a18ddad769aa829faa1c1f53b30cc083194e69d8f58d0c1dbe"
+
+[[receipt]]
+id = "RCP-radar_laser-laser-C"
+dimension = "C"
+claim = "Laser. Clock, latency and synchronisation handling is exact against the declared timing model and bad timing is refused."
+issue = "RES-693"
+reference_kind = "closed_form"
+independence = "The mono-exponential sprint and its gate-time inverse are closed forms in the reference substrate; that module imports no engine or assessment code."
+check_kind = "numeric"
+tolerance_unit = "as asserted in the cited tests (absolute)"
+tolerance_basis = "largest absolute bound asserted in the cited tests: 1e-12; largest relative bound 1e-10"
+tolerance = 1e-12
+subfamilies = ["radar_laser.laser"]
+implementation = ["src/dynamisbench_soccer/engines/radar_laser_acquisition.py::admit", "src/dynamisbench_soccer/engines/radar_laser.py::process"]
+reference = ["src/dynamisbench_soccer/reference/motion_models.py::MonoExponentialSprint"]
+tests = ["tests/test_radar_laser_acquisition.py::test_native_timestamp_fault_and_dropouts_refuse", "tests/test_radar_laser_acquisition.py::test_admits_distinct_native_measurands_and_affine_clocks", "tests/test_radar_laser_processing.py::test_start_modes_are_distinct_and_refuse_missing_triggers"]
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/radar_laser.py::process" = "137e921a52f17c44051f289ff850fe08c31af17ee75b1bc392a91941cb4ca274"
+"src/dynamisbench_soccer/engines/radar_laser_acquisition.py::admit" = "fcd77758a19ec8fbfce5eac2d5108c0748ecaa5ffbaf4b7a338667f763cff06e"
+"src/dynamisbench_soccer/reference/motion_models.py::MonoExponentialSprint" = "6f5cf86ba81df676877c7e99492f9df0400e35228a59a0f34a1d65bba5e3d493"
+"tests/test_radar_laser_acquisition.py::test_admits_distinct_native_measurands_and_affine_clocks" = "ae3f7848d4dd6713e4102793ab6fde1cfa11e1397f00c9fecf8246c10577060f"
+"tests/test_radar_laser_acquisition.py::test_native_timestamp_fault_and_dropouts_refuse" = "f84a419c7f30cb432d673ab2276d866cbea261e73ff57d0dd26ae47f1b49b9cb"
+"tests/test_radar_laser_processing.py::test_start_modes_are_distinct_and_refuse_missing_triggers" = "f366ba6d5bdd6c6a84ce142717464138b610c95267091673dcceedc8e4c71431"
+
+[[receipt]]
+id = "RCP-radar_laser-laser-L"
+dimension = "L"
+claim = "Laser. Analytical cross-device comparisons are executed and classified and never declare empirical interchangeability."
+issue = "RES-703"
+reference_kind = "closed_form"
+independence = "The mono-exponential sprint and its gate-time inverse are closed forms in the reference substrate; that module imports no engine or assessment code."
+check_kind = "numeric"
+tolerance_unit = "relative"
+tolerance_basis = "largest relative bound asserted in the cited tests: 0.01"
+tolerance = 0.01
+subfamilies = ["radar_laser.laser"]
+implementation = ["src/dynamisbench_soccer/agreement/studies.py::run_all"]
+reference = ["src/dynamisbench_soccer/reference/motion_models.py::MonoExponentialSprint"]
+tests = ["tests/test_cross_device_agreement.py::test_radar_laser_is_a_definition_mismatch_with_derived_noise_amplification", "tests/test_cross_device_agreement.py::test_every_declared_non_equivalence_has_a_study_and_none_claims_empirical_agreement"]
+
+[receipt.digests]
+"src/dynamisbench_soccer/agreement/studies.py::run_all" = "b3693d85d3de83221bd5e8f56727c7d42bdf47ec121de9d50b6c951c6254c7ff"
+"src/dynamisbench_soccer/reference/motion_models.py::MonoExponentialSprint" = "6f5cf86ba81df676877c7e99492f9df0400e35228a59a0f34a1d65bba5e3d493"
+"tests/test_cross_device_agreement.py::test_every_declared_non_equivalence_has_a_study_and_none_claims_empirical_agreement" = "465de1b8d41e9b31c73bf63958fd413dd46e68a0e13d70318d08548f5a23d8af"
+"tests/test_cross_device_agreement.py::test_radar_laser_is_a_definition_mismatch_with_derived_noise_amplification" = "45d8f7c9b6f40bcaf0cd88775f0fd6f23b5f934948c6958dfeb52ef96b1b4e0e"
+
+[[receipt]]
+id = "RCP-gnss_lps-gnss-A"
+dimension = "A"
+claim = "GNSS. Admission contract: invalid, mislabelled or unadmitted inputs are refused by the acquisition code."
+issue = "RES-693"
+reference_kind = "closed_form"
+independence = "The planar and geodetic tracks are closed forms in the reference substrate; that module imports no engine or assessment code."
+check_kind = "categorical"
+tolerance_unit = ""
+tolerance_basis = "Exact outcomes asserted by the cited tests: expected refusals, verdicts, classifications and counts, with no numeric tolerance."
+tolerance = 0.0
+subfamilies = ["gnss_lps.gnss"]
+implementation = ["src/dynamisbench_soccer/engines/gnss_lps_acquisition.py::admit"]
+reference = ["src/dynamisbench_soccer/reference/spatial.py::GeodeticTrack"]
+tests = ["tests/test_gnss_lps_acquisition.py::test_contradictory_acquisition_declarations_refuse", "tests/test_gnss_lps_acquisition.py::test_resampling_provenance_refuses_even_when_rates_agree", "tests/test_gnss_lps_acquisition.py::test_implicit_and_duplicate_timestamps_and_analytical_truth_refuse", "tests/test_gnss_lps_acquisition.py::test_admit_native_times_clock_latency_and_positions"]
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/gnss_lps_acquisition.py::admit" = "345499dec7ee6bc71ca6a5b9cd67689358a929d709f0b0ceed93bc33d61de18d"
+"src/dynamisbench_soccer/reference/spatial.py::GeodeticTrack" = "b4bf5e008c8bdd5c4f1ecaa5a628c9981c414a9a3a7a285ffdd85994be1b31c2"
+"tests/test_gnss_lps_acquisition.py::test_admit_native_times_clock_latency_and_positions" = "d41a95cbbd7488ac150eef8b18c22f9c4640c41121e8cac846e1c8ab7b9405a3"
+"tests/test_gnss_lps_acquisition.py::test_contradictory_acquisition_declarations_refuse" = "9c3537129edf0823d2767ee752fd3602329b50470b832cfc083641a88ad49371"
+"tests/test_gnss_lps_acquisition.py::test_implicit_and_duplicate_timestamps_and_analytical_truth_refuse" = "dc85190a596345a1ec7682cf18fbfcf88b230e2f1005b8e1059e4ed234d692df"
+"tests/test_gnss_lps_acquisition.py::test_resampling_provenance_refuses_even_when_rates_agree" = "c632a4b746d6d666763fbba959572e0322cfe5a23bdf1e6275b1542d1ffb2af3"
+
+[[receipt]]
+id = "RCP-gnss_lps-gnss-C"
+dimension = "C"
+claim = "GNSS. Clock, latency and synchronisation handling is exact against the declared timing model and bad timing is refused."
+issue = "RES-693"
+reference_kind = "closed_form"
+independence = "The planar and geodetic tracks are closed forms in the reference substrate; that module imports no engine or assessment code."
+check_kind = "numeric"
+tolerance_unit = "as asserted in the cited tests (absolute)"
+tolerance_basis = "largest absolute bound asserted in the cited tests: 4e-09"
+tolerance = 4e-09
+subfamilies = ["gnss_lps.gnss"]
+implementation = ["src/dynamisbench_soccer/engines/gnss_lps_acquisition.py::admit", "src/dynamisbench_soccer/engines/gnss_lps.py::process"]
+reference = ["src/dynamisbench_soccer/reference/spatial.py::GeodeticTrack"]
+tests = ["tests/test_gnss_lps_acquisition.py::test_drift_needs_bracketing_sync_pulses", "tests/test_gnss_lps_acquisition.py::test_admit_native_times_clock_latency_and_positions", "tests/test_gnss_lps_acquisition.py::test_implicit_and_duplicate_timestamps_and_analytical_truth_refuse", "tests/test_gnss_lps_processing.py::test_three_point_uses_measured_time_and_five_point_refuses_jitter"]
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/gnss_lps.py::process" = "6c3aa1bea185831bc5d831a8ca21f7b87d35fa9f2b8bff2350240869d5245740"
+"src/dynamisbench_soccer/engines/gnss_lps_acquisition.py::admit" = "345499dec7ee6bc71ca6a5b9cd67689358a929d709f0b0ceed93bc33d61de18d"
+"src/dynamisbench_soccer/reference/spatial.py::GeodeticTrack" = "b4bf5e008c8bdd5c4f1ecaa5a628c9981c414a9a3a7a285ffdd85994be1b31c2"
+"tests/test_gnss_lps_acquisition.py::test_admit_native_times_clock_latency_and_positions" = "d41a95cbbd7488ac150eef8b18c22f9c4640c41121e8cac846e1c8ab7b9405a3"
+"tests/test_gnss_lps_acquisition.py::test_drift_needs_bracketing_sync_pulses" = "27489f100468f85cb030b7ea8120c01f95ec90f38882fcf1c601de62f656913d"
+"tests/test_gnss_lps_acquisition.py::test_implicit_and_duplicate_timestamps_and_analytical_truth_refuse" = "dc85190a596345a1ec7682cf18fbfcf88b230e2f1005b8e1059e4ed234d692df"
+"tests/test_gnss_lps_processing.py::test_three_point_uses_measured_time_and_five_point_refuses_jitter" = "14a919528034e37d2dfa1742944b95486f06b7a05964f691c680013b1f5b0512"
+
+[[receipt]]
+id = "RCP-gnss_lps-gnss-F"
+dimension = "F"
+claim = "GNSS. Reconstructed quantities equal the independent analytical truth within the asserted tolerance."
+issue = "RES-700"
+reference_kind = "closed_form"
+independence = "The planar and geodetic tracks are closed forms in the reference substrate; that module imports no engine or assessment code."
+check_kind = "numeric"
+tolerance_unit = "as asserted in the cited tests (absolute)"
+tolerance_basis = "largest absolute bound asserted in the cited tests: 1e-05"
+tolerance = 1e-05
+subfamilies = ["gnss_lps.gnss"]
+implementation = ["src/dynamisbench_soccer/engines/gnss_lps.py::process"]
+reference = ["src/dynamisbench_soccer/reference/spatial.py::GeodeticTrack"]
+tests = ["tests/test_gnss_lps_processing.py::test_closed_form_acceleration_speed_distance_and_doppler", "tests/test_gnss_lps_processing.py::test_turning_point_has_vector_acceleration_and_accumulates_chords"]
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/gnss_lps.py::process" = "6c3aa1bea185831bc5d831a8ca21f7b87d35fa9f2b8bff2350240869d5245740"
+"src/dynamisbench_soccer/reference/spatial.py::GeodeticTrack" = "b4bf5e008c8bdd5c4f1ecaa5a628c9981c414a9a3a7a285ffdd85994be1b31c2"
+"tests/test_gnss_lps_processing.py::test_closed_form_acceleration_speed_distance_and_doppler" = "cb286b150262a686880be6ad9f88692c6575aef09eb1b1acd0afb41d4cea5675"
+"tests/test_gnss_lps_processing.py::test_turning_point_has_vector_acceleration_and_accumulates_chords" = "6fdb0ef0d07a7cf21227b9efd286f3cc9e7babc57b3b94810aaabd2e433330e6"
+
+[[receipt]]
+id = "RCP-gnss_lps-gnss-G"
+dimension = "G"
+claim = "GNSS. Protocol events and phases are recovered at the analytically known times, with eligibility refusals."
+issue = "RES-673"
+reference_kind = "closed_form"
+independence = "The planar and geodetic tracks are closed forms in the reference substrate; that module imports no engine or assessment code."
+check_kind = "numeric"
+tolerance_unit = "as asserted in the cited tests (absolute)"
+tolerance_basis = "largest absolute bound asserted in the cited tests: 1e-05"
+tolerance = 1e-05
+subfamilies = ["gnss_lps.gnss"]
+implementation = ["src/dynamisbench_soccer/engines/gnss_lps.py::process"]
+reference = ["src/dynamisbench_soccer/reference/spatial.py::GeodeticTrack"]
+tests = ["tests/test_gnss_lps_processing.py::test_doppler_threshold_counts_and_integrates_whole_runs_at_measured_dwell", "tests/test_gnss_lps_processing.py::test_closed_form_acceleration_speed_distance_and_doppler"]
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/gnss_lps.py::process" = "6c3aa1bea185831bc5d831a8ca21f7b87d35fa9f2b8bff2350240869d5245740"
+"src/dynamisbench_soccer/reference/spatial.py::GeodeticTrack" = "b4bf5e008c8bdd5c4f1ecaa5a628c9981c414a9a3a7a285ffdd85994be1b31c2"
+"tests/test_gnss_lps_processing.py::test_closed_form_acceleration_speed_distance_and_doppler" = "cb286b150262a686880be6ad9f88692c6575aef09eb1b1acd0afb41d4cea5675"
+"tests/test_gnss_lps_processing.py::test_doppler_threshold_counts_and_integrates_whole_runs_at_measured_dwell" = "616cc241c1f8315998ad26829b7c549b01d2caa5a312361ae5543aee6fa74699"
+
+[[receipt]]
+id = "RCP-gnss_lps-gnss-J"
+dimension = "J"
+claim = "GNSS. The engine agrees with a reference that shares no code with it; the reference substrate imports no engine code."
+issue = "RES-669"
+reference_kind = "independent_implementation"
+independence = "The planar and geodetic tracks are closed forms in the reference substrate; that module imports no engine or assessment code."
+check_kind = "numeric"
+tolerance_unit = "as asserted in the cited tests (absolute)"
+tolerance_basis = "largest absolute bound asserted in the cited tests: 0.001"
+tolerance = 0.001
+subfamilies = ["gnss_lps.gnss"]
+implementation = ["src/dynamisbench_soccer/engines/gnss_lps_acquisition.py::admit", "src/dynamisbench_soccer/engines/gnss_lps.py::process"]
+reference = ["src/dynamisbench_soccer/reference/coordinates.py::geodetic_ecef", "src/dynamisbench_soccer/reference/spatial.py::GeodeticTrack"]
+tests = ["tests/test_gnss_lps_processing.py::test_closed_form_acceleration_speed_distance_and_doppler", "tests/test_gnss_lps_acquisition.py::test_enu_longitude_wrap_and_height_with_closed_form_equator", "tests/test_reference_complete_scenarios.py::test_wgs84_known_axes_and_independent_published_topocentric_example"]
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/gnss_lps.py::process" = "6c3aa1bea185831bc5d831a8ca21f7b87d35fa9f2b8bff2350240869d5245740"
+"src/dynamisbench_soccer/engines/gnss_lps_acquisition.py::admit" = "345499dec7ee6bc71ca6a5b9cd67689358a929d709f0b0ceed93bc33d61de18d"
+"src/dynamisbench_soccer/reference/coordinates.py::geodetic_ecef" = "b4510f3ee8434f4766de5a3e183e25ff2c6a3ed15e73284ad20279b2918acc48"
+"src/dynamisbench_soccer/reference/spatial.py::GeodeticTrack" = "b4bf5e008c8bdd5c4f1ecaa5a628c9981c414a9a3a7a285ffdd85994be1b31c2"
+"tests/test_gnss_lps_acquisition.py::test_enu_longitude_wrap_and_height_with_closed_form_equator" = "ff91851fd704db4b36419a41898d1cf19c89d9c2e8538f0361f7de6774986cac"
+"tests/test_gnss_lps_processing.py::test_closed_form_acceleration_speed_distance_and_doppler" = "cb286b150262a686880be6ad9f88692c6575aef09eb1b1acd0afb41d4cea5675"
+"tests/test_reference_complete_scenarios.py::test_wgs84_known_axes_and_independent_published_topocentric_example" = "82ad502fbd1fb1ab2b4c7d049878c210e08da186004cc7e197b0ea3b8f689df2"
+
+[[receipt]]
+id = "RCP-gnss_lps-gnss-K"
+dimension = "K"
+claim = "GNSS. Seeded fault fixtures cover the declared fault classes with deterministic bytes and expected verdicts."
+issue = "RES-669"
+reference_kind = "closed_form"
+independence = "Fault injection and the seeded exporters live in the reference substrate and are independent of the engines they exercise; the substrate imports no engine code."
+check_kind = "categorical"
+tolerance_unit = ""
+tolerance_basis = "Exact outcomes asserted by the cited tests: expected refusals, verdicts, classifications and counts, with no numeric tolerance."
+tolerance = 0.0
+subfamilies = ["gnss_lps.gnss"]
+implementation = ["src/dynamisbench_soccer/engines/gnss_lps_acquisition.py::admit", "src/dynamisbench_soccer/engines/gnss_lps.py::process"]
+reference = ["src/dynamisbench_soccer/reference/faults.py::inject"]
+tests = ["tests/test_reference_faults.py::test_faults_cover_all_subfamilies_with_isolated_lineage_and_deterministic_bytes", "tests/test_reference_faults.py::test_position_faults_drop_jump_in_metres_and_interpolate_native_data", "tests/test_reference_faults.py::test_seeded_position_noise_uses_metres_not_degrees", "tests/test_gnss_lps_acquisition.py::test_res669_adversarial_observations"]
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/gnss_lps.py::process" = "6c3aa1bea185831bc5d831a8ca21f7b87d35fa9f2b8bff2350240869d5245740"
+"src/dynamisbench_soccer/engines/gnss_lps_acquisition.py::admit" = "345499dec7ee6bc71ca6a5b9cd67689358a929d709f0b0ceed93bc33d61de18d"
+"src/dynamisbench_soccer/reference/faults.py::inject" = "7a76c90a53d7ff965561df3d431cb1248c3a7200f222e1ce9b96bacb283119ca"
+"tests/test_gnss_lps_acquisition.py::test_res669_adversarial_observations" = "605a30f6cffa43ddb04c7c3e254032dc731d15d595a974a3c3f4fbce0d1a3bc0"
+"tests/test_reference_faults.py::test_faults_cover_all_subfamilies_with_isolated_lineage_and_deterministic_bytes" = "9c19f1ba0ffefdcad3066743dd925f5b4913d315915ec2eda9d7bd94e6bc28ff"
+"tests/test_reference_faults.py::test_position_faults_drop_jump_in_metres_and_interpolate_native_data" = "76d47593dbf7db1c7cf80dfa36c2708684302d7a058ef56fdf9801f6dae78f56"
+"tests/test_reference_faults.py::test_seeded_position_noise_uses_metres_not_degrees" = "1f4f7fed82489e89d4b669c9f5d5084c1164250936a38da7b360ebf3dda41987"
+
+[[receipt]]
+id = "RCP-gnss_lps-gnss-L"
+dimension = "L"
+claim = "GNSS. Analytical cross-device comparisons are executed and classified and never declare empirical interchangeability."
+issue = "RES-703"
+reference_kind = "closed_form"
+independence = "The mono-exponential sprint and its gate-time inverse are closed forms in the reference substrate; that module imports no engine or assessment code."
+check_kind = "numeric"
+tolerance_unit = "relative"
+tolerance_basis = "largest relative bound asserted in the cited tests: 0.001"
+tolerance = 0.001
+subfamilies = ["gnss_lps.gnss"]
+implementation = ["src/dynamisbench_soccer/agreement/studies.py::run_all"]
+reference = ["src/dynamisbench_soccer/reference/motion_models.py::MonoExponentialSprint"]
+tests = ["tests/test_cross_device_agreement.py::test_positional_gate_cable_and_attachment_studies_match_closed_forms", "tests/test_cross_device_agreement.py::test_every_declared_non_equivalence_has_a_study_and_none_claims_empirical_agreement", "tests/test_assessment_handoff.py::test_doppler_and_positional_speed_are_different_traces"]
+
+[receipt.digests]
+"src/dynamisbench_soccer/agreement/studies.py::run_all" = "b3693d85d3de83221bd5e8f56727c7d42bdf47ec121de9d50b6c951c6254c7ff"
+"src/dynamisbench_soccer/reference/motion_models.py::MonoExponentialSprint" = "6f5cf86ba81df676877c7e99492f9df0400e35228a59a0f34a1d65bba5e3d493"
+"tests/test_assessment_handoff.py::test_doppler_and_positional_speed_are_different_traces" = "06fa1feab663753f2d4a1af81b3bcf8a6a3ab7c21b8a8e5e27854c6d722fa258"
+"tests/test_cross_device_agreement.py::test_every_declared_non_equivalence_has_a_study_and_none_claims_empirical_agreement" = "465de1b8d41e9b31c73bf63958fd413dd46e68a0e13d70318d08548f5a23d8af"
+"tests/test_cross_device_agreement.py::test_positional_gate_cable_and_attachment_studies_match_closed_forms" = "b2b77a92f4695cd79262fd3d707e878162fce4fbf0683d61142885e11e8f3f79"
+
+[[receipt]]
+id = "RCP-gnss_lps-lps-F"
+dimension = "F"
+claim = "LPS. Reconstructed quantities equal the independent analytical truth within the asserted tolerance."
+issue = "RES-700"
+reference_kind = "closed_form"
+independence = "The planar and geodetic tracks are closed forms in the reference substrate; that module imports no engine or assessment code."
+check_kind = "numeric"
+tolerance_unit = "as asserted in the cited tests (absolute)"
+tolerance_basis = "largest absolute bound asserted in the cited tests: 1e-05"
+tolerance = 1e-05
+subfamilies = ["gnss_lps.lps"]
+implementation = ["src/dynamisbench_soccer/engines/gnss_lps.py::process"]
+reference = ["src/dynamisbench_soccer/reference/spatial.py::PlanarTrajectory"]
+tests = ["tests/test_gnss_lps_processing.py::test_closed_form_acceleration_speed_distance_and_doppler", "tests/test_gnss_lps_processing.py::test_turning_point_has_vector_acceleration_and_accumulates_chords"]
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/gnss_lps.py::process" = "6c3aa1bea185831bc5d831a8ca21f7b87d35fa9f2b8bff2350240869d5245740"
+"src/dynamisbench_soccer/reference/spatial.py::PlanarTrajectory" = "7712a4ab3c5a0dab08da93f1ad61f875c65cc7aec9db048390088142c40ea06b"
+"tests/test_gnss_lps_processing.py::test_closed_form_acceleration_speed_distance_and_doppler" = "cb286b150262a686880be6ad9f88692c6575aef09eb1b1acd0afb41d4cea5675"
+"tests/test_gnss_lps_processing.py::test_turning_point_has_vector_acceleration_and_accumulates_chords" = "6fdb0ef0d07a7cf21227b9efd286f3cc9e7babc57b3b94810aaabd2e433330e6"
+
+[[receipt]]
+id = "RCP-gnss_lps-lps-K"
+dimension = "K"
+claim = "LPS. Seeded fault fixtures cover the declared fault classes with deterministic bytes and expected verdicts."
+issue = "RES-669"
+reference_kind = "closed_form"
+independence = "Fault injection and the seeded exporters live in the reference substrate and are independent of the engines they exercise; the substrate imports no engine code."
+check_kind = "categorical"
+tolerance_unit = ""
+tolerance_basis = "Exact outcomes asserted by the cited tests: expected refusals, verdicts, classifications and counts, with no numeric tolerance."
+tolerance = 0.0
+subfamilies = ["gnss_lps.lps"]
+implementation = ["src/dynamisbench_soccer/engines/gnss_lps_acquisition.py::admit", "src/dynamisbench_soccer/engines/gnss_lps.py::process"]
+reference = ["src/dynamisbench_soccer/reference/faults.py::inject"]
+tests = ["tests/test_reference_faults.py::test_faults_cover_all_subfamilies_with_isolated_lineage_and_deterministic_bytes", "tests/test_reference_faults.py::test_position_faults_drop_jump_in_metres_and_interpolate_native_data", "tests/test_reference_faults.py::test_seeded_position_noise_uses_metres_not_degrees", "tests/test_gnss_lps_acquisition.py::test_res669_adversarial_observations"]
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/gnss_lps.py::process" = "6c3aa1bea185831bc5d831a8ca21f7b87d35fa9f2b8bff2350240869d5245740"
+"src/dynamisbench_soccer/engines/gnss_lps_acquisition.py::admit" = "345499dec7ee6bc71ca6a5b9cd67689358a929d709f0b0ceed93bc33d61de18d"
+"src/dynamisbench_soccer/reference/faults.py::inject" = "7a76c90a53d7ff965561df3d431cb1248c3a7200f222e1ce9b96bacb283119ca"
+"tests/test_gnss_lps_acquisition.py::test_res669_adversarial_observations" = "605a30f6cffa43ddb04c7c3e254032dc731d15d595a974a3c3f4fbce0d1a3bc0"
+"tests/test_reference_faults.py::test_faults_cover_all_subfamilies_with_isolated_lineage_and_deterministic_bytes" = "9c19f1ba0ffefdcad3066743dd925f5b4913d315915ec2eda9d7bd94e6bc28ff"
+"tests/test_reference_faults.py::test_position_faults_drop_jump_in_metres_and_interpolate_native_data" = "76d47593dbf7db1c7cf80dfa36c2708684302d7a058ef56fdf9801f6dae78f56"
+"tests/test_reference_faults.py::test_seeded_position_noise_uses_metres_not_degrees" = "1f4f7fed82489e89d4b669c9f5d5084c1164250936a38da7b360ebf3dda41987"
+
+[[receipt]]
+id = "RCP-imu-inertial-B"
+dimension = "B"
+claim = "IMU. Calibration and geometry records are applied exactly and missing or contradictory records are refused."
+issue = "RES-701"
+reference_kind = "closed_form"
+independence = "The rigid-body kinematics are closed forms in the reference substrate; that module imports no engine or assessment code."
+check_kind = "numeric"
+tolerance_unit = "as asserted in the cited tests (absolute)"
+tolerance_basis = "largest absolute bound asserted in the cited tests: 1e-09"
+tolerance = 1e-09
+subfamilies = ["imu.inertial"]
+implementation = ["src/dynamisbench_soccer/engines/imu.py::process"]
+reference = ["src/dynamisbench_soccer/reference/spatial.py::RigidBody"]
+tests = ["tests/test_imu_engine.py::test_declared_calibration_inverts_a_known_forward_model", "tests/test_imu_engine.py::test_sensor_to_segment_placement_is_declared_and_applied", "tests/test_imu_engine.py::test_static_tilt_initialises_roll_pitch_but_not_yaw"]
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/imu.py::process" = "c28d6d41fa346b49d06a8d8453c8c06d7d04dfdcab31677a2881c9e997ef52ea"
+"src/dynamisbench_soccer/reference/spatial.py::RigidBody" = "a3e40bf665553c941cc03fb7f4ebe13bb5942b47b12808e890e09b74b57720cb"
+"tests/test_imu_engine.py::test_declared_calibration_inverts_a_known_forward_model" = "72e8c226a0e392f1480e5148c5f8cb61e2978fee513e69e386b92fd98ed1e7eb"
+"tests/test_imu_engine.py::test_sensor_to_segment_placement_is_declared_and_applied" = "1a5b6582bff1cd647790fa71804924369b1d4ad1ccf716ecfaa62a6a7f1e9d52"
+"tests/test_imu_engine.py::test_static_tilt_initialises_roll_pitch_but_not_yaw" = "ab6d78646c474eec61096120813def363eab3073d13fa13bdcb3650f192fe286"
+
+[[receipt]]
+id = "RCP-imu-inertial-D"
+dimension = "D"
+claim = "IMU. Injected integrity faults are detected and clean controls are not rejected, with the expected QC verdicts."
+issue = "RES-701"
+reference_kind = "closed_form"
+independence = "The rigid-body kinematics are closed forms in the reference substrate; that module imports no engine or assessment code."
+check_kind = "categorical"
+tolerance_unit = ""
+tolerance_basis = "Exact outcomes asserted by the cited tests: expected refusals, verdicts, classifications and counts, with no numeric tolerance."
+tolerance = 0.0
+subfamilies = ["imu.inertial"]
+implementation = ["src/dynamisbench_soccer/engines/imu.py::process"]
+reference = ["src/dynamisbench_soccer/reference/spatial.py::RigidBody"]
+tests = ["tests/test_imu_engine.py::test_integrity_faults_are_detected", "tests/test_imu_engine.py::test_static_gyro_bias_and_slip_are_flagged", "tests/test_imu_engine.py::test_wrong_device_and_missing_channels_are_refused"]
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/imu.py::process" = "c28d6d41fa346b49d06a8d8453c8c06d7d04dfdcab31677a2881c9e997ef52ea"
+"src/dynamisbench_soccer/reference/spatial.py::RigidBody" = "a3e40bf665553c941cc03fb7f4ebe13bb5942b47b12808e890e09b74b57720cb"
+"tests/test_imu_engine.py::test_integrity_faults_are_detected" = "29da3b5c1860774fe00dcce46e981298f874ad3b4f21348331143c74533a3cdf"
+"tests/test_imu_engine.py::test_static_gyro_bias_and_slip_are_flagged" = "4a8ab391f1cfe48ddeec21fd07d4cad7f81a9ddcfbea68ccfcae139b02c677d0"
+"tests/test_imu_engine.py::test_wrong_device_and_missing_channels_are_refused" = "deea199c3d76bde841d3f656d9266957d150f78a6e39715fd1c87023cfad0853"
+
+[[receipt]]
+id = "RCP-imu-inertial-E"
+dimension = "E"
+claim = "IMU. Each named processing variant reproduces the independent truth within the asserted tolerance and reports its sensitivity."
+issue = "RES-701"
+reference_kind = "closed_form"
+independence = "The rigid-body kinematics are closed forms in the reference substrate; that module imports no engine or assessment code."
+check_kind = "numeric"
+tolerance_unit = "as asserted in the cited tests (absolute)"
+tolerance_basis = "largest absolute bound asserted in the cited tests: 0.01; largest relative bound 1e-09"
+tolerance = 0.01
+subfamilies = ["imu.inertial"]
+implementation = ["src/dynamisbench_soccer/engines/imu.py::process"]
+reference = ["src/dynamisbench_soccer/reference/spatial.py::RigidBody"]
+tests = ["tests/test_imu_engine.py::test_uncorrected_bias_growth_matches_closed_form_and_zupt_removes_linear_drift", "tests/test_imu_engine.py::test_gyro_bias_drift_versus_complementary_bound_matches_closed_form", "tests/test_imu_engine.py::test_orientation_is_refused_when_unobservable"]
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/imu.py::process" = "c28d6d41fa346b49d06a8d8453c8c06d7d04dfdcab31677a2881c9e997ef52ea"
+"src/dynamisbench_soccer/reference/spatial.py::RigidBody" = "a3e40bf665553c941cc03fb7f4ebe13bb5942b47b12808e890e09b74b57720cb"
+"tests/test_imu_engine.py::test_gyro_bias_drift_versus_complementary_bound_matches_closed_form" = "2a0dde7261480d2977354eca580f836ac40ffcbb739256a12ac0585b060bccb9"
+"tests/test_imu_engine.py::test_orientation_is_refused_when_unobservable" = "e9052c65c41b464a4c570b1d81a2b104fd57ef839f69dd76b7cf29f7a0a6bb53"
+"tests/test_imu_engine.py::test_uncorrected_bias_growth_matches_closed_form_and_zupt_removes_linear_drift" = "a6428ea705d9f0e97ffef58d00c077f1315e2ccfa151b38ae54a21aade43d5fe"
+
+[[receipt]]
+id = "RCP-imu-inertial-F"
+dimension = "F"
+claim = "IMU. Reconstructed quantities equal the independent analytical truth within the asserted tolerance."
+issue = "RES-701"
+reference_kind = "closed_form"
+independence = "The rigid-body kinematics are closed forms in the reference substrate; that module imports no engine or assessment code."
+check_kind = "numeric"
+tolerance_unit = "as asserted in the cited tests (absolute)"
+tolerance_basis = "largest absolute bound asserted in the cited tests: 1e-08"
+tolerance = 1e-08
+subfamilies = ["imu.inertial"]
+implementation = ["src/dynamisbench_soccer/engines/imu.py::process"]
+reference = ["src/dynamisbench_soccer/reference/spatial.py::RigidBody"]
+tests = ["tests/test_imu_engine.py::test_orientation_and_free_acceleration_match_rigid_body_truth", "tests/test_imu_engine.py::test_specific_force_is_not_free_acceleration", "tests/test_imu_engine.py::test_integration_recovers_velocity_and_position_given_declared_initial_conditions"]
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/imu.py::process" = "c28d6d41fa346b49d06a8d8453c8c06d7d04dfdcab31677a2881c9e997ef52ea"
+"src/dynamisbench_soccer/reference/spatial.py::RigidBody" = "a3e40bf665553c941cc03fb7f4ebe13bb5942b47b12808e890e09b74b57720cb"
+"tests/test_imu_engine.py::test_integration_recovers_velocity_and_position_given_declared_initial_conditions" = "5adfe7d85037094c0fff48062e78d1018687bcab84a519a4f6d85f6a904091a3"
+"tests/test_imu_engine.py::test_orientation_and_free_acceleration_match_rigid_body_truth" = "cee84b2157e15c44f1cb2b133a9f27c8dab95f789cd0d2656969bcf90d52cb44"
+"tests/test_imu_engine.py::test_specific_force_is_not_free_acceleration" = "3789975a7d6d9facf4de87cac5e277e035bf0ab841d1aef273ea43715e80e158"
+
+[[receipt]]
+id = "RCP-imu-inertial-I"
+dimension = "I"
+claim = "IMU. Declared uncertainty and sensitivity are propagated and equal the independent analytical expectation."
+issue = "RES-701"
+reference_kind = "closed_form"
+independence = "The rigid-body kinematics are closed forms in the reference substrate; that module imports no engine or assessment code."
+check_kind = "numeric"
+tolerance_unit = "as asserted in the cited tests (absolute)"
+tolerance_basis = "largest absolute bound asserted in the cited tests: 0.01; largest relative bound 1e-09"
+tolerance = 0.01
+subfamilies = ["imu.inertial"]
+implementation = ["src/dynamisbench_soccer/engines/imu.py::process"]
+reference = ["src/dynamisbench_soccer/reference/spatial.py::RigidBody"]
+tests = ["tests/test_imu_engine.py::test_uncorrected_bias_growth_matches_closed_form_and_zupt_removes_linear_drift", "tests/test_imu_engine.py::test_gyro_bias_drift_versus_complementary_bound_matches_closed_form"]
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/imu.py::process" = "c28d6d41fa346b49d06a8d8453c8c06d7d04dfdcab31677a2881c9e997ef52ea"
+"src/dynamisbench_soccer/reference/spatial.py::RigidBody" = "a3e40bf665553c941cc03fb7f4ebe13bb5942b47b12808e890e09b74b57720cb"
+"tests/test_imu_engine.py::test_gyro_bias_drift_versus_complementary_bound_matches_closed_form" = "2a0dde7261480d2977354eca580f836ac40ffcbb739256a12ac0585b060bccb9"
+"tests/test_imu_engine.py::test_uncorrected_bias_growth_matches_closed_form_and_zupt_removes_linear_drift" = "a6428ea705d9f0e97ffef58d00c077f1315e2ccfa151b38ae54a21aade43d5fe"
+
+[[receipt]]
+id = "RCP-imu-inertial-J"
+dimension = "J"
+claim = "IMU. The engine agrees with a reference that shares no code with it; the reference substrate imports no engine code."
+issue = "RES-669"
+reference_kind = "closed_form"
+independence = "The rigid-body kinematics are closed forms in the reference substrate; that module imports no engine or assessment code."
+check_kind = "numeric"
+tolerance_unit = "as asserted in the cited tests (absolute)"
+tolerance_basis = "largest absolute bound asserted in the cited tests: 1e-08"
+tolerance = 1e-08
+subfamilies = ["imu.inertial"]
+implementation = ["src/dynamisbench_soccer/engines/imu.py::process"]
+reference = ["src/dynamisbench_soccer/reference/spatial.py::RigidBody"]
+tests = ["tests/test_imu_engine.py::test_orientation_and_free_acceleration_match_rigid_body_truth", "tests/test_imu_engine.py::test_engine_never_imports_reference_substrate", "tests/test_reference_complete_scenarios.py::test_full_rigid_rotation_derivatives_and_imu_inversion"]
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/imu.py::process" = "c28d6d41fa346b49d06a8d8453c8c06d7d04dfdcab31677a2881c9e997ef52ea"
+"src/dynamisbench_soccer/reference/spatial.py::RigidBody" = "a3e40bf665553c941cc03fb7f4ebe13bb5942b47b12808e890e09b74b57720cb"
+"tests/test_imu_engine.py::test_engine_never_imports_reference_substrate" = "aae484712e279b023aa8f39ae301a95f5c92eab5562494c008b0191757856e3a"
+"tests/test_imu_engine.py::test_orientation_and_free_acceleration_match_rigid_body_truth" = "cee84b2157e15c44f1cb2b133a9f27c8dab95f789cd0d2656969bcf90d52cb44"
+"tests/test_reference_complete_scenarios.py::test_full_rigid_rotation_derivatives_and_imu_inversion" = "5f8c56902513f3d274bdc61251d89341dab2ad442b88209359f98f5d3fda47ab"
+
+[[receipt]]
+id = "RCP-force_platform-single-M"
+dimension = "M"
+claim = "Force plate (single). Seeded bundles and processing results carry hash-linked, deterministic provenance that reproduces exactly."
+issue = "RES-675"
+reference_kind = "closed_form"
+independence = "The closed-form jump trajectory is defined in the reference substrate by piecewise constant acceleration; that module imports no engine or assessment code."
+check_kind = "categorical"
+tolerance_unit = ""
+tolerance_basis = "Recorded source hashes equal an independently computed file hash, identical inputs give identical output, and a one-sample change changes the recorded digest."
+tolerance = 0.0
+subfamilies = ["force_platform.single"]
+implementation = ["src/dynamisbench_soccer/engines/force_platform.py::process"]
+reference = ["src/dynamisbench_soccer/reference/kinematics.py::Trajectory"]
+tests = ["tests/test_policy_a_provenance.py::test_force_platform_results_record_source_hashes_and_reproduce_exactly", "tests/test_reference_exporters.py::test_every_export_is_v2_deterministic_separate_and_hash_linked", "tests/test_reference_acceptance.py::test_frozen_seeded_v2_artifact_bytes", "tests/test_signals_schema_io.py::test_golden_hashes", "tests/test_signals_schema_io.py::test_tampered_parquet_is_rejected"]
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/force_platform.py::process" = "c5080deb1140c6f84a3326a1faa5443b41897c96fba6f7145892ff378c232e26"
+"src/dynamisbench_soccer/reference/kinematics.py::Trajectory" = "6fd262b8d895af9de34578e32afcad3bb0f961993d30ca48cc17e522399a057e"
+"tests/test_policy_a_provenance.py::test_force_platform_results_record_source_hashes_and_reproduce_exactly" = "04c20c7a738cab6c5f95132166eb003dc819a9b9311a6036e35d2c200d66d40f"
+"tests/test_reference_acceptance.py::test_frozen_seeded_v2_artifact_bytes" = "33bbba91ebfefb1ac630bc2e73b8c471e6ae8255323d11681c429b0aa0040393"
+"tests/test_reference_exporters.py::test_every_export_is_v2_deterministic_separate_and_hash_linked" = "dd5083a390846e2a8e59502d253a571f08ffc5bfab0a6b4d0220e225103805ad"
+"tests/test_signals_schema_io.py::test_golden_hashes" = "bec4955331c9f9a6faf05e863c8ef144f1ca7cbef00de8177e39078a8f244308"
+"tests/test_signals_schema_io.py::test_tampered_parquet_is_rejected" = "8a29c36fd63d8686b7a8cdd26b5d295bb67cef0f2c0b80a70234c2a1c7baa4b6"
+
+[[receipt]]
+id = "RCP-force_platform-dual-M"
+dimension = "M"
+claim = "Force plate (dual). Seeded bundles and processing results carry hash-linked, deterministic provenance that reproduces exactly."
+issue = "RES-675"
+reference_kind = "closed_form"
+independence = "The closed-form jump trajectory is defined in the reference substrate by piecewise constant acceleration; that module imports no engine or assessment code."
+check_kind = "categorical"
+tolerance_unit = ""
+tolerance_basis = "Recorded source hashes equal an independently computed file hash, identical inputs give identical output, and a one-sample change changes the recorded digest."
+tolerance = 0.0
+subfamilies = ["force_platform.dual"]
+implementation = ["src/dynamisbench_soccer/engines/force_platform.py::process"]
+reference = ["src/dynamisbench_soccer/reference/kinematics.py::Trajectory"]
+tests = ["tests/test_policy_a_provenance.py::test_force_platform_results_record_source_hashes_and_reproduce_exactly", "tests/test_reference_exporters.py::test_every_export_is_v2_deterministic_separate_and_hash_linked", "tests/test_reference_acceptance.py::test_frozen_seeded_v2_artifact_bytes", "tests/test_signals_schema_io.py::test_golden_hashes", "tests/test_signals_schema_io.py::test_tampered_parquet_is_rejected"]
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/force_platform.py::process" = "c5080deb1140c6f84a3326a1faa5443b41897c96fba6f7145892ff378c232e26"
+"src/dynamisbench_soccer/reference/kinematics.py::Trajectory" = "6fd262b8d895af9de34578e32afcad3bb0f961993d30ca48cc17e522399a057e"
+"tests/test_policy_a_provenance.py::test_force_platform_results_record_source_hashes_and_reproduce_exactly" = "04c20c7a738cab6c5f95132166eb003dc819a9b9311a6036e35d2c200d66d40f"
+"tests/test_reference_acceptance.py::test_frozen_seeded_v2_artifact_bytes" = "33bbba91ebfefb1ac630bc2e73b8c471e6ae8255323d11681c429b0aa0040393"
+"tests/test_reference_exporters.py::test_every_export_is_v2_deterministic_separate_and_hash_linked" = "dd5083a390846e2a8e59502d253a571f08ffc5bfab0a6b4d0220e225103805ad"
+"tests/test_signals_schema_io.py::test_golden_hashes" = "bec4955331c9f9a6faf05e863c8ef144f1ca7cbef00de8177e39078a8f244308"
+"tests/test_signals_schema_io.py::test_tampered_parquet_is_rejected" = "8a29c36fd63d8686b7a8cdd26b5d295bb67cef0f2c0b80a70234c2a1c7baa4b6"
+
+[[receipt]]
+id = "RCP-load_cell_isometric-load_cell-M"
+dimension = "M"
+claim = "Load cell. Seeded bundles and processing results carry hash-linked, deterministic provenance that reproduces exactly."
+issue = "RES-696"
+reference_kind = "closed_form"
+independence = "The isometric ramp, RFD and impulse are closed forms in the reference substrate; that module imports no engine or assessment code."
+check_kind = "categorical"
+tolerance_unit = ""
+tolerance_basis = "Recorded source hashes equal an independently computed file hash, identical inputs give identical output, and a one-sample change changes the recorded digest."
+tolerance = 0.0
+subfamilies = ["load_cell_isometric.load_cell"]
+implementation = ["src/dynamisbench_soccer/engines/load_cell.py::process"]
+reference = ["src/dynamisbench_soccer/reference/motion_models.py::IsometricRamp"]
+tests = ["tests/test_policy_a_provenance.py::test_load_cell_results_record_input_digest_and_reproduce_exactly", "tests/test_reference_exporters.py::test_every_export_is_v2_deterministic_separate_and_hash_linked", "tests/test_reference_acceptance.py::test_frozen_seeded_v2_artifact_bytes", "tests/test_signals_schema_io.py::test_golden_hashes", "tests/test_signals_schema_io.py::test_tampered_parquet_is_rejected"]
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/load_cell.py::process" = "c79bdbf709f74b295903f4bc611bf38edf9b71ae59098fb190a34db78b2297f7"
+"src/dynamisbench_soccer/reference/motion_models.py::IsometricRamp" = "fb30c889a909acd458dae981957a34ea33ce883f396d88610ac5ec87d75cb710"
+"tests/test_policy_a_provenance.py::test_load_cell_results_record_input_digest_and_reproduce_exactly" = "3ab8f53c978d1998bb5ec7fe57ae329efdb0ed9ccc1d13208c4e6225860d51a8"
+"tests/test_reference_acceptance.py::test_frozen_seeded_v2_artifact_bytes" = "33bbba91ebfefb1ac630bc2e73b8c471e6ae8255323d11681c429b0aa0040393"
+"tests/test_reference_exporters.py::test_every_export_is_v2_deterministic_separate_and_hash_linked" = "dd5083a390846e2a8e59502d253a571f08ffc5bfab0a6b4d0220e225103805ad"
+"tests/test_signals_schema_io.py::test_golden_hashes" = "bec4955331c9f9a6faf05e863c8ef144f1ca7cbef00de8177e39078a8f244308"
+"tests/test_signals_schema_io.py::test_tampered_parquet_is_rejected" = "8a29c36fd63d8686b7a8cdd26b5d295bb67cef0f2c0b80a70234c2a1c7baa4b6"
+
+[[receipt]]
+id = "RCP-load_cell_isometric-isometric_rig-M"
+dimension = "M"
+claim = "Isometric rig. Seeded bundles and processing results carry hash-linked, deterministic provenance that reproduces exactly."
+issue = "RES-696"
+reference_kind = "closed_form"
+independence = "The isometric ramp, RFD and impulse are closed forms in the reference substrate; that module imports no engine or assessment code."
+check_kind = "categorical"
+tolerance_unit = ""
+tolerance_basis = "Recorded source hashes equal an independently computed file hash, identical inputs give identical output, and a one-sample change changes the recorded digest."
+tolerance = 0.0
+subfamilies = ["load_cell_isometric.isometric_rig"]
+implementation = ["src/dynamisbench_soccer/engines/load_cell.py::process"]
+reference = ["src/dynamisbench_soccer/reference/motion_models.py::IsometricRamp"]
+tests = ["tests/test_policy_a_provenance.py::test_load_cell_results_record_input_digest_and_reproduce_exactly", "tests/test_reference_exporters.py::test_every_export_is_v2_deterministic_separate_and_hash_linked", "tests/test_reference_acceptance.py::test_frozen_seeded_v2_artifact_bytes", "tests/test_signals_schema_io.py::test_golden_hashes", "tests/test_signals_schema_io.py::test_tampered_parquet_is_rejected"]
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/load_cell.py::process" = "c79bdbf709f74b295903f4bc611bf38edf9b71ae59098fb190a34db78b2297f7"
+"src/dynamisbench_soccer/reference/motion_models.py::IsometricRamp" = "fb30c889a909acd458dae981957a34ea33ce883f396d88610ac5ec87d75cb710"
+"tests/test_policy_a_provenance.py::test_load_cell_results_record_input_digest_and_reproduce_exactly" = "3ab8f53c978d1998bb5ec7fe57ae329efdb0ed9ccc1d13208c4e6225860d51a8"
+"tests/test_reference_acceptance.py::test_frozen_seeded_v2_artifact_bytes" = "33bbba91ebfefb1ac630bc2e73b8c471e6ae8255323d11681c429b0aa0040393"
+"tests/test_reference_exporters.py::test_every_export_is_v2_deterministic_separate_and_hash_linked" = "dd5083a390846e2a8e59502d253a571f08ffc5bfab0a6b4d0220e225103805ad"
+"tests/test_signals_schema_io.py::test_golden_hashes" = "bec4955331c9f9a6faf05e863c8ef144f1ca7cbef00de8177e39078a8f244308"
+"tests/test_signals_schema_io.py::test_tampered_parquet_is_rejected" = "8a29c36fd63d8686b7a8cdd26b5d295bb67cef0f2c0b80a70234c2a1c7baa4b6"
+
+[[receipt]]
+id = "RCP-lpt_encoder-lpt-M"
+dimension = "M"
+claim = "LPT. Seeded bundles and processing results carry hash-linked, deterministic provenance that reproduces exactly."
+issue = "RES-695"
+reference_kind = "closed_form"
+independence = "The rigid-body kinematics are closed forms in the reference substrate; that module imports no engine or assessment code."
+check_kind = "categorical"
+tolerance_unit = ""
+tolerance_basis = "Recorded source hashes equal an independently computed file hash, identical inputs give identical output, and a one-sample change changes the recorded digest."
+tolerance = 0.0
+subfamilies = ["lpt_encoder.lpt"]
+implementation = ["src/dynamisbench_soccer/engines/lpt.py::process"]
+reference = ["src/dynamisbench_soccer/reference/spatial.py::RigidBody"]
+tests = ["tests/test_policy_a_provenance.py::test_lpt_results_record_bundle_identity_and_hash_and_reproduce_exactly", "tests/test_reference_exporters.py::test_every_export_is_v2_deterministic_separate_and_hash_linked", "tests/test_reference_acceptance.py::test_frozen_seeded_v2_artifact_bytes", "tests/test_signals_schema_io.py::test_golden_hashes", "tests/test_signals_schema_io.py::test_tampered_parquet_is_rejected"]
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/lpt.py::process" = "25a519e5f2a5be3d743f8e7a89bcb8020d4417b21af6bc1802aa34dddb80ecc1"
+"src/dynamisbench_soccer/reference/spatial.py::RigidBody" = "a3e40bf665553c941cc03fb7f4ebe13bb5942b47b12808e890e09b74b57720cb"
+"tests/test_policy_a_provenance.py::test_lpt_results_record_bundle_identity_and_hash_and_reproduce_exactly" = "c3aa3c4bcd6fd502e822aef47318c9df657aa7847aa667bee550c3efdc214062"
+"tests/test_reference_acceptance.py::test_frozen_seeded_v2_artifact_bytes" = "33bbba91ebfefb1ac630bc2e73b8c471e6ae8255323d11681c429b0aa0040393"
+"tests/test_reference_exporters.py::test_every_export_is_v2_deterministic_separate_and_hash_linked" = "dd5083a390846e2a8e59502d253a571f08ffc5bfab0a6b4d0220e225103805ad"
+"tests/test_signals_schema_io.py::test_golden_hashes" = "bec4955331c9f9a6faf05e863c8ef144f1ca7cbef00de8177e39078a8f244308"
+"tests/test_signals_schema_io.py::test_tampered_parquet_is_rejected" = "8a29c36fd63d8686b7a8cdd26b5d295bb67cef0f2c0b80a70234c2a1c7baa4b6"
