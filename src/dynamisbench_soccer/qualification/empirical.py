@@ -75,6 +75,13 @@ def load(path: Path) -> tuple[EmpiricalRecord, ...]:
     )
 
 
+def _clearance_ok(root: Path, ref: str) -> bool:
+    """The clearance must be a real file under the repository's docs/ or data/ trees."""
+    target = (root / ref).resolve()
+    allowed = [(root / name).resolve() for name in ("docs", "data")]
+    return target.is_file() and any(target.is_relative_to(a) for a in allowed)
+
+
 MIN_PAIRED_UNITS = 20  # the approved paired-agreement floor for dimension L
 
 
@@ -88,8 +95,11 @@ def verify(record: EmpiricalRecord, subfamily_ids: set[str], root: Path | None =
             errors.append(f"{rid}: L needs a paired_instrument criterion")
         if record.n_independent_units < MIN_PAIRED_UNITS:
             errors.append(f"{rid}: L needs at least {MIN_PAIRED_UNITS} independent units")
-    if root is not None and not (root / record.rights_ref).is_file():
-        errors.append(f"{rid}: rights/provenance clearance {record.rights_ref!r} does not resolve")
+    if root is not None and not _clearance_ok(root, record.rights_ref):
+        errors.append(
+            f"{rid}: rights/provenance clearance {record.rights_ref!r} must be a file under "
+            "docs/ or data/ inside the repository"
+        )
     if record.subfamily not in subfamily_ids:
         errors.append(f"{rid}: unknown subfamily {record.subfamily}")
     if record.data_category not in DATA_CATEGORIES:

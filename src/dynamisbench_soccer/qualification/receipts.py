@@ -203,10 +203,24 @@ def _info_cached(target: str, stamp: tuple[int, int], symbol: str) -> SymbolInfo
     if node is None:
         return None
     reached = [node, *closure(tree, node).values()]
+    banned = set(_engine_names(tree))
+    if any(
+        isinstance(n, ast.Attribute) and n.attr in FORBIDDEN_PACKAGES
+        for part in reached
+        for n in ast.walk(part)
+    ):
+        # `import dynamisbench_soccer` then `dynamisbench_soccer.engines...`
+        banned |= {
+            (a.asname or a.name).split(".")[0]
+            for t in ast.walk(tree)
+            if isinstance(t, ast.Import)
+            for a in t.names
+            if a.name == "dynamisbench_soccer"
+        }
     return SymbolInfo(
         digest_node(node, tree),
         frozenset(n.id for part in reached for n in ast.walk(part) if isinstance(n, ast.Name)),
-        frozenset(_engine_names(tree)),
+        frozenset(banned),
         frozenset(_marks(node)),
         _has_assertion(node),
     )
