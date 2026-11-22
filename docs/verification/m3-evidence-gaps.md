@@ -9,7 +9,7 @@ specifies the independent evidence required by the approved Policy A contract.
 ## Shared engineering causes
 
 Each cell has one primary cause for counting. The evidence column retains any
-additional requirements from the audit.
+additional requirements from the audit and clarifies them against baseline code where needed.
 
 | Primary cause | Open cells | Shared work |
 | --- | ---: | --- |
@@ -19,7 +19,7 @@ additional requirements from the audit.
 | Method definitions | 19 | Verify event eligibility and timing, and bind metric formulas to sourced registry claims. |
 | Provenance | 10 | Track verified input hashes and declarations through deterministic, mutation-sensitive replay. |
 | Limitations | 13 | Source operating limitations and assert that every applicable result carries them. |
-| Cross-device agreement | 8 | Execute each named subfamily in controlled comparisons and check numerical disagreement and its classification. |
+| Cross-device agreement | 8 | Execute each named subfamily in controlled comparisons and check numerical disagreement and its classification. The empirical verdict stays unknown. |
 
 The draft audit left 96 PARTIAL, 17 UNSUPPORTED and one NOT_AUDITED. The other 33
 open cells had no draft. The audit also requested follow-up on three SUPPORTED
@@ -55,7 +55,7 @@ receipts outside this count: the 0.006 s bound for force-platform single L, the
 | RCP-gnss_lps-gnss-B | RES-700 | PARTIAL | Subfamily isolation and calibration | Cite the enu_origin=None case and add contradictory geometry or antenna-offset refusals. |
 | RCP-gnss_lps-gnss-D | RES-700 | PARTIAL | QC verdicts | Cite test_admit_native_times_clock_latency_and_positions[gnss] as the clean control. |
 | RCP-gnss_lps-gnss-E | RES-700 | UNSUPPORTED | Method variants and numerical bounds | Parametrize the E tests over gnss and compare each variant with the GeodeticTrack truth. |
-| RCP-gnss_lps-gnss-H | RES-673 | PARTIAL | Method definitions and registry bindings | Add a registry-binding assertion once RES-694 lands. |
+| RCP-gnss_lps-gnss-H | RES-673 | PARTIAL | Method definitions and registry bindings | Bind the GNSS estimands to applicable sourced registry definitions and add a method claim where a definition is missing. |
 | RCP-gnss_lps-gnss-I | RES-700 | UNSUPPORTED | Numerical uncertainty | Propagate a GNSS position σ to speed and acceleration and compare with the closed-form variance. |
 | RCP-gnss_lps-gnss-M | RES-700 | UNSUPPORTED | Provenance | Round-trip through io.write/read, assert a non-None data_sha256 equal to the file hash, and assert that the digest changes on mutation. |
 | RCP-gnss_lps-gnss-O | RES-700 | PARTIAL | Limitations | Bind the limitations to sourced records. |
@@ -74,7 +74,7 @@ receipts outside this count: the 0.006 s bound for force-platform single L, the
 | RCP-imu-inertial-A | RES-693 | PARTIAL | Subfamily isolation and admission | Add stage, unit-label and non-finite or non-monotonic input refusals for imu.inertial. |
 | RCP-imu-inertial-C | RES-693 | NO DRAFT | Numerical timing and synchronisation | Apply declared IMU timestamps, synchronisation and latency to a reference trajectory, propagate timing uncertainty, and refuse unresolved or inconsistent alignment. |
 | RCP-imu-inertial-G | RES-671 | PARTIAL | Method definitions and protocol events | Record the event tolerance as 2/hz = 0.004 s. |
-| RCP-imu-inertial-H | RES-671 | PARTIAL | Method definitions and registry bindings | Add a registry-binding check once the claims exist. |
+| RCP-imu-inertial-H | RES-671 | PARTIAL | Method definitions and registry bindings | Bind IMU estimands to the applicable sourced registry definitions and add a method claim where a definition is missing. |
 | RCP-imu-inertial-K | RES-669 | PARTIAL | QC verdicts and fault coverage | Cite test_static_gyro_bias_and_slip_are_flagged and add a misalignment verdict. |
 | RCP-imu-inertial-L | RES-703 | PARTIAL | Cross-device agreement | Record tolerance 0.006 s. |
 | RCP-imu-inertial-M | RES-701 | NO DRAFT | Provenance | Verify source hash, placement and calibration declarations in IMU output with exact replay and input-mutation detection. |
@@ -98,12 +98,12 @@ receipts outside this count: the 0.006 s bound for force-platform single L, the
 | RCP-lpt_encoder-encoder-A | RES-693 | UNSUPPORTED | Subfamily isolation and admission | Encoder-fixture refusal tests (duplicate timestamps, bad count calibration units, analytical truth input). |
 | RCP-lpt_encoder-encoder-C | RES-693 | NO DRAFT | Numerical timing and synchronisation | Apply a declared encoder clock/latency transform and compare event timestamps with the affine oracle. Refuse a contradictory clock or non-monotonic corrected timestamps. |
 | RCP-lpt_encoder-encoder-D | RES-695 | PARTIAL | QC verdicts | Encoder-fixture dropout/duplicate faults and clean-control assertion. |
-| RCP-lpt_encoder-encoder-E | RES-695 | NO DRAFT | Method variants and numerical bounds | Compare every supported count-unwrapping and rate method with independent signed count histories. Bound the sensitivity to count quantisation and timestamp resolution. |
-| RCP-lpt_encoder-encoder-F | RES-695 | NO DRAFT | Numerical reconstruction | Recover displacement and rate from a signed, wrapped count history with known counter scale, direction and timestamp spacing. Derive the count and timing bounds. |
+| RCP-lpt_encoder-encoder-E | RES-695 | NO DRAFT | Method variants and numerical bounds | Compare each count and rate method with independent signed count histories. The ledger lists count_unwrap but the engine currently flags jumps. Verify rollover under a declared modulus or verify a reviewed refusal. Bound count quantisation and timestamp sensitivity. |
+| RCP-lpt_encoder-encoder-F | RES-695 | NO DRAFT | Numerical reconstruction | Extend the signed-count controls to displacement and rate at a declared scale and timestamp spacing. Verify rollover under a declared modulus or verify a reviewed refusal. Derive count and timing bounds. |
 | RCP-lpt_encoder-encoder-G | RES-671 | NO DRAFT | Method definitions and protocol events | Feed encoder-reconstructed displacement/rate into the applicable jump event path and assert analytical event times and eligibility refusals. |
 | RCP-lpt_encoder-encoder-H | RES-671 | NO DRAFT | Method definitions and registry bindings | Bind count-based displacement and rate estimands to sourced registry claims. Keep encoder attachment displacement distinct from centre-of-mass displacement. |
 | RCP-lpt_encoder-encoder-I | RES-695 | NO DRAFT | Numerical uncertainty | Propagate declared count and clock quantisation through displacement and rate, checking the observed bounds against the analytical result. |
-| RCP-lpt_encoder-encoder-J | RES-669 | NO DRAFT | Independent reference and numerical bounds | Run encoder unwrapping and rate against an independent signed count oracle. Check that the engine and reference share no reconstruction code. |
+| RCP-lpt_encoder-encoder-J | RES-669 | NO DRAFT | Independent reference and numerical bounds | Run signed counts and rate against an independent oracle. Verify rollover with a declared modulus or demonstrate the reviewed refusal. Check that the engine and reference share no reconstruction code. |
 | RCP-lpt_encoder-encoder-K | RES-669 | PARTIAL | QC verdicts and fault coverage | Assert acquire() outcome for each EventKind on encoder fixture. |
 | RCP-lpt_encoder-encoder-L | RES-703 | NO DRAFT | Cross-device agreement | Run a paired analytical encoder comparison using matched attachment kinematics, and quantify and classify disagreement with a non-matched estimand. |
 | RCP-lpt_encoder-encoder-M | RES-695 | NO DRAFT | Provenance | Round-trip encoder observations through verified I/O, trace source digest and method declarations into the report, and verify exact replay and mutation detection. |
@@ -116,7 +116,7 @@ receipts outside this count: the 0.006 s bound for force-platform single L, the
 | RCP-lpt_encoder-lpt-H | RES-671 | PARTIAL | Method definitions and registry bindings | Add registry-claim binding test for LPT estimands. |
 | RCP-lpt_encoder-lpt-I | RES-695 | UNSUPPORTED | Numerical uncertainty | LPT fixture; compare cable-angle/timebase perturbation deltas to closed-form cos/scale derivatives. |
 | RCP-lpt_encoder-lpt-K | RES-669 | PARTIAL | QC verdicts and fault coverage | Seeded inject() fixtures of LPT fault classes with expected acquire() fault maps. |
-| RCP-lpt_encoder-lpt-L | RES-703 | PARTIAL | Cross-device agreement | Run LPT engine in at least one study and assert its classification. |
+| RCP-lpt_encoder-lpt-L | RES-703 | PARTIAL | Cross-device agreement | Run LPT engine in at least one study and assert its classification. The empirical verdict stays unknown. |
 | RCP-lpt_encoder-lpt-O | RES-695 | PARTIAL | Limitations | Assert a declared LPT LIMITATIONS set is emitted on cable-only, fixed-line and dual results. |
 | RCP-nordic_hip-hip-A | RES-697 | PARTIAL | Subfamily isolation and admission | Add hip-data refusal tests: left/right declared on the hip export, a missing 'force' channel, and force_basis on hip. |
 | RCP-nordic_hip-hip-B | RES-697 | UNSUPPORTED | Subfamily isolation and calibration | Cite test_hip_squeeze_metrics_and_geometry_gate and add hip torque refusal and calibration application tests. |

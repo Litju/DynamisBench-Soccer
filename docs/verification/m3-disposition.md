@@ -56,7 +56,7 @@ The previous per-subfamily `blockers` text is preserved verbatim as `empirical_g
 
 ## 3. Open computational work, from the independent audit
 
-Cells below have a draft receipt that the auditors judged PARTIAL or UNSUPPORTED, or no draft because no test covers them. The [evidence gap inventory](m3-evidence-gaps.md) identifies the existing owner and required evidence for all 147 open cells. The original reviewer findings are in [the draft audit](m3-receipt-audit.md).
+Prior drafts were PARTIAL, UNSUPPORTED or NOT_AUDITED. The other open cells have no draft receipt. The [evidence gap inventory](m3-evidence-gaps.md) identifies the existing owner and required evidence for all 147 open cells. The original reviewer findings are in [the draft audit](m3-receipt-audit.md).
 
 Recurring gaps (each is concrete engineering, owned by the existing issue for that engine):
 
