@@ -295,6 +295,34 @@ def test_lps_processing_variants_and_reported_sensitivity(
         kinematics.positional_acceleration_m_s2[6:-6, 0], 2, rtol=0, atol=2e-10
     )
 
+    # All comparisons end at t=2.96 s. With slope extension, the endpoint
+    # velocity is 6.92 - h(3w1 + 5w2) for the two positive-offset weights.
+    alternate = "binomial5" if position_filter == "none" else "none"
+    endpoint_loss = {"none": 0, "boxcar5": 8 / 5, "binomial5": 17 / 16}
+    acceleration_overshoot = {"none": 0, "boxcar5": 1 / 30, "binomial5": 17 / 576}
+    sensitivity = result.sensitivity
+    assert sensitivity.comparison_duration_s == pytest.approx(2.96, rel=0, abs=1e-12)
+    assert sensitivity.every_second_sample is not None
+    for peak, filt, rate in (
+        (sensitivity.native, position_filter, 25),
+        (sensitivity.alternate_filter, alternate, 25),
+        (sensitivity.every_second_sample, position_filter, 12.5),
+    ):
+        assert peak.position_filter == filt
+        assert peak.reference_rate_hz == pytest.approx(rate, rel=0, abs=1e-9)
+        expected_speed = 6.92 - endpoint_loss[filt] / rate
+        assert peak.horizontal_positional_speed_m_s == pytest.approx(
+            expected_speed, rel=0, abs=2e-12
+        )
+        # For the nested five-point derivative, the boundary perturbations
+        # peak four rows in for boxcar5 and three rows in for binomial5.
+        expected_acceleration = 2 + (
+            acceleration_overshoot[filt] if derivative == "five_point" else 0
+        )
+        assert peak.horizontal_positional_acceleration_m_s2 == pytest.approx(
+            expected_acceleration, rel=0, abs=2e-10
+        )
+
 
 def test_lps_positional_threshold_recovers_known_interval_and_refuses_short_dwell() -> None:
     hz = 25
