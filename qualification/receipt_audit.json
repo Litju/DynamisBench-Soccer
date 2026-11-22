@@ -541,9 +541,13 @@
    "verdict": "UNSUPPORTED"
   },
   "RCP-lpt_encoder-encoder-B": {
-   "bound_digest": "096122d32d038f761f489c558d9d0f8ff8c2448724f5fb0a4b9766974e98d1fa",
-   "fix": "Record 5e-4 m as the largest bound.",
-   "reason": "Signed affine count calibration is exact (1e-15) on an encoder fixture. Quantization resolution is checked, and contradictory attachment is refused ('differs'). Recorded tolerance omits the 0.0005 m quantization bound.",
+   "bound_digest": "c720fa93b53faa84b7eb8dcbece8fdeb77a9f60ef872cee9408f8682b2e93bdd",
+   "evidence_head": "a5c9f898f1c0199f553e2b8bf49118b7f420b616",
+   "fix": "",
+   "prior_fix": "Record 5e-4 m as the largest bound.",
+   "prior_reason": "Signed affine count calibration is exact (1e-15) on an encoder fixture. Quantization resolution is checked, and contradictory attachment is refused ('differs'). Recorded tolerance omits the 0.0005 m quantization bound.",
+   "prior_verdict": "SUPPORTED",
+   "reason": "Existing signed count and quantisation controls still support the 0.0005 m bound, with geometry and attachment refusals unchanged. The new opt-in modular path has independent positive and adversarial checks.",
    "verdict": "SUPPORTED"
   },
   "RCP-lpt_encoder-encoder-D": {
@@ -567,9 +571,13 @@
    "verdict": "PARTIAL"
   },
   "RCP-lpt_encoder-lpt-C": {
-   "bound_digest": "f946a86a1d3436d6c840618b2e727ce85ed38159fd9233322e96765eb8051161",
+   "bound_digest": "f340056383e8ee26730d28d644d6b00b4a04bf1124fb0c37841e32665c8561e0",
+   "evidence_head": "a5c9f898f1c0199f553e2b8bf49118b7f420b616",
    "fix": "",
-   "reason": "Dual clock offset is applied exactly (4e-15), and skew, sync uncertainty and non-bracketing sync events are refused. Native irregular timestamps are preserved. All run on LPT fixtures.",
+   "prior_fix": "",
+   "prior_reason": "Dual clock offset is applied exactly (4e-15), and skew, sync uncertainty and non-bracketing sync events are refused. Native irregular timestamps are preserved. All run on LPT fixtures.",
+   "prior_verdict": "SUPPORTED",
+   "reason": "The offset-clock dual test asserts 4e-15 s and 4e-15 m with zero relative allowance and refuses excessive skew, uncertainty and unbracketed time. Encoder rollover changes preserve LPT clock support.",
    "verdict": "SUPPORTED"
   },
   "RCP-lpt_encoder-lpt-D": {
@@ -583,9 +591,13 @@
    "verdict": "PARTIAL"
   },
   "RCP-lpt_encoder-lpt-F": {
-   "bound_digest": "a7283dbe4c58e47380983354923b7c1f39384d82f2f33d85a78ab91151195adf",
+   "bound_digest": "a3c233830222fed70c9609a6255d29f45b18b2e577024efd221eeced9e264b69",
+   "evidence_head": "a5c9f898f1c0199f553e2b8bf49118b7f420b616",
    "fix": "",
-   "reason": "LPT fixed vertical line matches 0.4t+t^2 within 2e-15, and dual LPT velocity/acceleration match the closed form. The irregular test is encoder but supplementary. Tolerance 1.0 W matches the power bound.",
+   "prior_fix": "",
+   "prior_reason": "LPT fixed vertical line matches 0.4t+t^2 within 2e-15, and dual LPT velocity/acceleration match the closed form. The irregular test is encoder but supplementary. Tolerance 1.0 W matches the power bound.",
+   "prior_verdict": "SUPPORTED",
+   "reason": "Fixed-line and dual LPT controls assert 1e-13 m, 5e-4 m/s and 0.012 m/s\u00b2 absolute with zero relative allowance. The encoder-only power tolerance is outside this scope.",
    "verdict": "SUPPORTED"
   },
   "RCP-lpt_encoder-lpt-G": {
@@ -604,9 +616,13 @@
    "verdict": "UNSUPPORTED"
   },
   "RCP-lpt_encoder-lpt-J": {
-   "bound_digest": "ed9975b14cbaed155a655f12d8d37bbc96795588ecd9614694241d1716d3440c",
+   "bound_digest": "ba2fe7309686faf60f6dc3ef5f493ba752f0aa0ac16c1b00c025217336a3e7aa",
+   "evidence_head": "a5c9f898f1c0199f553e2b8bf49118b7f420b616",
    "fix": "",
-   "reason": "The engine output is compared with inline analytic trajectories that share no code (dual LPT, fixed line), and the import-boundary test passes. The CLI test keeps the truth bundle refused. Tolerance 1.0 W is consistent.",
+   "prior_fix": "",
+   "prior_reason": "The engine output is compared with inline analytic trajectories that share no code (dual LPT, fixed line), and the import-boundary test passes. The CLI test keeps the truth bundle refused. Tolerance 1.0 W is consistent.",
+   "prior_verdict": "SUPPORTED",
+   "reason": "Fixed-line and dual LPT outcomes agree with the independent kinematic expressions under the absolute F bounds, and the source import-boundary check passes.",
    "verdict": "SUPPORTED"
   },
   "RCP-lpt_encoder-lpt-K": {

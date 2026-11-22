@@ -109,8 +109,8 @@ issue = "RES-693"
 reference_kind = "closed_form"
 independence = "The rigid-body kinematics are closed forms in the reference substrate; that module imports no engine or assessment code."
 check_kind = "numeric"
-tolerance_unit = "as asserted in the cited tests (absolute)"
-tolerance_basis = "largest absolute bound asserted in the cited tests: 4e-15"
+tolerance_unit = "s (clock); separate 4e-15 m reconstruction bound"
+tolerance_basis = "Right raw clock plus the declared 0.2 s offset matches reference time at absolute 4e-15 s. Dual reconstructed displacement 0.4t+t² matches at absolute 4e-15 m. Relative tolerance is zero. Skew, unbracketed time and excess uncertainty are refused."
 tolerance = 4e-15
 subfamilies = ["lpt_encoder.lpt"]
 implementation = ["src/dynamisbench_soccer/engines/lpt_acquisition.py::acquire"]
@@ -118,9 +118,9 @@ reference = ["src/dynamisbench_soccer/reference/spatial.py::RigidBody"]
 tests = ["tests/test_lpt_acquisition.py::test_dual_rejects_unsynchronized_clocks", "tests/test_lpt_acquisition.py::test_dual_reconstruction_with_lateral_motion_and_offset_clocks", "tests/test_lpt_acquisition.py::test_native_irregular_timing_and_indexed_integrity_diagnostics"]
 
 [receipt.digests]
-"src/dynamisbench_soccer/engines/lpt_acquisition.py::acquire" = "9af2e84afd83b6e7b7a366d9fe071885f26588069bbc0db9299e2abeda62ea0c"
+"src/dynamisbench_soccer/engines/lpt_acquisition.py::acquire" = "9980148ba8cdc54b945261a11e8747425e1209f700bfb319727c8139976f3358"
 "src/dynamisbench_soccer/reference/spatial.py::RigidBody" = "3f6ce7c7d3d600665ad4e580bff84c581243abbb2cad1dc11c92c8e51ab42fe7"
-"tests/test_lpt_acquisition.py::test_dual_reconstruction_with_lateral_motion_and_offset_clocks" = "89f4186104b59799fc447f29342c235018c1a68a2e52c5713c0470911c449ed1"
+"tests/test_lpt_acquisition.py::test_dual_reconstruction_with_lateral_motion_and_offset_clocks" = "cc43468d906d6e752a5b3564a0bf951cdbe259d74065e717d69485d403436377"
 "tests/test_lpt_acquisition.py::test_dual_rejects_unsynchronized_clocks" = "d361ffe8e27c764612c0f0cbfe527f087f4e0bbbe1b302f230139357cb5a7d60"
 "tests/test_lpt_acquisition.py::test_native_irregular_timing_and_indexed_integrity_diagnostics" = "446a26414a2892d71a1c8e0109ea7af76566601586394040333d067242d99903"
 
@@ -130,23 +130,22 @@ dimension = "F"
 claim = "LPT. Reconstructed quantities equal the independent analytical truth within the asserted tolerance."
 issue = "RES-695"
 reference_kind = "closed_form"
-independence = "The rigid-body kinematics are closed forms in the reference substrate; that module imports no engine or assessment code."
+independence = "The reference trajectory and test-side dual bar expressions are independent kinematic closed forms. The reference substrate imports no engine or assessment code."
 check_kind = "numeric"
-tolerance_unit = "as asserted in the cited tests (absolute)"
-tolerance_basis = "largest absolute bound asserted in the cited tests: 1"
-tolerance = 1.0
+tolerance_unit = "m (fixed-line); separate velocity and acceleration bounds"
+tolerance_basis = "Expected fixed-line displacement is 0.4t+t², with absolute tolerance 1e-13 m for surveyed-range rounding. Dual bar velocity is 0.4+2t and acceleration is 2, with absolute tolerances 5e-4 m/s and 0.012 m/s² for the checked interior under all three methods. The tests set relative tolerance to zero."
+tolerance = 1e-13
 subfamilies = ["lpt_encoder.lpt"]
 implementation = ["src/dynamisbench_soccer/engines/lpt_acquisition.py::acquire", "src/dynamisbench_soccer/engines/lpt.py::process"]
-reference = ["src/dynamisbench_soccer/reference/spatial.py::RigidBody"]
-tests = ["tests/test_lpt_engine.py::test_methods_against_independent_analytic_irregular_quantized_motion", "tests/test_lpt_engine.py::test_dual_methods_recover_independent_bar_trajectory", "tests/test_lpt_acquisition.py::test_fixed_vertical_line_using_res669_observation_and_separate_com_oracle"]
+reference = ["src/dynamisbench_soccer/reference/kinematics.py::Trajectory"]
+tests = ["tests/test_lpt_engine.py::test_dual_methods_recover_independent_bar_trajectory", "tests/test_lpt_acquisition.py::test_fixed_vertical_line_using_res669_observation_and_separate_com_oracle"]
 
 [receipt.digests]
 "src/dynamisbench_soccer/engines/lpt.py::process" = "5b197309b2e6212f55f1e21e3a614ccc3400fc0404bfcb58d6e0371f1d4396fd"
-"src/dynamisbench_soccer/engines/lpt_acquisition.py::acquire" = "9af2e84afd83b6e7b7a366d9fe071885f26588069bbc0db9299e2abeda62ea0c"
-"src/dynamisbench_soccer/reference/spatial.py::RigidBody" = "3f6ce7c7d3d600665ad4e580bff84c581243abbb2cad1dc11c92c8e51ab42fe7"
-"tests/test_lpt_acquisition.py::test_fixed_vertical_line_using_res669_observation_and_separate_com_oracle" = "1281c840b4847d956c6bfa67419c8f5b9ece20ccbca6ee187ff2eef31c15f009"
-"tests/test_lpt_engine.py::test_dual_methods_recover_independent_bar_trajectory" = "fc02153221f07254db463f22a25ef1334947b37426075a0b677ddfb37bf7fade"
-"tests/test_lpt_engine.py::test_methods_against_independent_analytic_irregular_quantized_motion" = "de56ac7557a309f73c9bc726339a558ea75ec816bfd4527caa9d0984e8760954"
+"src/dynamisbench_soccer/engines/lpt_acquisition.py::acquire" = "9980148ba8cdc54b945261a11e8747425e1209f700bfb319727c8139976f3358"
+"src/dynamisbench_soccer/reference/kinematics.py::Trajectory" = "6c5d2b8879d0384ef30a4044c4ff13b6fe3f69f0ed33232c74da454f9da7d9a7"
+"tests/test_lpt_acquisition.py::test_fixed_vertical_line_using_res669_observation_and_separate_com_oracle" = "7f4786f2982904758064028bfe432e13177707bfe8d4e7b8d2a90a7597e6ec82"
+"tests/test_lpt_engine.py::test_dual_methods_recover_independent_bar_trajectory" = "3e320e333c489f133d0f5cf01db8610aaced4a798e79a3660fec8fd434b12f54"
 
 [[receipt]]
 id = "RCP-lpt_encoder-lpt-J"
@@ -154,22 +153,22 @@ dimension = "J"
 claim = "LPT. The engine agrees with a reference that shares no code with it; the reference substrate imports no engine code."
 issue = "RES-669"
 reference_kind = "closed_form"
-independence = "The rigid-body kinematics are closed forms in the reference substrate; that module imports no engine or assessment code."
+independence = "The reference trajectory and test-side dual bar expressions are independent kinematic closed forms. The reference substrate imports no engine or assessment code."
 check_kind = "numeric"
-tolerance_unit = "as asserted in the cited tests (absolute)"
-tolerance_basis = "largest absolute bound asserted in the cited tests: 1"
-tolerance = 1.0
+tolerance_unit = "m (fixed-line); separate velocity and acceleration bounds"
+tolerance_basis = "Expected fixed-line displacement is 0.4t+t², with absolute tolerance 1e-13 m for surveyed-range rounding. Dual bar velocity is 0.4+2t and acceleration is 2, with absolute tolerances 5e-4 m/s and 0.012 m/s² for the checked interior under all three methods. The tests set relative tolerance to zero."
+tolerance = 1e-13
 subfamilies = ["lpt_encoder.lpt"]
 implementation = ["src/dynamisbench_soccer/engines/lpt.py::process"]
-reference = ["src/dynamisbench_soccer/reference/spatial.py::RigidBody"]
-tests = ["tests/test_lpt_engine.py::test_methods_against_independent_analytic_irregular_quantized_motion", "tests/test_lpt_engine.py::test_dual_methods_recover_independent_bar_trajectory", "tests/test_lpt_engine.py::test_cli_processes_verified_bundle_and_keeps_reference_separate", "tests/test_reference_spatial_observations.py::test_import_boundary_between_references_and_engines"]
+reference = ["src/dynamisbench_soccer/reference/kinematics.py::Trajectory"]
+tests = ["tests/test_lpt_acquisition.py::test_fixed_vertical_line_using_res669_observation_and_separate_com_oracle", "tests/test_lpt_engine.py::test_dual_methods_recover_independent_bar_trajectory", "tests/test_lpt_engine.py::test_cli_processes_verified_bundle_and_keeps_reference_separate", "tests/test_reference_spatial_observations.py::test_import_boundary_between_references_and_engines"]
 
 [receipt.digests]
 "src/dynamisbench_soccer/engines/lpt.py::process" = "5b197309b2e6212f55f1e21e3a614ccc3400fc0404bfcb58d6e0371f1d4396fd"
-"src/dynamisbench_soccer/reference/spatial.py::RigidBody" = "3f6ce7c7d3d600665ad4e580bff84c581243abbb2cad1dc11c92c8e51ab42fe7"
+"src/dynamisbench_soccer/reference/kinematics.py::Trajectory" = "6c5d2b8879d0384ef30a4044c4ff13b6fe3f69f0ed33232c74da454f9da7d9a7"
+"tests/test_lpt_acquisition.py::test_fixed_vertical_line_using_res669_observation_and_separate_com_oracle" = "7f4786f2982904758064028bfe432e13177707bfe8d4e7b8d2a90a7597e6ec82"
 "tests/test_lpt_engine.py::test_cli_processes_verified_bundle_and_keeps_reference_separate" = "66ee35121e917438d2c74ba268e7d0c3249396ae9f8912cbfd2abeeb53af818b"
-"tests/test_lpt_engine.py::test_dual_methods_recover_independent_bar_trajectory" = "fc02153221f07254db463f22a25ef1334947b37426075a0b677ddfb37bf7fade"
-"tests/test_lpt_engine.py::test_methods_against_independent_analytic_irregular_quantized_motion" = "de56ac7557a309f73c9bc726339a558ea75ec816bfd4527caa9d0984e8760954"
+"tests/test_lpt_engine.py::test_dual_methods_recover_independent_bar_trajectory" = "3e320e333c489f133d0f5cf01db8610aaced4a798e79a3660fec8fd434b12f54"
 "tests/test_reference_spatial_observations.py::test_import_boundary_between_references_and_engines" = "9da921ff81d53361dc6491bd84940e7f356b20de83804dc104d8d502e812e54a"
 
 [[receipt]]
@@ -189,7 +188,7 @@ reference = ["src/dynamisbench_soccer/reference/spatial_observations.py::encoder
 tests = ["tests/test_lpt_acquisition.py::test_signed_encoder_affine_calibration_and_count_jump", "tests/test_lpt_acquisition.py::test_counts_quantization_and_missing_geometry_stay_in_cable_coordinates"]
 
 [receipt.digests]
-"src/dynamisbench_soccer/engines/lpt_acquisition.py::acquire" = "9af2e84afd83b6e7b7a366d9fe071885f26588069bbc0db9299e2abeda62ea0c"
+"src/dynamisbench_soccer/engines/lpt_acquisition.py::acquire" = "9980148ba8cdc54b945261a11e8747425e1209f700bfb319727c8139976f3358"
 "src/dynamisbench_soccer/reference/spatial_observations.py::encoder_counts" = "0dfced833275d92cc228956a663bf16bc8ed22ba23b8fb546ef8b94b9a0c8ac8"
 "tests/test_lpt_acquisition.py::test_counts_quantization_and_missing_geometry_stay_in_cable_coordinates" = "0bbc6d11e705d6850a66d3f83221493e257b18690bca3202c68e34fa0d6b33e3"
 "tests/test_lpt_acquisition.py::test_signed_encoder_affine_calibration_and_count_jump" = "4d920dd25b17bc5c59459ddb1ee18f132ab23297c59abac601d69a876d79877e"

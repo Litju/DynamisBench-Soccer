@@ -40,8 +40,12 @@ a constant effective conversion, supply `encoder_counts_per_m` in the source geo
 The engine multiplies `(count - zero_count) / encoder_counts_per_m` by `count_direction`
 and adds `initial_length_m` when supplied. Here `initial_length_m` is the absolute
 length at the declared zero count or zero metre displacement. Absolute distance channels
-already supply the length datum. Variable spool radius, encoder wraps and mechanical backlash
-require upstream correction backed by acquisition evidence.
+already supply the length datum. For a wrapping counter, declare `count_modulus` between 2
+and 2³² and supply the raw count and zero in that range, starting the zero in the same
+revolution as the first sample. The engine uses the shortest signed modular difference only
+when the speed bound plus one count of allowance is less than half a revolution on every
+sample interval. It refuses ambiguous intervals and still rejects overspeed. Variable spool
+radius and mechanical backlash require separate acquisition evidence.
 
 The input attachment label must match the requested point. A single cable with no usable
 geometry yields cable travel and its derivatives. Vertical reconstruction uses one of these
