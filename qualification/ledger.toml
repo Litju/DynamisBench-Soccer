@@ -93,7 +93,7 @@ paradigm = "continuous_signal"
 issue = "RES-697"
 engine_id = "hip"
 methods = ["filter"]
-ratings = { A = "specified", B = "specified", C = "specified", D = "partial", E = "partial", F = "partial", G = "partial", H = "partial", I = "partial", J = "verified", K = "partial", L = "partial", M = "partial", N = "absent", O = "partial" }
+ratings = { A = "specified", B = "verified", C = "specified", D = "partial", E = "partial", F = "partial", G = "partial", H = "partial", I = "partial", J = "verified", K = "partial", L = "partial", M = "partial", N = "absent", O = "partial" }
 empirical_gaps = ["Engine verified on analytical isometric controls (RES-697); squeeze protocol geometry validity and device metrology remain unqualified (RES-694)", "G/H assessment qualification remains RES-672"]
 blockers = []
 
@@ -4555,3 +4555,11 @@ kind = "independent_test"
 ref = "repo:tests/test_gnss_lps_acquisition.py"
 issue = "RES-700"
 rationale = "Native LPS admits surveyed anchor and Z-up declarations, preserves analytical XYZ and refuses missing or invalid geometry under RCP-gnss_lps-lps-B."
+
+[[evidence]]
+subfamily = "nordic_hip.hip"
+dimension = "B"
+kind = "independent_test"
+ref = "repo:tests/test_hip_policy_a.py"
+issue = "RES-697"
+rationale = "The typed affine cuff calibration, modeled peak torque and contradictory source and trial geometry refusals support RCP-nordic_hip-hip-B."

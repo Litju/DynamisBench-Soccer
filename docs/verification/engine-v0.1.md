@@ -28,7 +28,7 @@ Engineering calculations only; no scientific qualification of any device or metr
 | load_cell_isometric.load_cell | SPECIFIED | yes | 5 of 14 |
 | lpt_encoder.encoder | SPECIFIED | yes | 13 of 14 |
 | lpt_encoder.lpt | SPECIFIED | yes | 10 of 14 |
-| nordic_hip.hip | SPECIFIED | yes | 13 of 14 |
+| nordic_hip.hip | SPECIFIED | yes | 12 of 14 |
 | nordic_hip.nordic | SPECIFIED | yes | 9 of 14 |
 | radar_laser.laser | SPECIFIED | yes | 11 of 14 |
 | radar_laser.radar | SPECIFIED | yes | 7 of 14 |
@@ -219,7 +219,6 @@ Engineering calculations only; no scientific qualification of any device or metr
 
 **nordic_hip.hip** (SPECIFIED)
 * computational blocker: A: executable admission contract: native/vendor stage, units and integrity refusals tested (owner RES-697; rated specified)
-* computational blocker: B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-697; rated specified)
 * computational blocker: C: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused (owner RES-693; rated specified)
 * computational blocker: D: integrity and QC checks reject injected faults and pass clean controls (owner RES-697; rated partial)
 * computational blocker: E: every processing method variant is compared with an independent reference with stated sensitivity bounds (owner RES-697; rated partial)
@@ -235,7 +234,6 @@ Engineering calculations only; no scientific qualification of any device or metr
 * H - owner RES-672: metric definitions are bound to sourced registry claims and executable exactly
 * G - owner RES-672: protocol events are recovered against analytically known event times, with eligibility refusals
 * C - owner RES-693: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused
-* B - owner RES-697: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused
 * I - owner RES-697: declared uncertainty propagation is checked against an independent analytical result
 * E - owner RES-697: every processing method variant is compared with an independent reference with stated sensitivity bounds
 * A - owner RES-697: executable admission contract: native/vendor stage, units and integrity refusals tested
@@ -453,7 +451,7 @@ Open empirical requirements (what only physical measurement can close):
 | load_cell_isometric.load_cell | V | V | s | V | p | V | V | p | p | V | p | V | V | - | V |
 | lpt_encoder.encoder | s | V | s | p | p | p | p | p | p | p | p | p | p | - | p |
 | lpt_encoder.lpt | s | s | V | p | p | V | p | p | p | V | p | p | V | - | p |
-| nordic_hip.hip | s | s | s | p | p | p | p | p | p | V | p | p | p | - | p |
+| nordic_hip.hip | s | V | s | p | p | p | p | p | p | V | p | p | p | - | p |
 | nordic_hip.nordic | s | s | s | p | p | V | V | V | p | V | p | V | p | - | p |
 | radar_laser.laser | s | s | V | p | p | V | p | p | p | p | p | V | p | - | p |
 | radar_laser.radar | V | s | V | V | p | V | V | V | p | V | p | p | p | - | p |

@@ -1752,7 +1752,6 @@
       ],
       "nordic_hip.hip": [
         "A: executable admission contract: native/vendor stage, units and integrity refusals tested (owner RES-697; rated specified)",
-        "B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-697; rated specified)",
         "C: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused (owner RES-693; rated specified)",
         "D: integrity and QC checks reject injected faults and pass clean controls (owner RES-697; rated partial)",
         "E: every processing method variant is compared with an independent reference with stated sensitivity bounds (owner RES-697; rated partial)",
@@ -3227,11 +3226,11 @@
     },
     {
       "analytical_only_dimensions": [
+        "B",
         "J"
       ],
       "blockers": [
         "A: executable admission contract: native/vendor stage, units and integrity refusals tested (owner RES-697; rated specified)",
-        "B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-697; rated specified)",
         "C: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused (owner RES-693; rated specified)",
         "D: integrity and QC checks reject injected faults and pass clean controls (owner RES-697; rated partial)",
         "E: every processing method variant is compared with an independent reference with stated sensitivity bounds (owner RES-697; rated partial)",
@@ -3289,7 +3288,7 @@
       },
       "ratings": {
         "A": "specified",
-        "B": "specified",
+        "B": "verified",
         "C": "specified",
         "D": "partial",
         "E": "partial",
@@ -3305,13 +3304,15 @@
         "O": "partial"
       },
       "receipts": {
+        "B": [
+          "RCP-nordic_hip-hip-B"
+        ],
         "J": [
           "RCP-nordic_hip-hip-J"
         ]
       },
       "required_computational": {
         "A": "executable admission contract: native/vendor stage, units and integrity refusals tested",
-        "B": "declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused",
         "C": "clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused",
         "D": "integrity and QC checks reject injected faults and pass clean controls",
         "E": "every processing method variant is compared with an independent reference with stated sensitivity bounds",
@@ -3328,7 +3329,6 @@
       "subfamily": "nordic_hip.hip",
       "unverified_m3": [
         "A",
-        "B",
         "C",
         "D",
         "E",
@@ -3342,6 +3342,7 @@
         "O"
       ],
       "verified_m3": [
+        "B",
         "J"
       ]
     },

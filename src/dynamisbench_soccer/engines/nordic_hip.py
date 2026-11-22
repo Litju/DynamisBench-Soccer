@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import itertools
 import json
+import math
 from dataclasses import asdict, dataclass
 from typing import Literal
 
@@ -222,14 +223,42 @@ def _admit(bundle: SignalBundle, spec: NordicSpec) -> tuple[object, list[str]]:
     return meta, notes
 
 
+def _check_source_geometry(bundle: SignalBundle, spec: NordicSpec) -> None:
+    trial = bundle.meta.geometry
+    acquisition = bundle.meta.acquisition
+    if acquisition is None or trial is None:
+        return
+    channels = {decl.channel for decl in spec.sides}
+    angle = "hip_flexion_deg" if spec.protocol == "hip_squeeze" else "knee_angle_deg"
+    for source in acquisition.sources:
+        if channels.isdisjoint(source.channels):
+            continue
+        for field in ("lever_arm_m", angle):
+            recorded = getattr(source.geometry, field)
+            if recorded is None or field in source.geometry.unknown:
+                continue
+            expected = getattr(trial, field) if field not in trial.unknown else None
+            if field == "lever_arm_m" and spec.lever_arm_m is not None:
+                expected = spec.lever_arm_m
+            if expected is not None and not math.isclose(
+                expected, recorded, rel_tol=0, abs_tol=1e-9
+            ):
+                raise ValueError(f"{source.id}: declared {field} contradicts trial geometry")
+
+
 def _lever(spec: NordicSpec, meta: object) -> tuple[float | None, str | None, str | None]:
     geometry = getattr(meta, "geometry", None)
+    recorded = (
+        geometry.lever_arm_m
+        if geometry is not None and "lever_arm_m" not in geometry.unknown
+        else None
+    )
     lever = spec.lever_arm_m
-    if lever is None and geometry is not None and "lever_arm_m" not in geometry.unknown:
-        lever = geometry.lever_arm_m
+    if lever is None:
+        lever = recorded
+    elif recorded is not None and not math.isclose(lever, recorded, rel_tol=0, abs_tol=1e-9):
+        raise ValueError("configured lever arm contradicts bundle geometry")
     definition = spec.moment_arm_definition
-    if definition is None and geometry is not None and geometry.rig_description:
-        definition = None  # a rig description is not a moment-arm definition
     if lever is None:
         return None, definition, "torque refused: no declared lever arm"
     if not definition or not definition.strip():
@@ -422,6 +451,7 @@ def process(bundle: SignalBundle, spec: NordicSpec, method: MethodSpec | None = 
     spec = NordicSpec.model_validate(spec.model_dump())
     meta, notes = _admit(bundle, spec)
     lever, definition, lever_refusal = _lever(spec, meta)
+    _check_source_geometry(bundle, spec)
     geometry = bundle.meta.geometry
     checks: list[qc.Result] = []
     if spec.protocol == "hip_squeeze" and (

@@ -27,6 +27,7 @@ from dynamisbench_soccer.engines.nordic_hip import (
 from dynamisbench_soccer.qc.spec import Status
 from dynamisbench_soccer.reference.exporters import export_case
 from dynamisbench_soccer.reference.faults import ContinuousFault, ContinuousKind, inject
+from dynamisbench_soccer.registry.models import load as load_registry
 from dynamisbench_soccer.signals import io
 from dynamisbench_soccer.signals.schema import ChannelSpec, Quantity, SignalBundle
 
@@ -301,3 +302,35 @@ def test_cli_round_trip_and_refusal_exit_codes(tmp_path: Path) -> None:
         main(["nordic-hip", "process", str(stem), "--config", str(config), "--out", str(config)])
         == 2
     )
+
+
+@pytest.mark.parametrize(
+    ("method", "expected"),
+    [
+        ("weaker_over_stronger_percent", 100 * 160 / 240),
+        ("difference_over_mean_percent", 100 * (240 - 160) / 200),
+    ],
+)
+def test_nordic_force_torque_and_named_asymmetry_bind_to_sourced_claims(
+    method: str, expected: float
+) -> None:
+    registry = load_registry(Path(__file__).resolve().parents[1] / "registry")
+    by_id = {claim.id: claim for claim in registry.claims}
+    force_torque, asymmetry = by_id["NH-002"], by_id["AS-001"]
+    assert force_torque.metrics == ["peak_force", "peak_torque"]
+    assert force_torque.sources == ["opar2013"]
+    assert "opar2013" in registry.sources
+    assert "multiplying by the lever arm" in force_torque.statement
+    assert asymmetry.metrics == ["asymmetry_index"]
+    assert asymmetry.sources == ["bishop2018"]
+    assert "bishop2018" in registry.sources
+    assert "equation and the reference limb" in asymmetry.statement
+
+    result = process(_case(), _spec(), MethodSpec(asymmetry=method))
+    for side, peak, torque in (("left", 160, 64), ("right", 240, 96)):
+        metrics = result.sides[side].metrics
+        assert metrics["peak_force_n"] == pytest.approx(peak, rel=0, abs=0.05)
+        assert metrics["peak_torque_n_m"] == pytest.approx(torque, rel=0, abs=0.02)
+    assert result.bilateral["asymmetry"] == method
+    assert result.bilateral["weaker_side"] == "left"
+    assert result.bilateral["asymmetry_value_percent"] == pytest.approx(expected, rel=0, abs=0.05)

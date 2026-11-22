@@ -12,7 +12,8 @@ uses it.
 
 * **Strap/cuff force at the device (N).** Not hamstring or hip-muscle force.
 * **Torque (N·m)** = strap force × a *declared* lever arm. It needs both `lever_arm_m` and a
-  `moment_arm_definition`; either missing is a recorded refusal, not a default.
+  `moment_arm_definition`. Missing values produce a torque refusal. A configured arm
+  that differs from the declared bundle arm by more than 1 nm rejects the acquisition.
 
 ## Mandatory declarations (refused when absent or contradictory)
 

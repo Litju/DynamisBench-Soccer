@@ -450,7 +450,7 @@ reference = ["src/dynamisbench_soccer/reference/spatial.py::EccentricCurve"]
 tests = ["tests/test_nordic_hip.py::test_peak_torque_impulse_and_asymmetry_match_closed_forms", "tests/test_nordic_hip.py::test_measured_angle_gives_work_and_peak_force_angle"]
 
 [receipt.digests]
-"src/dynamisbench_soccer/engines/nordic_hip.py::process" = "b1435143b1f8e8b9ef7ea85b982a46ea360499bb153543430974606c47bd9239"
+"src/dynamisbench_soccer/engines/nordic_hip.py::process" = "a713634ed342d53c9a5974031401d5cd9ad08ea909707198303277d826b62837"
 "src/dynamisbench_soccer/reference/spatial.py::EccentricCurve" = "c8d048238d74c46c91862d669447995a58755e70c9c9b07393bab023fd1e2596"
 "tests/test_nordic_hip.py::test_measured_angle_gives_work_and_peak_force_angle" = "d09bf910261f5778006b3522b90577b163db9bdd28c6fa299b1f0492aff1746d"
 "tests/test_nordic_hip.py::test_peak_torque_impulse_and_asymmetry_match_closed_forms" = "6c0c0b8ff5f8e4fc5065a8c0f532484e9e3345926489ad6b880ff43d919a3bc4"
@@ -458,50 +458,47 @@ tests = ["tests/test_nordic_hip.py::test_peak_torque_impulse_and_asymmetry_match
 [[receipt]]
 id = "RCP-nordic_hip-nordic-G"
 dimension = "G"
-claim = "Nordic. Protocol events and phases are recovered at the analytically known times, with eligibility refusals."
+claim = "Nordic measured knee-angle break recovery agrees with the independent kinematic control and refuses missing angle or uncontrolled descent."
 issue = "RES-672"
 reference_kind = "closed_form"
 independence = "The eccentric curve and torque are closed forms in the reference substrate; that module imports no engine or assessment code."
 check_kind = "numeric"
-tolerance_unit = "as asserted in the cited tests (absolute)"
-tolerance_basis = "largest absolute bound asserted in the cited tests: 0.5"
+tolerance_unit = "deg (absolute)"
+tolerance_basis = "Measured break angle agrees with the analytical angle to within 0.5°. Uncontrolled descent and missing measured angle produce refusals."
 tolerance = 0.5
 subfamilies = ["nordic_hip.nordic"]
 implementation = ["src/dynamisbench_soccer/engines/nordic_hip.py::process"]
 reference = ["src/dynamisbench_soccer/reference/spatial.py::EccentricCurve"]
-tests = ["tests/test_nordic_hip.py::test_repetition_detection_finds_each_effort", "tests/test_nordic_hip.py::test_kinematic_break_point_from_independent_angle_fixture", "tests/test_nordic_hip.py::test_kinematic_break_refused_without_controlled_descent", "tests/test_nordic_hip.py::test_angle_is_never_recovered_from_force_or_time"]
+tests = ["tests/test_nordic_hip.py::test_kinematic_break_point_from_independent_angle_fixture", "tests/test_nordic_hip.py::test_kinematic_break_refused_without_controlled_descent", "tests/test_nordic_hip.py::test_angle_is_never_recovered_from_force_or_time"]
 
 [receipt.digests]
-"src/dynamisbench_soccer/engines/nordic_hip.py::process" = "b1435143b1f8e8b9ef7ea85b982a46ea360499bb153543430974606c47bd9239"
+"src/dynamisbench_soccer/engines/nordic_hip.py::process" = "a713634ed342d53c9a5974031401d5cd9ad08ea909707198303277d826b62837"
 "src/dynamisbench_soccer/reference/spatial.py::EccentricCurve" = "c8d048238d74c46c91862d669447995a58755e70c9c9b07393bab023fd1e2596"
 "tests/test_nordic_hip.py::test_angle_is_never_recovered_from_force_or_time" = "266dd9db70a0c9d448ca658ca0effbfa91cad125056911e5fbd2d2ddbc3a357d"
 "tests/test_nordic_hip.py::test_kinematic_break_point_from_independent_angle_fixture" = "4e10158225517b954d59e434f1c70e86acd377e45070900bd748f728fd3c4848"
 "tests/test_nordic_hip.py::test_kinematic_break_refused_without_controlled_descent" = "907e4d6fb15a753441e2ddee00eddaa52da323c6d0674deece962a6dd09ec8fb"
-"tests/test_nordic_hip.py::test_repetition_detection_finds_each_effort" = "f3a4f3a8da4a2dca336cc991ad3aacb89166ec3a57bacd0e97ba1d0c00e667e3"
 
 [[receipt]]
 id = "RCP-nordic_hip-nordic-H"
 dimension = "H"
-claim = "Nordic. Metric definitions are executed exactly as specified and estimands are kept separate and named."
+claim = "Nordic ankle force and lever torque execute the definition in NH-002, and the report names both supported asymmetry equations and identifies the weaker limb as required by AS-001."
 issue = "RES-672"
 reference_kind = "closed_form"
 independence = "The eccentric curve and torque are closed forms in the reference substrate; that module imports no engine or assessment code."
 check_kind = "numeric"
-tolerance_unit = "as asserted in the cited tests (absolute)"
-tolerance_basis = "largest absolute bound asserted in the cited tests: 0.1; largest relative bound 0.0002"
-tolerance = 0.1
+tolerance_unit = "N and percentage points; separate N·m bound"
+tolerance_basis = "Against the independent ramp: limbs peak at 160 and 240 N and 64 and 96 N·m. Asymmetry is 66⅔% of the stronger limb or 40% of the pair mean. The sourced-control assertions use 0.05 N, 0.02 N·m and 0.05 percentage points, zero relative tolerance, allowing for 1 ms sampling of the eccentric peak."
+tolerance = 0.05
 subfamilies = ["nordic_hip.nordic"]
 implementation = ["src/dynamisbench_soccer/engines/nordic_hip.py::process"]
 reference = ["src/dynamisbench_soccer/reference/spatial.py::EccentricCurve"]
-tests = ["tests/test_nordic_hip.py::test_difference_over_mean_asymmetry_variant_is_distinct", "tests/test_nordic_hip.py::test_peak_torque_impulse_and_asymmetry_match_closed_forms", "tests/test_nordic_hip.py::test_force_basis_is_mandatory_and_carried_through", "tests/test_nordic_hip.py::test_engine_does_not_import_reference_or_claim_muscle_force"]
+tests = ["tests/test_nordic_hip.py::test_nordic_force_torque_and_named_asymmetry_bind_to_sourced_claims", "tests/test_nordic_hip.py::test_force_basis_is_mandatory_and_carried_through"]
 
 [receipt.digests]
-"src/dynamisbench_soccer/engines/nordic_hip.py::process" = "b1435143b1f8e8b9ef7ea85b982a46ea360499bb153543430974606c47bd9239"
+"src/dynamisbench_soccer/engines/nordic_hip.py::process" = "a713634ed342d53c9a5974031401d5cd9ad08ea909707198303277d826b62837"
 "src/dynamisbench_soccer/reference/spatial.py::EccentricCurve" = "c8d048238d74c46c91862d669447995a58755e70c9c9b07393bab023fd1e2596"
-"tests/test_nordic_hip.py::test_difference_over_mean_asymmetry_variant_is_distinct" = "4f6aaac075d78c0ac79cf87e5aa93210d3f8553b5ea151bc3e8560e48f8dba55"
-"tests/test_nordic_hip.py::test_engine_does_not_import_reference_or_claim_muscle_force" = "e7941cb6f51b9da4622323291a1280542de7a13fd97914b55ca8802c89c33fe7"
 "tests/test_nordic_hip.py::test_force_basis_is_mandatory_and_carried_through" = "234946a12c1a170251faf99fb0daba0ebec9b41a4bfe858d0d3a2a2434b7dbfa"
-"tests/test_nordic_hip.py::test_peak_torque_impulse_and_asymmetry_match_closed_forms" = "6c0c0b8ff5f8e4fc5065a8c0f532484e9e3345926489ad6b880ff43d919a3bc4"
+"tests/test_nordic_hip.py::test_nordic_force_torque_and_named_asymmetry_bind_to_sourced_claims" = "3656a209c01292b074a0c312a76c4820d07f4169379b05bd95a701ee6c23bf19"
 
 [[receipt]]
 id = "RCP-nordic_hip-nordic-J"
@@ -520,7 +517,7 @@ reference = ["src/dynamisbench_soccer/reference/spatial.py::EccentricCurve"]
 tests = ["tests/test_nordic_hip.py::test_peak_torque_impulse_and_asymmetry_match_closed_forms", "tests/test_nordic_hip.py::test_engine_does_not_import_reference_or_claim_muscle_force", "tests/test_reference_spatial_observations.py::test_import_boundary_between_references_and_engines"]
 
 [receipt.digests]
-"src/dynamisbench_soccer/engines/nordic_hip.py::process" = "b1435143b1f8e8b9ef7ea85b982a46ea360499bb153543430974606c47bd9239"
+"src/dynamisbench_soccer/engines/nordic_hip.py::process" = "a713634ed342d53c9a5974031401d5cd9ad08ea909707198303277d826b62837"
 "src/dynamisbench_soccer/reference/spatial.py::EccentricCurve" = "c8d048238d74c46c91862d669447995a58755e70c9c9b07393bab023fd1e2596"
 "tests/test_nordic_hip.py::test_engine_does_not_import_reference_or_claim_muscle_force" = "e7941cb6f51b9da4622323291a1280542de7a13fd97914b55ca8802c89c33fe7"
 "tests/test_nordic_hip.py::test_peak_torque_impulse_and_asymmetry_match_closed_forms" = "6c0c0b8ff5f8e4fc5065a8c0f532484e9e3345926489ad6b880ff43d919a3bc4"
@@ -1687,7 +1684,7 @@ reference = ["src/dynamisbench_soccer/reference/motion_models.py::IsometricRamp"
 tests = ["tests/test_hip_policy_a.py::test_hip_cuff_force_reconstruction", "tests/test_nordic_hip.py::test_engine_does_not_import_reference_or_claim_muscle_force", "tests/test_reference_spatial_observations.py::test_import_boundary_between_references_and_engines"]
 
 [receipt.digests]
-"src/dynamisbench_soccer/engines/nordic_hip.py::process" = "b1435143b1f8e8b9ef7ea85b982a46ea360499bb153543430974606c47bd9239"
+"src/dynamisbench_soccer/engines/nordic_hip.py::process" = "a713634ed342d53c9a5974031401d5cd9ad08ea909707198303277d826b62837"
 "src/dynamisbench_soccer/reference/motion_models.py::IsometricRamp" = "fb30c889a909acd458dae981957a34ea33ce883f396d88610ac5ec87d75cb710"
 "tests/test_hip_policy_a.py::test_hip_cuff_force_reconstruction" = "3936a489477f841aa4c00b663db0ce159c5e0075fc5c34f551ac8cabfebaf889"
 "tests/test_nordic_hip.py::test_engine_does_not_import_reference_or_claim_muscle_force" = "e7941cb6f51b9da4622323291a1280542de7a13fd97914b55ca8802c89c33fe7"
@@ -1713,3 +1710,27 @@ tests = ["tests/test_radar_laser_processing.py::test_laser_distance_derivative_r
 "src/dynamisbench_soccer/engines/radar_laser.py::process" = "9ab9db6c532a1c8b13f97eceb8135e8e86058cba526ec9f9dcf42f31e0fc9228"
 "src/dynamisbench_soccer/reference/motion_models.py::MonoExponentialSprint" = "6f5cf86ba81df676877c7e99492f9df0400e35228a59a0f34a1d65bba5e3d493"
 "tests/test_radar_laser_processing.py::test_laser_distance_derivative_recovers_analytical_speed" = "2a514b17e5f70d07a7d6b444db3210ac0683c59e628a7a765d97704c6bcb07c3"
+
+[[receipt]]
+id = "RCP-nordic_hip-hip-B"
+dimension = "B"
+issue = "RES-697"
+claim = "The hip engine applies typed cuff-force calibration and declared lever geometry, and refuses missing or contradictory calibration and trial/source geometry."
+reference_kind = "closed_form"
+independence = "The isometric ramp independently defines cuff force. The test fixture inverts a separately declared affine calibration and compares returned force and torque with hand-calculated values."
+check_kind = "numeric"
+tolerance_unit = "absolute in N and N·m"
+tolerance = 1e-08
+tolerance_basis = "The control voltage represents F=500 V−50 N with peak 2500 N. A 0.40 m perpendicular lever gives 1000 N·m. Absolute 1e-8 in each unit allows floating-point arithmetic with zero relative allowance. Missing and double calibration, missing hip angle, a missing moment-arm definition, and 0.35/0.40 m or 90°/45° conflicts are verified refusals."
+subfamilies = ["nordic_hip.hip"]
+implementation = ["src/dynamisbench_soccer/engines/nordic_hip.py::process"]
+reference = ["src/dynamisbench_soccer/reference/motion_models.py::IsometricRamp"]
+tests = ["tests/test_hip_policy_a.py::test_hip_calibration_and_geometry_apply_once", "tests/test_hip_policy_a.py::test_hip_refuses_conflicting_configured_lever", "tests/test_hip_policy_a.py::test_hip_refuses_conflicting_source_geometry", "tests/test_nordic_hip.py::test_hip_squeeze_metrics_and_geometry_gate"]
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/nordic_hip.py::process" = "a713634ed342d53c9a5974031401d5cd9ad08ea909707198303277d826b62837"
+"src/dynamisbench_soccer/reference/motion_models.py::IsometricRamp" = "fb30c889a909acd458dae981957a34ea33ce883f396d88610ac5ec87d75cb710"
+"tests/test_hip_policy_a.py::test_hip_calibration_and_geometry_apply_once" = "20936272dc8870a82ff92ed3a21fba08d508bcde2a460ae7d05a5c58143376f4"
+"tests/test_hip_policy_a.py::test_hip_refuses_conflicting_configured_lever" = "8839c9b11cd5b2b0416247a91c5e444aff9eefc2a5151e0cc42ee6f3095c3e1a"
+"tests/test_hip_policy_a.py::test_hip_refuses_conflicting_source_geometry" = "fe88e8206eaeb108a93446ad22d4006b5537c817601fcb440e5278c7a229d85c"
+"tests/test_nordic_hip.py::test_hip_squeeze_metrics_and_geometry_gate" = "ed8b1e224078b4381aee90d00652041cdabce75b444e6de136b242ed5ef99398"
