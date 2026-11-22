@@ -1734,3 +1734,168 @@ tests = ["tests/test_hip_policy_a.py::test_hip_calibration_and_geometry_apply_on
 "tests/test_hip_policy_a.py::test_hip_refuses_conflicting_configured_lever" = "8839c9b11cd5b2b0416247a91c5e444aff9eefc2a5151e0cc42ee6f3095c3e1a"
 "tests/test_hip_policy_a.py::test_hip_refuses_conflicting_source_geometry" = "fe88e8206eaeb108a93446ad22d4006b5537c817601fcb440e5278c7a229d85c"
 "tests/test_nordic_hip.py::test_hip_squeeze_metrics_and_geometry_gate" = "ed8b1e224078b4381aee90d00652041cdabce75b444e6de136b242ed5ef99398"
+
+[[receipt]]
+id = "RCP-gnss_lps-lps-A"
+dimension = "A"
+subfamilies = ["gnss_lps.lps"]
+issue = "RES-693"
+claim = "LPS admission accepts the intact native observation and verifies stage, geometry declarations, units and native data integrity."
+implementation = ["src/dynamisbench_soccer/engines/gnss_lps_acquisition.py::admit"]
+reference = ["src/dynamisbench_soccer/reference/spatial.py::RigidBody"]
+tests = ["tests/test_gnss_lps_acquisition.py::test_admit_native_times_clock_latency_and_positions", "tests/test_gnss_lps_acquisition.py::test_lps_contradictory_native_declarations_are_refused", "tests/test_gnss_lps_acquisition.py::test_lps_unit_and_resampling_provenance_refusal", "tests/test_gnss_lps_acquisition.py::test_implicit_and_duplicate_timestamps_and_analytical_truth_refuse"]
+reference_kind = "closed_form"
+independence = "The cited reference constructs analytical motion, timing or deterministic observation faults without importing the tested engine."
+check_kind = "categorical"
+tolerance_basis = "Exact outcomes: refuse processed and resampled stages, noncanonical centimetres, contradictory rate/uncertainty/latency/drift/identity, missing or duplicate timestamps, and analytical truth supplied as an observation."
+tolerance = 0
+tolerance_unit = ""
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/gnss_lps_acquisition.py::admit" = "9debfad0fb7859e175ed2ce9f125e59c7ed7f18719af7fdef075a99b79ee1a3b"
+"src/dynamisbench_soccer/reference/spatial.py::RigidBody" = "3f6ce7c7d3d600665ad4e580bff84c581243abbb2cad1dc11c92c8e51ab42fe7"
+"tests/test_gnss_lps_acquisition.py::test_admit_native_times_clock_latency_and_positions" = "88876c7df6e0fade7e0e6caf3cb0cf79f3aef5250557b748140b16c610f3a106"
+"tests/test_gnss_lps_acquisition.py::test_implicit_and_duplicate_timestamps_and_analytical_truth_refuse" = "5fb460abd7ee78b65f50dc0f0eded4ea2f2e6ec9f126945514cb28b09cb32003"
+"tests/test_gnss_lps_acquisition.py::test_lps_contradictory_native_declarations_are_refused" = "49ecacfd79cf48a6b8fd7e2e7bf66fd65d1fe2b83e14a111f1a0c756865b436b"
+"tests/test_gnss_lps_acquisition.py::test_lps_unit_and_resampling_provenance_refusal" = "bc51a16001de2fe5664106455be591e3ab4ca3018cdc8ad54f07b69b3ee7f62b"
+
+[[receipt]]
+id = "RCP-gnss_lps-lps-C"
+dimension = "C"
+subfamilies = ["gnss_lps.lps"]
+issue = "RES-693"
+claim = "LPS maps declared time using a bracketing affine clock and latency model, retains timing uncertainty and refuses unresolved drift."
+implementation = ["src/dynamisbench_soccer/engines/gnss_lps_acquisition.py::admit"]
+reference = ["src/dynamisbench_soccer/reference/clocks.py::DeviceClock"]
+tests = ["tests/test_gnss_lps_acquisition.py::test_lps_declared_clock_and_latency_against_affine_reference", "tests/test_gnss_lps_processing.py::test_three_point_uses_measured_time_and_five_point_refuses_jitter"]
+reference_kind = "closed_form"
+independence = "The cited reference constructs analytical motion, timing or deterministic observation faults without importing the tested engine."
+check_kind = "numeric"
+tolerance_basis = "Measurement time is (1−160e−6)k/25 seconds and reference receipt time adds 0.038 s. Both arrays use absolute 1e-12 s with zero relative tolerance, allowing round-off only. Alignment and latency uncertainties are 1e-12 and 0.001 s. Unbracketed drift and unsupported jitter are refused."
+tolerance = 1e-12
+tolerance_unit = "s (absolute)"
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/gnss_lps_acquisition.py::admit" = "9debfad0fb7859e175ed2ce9f125e59c7ed7f18719af7fdef075a99b79ee1a3b"
+"src/dynamisbench_soccer/reference/clocks.py::DeviceClock" = "a538e7ae80f47d9b0880988f85c6705c2e5bdfe3344e5900158ed90fea72c043"
+"tests/test_gnss_lps_acquisition.py::test_lps_declared_clock_and_latency_against_affine_reference" = "5d84c0f76013005dc2eb1d866a832bb5618856589aa4119021ac5094c89978a3"
+"tests/test_gnss_lps_processing.py::test_three_point_uses_measured_time_and_five_point_refuses_jitter" = "14a919528034e37d2dfa1742944b95486f06b7a05964f691c680013b1f5b0512"
+
+[[receipt]]
+id = "RCP-gnss_lps-lps-E"
+dimension = "E"
+subfamilies = ["gnss_lps.lps"]
+issue = "RES-700"
+claim = "LPS three-point and five-point differentiation, all three position smoothers and reported alternate-filter and half-rate effects agree with independent linear and quadratic controls."
+implementation = ["src/dynamisbench_soccer/engines/gnss_lps.py::process"]
+reference = ["src/dynamisbench_soccer/reference/spatial.py::PlanarTrajectory", "src/dynamisbench_soccer/reference/spatial.py::RigidBody"]
+tests = ["tests/test_gnss_lps_processing.py::test_lps_processing_variants_and_reported_sensitivity", "tests/test_gnss_lps_processing.py::test_three_point_uses_measured_time_and_five_point_refuses_jitter", "tests/test_gnss_lps_processing.py::test_five_point_retains_native_result_when_rate_comparison_is_unavailable"]
+reference_kind = "closed_form"
+independence = "The cited reference constructs analytical motion, timing or deterministic observation faults without importing the tested engine."
+check_kind = "numeric"
+tolerance_basis = "For x=0.75t, speed and acceleration are 0.75 m/s and zero. For x=t+t², interior filter shifts are μ₂h² for μ₂=0,2,1 and speed/acceleration are 1+2t and 2. At the common 2.96 s endpoint, quadratic velocity peaks are 6.92−h(3w₁+5w₂); three-point acceleration peaks are 2 and five-point peaks are 2, 2+1/30 and 2+17/576 m/s² for none, boxcar and binomial. Sample times use 1e-12 s, rate 1e-9 Hz, position and speed 2e-12 in their units and acceleration 2e-10 m/s² to allow differentiation round-off, all with zero relative tolerance."
+tolerance = 2e-10
+tolerance_unit = "m/s² (acceleration), with separate bounds for position, speed, time and rate"
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/gnss_lps.py::process" = "47dad0be73c8de9a93699c8954df13d3b313b97a249e7ff27f8bfae4ee58edf9"
+"src/dynamisbench_soccer/reference/spatial.py::PlanarTrajectory" = "67451605f53ffbc4699f23b3ececbe8d654c0ae85748498bf55d05151a111fc5"
+"src/dynamisbench_soccer/reference/spatial.py::RigidBody" = "3f6ce7c7d3d600665ad4e580bff84c581243abbb2cad1dc11c92c8e51ab42fe7"
+"tests/test_gnss_lps_processing.py::test_five_point_retains_native_result_when_rate_comparison_is_unavailable" = "069f6699c35e7fabeefd8ea53da79ef8459b17da3115869391cdffaec3970c52"
+"tests/test_gnss_lps_processing.py::test_lps_processing_variants_and_reported_sensitivity" = "286fe73682a540d7e5dbd43feb5b4dff6fb5916158848a662f8728d312c0dd7f"
+"tests/test_gnss_lps_processing.py::test_three_point_uses_measured_time_and_five_point_refuses_jitter" = "14a919528034e37d2dfa1742944b95486f06b7a05964f691c680013b1f5b0512"
+
+[[receipt]]
+id = "RCP-gnss_lps-lps-G"
+dimension = "G"
+subfamilies = ["gnss_lps.lps"]
+issue = "RES-673"
+claim = "LPS horizontal positional speed qualification retains the known sampled above-threshold interval with exact run counts and refuses under-dwell or isolated samples."
+implementation = ["src/dynamisbench_soccer/engines/gnss_lps.py::process"]
+reference = ["src/dynamisbench_soccer/reference/spatial.py::PlanarTrajectory", "src/dynamisbench_soccer/reference/spatial.py::RigidBody"]
+tests = ["tests/test_gnss_lps_processing.py::test_lps_positional_threshold_recovers_known_interval_and_refuses_short_dwell"]
+reference_kind = "closed_form"
+independence = "The cited reference constructs analytical motion, timing or deterministic observation faults without importing the tested engine."
+check_kind = "numeric"
+tolerance_basis = "At 25 Hz, v=1+2t first exceeds 3.01 m/s at 1.04 s. The final row is 3 s, so the retained interval is 1.96 s and x(3)−x(1.04)=9.8784 m. Absolute rounding allowances are 1e-12 s and 2e-12 m. Dwell of 1.97 s and the isolated ≥6.99 m/s row both give zero runs and zero totals."
+tolerance = 2e-12
+tolerance_unit = "m (distance), with separate 1e-12 s duration bound"
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/gnss_lps.py::process" = "47dad0be73c8de9a93699c8954df13d3b313b97a249e7ff27f8bfae4ee58edf9"
+"src/dynamisbench_soccer/reference/spatial.py::PlanarTrajectory" = "67451605f53ffbc4699f23b3ececbe8d654c0ae85748498bf55d05151a111fc5"
+"src/dynamisbench_soccer/reference/spatial.py::RigidBody" = "3f6ce7c7d3d600665ad4e580bff84c581243abbb2cad1dc11c92c8e51ab42fe7"
+"tests/test_gnss_lps_processing.py::test_lps_positional_threshold_recovers_known_interval_and_refuses_short_dwell" = "c50b0c7f024cf59ad4048339bad578e8aba3cc8831d4f328954d8ef5e1c12bd6"
+
+[[receipt]]
+id = "RCP-gnss_lps-lps-J"
+dimension = "J"
+subfamilies = ["gnss_lps.lps"]
+issue = "RES-669"
+claim = "LPS native processing uses an independent planar motion and rigid-body oracle, and matches it without sharing production reconstruction code."
+implementation = ["src/dynamisbench_soccer/engines/gnss_lps.py::process"]
+reference = ["src/dynamisbench_soccer/reference/spatial.py::PlanarTrajectory", "src/dynamisbench_soccer/reference/spatial.py::RigidBody"]
+tests = ["tests/test_gnss_lps_processing.py::test_lps_processing_variants_and_reported_sensitivity", "tests/test_reference_spatial_observations.py::test_import_boundary_between_references_and_engines"]
+reference_kind = "closed_form"
+independence = "The cited reference constructs analytical motion, timing or deterministic observation faults without importing the tested engine."
+check_kind = "numeric"
+tolerance_basis = "On the quadratic track x=t+t² the interior smoothing adjustment is μ₂/25² with μ₂=0,2,1. Speed 1+2t and acceleration 2 agree at absolute 2e-12 m and m/s, and 2e-10 m/s², with zero relative tolerance. Linear and quadratic sensitivity use the rate, duration and boundary values detailed in RCP-gnss_lps-lps-E."
+tolerance = 2e-10
+tolerance_unit = "m/s² (acceleration), with separate position and speed bounds"
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/gnss_lps.py::process" = "47dad0be73c8de9a93699c8954df13d3b313b97a249e7ff27f8bfae4ee58edf9"
+"src/dynamisbench_soccer/reference/spatial.py::PlanarTrajectory" = "67451605f53ffbc4699f23b3ececbe8d654c0ae85748498bf55d05151a111fc5"
+"src/dynamisbench_soccer/reference/spatial.py::RigidBody" = "3f6ce7c7d3d600665ad4e580bff84c581243abbb2cad1dc11c92c8e51ab42fe7"
+"tests/test_gnss_lps_processing.py::test_lps_processing_variants_and_reported_sensitivity" = "286fe73682a540d7e5dbd43feb5b4dff6fb5916158848a662f8728d312c0dd7f"
+"tests/test_reference_spatial_observations.py::test_import_boundary_between_references_and_engines" = "9da921ff81d53361dc6491bd84940e7f356b20de83804dc104d8d502e812e54a"
+
+[[receipt]]
+id = "RCP-gnss_lps-gnss-M"
+dimension = "M"
+subfamilies = ["gnss_lps.gnss"]
+issue = "RES-700"
+claim = "File-backed GNSS processing records the verified synthetic observation hash and deterministically replays the seeded export, declaration and processing result."
+implementation = ["src/dynamisbench_soccer/engines/gnss_lps.py::process", "src/dynamisbench_soccer/engines/gnss_lps_acquisition.py::admit"]
+reference = ["src/dynamisbench_soccer/reference/faults.py::inject", "src/dynamisbench_soccer/reference/exporters.py::export_case"]
+tests = ["tests/test_gnss_lps_processing.py::test_position_engines_reproduce_seeded_inputs_and_bind_the_source_hash", "tests/test_reference_exporters.py::test_every_export_is_v2_deterministic_separate_and_hash_linked", "tests/test_reference_faults.py::test_faults_cover_all_subfamilies_with_isolated_lineage_and_deterministic_bytes"]
+reference_kind = "independent_implementation"
+independence = "The cited reference constructs analytical motion, timing or deterministic observation faults without importing the tested engine."
+check_kind = "categorical"
+tolerance_basis = "Exact outcomes: independent seed-700 regeneration gives identical Parquet, sidecar and processing report bytes. The acquisition digest equals the independently hashed Parquet, changes after a 0.005 m sample mutation, and tampering results in an input integrity refusal."
+tolerance = 0
+tolerance_unit = ""
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/gnss_lps.py::process" = "47dad0be73c8de9a93699c8954df13d3b313b97a249e7ff27f8bfae4ee58edf9"
+"src/dynamisbench_soccer/engines/gnss_lps_acquisition.py::admit" = "9debfad0fb7859e175ed2ce9f125e59c7ed7f18719af7fdef075a99b79ee1a3b"
+"src/dynamisbench_soccer/reference/exporters.py::export_case" = "3cf942e1d9c8bfce28253a1aacf6b4ff60afd78e6a37aa92ae88be042b289c09"
+"src/dynamisbench_soccer/reference/faults.py::inject" = "bc803ce121a3bf35662d04ca34370d2f1525a44ac1503ab51c6678a39905bc7e"
+"tests/test_gnss_lps_processing.py::test_position_engines_reproduce_seeded_inputs_and_bind_the_source_hash" = "60fdc0f47add24285adb0d99473ef974a34980e117ec1474483e876a3fe75fc2"
+"tests/test_reference_exporters.py::test_every_export_is_v2_deterministic_separate_and_hash_linked" = "dd5083a390846e2a8e59502d253a571f08ffc5bfab0a6b4d0220e225103805ad"
+"tests/test_reference_faults.py::test_faults_cover_all_subfamilies_with_isolated_lineage_and_deterministic_bytes" = "02408de0fac0618db8014d21c500a9e2b3981a80f8b1afa1045698eac00455ae"
+
+[[receipt]]
+id = "RCP-gnss_lps-lps-M"
+dimension = "M"
+subfamilies = ["gnss_lps.lps"]
+issue = "RES-700"
+claim = "File-backed LPS processing records the verified synthetic observation hash and deterministically replays the seeded export, declaration and processing result."
+implementation = ["src/dynamisbench_soccer/engines/gnss_lps.py::process", "src/dynamisbench_soccer/engines/gnss_lps_acquisition.py::admit"]
+reference = ["src/dynamisbench_soccer/reference/faults.py::inject", "src/dynamisbench_soccer/reference/exporters.py::export_case"]
+tests = ["tests/test_gnss_lps_processing.py::test_position_engines_reproduce_seeded_inputs_and_bind_the_source_hash", "tests/test_reference_exporters.py::test_every_export_is_v2_deterministic_separate_and_hash_linked", "tests/test_reference_faults.py::test_faults_cover_all_subfamilies_with_isolated_lineage_and_deterministic_bytes"]
+reference_kind = "independent_implementation"
+independence = "The cited reference constructs analytical motion, timing or deterministic observation faults without importing the tested engine."
+check_kind = "categorical"
+tolerance_basis = "Exact outcomes: independent seed-700 regeneration gives identical Parquet, sidecar and processing report bytes. The acquisition digest equals the independently hashed Parquet, changes after a 0.005 m sample mutation, and tampering results in an input integrity refusal."
+tolerance = 0
+tolerance_unit = ""
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/gnss_lps.py::process" = "47dad0be73c8de9a93699c8954df13d3b313b97a249e7ff27f8bfae4ee58edf9"
+"src/dynamisbench_soccer/engines/gnss_lps_acquisition.py::admit" = "9debfad0fb7859e175ed2ce9f125e59c7ed7f18719af7fdef075a99b79ee1a3b"
+"src/dynamisbench_soccer/reference/exporters.py::export_case" = "3cf942e1d9c8bfce28253a1aacf6b4ff60afd78e6a37aa92ae88be042b289c09"
+"src/dynamisbench_soccer/reference/faults.py::inject" = "bc803ce121a3bf35662d04ca34370d2f1525a44ac1503ab51c6678a39905bc7e"
+"tests/test_gnss_lps_processing.py::test_position_engines_reproduce_seeded_inputs_and_bind_the_source_hash" = "60fdc0f47add24285adb0d99473ef974a34980e117ec1474483e876a3fe75fc2"
+"tests/test_reference_exporters.py::test_every_export_is_v2_deterministic_separate_and_hash_linked" = "dd5083a390846e2a8e59502d253a571f08ffc5bfab0a6b4d0220e225103805ad"
+"tests/test_reference_faults.py::test_faults_cover_all_subfamilies_with_isolated_lineage_and_deterministic_bytes" = "02408de0fac0618db8014d21c500a9e2b3981a80f8b1afa1045698eac00455ae"

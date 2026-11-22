@@ -1678,19 +1678,12 @@
         "E: every processing method variant is compared with an independent reference with stated sensitivity bounds (owner RES-700; rated partial)",
         "H: metric definitions are bound to sourced registry claims and executable exactly (owner RES-673; rated partial)",
         "I: declared uncertainty propagation is checked against an independent analytical result (owner RES-700; rated partial)",
-        "M: seeded, hash-bound provenance chain for every processing stage, reproduced exactly (owner RES-700; rated partial)",
         "O: limitation statements are sourced and emitted with every result (owner RES-700; rated partial)"
       ],
       "gnss_lps.lps": [
-        "A: executable admission contract: native/vendor stage, units and integrity refusals tested (owner RES-693; rated specified)",
-        "C: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused (owner RES-693; rated specified)",
-        "E: every processing method variant is compared with an independent reference with stated sensitivity bounds (owner RES-700; rated partial)",
-        "G: protocol events are recovered against analytically known event times, with eligibility refusals (owner RES-673; rated partial)",
         "H: metric definitions are bound to sourced registry claims and executable exactly (owner RES-673; rated partial)",
         "I: declared uncertainty propagation is checked against an independent analytical result (owner RES-700; rated partial)",
-        "J: an independent reference implementation or closed form that shares no code with the engine (owner RES-669; rated partial)",
         "L: analytical cross-device studies are executed and classified, never read as interchangeability (owner RES-703; rated partial)",
-        "M: seeded, hash-bound provenance chain for every processing stage, reproduced exactly (owner RES-700; rated partial)",
         "O: limitation statements are sourced and emitted with every result (owner RES-700; rated partial)"
       ],
       "imu.inertial": [
@@ -2337,14 +2330,14 @@
         "G",
         "J",
         "K",
-        "L"
+        "L",
+        "M"
       ],
       "blockers": [
         "B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-700; rated specified)",
         "E: every processing method variant is compared with an independent reference with stated sensitivity bounds (owner RES-700; rated partial)",
         "H: metric definitions are bound to sourced registry claims and executable exactly (owner RES-673; rated partial)",
         "I: declared uncertainty propagation is checked against an independent analytical result (owner RES-700; rated partial)",
-        "M: seeded, hash-bound provenance chain for every processing stage, reproduced exactly (owner RES-700; rated partial)",
         "O: limitation statements are sourced and emitted with every result (owner RES-700; rated partial)"
       ],
       "empirical_dimensions_covered": [],
@@ -2403,7 +2396,7 @@
         "J": "verified",
         "K": "verified",
         "L": "verified",
-        "M": "partial",
+        "M": "verified",
         "N": "absent",
         "O": "partial"
       },
@@ -2431,6 +2424,9 @@
         ],
         "L": [
           "RCP-gnss_lps-gnss-L"
+        ],
+        "M": [
+          "RCP-gnss_lps-gnss-M"
         ]
       },
       "required_computational": {
@@ -2438,7 +2434,6 @@
         "E": "every processing method variant is compared with an independent reference with stated sensitivity bounds",
         "H": "metric definitions are bound to sourced registry claims and executable exactly",
         "I": "declared uncertainty propagation is checked against an independent analytical result",
-        "M": "seeded, hash-bound provenance chain for every processing stage, reproduced exactly",
         "O": "limitation statements are sourced and emitted with every result"
       },
       "state": "SPECIFIED",
@@ -2448,7 +2443,6 @@
         "E",
         "H",
         "I",
-        "M",
         "O"
       ],
       "verified_m3": [
@@ -2459,26 +2453,27 @@
         "G",
         "J",
         "K",
-        "L"
+        "L",
+        "M"
       ]
     },
     {
       "analytical_only_dimensions": [
+        "A",
         "B",
+        "C",
         "D",
+        "E",
         "F",
-        "K"
+        "G",
+        "J",
+        "K",
+        "M"
       ],
       "blockers": [
-        "A: executable admission contract: native/vendor stage, units and integrity refusals tested (owner RES-693; rated specified)",
-        "C: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused (owner RES-693; rated specified)",
-        "E: every processing method variant is compared with an independent reference with stated sensitivity bounds (owner RES-700; rated partial)",
-        "G: protocol events are recovered against analytically known event times, with eligibility refusals (owner RES-673; rated partial)",
         "H: metric definitions are bound to sourced registry claims and executable exactly (owner RES-673; rated partial)",
         "I: declared uncertainty propagation is checked against an independent analytical result (owner RES-700; rated partial)",
-        "J: an independent reference implementation or closed form that shares no code with the engine (owner RES-669; rated partial)",
         "L: analytical cross-device studies are executed and classified, never read as interchangeability (owner RES-703; rated partial)",
-        "M: seeded, hash-bound provenance chain for every processing stage, reproduced exactly (owner RES-700; rated partial)",
         "O: limitation statements are sourced and emitted with every result (owner RES-700; rated partial)"
       ],
       "empirical_dimensions_covered": [],
@@ -2525,67 +2520,79 @@
         "O": "RES-700"
       },
       "ratings": {
-        "A": "specified",
+        "A": "verified",
         "B": "verified",
-        "C": "specified",
+        "C": "verified",
         "D": "verified",
-        "E": "partial",
+        "E": "verified",
         "F": "verified",
-        "G": "partial",
+        "G": "verified",
         "H": "partial",
         "I": "partial",
-        "J": "partial",
+        "J": "verified",
         "K": "verified",
         "L": "partial",
-        "M": "partial",
+        "M": "verified",
         "N": "absent",
         "O": "partial"
       },
       "receipts": {
+        "A": [
+          "RCP-gnss_lps-lps-A"
+        ],
         "B": [
           "RCP-gnss_lps-lps-B"
+        ],
+        "C": [
+          "RCP-gnss_lps-lps-C"
         ],
         "D": [
           "RCP-gnss_lps-lps-D"
         ],
+        "E": [
+          "RCP-gnss_lps-lps-E"
+        ],
         "F": [
           "RCP-gnss_lps-lps-F"
         ],
+        "G": [
+          "RCP-gnss_lps-lps-G"
+        ],
+        "J": [
+          "RCP-gnss_lps-lps-J"
+        ],
         "K": [
           "RCP-gnss_lps-lps-K"
+        ],
+        "M": [
+          "RCP-gnss_lps-lps-M"
         ]
       },
       "required_computational": {
-        "A": "executable admission contract: native/vendor stage, units and integrity refusals tested",
-        "C": "clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused",
-        "E": "every processing method variant is compared with an independent reference with stated sensitivity bounds",
-        "G": "protocol events are recovered against analytically known event times, with eligibility refusals",
         "H": "metric definitions are bound to sourced registry claims and executable exactly",
         "I": "declared uncertainty propagation is checked against an independent analytical result",
-        "J": "an independent reference implementation or closed form that shares no code with the engine",
         "L": "analytical cross-device studies are executed and classified, never read as interchangeability",
-        "M": "seeded, hash-bound provenance chain for every processing stage, reproduced exactly",
         "O": "limitation statements are sourced and emitted with every result"
       },
       "state": "SPECIFIED",
       "subfamily": "gnss_lps.lps",
       "unverified_m3": [
-        "A",
-        "C",
-        "E",
-        "G",
         "H",
         "I",
-        "J",
         "L",
-        "M",
         "O"
       ],
       "verified_m3": [
+        "A",
         "B",
+        "C",
         "D",
+        "E",
         "F",
-        "K"
+        "G",
+        "J",
+        "K",
+        "M"
       ]
     },
     {

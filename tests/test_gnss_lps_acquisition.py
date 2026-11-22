@@ -240,3 +240,52 @@ def test_lps_field_axes_require_an_explicit_z_up_frame(frame: str | None) -> Non
     case, declaration = track_case("lps")
     with pytest.raises(AcquisitionRefusal, match="declared Z-up field frame"):
         admit(case.observation, declaration.model_copy(update={"lps_z_up_frame": frame}))
+
+
+@pytest.mark.parametrize(
+    ("change", "message"),
+    [
+        ({"native_hz": 10}, "native acquisition rate"),
+        ({"stage": "vendor_resampled"}, "resampled"),
+        ({"stage": "vendor_processed"}, "processed"),
+        ({"latency_uncertainty_s": 0.2}, "uncertainty"),
+        ({"timestamp_basis": "measurement"}, "zero latency"),
+        ({"maximum_drift_ppm": 10}, "clock drift"),
+        ({"bundle_id": "other-bundle"}, "different bundle"),
+    ],
+)
+def test_lps_contradictory_native_declarations_are_refused(change: dict, message: str) -> None:
+    case, declaration = track_case("lps")
+    with pytest.raises(AcquisitionRefusal, match=message):
+        admit(case.observation, declaration.model_copy(update=change))
+
+
+def test_lps_unit_and_resampling_provenance_refusal() -> None:
+    case, declaration = track_case("lps")
+    acquisition = case.observation.meta.acquisition
+    assert acquisition is not None
+    source = acquisition.sources[0]
+    source.raw_format = "Vendor Re-Sampled Export"
+    with pytest.raises(AcquisitionRefusal, match="resampled"):
+        admit(case.observation, declaration)
+    source.raw_format = "native LPS"
+    case.observation.meta.channel("position_x").unit = "cm"
+    with pytest.raises(AcquisitionRefusal, match="is not canonical 'm'"):
+        admit(case.observation, declaration)
+
+
+def test_lps_declared_clock_and_latency_against_affine_reference() -> None:
+    case, declaration = track_case("lps", hz=25, drift=-160, latency=0.038)
+    expected_time = (1 - 160e-6) * np.arange(case.observation.meta.n_rows) / 25
+    result = admit(case.observation, declaration)
+    np.testing.assert_allclose(result.clock.measurement_time_s, expected_time, rtol=0, atol=1e-12)
+    np.testing.assert_allclose(
+        result.clock.reference_stamp_s, expected_time + 0.038, rtol=0, atol=1e-12
+    )
+    assert result.clock.alignment_uncertainty_s == 1e-12
+    assert result.declaration.latency_uncertainty_s == 0.001
+    acquisition = case.observation.meta.acquisition
+    assert acquisition is not None
+    acquisition.alignments[0].sync_events.pop()
+    with pytest.raises(AcquisitionRefusal, match="bracketing"):
+        admit(case.observation, declaration)
