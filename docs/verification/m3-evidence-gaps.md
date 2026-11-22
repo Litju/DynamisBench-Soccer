@@ -6,6 +6,28 @@ Baseline `81fd3255eb4dde7bf9baea851682722d6f91ac94`. This inventory records the
 `qualification/receipt_audit.json`. For cells with no draft, the final column
 specifies the independent evidence required by the approved Policy A contract.
 
+## Shared engineering causes
+
+Each cell has one primary cause for counting. The evidence column retains any
+additional requirements from the audit.
+
+| Primary cause | Open cells | Shared work |
+| --- | ---: | --- |
+| Subfamily isolation | 27 | Exercise admission, geometry or processing on the named subfamily's own fixtures. |
+| QC verdicts | 22 | Check clean controls, fault-specific diagnostics and the resulting acceptance or rejection. |
+| Numerical accuracy and uncertainty | 48 | Compare clock transforms, reconstruction, variant sensitivity and propagated error against independent values with stated units and bounds. |
+| Method definitions | 19 | Verify event eligibility and timing, and bind metric formulas to sourced registry claims. |
+| Provenance | 10 | Track verified input hashes and declarations through deterministic, mutation-sensitive replay. |
+| Limitations | 13 | Source operating limitations and assert that every applicable result carries them. |
+| Cross-device agreement | 8 | Execute each named subfamily in controlled comparisons and check numerical disagreement and its classification. |
+
+The draft audit left 96 PARTIAL, 17 UNSUPPORTED and one NOT_AUDITED. The other 33
+open cells had no draft. The audit also requested follow-up on three SUPPORTED
+receipts outside this count: the 0.006 s bound for force-platform single L, the
+0.0005 m bound for encoder B, and an explicit import-boundary check for GNSS J.
+
+## Per-cell evidence
+
 | Receipt ID | Existing owner issue | Prior verdict | Engineering cause | Evidence required |
 | --- | --- | --- | --- | --- |
 | RCP-force_platform-dual-A | RES-670 | PARTIAL | Subfamily isolation and admission | Add adapter admission test and non-finite wrench refusal for dual. |
