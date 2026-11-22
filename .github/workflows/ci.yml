@@ -86,7 +86,8 @@ jobs:
           wheel_bin="$RUNNER_TEMP/wheel-venv/bin"
           cd "$RUNNER_TEMP"
           "$wheel_bin/dbs" nordic-hip process --help
-          "$wheel_bin/python" -m pytest "$GITHUB_WORKSPACE/tests/test_nordic_hip.py"
+          "$wheel_bin/python" -m pytest \
+            "$GITHUB_WORKSPACE/tests/test_nordic_hip.py" "$GITHUB_WORKSPACE/tests/test_hip_policy_a.py"
       - name: RES-701 IMU installed-wheel processing
         run: |
           wheel_bin="$RUNNER_TEMP/wheel-venv/bin"
