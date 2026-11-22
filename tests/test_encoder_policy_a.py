@@ -3,6 +3,7 @@
 import numpy as np
 import pytest
 
+from dynamisbench_soccer.engines.lpt import process
 from dynamisbench_soccer.engines.lpt_acquisition import CableSpec, GeometrySpec, acquire
 from dynamisbench_soccer.reference.exporters import export_case
 from dynamisbench_soccer.reference.kinematics import Phase, Trajectory
@@ -46,3 +47,64 @@ def test_encoder_fractional_count_refusal() -> None:
             (CABLE,),
             GEOMETRY,
         )
+
+
+@pytest.mark.parametrize(
+    ("direction", "counts", "zero"),
+    [
+        (1, [252, 254, 0, 2, 4], 252),
+        (-1, [4, 2, 0, 254, 252], 4),
+    ],
+)
+def test_encoder_modular_count_rollover_preserves_signed_displacement_and_rate(
+    direction: int, counts: list[int], zero: int
+) -> None:
+    observation = _count_observation(counts)
+    declared = CableSpec(
+        source="instrument",
+        channel="counts",
+        count_modulus=256,
+        count_direction=direction,
+        zero_count=zero,
+        max_speed_m_s=4,
+    )
+    result = process(observation, (declared,), GEOMETRY)
+    assert result["verdict"] == "processed"
+    cable = result["cables"][0]
+    assert cable["faults"] == {}
+    np.testing.assert_allclose(
+        cable["cable_displacement_m"], [0, 0.002, 0.004, 0.006, 0.008], rtol=0, atol=1e-15
+    )
+    np.testing.assert_allclose(result["motion"]["velocity_m_s"], [0.2] * 5, rtol=0, atol=1e-12)
+
+
+def test_encoder_refuses_ambiguous_rollover_and_out_of_range_counts() -> None:
+    observation = _count_observation([252, 254, 0, 2, 4])
+    ambiguous = CableSpec(
+        source="instrument", channel="counts", count_modulus=256, max_speed_m_s=13
+    )
+    with pytest.raises(ValueError, match="rollover is ambiguous"):
+        acquire(observation, (ambiguous,), GEOMETRY)
+    declared = CableSpec(source="instrument", channel="counts", count_modulus=256, max_speed_m_s=4)
+    with pytest.raises(ValueError, match="encoder counts and zero"):
+        acquire(_count_observation([252, 254, 256, 2, 4]), (declared,), GEOMETRY)
+
+
+def test_encoder_rollover_does_not_mask_overspeed() -> None:
+    observation = _count_observation([252, 254, 70, 72, 74])
+    declared = CableSpec(source="instrument", channel="counts", count_modulus=256, max_speed_m_s=4)
+    result = process(observation, (declared,), GEOMETRY)
+    assert result["verdict"] == "reject"
+    assert result["cables"][0]["faults"] == {"count_jump_or_overspeed": [2]}
+    assert result["motion"] is None
+
+
+def _count_observation(counts: list[int]) -> SignalBundle:
+    observation = export_case("lpt_encoder.encoder", MOTION, test_id="cmj", hz=100).observation
+    meta = observation.meta.model_dump()
+    meta["n_rows"] = len(counts)
+    meta["acquisition"]["sources"][0]["geometry"]["cable_angle_rad"] = 0
+    return SignalBundle(
+        BundleMeta.model_validate(meta),
+        {"time": np.arange(len(counts)) / 100, "counts": np.array(counts, dtype=float)},
+    )

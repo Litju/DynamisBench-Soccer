@@ -27,6 +27,7 @@ class CableSpec(BaseModel):
     max_speed_m_s: float = Field(gt=0)
     count_direction: Literal[-1, 1] = 1
     zero_count: int = Field(default=0, gt=-(2**53), lt=2**53)
+    count_modulus: int | None = Field(default=None, ge=2, le=2**32)
     anchor_index: int = Field(default=0, ge=0)
     initial_length_m: float | None = Field(default=None, gt=0)
     full_length_m: float | None = Field(default=None, gt=0)
@@ -121,13 +122,16 @@ def _read_cable(bundle: SignalBundle, spec: CableSpec, gap_factor: float) -> Cab
         raw = bundle[spec.channel]
         if np.any(np.abs(raw) >= 2**53) or np.any(raw != np.floor(raw)):
             raise ValueError("encoder needs exactly represented integer counts")
-        raw = raw - spec.zero_count
+        if spec.count_modulus is not None:
+            raw = _unwrap_counts(raw, spec, dt, scale)
+        else:
+            raw = raw - spec.zero_count
         if np.any(np.abs(raw) >= 2**53):
             raise ValueError("count difference exceeds exact integer range")
         resolution = abs(gain)
     else:
-        if spec.count_direction != 1 or spec.zero_count != 0:
-            raise ValueError("count direction and zero count apply only to an encoder")
+        if spec.count_direction != 1 or spec.zero_count != 0 or spec.count_modulus is not None:
+            raise ValueError("count direction, zero count and modulus apply only to an encoder")
         raw = bundle[spec.channel]
         if calibration and (calibration.input_unit, calibration.output_unit) != ("m", "m"):
             raise ValueError("cable calibration requires metre-to-metre units")
@@ -175,6 +179,26 @@ def _read_cable(bundle: SignalBundle, spec: CableSpec, gap_factor: float) -> Cab
     else:
         limitations.append("full-extension saturation unmonitored")
     return Cable(spec, source, time, length, absolute, resolution, faults, tuple(limitations))
+
+
+def _unwrap_counts(raw: FloatArray, spec: CableSpec, dt: FloatArray, scale: float) -> FloatArray:
+    modulus = spec.count_modulus
+    assert modulus is not None
+    if not 0 <= spec.zero_count < modulus or np.any((raw < 0) | (raw >= modulus)):
+        raise ValueError("encoder counts and zero must lie in [0, count modulus)")
+    # With at most one count of quantisation error, the speed bound must identify
+    # a unique branch of the modular difference on every native interval.
+    if np.any(spec.max_speed_m_s * dt * scale + 1 >= modulus / 2):
+        raise ValueError("encoder rollover is ambiguous at the declared speed and sample intervals")
+    half = modulus // 2
+    if (len(raw) + 1) * modulus >= 2**63:
+        raise ValueError("encoder revolution count exceeds integer range")
+    changes = np.remainder(np.diff(raw.astype(np.int64)) + np.int64(half), np.int64(modulus))
+    initial = np.array([int(raw[0]) - spec.zero_count], dtype=np.int64)
+    unwrapped = np.concatenate((initial, changes - np.int64(half))).cumsum(dtype=np.int64)
+    if np.any((unwrapped <= -(2**53)) | (unwrapped >= 2**53)):
+        raise ValueError("count difference exceeds exact integer range")
+    return unwrapped.astype(np.float64)
 
 
 def _common_time(
