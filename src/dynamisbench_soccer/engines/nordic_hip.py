@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import itertools
 import json
+import math
 from dataclasses import asdict, dataclass
 from typing import Literal
 
@@ -224,12 +225,17 @@ def _admit(bundle: SignalBundle, spec: NordicSpec) -> tuple[object, list[str]]:
 
 def _lever(spec: NordicSpec, meta: object) -> tuple[float | None, str | None, str | None]:
     geometry = getattr(meta, "geometry", None)
+    recorded = (
+        geometry.lever_arm_m
+        if geometry is not None and "lever_arm_m" not in geometry.unknown
+        else None
+    )
     lever = spec.lever_arm_m
-    if lever is None and geometry is not None and "lever_arm_m" not in geometry.unknown:
-        lever = geometry.lever_arm_m
+    if lever is None:
+        lever = recorded
+    elif recorded is not None and not math.isclose(lever, recorded, rel_tol=0, abs_tol=1e-9):
+        raise ValueError("configured lever arm contradicts bundle geometry")
     definition = spec.moment_arm_definition
-    if definition is None and geometry is not None and geometry.rig_description:
-        definition = None  # a rig description is not a moment-arm definition
     if lever is None:
         return None, definition, "torque refused: no declared lever arm"
     if not definition or not definition.strip():

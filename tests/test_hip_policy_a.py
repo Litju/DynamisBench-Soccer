@@ -204,3 +204,12 @@ def test_hip_contradictory_protocol_and_missing_channel_refusals() -> None:
     missing = SideDeclaration(channel="absent", side="unilateral")
     with pytest.raises(ValueError, match="missing or not a force/voltage channel"):
         process(observation, _spec().model_copy(update={"sides": (missing,)}))
+
+
+def test_hip_refuses_conflicting_configured_lever() -> None:
+    observation = export_case("nordic_hip.hip", scenario=RAMP, hz=HZ).observation
+    assert observation.meta.geometry is not None
+    assert observation.meta.geometry.lever_arm_m == 0.4
+    with pytest.raises(ValueError, match="configured lever arm contradicts bundle geometry"):
+        process(observation, _spec().model_copy(update={"lever_arm_m": 0.35}))
+    assert process(observation, _spec()).sides["unilateral"].metrics["peak_torque_n_m"] == 1000
