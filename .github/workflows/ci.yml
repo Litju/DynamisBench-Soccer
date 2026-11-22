@@ -166,6 +166,9 @@ jobs:
           PY
       - name: Installed wheel force-platform processing
         run: |
+          wheel_bin="$RUNNER_TEMP/wheel-venv/bin"
+          (cd "$RUNNER_TEMP" && "$wheel_bin/python" -m pytest \
+            "$GITHUB_WORKSPACE/tests/test_force_platform_policy_a.py")
           uv run python -I - <<'PYCODE'
           import os
           import tempfile
