@@ -75,9 +75,9 @@ def test_dual_methods_recover_independent_bar_trajectory(method):
     t = np.asarray(motion["elapsed_s"])
     keep = (t >= 0.25) & (t <= 0.75)
     np.testing.assert_allclose(
-        np.asarray(motion["velocity_m_s"])[keep], 0.4 + 2 * t[keep], atol=5e-4
+        np.asarray(motion["velocity_m_s"])[keep], 0.4 + 2 * t[keep], atol=5e-4, rtol=0
     )
-    np.testing.assert_allclose(np.asarray(motion["acceleration_m_s2"])[keep], 2, atol=0.012)
+    np.testing.assert_allclose(np.asarray(motion["acceleration_m_s2"])[keep], 2, atol=0.012, rtol=0)
     assert "vertical_mass_model_power_w" not in motion
 
 

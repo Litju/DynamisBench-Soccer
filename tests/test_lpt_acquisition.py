@@ -34,7 +34,7 @@ def test_fixed_vertical_line_using_res669_observation_and_separate_com_oracle():
     result = acquire(case.observation, (LPT,), LINE)
     assert result.geometry_method == "fixed_vertical_line_above_anchor"
     np.testing.assert_allclose(
-        result.vertical_displacement_m, 0.4 * result.time_s + result.time_s**2, atol=2e-15
+        result.vertical_displacement_m, 0.4 * result.time_s + result.time_s**2, atol=1e-13, rtol=0
     )
     assert result.cables[0].limitations
     with pytest.raises(ValueError, match="excluding analytical"):
@@ -146,8 +146,8 @@ BAR = GeometrySpec(attachment_point="barbell", max_sync_error_s=0.0005)
 def test_dual_reconstruction_with_lateral_motion_and_offset_clocks():
     result = acquire(_dual(), DUAL, BAR)
     t = result.time_s
-    np.testing.assert_allclose(result.vertical_displacement_m, 0.4 * t + t**2, atol=4e-15)
-    np.testing.assert_allclose(result.cables[1].time_s, t - 0.2)
+    np.testing.assert_allclose(result.vertical_displacement_m, 0.4 * t + t**2, atol=4e-15, rtol=0)
+    np.testing.assert_allclose(result.cables[1].time_s + 0.2, t, atol=4e-15, rtol=0)
     assert result.geometry_method == "planar_dual_circle_above_baseline"
 
 

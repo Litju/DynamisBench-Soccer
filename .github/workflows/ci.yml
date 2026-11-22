@@ -199,8 +199,12 @@ jobs:
               assert len(result.qc)>0
               assert result.onset.index is None
           PYCODE
-      - name: Built wheel LPT/encoder registration and QC rules
+      - name: Built wheel LPT/encoder registration, processing and QC rules
         run: |
+          wheel_bin="$RUNNER_TEMP/wheel-venv/bin"
+          (cd "$RUNNER_TEMP" && "$wheel_bin/python" -m pytest \
+            "$GITHUB_WORKSPACE/tests/test_encoder_policy_a.py" \
+            "$GITHUB_WORKSPACE/tests/test_lpt_acquisition.py" "$GITHUB_WORKSPACE/tests/test_lpt_engine.py")
           uv run python -I - <<'PYCODE'
           from pathlib import Path
           import sys
