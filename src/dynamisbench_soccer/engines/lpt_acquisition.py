@@ -156,6 +156,8 @@ def _read_cable(bundle: SignalBundle, spec: CableSpec, gap_factor: float) -> Cab
         # Compare in counts to keep the one-count allowance exact near a large counter value.
         edge = np.diff(raw) * spec.count_direction
         allowance = spec.max_speed_m_s * dt / resolution + 1
+    # The limit is inclusive; one floating-point step covers rounding at its boundary.
+    allowance = np.nextafter(allowance, np.inf)
     for flag, mask in (
         ("dropout_gap", dt > gap_factor / sampling.nominal_hz),
         ("count_jump_or_overspeed" if resolution else "overspeed", edge > allowance),

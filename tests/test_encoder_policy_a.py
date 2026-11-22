@@ -110,16 +110,16 @@ def _count_observation(counts: list[int], *, hz: int = 100) -> SignalBundle:
     )
 
 
-def test_encoder_count_allowance_survives_large_counter_origin() -> None:
+@pytest.mark.parametrize("hz", [100, 128])
+def test_encoder_count_allowance_survives_large_counter_origin(hz: int) -> None:
     modulus = 2**32
-    observation = _count_observation([modulus - 1, 1, 3, 5, 7], hz=128)
-    # 0.125 m/s * (1 / 128 s) * 1000 count/m is just under one count.
-    # Use 0.128 m/s for exactly one permitted count plus one quantisation count.
+    observation = _count_observation([modulus - 1, 1, 3, 5, 7], hz=hz)
+    # The declared speed gives one permitted count plus one quantisation count.
     declared = CableSpec(
         source="instrument",
         channel="counts",
         count_modulus=modulus,
-        max_speed_m_s=0.128,
+        max_speed_m_s=hz / 1000,
     )
     cable = acquire(observation, (declared,), GEOMETRY).cables[0]
     assert cable.faults == {}
