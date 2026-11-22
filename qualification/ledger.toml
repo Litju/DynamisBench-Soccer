@@ -153,7 +153,7 @@ paradigm = "position_track"
 issue = "RES-700"
 engine_id = "gnss"
 methods = ["resample", "smooth"]
-ratings = { A = "verified", B = "specified", C = "verified", D = "verified", E = "partial", F = "verified", G = "verified", H = "partial", I = "partial", J = "verified", K = "verified", L = "verified", M = "partial", N = "absent", O = "partial" }
+ratings = { A = "verified", B = "specified", C = "verified", D = "verified", E = "partial", F = "verified", G = "verified", H = "partial", I = "partial", J = "verified", K = "verified", L = "verified", M = "verified", N = "absent", O = "partial" }
 empirical_gaps = ["Engine verified on analytical tracks (RES-700); audited native GNSS data and empirical latency, HDOP and multipath evidence remain open (RES-694)", "Positional versus Doppler/radar agreement is analytical only (RES-703)"]
 blockers = []
 
@@ -165,7 +165,7 @@ paradigm = "position_track"
 issue = "RES-700"
 engine_id = "lps"
 methods = ["resample", "smooth"]
-ratings = { A = "specified", B = "verified", C = "specified", D = "verified", E = "partial", F = "verified", G = "partial", H = "partial", I = "partial", J = "partial", K = "verified", L = "partial", M = "partial", N = "absent", O = "partial" }
+ratings = { A = "verified", B = "verified", C = "verified", D = "verified", E = "verified", F = "verified", G = "verified", H = "partial", I = "partial", J = "verified", K = "verified", L = "partial", M = "verified", N = "absent", O = "partial" }
 empirical_gaps = ["Engine verified on analytical tracks (RES-700); audited native LPS data, anchor survey and latency evidence remain open (RES-694)", "Positional versus radar agreement is analytical only (RES-703)"]
 blockers = []
 
@@ -4563,3 +4563,59 @@ kind = "independent_test"
 ref = "repo:tests/test_hip_policy_a.py"
 issue = "RES-697"
 rationale = "The typed affine cuff calibration, modeled peak torque and contradictory source and trial geometry refusals support RCP-nordic_hip-hip-B."
+
+[[evidence]]
+subfamily = "gnss_lps.lps"
+dimension = "A"
+kind = "independent_test"
+ref = "repo:tests/test_gnss_lps_acquisition.py"
+issue = "RES-693"
+rationale = "LPS admission accepts the intact native observation and verifies stage, geometry declarations, units and native data integrity."
+
+[[evidence]]
+subfamily = "gnss_lps.lps"
+dimension = "C"
+kind = "independent_test"
+ref = "repo:tests/test_gnss_lps_acquisition.py"
+issue = "RES-693"
+rationale = "LPS maps declared time using a bracketing affine clock and latency model, retains timing uncertainty and refuses unresolved drift."
+
+[[evidence]]
+subfamily = "gnss_lps.lps"
+dimension = "E"
+kind = "independent_test"
+ref = "repo:tests/test_gnss_lps_processing.py"
+issue = "RES-700"
+rationale = "LPS three-point and five-point differentiation, all three position smoothers and reported alternate-filter and half-rate effects agree with independent linear and quadratic controls."
+
+[[evidence]]
+subfamily = "gnss_lps.lps"
+dimension = "G"
+kind = "independent_test"
+ref = "repo:tests/test_gnss_lps_processing.py"
+issue = "RES-673"
+rationale = "LPS horizontal positional speed qualification retains the known sampled above-threshold interval with exact run counts and refuses under-dwell or isolated samples."
+
+[[evidence]]
+subfamily = "gnss_lps.lps"
+dimension = "J"
+kind = "independent_test"
+ref = "repo:tests/test_gnss_lps_processing.py"
+issue = "RES-669"
+rationale = "LPS native processing uses an independent planar motion and rigid-body oracle, and matches it without sharing production reconstruction code."
+
+[[evidence]]
+subfamily = "gnss_lps.gnss"
+dimension = "M"
+kind = "independent_test"
+ref = "repo:tests/test_gnss_lps_processing.py"
+issue = "RES-700"
+rationale = "File-backed GNSS processing records the verified synthetic observation hash and deterministically replays the seeded export, declaration and processing result."
+
+[[evidence]]
+subfamily = "gnss_lps.lps"
+dimension = "M"
+kind = "independent_test"
+ref = "repo:tests/test_gnss_lps_processing.py"
+issue = "RES-700"
+rationale = "File-backed LPS processing records the verified synthetic observation hash and deterministically replays the seeded export, declaration and processing result."

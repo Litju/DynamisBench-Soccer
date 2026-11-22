@@ -231,9 +231,14 @@
    "verdict": "SUPPORTED"
   },
   "RCP-gnss_lps-gnss-M": {
-   "fix": "Round-trip through io.write/read, assert a non-None data_sha256 equal to the file hash, and assert that the digest changes on mutation.",
-   "reason": "test_track_results_record_acquisition_hashes asserts 'data_sha256 == meta sha OR None'. A probe shows both are None for gnss, so the result is not hash-bound. There is no file round-trip and no input-change detection.",
-   "verdict": "UNSUPPORTED"
+   "bound_digest": "1bce76f1a4e8a500692a3a980951c9238498f1a0588942de8acc8fd4de841957",
+   "evidence_head": "2b1aeced0cdf8613fd09b23737f711bda88a53b1",
+   "fix": "",
+   "prior_fix": "Round-trip through io.write/read, assert a non-None data_sha256 equal to the file hash, and assert that the digest changes on mutation.",
+   "prior_reason": "test_track_results_record_acquisition_hashes asserts 'data_sha256 == meta sha OR None'. A probe shows both are None for gnss, so the result is not hash-bound. There is no file round-trip and no input-change detection.",
+   "prior_verdict": "UNSUPPORTED",
+   "reason": "File-backed GNSS processing records the verified synthetic observation hash and deterministically replays the seeded export, declaration and processing result. Exact outcomes: independent seed-700 regeneration gives identical Parquet, sidecar and processing report bytes. The acquisition digest equals the independently hashed Parquet, changes after a 0.005 m sample mutation, and tampering results in an input integrity refusal.",
+   "verdict": "SUPPORTED"
   },
   "RCP-gnss_lps-gnss-O": {
    "fix": "Bind the limitations to sourced records.",
@@ -241,9 +246,14 @@
    "verdict": "PARTIAL"
   },
   "RCP-gnss_lps-lps-A": {
-   "fix": "Parametrize the contradictory and resampling tests over lps.",
-   "reason": "The contradictory-declaration and resampled-provenance refusals are GNSS-only. LPS refusals cover only missing or duplicate time and the truth input. No stage or vendor refusal is tested on LPS.",
-   "verdict": "PARTIAL"
+   "bound_digest": "8422e3613f1ae2e5cd00e2903d733fd13356c91c537164ca3d782fe61eec2f0b",
+   "evidence_head": "2b1aeced0cdf8613fd09b23737f711bda88a53b1",
+   "fix": "",
+   "prior_fix": "Parametrize the contradictory and resampling tests over lps.",
+   "prior_reason": "The contradictory-declaration and resampled-provenance refusals are GNSS-only. LPS refusals cover only missing or duplicate time and the truth input. No stage or vendor refusal is tested on LPS.",
+   "prior_verdict": "PARTIAL",
+   "reason": "LPS admission accepts the intact native observation and verifies stage, geometry declarations, units and native data integrity. Exact outcomes: refuse processed and resampled stages, noncanonical centimetres, contradictory rate/uncertainty/latency/drift/identity, missing or duplicate timestamps, and analytical truth supplied as an observation.",
+   "verdict": "SUPPORTED"
   },
   "RCP-gnss_lps-lps-B": {
    "bound_digest": "6f3babba45e90bba709069ef7abb5f75d0baaebf07b04032119d3b2cfaf8d9b1",
@@ -256,9 +266,14 @@
    "verdict": "SUPPORTED"
   },
   "RCP-gnss_lps-lps-C": {
-   "fix": "Parametrize the sync-pulse refusal over lps.",
-   "reason": "LPS latency and +120 ppm drift are exact at 1e-12, and duplicate time and jitter are refused. But the bracketing sync-pulse drift refusal (test_drift_needs_bracketing_sync_pulses) runs GNSS only.",
-   "verdict": "PARTIAL"
+   "bound_digest": "b79007151ed20cc5dbb87d9f8a1ee308b747bc1301acdb43466f93fdb84039a6",
+   "evidence_head": "2b1aeced0cdf8613fd09b23737f711bda88a53b1",
+   "fix": "",
+   "prior_fix": "Parametrize the sync-pulse refusal over lps.",
+   "prior_reason": "LPS latency and +120 ppm drift are exact at 1e-12, and duplicate time and jitter are refused. But the bracketing sync-pulse drift refusal (test_drift_needs_bracketing_sync_pulses) runs GNSS only.",
+   "prior_verdict": "PARTIAL",
+   "reason": "LPS maps declared time using a bracketing affine clock and latency model, retains timing uncertainty and refuses unresolved drift. Measurement time is (1\u2212160e\u22126)k/25 seconds and reference receipt time adds 0.038 s. Both arrays use absolute 1e-12 s with zero relative tolerance, allowing round-off only. Alignment and latency uncertainties are 1e-12 and 0.001 s. Unbracketed drift and unsupported jitter are refused.",
+   "verdict": "SUPPORTED"
   },
   "RCP-gnss_lps-lps-D": {
    "bound_digest": "fa40b2211e53233f69c893f941bfa6c41305d226ea1808d373d4e2380e21fadd",
@@ -271,9 +286,14 @@
    "verdict": "SUPPORTED"
   },
   "RCP-gnss_lps-lps-E": {
-   "fix": "Compare five_point and binomial5 against the PlanarTrajectory truth with stated bounds.",
-   "reason": "three_point is checked exactly on jittered LPS. The binomial5 and every-second-sample variants assert only inequalities, and five_point appears only as a refusal or retention. No reference comparison exists for those variants. Recorded categorical despite numeric asserts.",
-   "verdict": "PARTIAL"
+   "bound_digest": "714ed44f813713fbebc1daa0e0a9b85535d3d8576ca6721a2608684f59263ed0",
+   "evidence_head": "2b1aeced0cdf8613fd09b23737f711bda88a53b1",
+   "fix": "",
+   "prior_fix": "Compare five_point and binomial5 against the PlanarTrajectory truth with stated bounds.",
+   "prior_reason": "three_point is checked exactly on jittered LPS. The binomial5 and every-second-sample variants assert only inequalities, and five_point appears only as a refusal or retention. No reference comparison exists for those variants. Recorded categorical despite numeric asserts.",
+   "prior_verdict": "PARTIAL",
+   "reason": "LPS three-point and five-point differentiation, all three position smoothers and reported alternate-filter and half-rate effects agree with independent linear and quadratic controls. For x=0.75t, speed and acceleration are 0.75 m/s and zero. For x=t+t\u00b2, interior filter shifts are \u03bc\u2082h\u00b2 for \u03bc\u2082=0,2,1 and speed/acceleration are 1+2t and 2. At the common 2.96 s endpoint, quadratic velocity peaks are 6.92\u2212h(3w\u2081+5w\u2082); three-point acceleration peaks are 2 and five-point peaks are 2, 2+1/30 and 2+17/576 m/s\u00b2 for none, boxcar and binomial. Sample times use 1e-12 s, rate 1e-9 Hz, position and speed 2e-12 in their units and acceleration 2e-10 m/s\u00b2 to allow differentiation round-off, all with zero relative tolerance.",
+   "verdict": "SUPPORTED"
   },
   "RCP-gnss_lps-lps-F": {
    "bound_digest": "94ac91b74dada07238625d2892d7a78f4a74b52e4e2f1270dfbfe6084aa78f0f",
@@ -282,9 +302,14 @@
    "verdict": "SUPPORTED"
   },
   "RCP-gnss_lps-lps-G": {
-   "fix": "Add an LPS horizontal_positional_speed threshold test with analytically known run times and dwell refusals.",
-   "reason": "test_doppler_threshold_counts... runs track_case('gnss') on Doppler. For LPS (no Doppler) nothing checks positional-speed threshold runs or events against known times.",
-   "verdict": "UNSUPPORTED"
+   "bound_digest": "2faa87a834671572d9c526de388a11d654f5d5d3d0994749cc9ac3b0f22fded2",
+   "evidence_head": "2b1aeced0cdf8613fd09b23737f711bda88a53b1",
+   "fix": "",
+   "prior_fix": "Add an LPS horizontal_positional_speed threshold test with analytically known run times and dwell refusals.",
+   "prior_reason": "test_doppler_threshold_counts... runs track_case('gnss') on Doppler. For LPS (no Doppler) nothing checks positional-speed threshold runs or events against known times.",
+   "prior_verdict": "UNSUPPORTED",
+   "reason": "LPS horizontal positional speed qualification retains the known sampled above-threshold interval with exact run counts and refuses under-dwell or isolated samples. At 25 Hz, v=1+2t first exceeds 3.01 m/s at 1.04 s. The final row is 3 s, so the retained interval is 1.96 s and x(3)\u2212x(1.04)=9.8784 m. Absolute rounding allowances are 1e-12 s and 2e-12 m. Dwell of 1.97 s and the isolated \u22656.99 m/s row both give zero runs and zero totals.",
+   "verdict": "SUPPORTED"
   },
   "RCP-gnss_lps-lps-H": {
    "fix": "Add an LPS-specific estimand and registry-binding assertion.",
@@ -297,9 +322,14 @@
    "verdict": "UNSUPPORTED"
   },
   "RCP-gnss_lps-lps-J": {
-   "fix": "Replace the geodetic citations with an LPS trilateration or planar closed-form test plus an import check.",
-   "reason": "The LPS closed-form test is genuine. The ENU equator and WGS84/PROJ tests are irrelevant to the planar LPS path, and no cited test checks the LPS engine's import independence.",
-   "verdict": "PARTIAL"
+   "bound_digest": "00b3e06dc4c69f1a1228a8a2e91732a39749f8ee5e8467a76b86bcd78332c4e3",
+   "evidence_head": "2b1aeced0cdf8613fd09b23737f711bda88a53b1",
+   "fix": "",
+   "prior_fix": "Replace the geodetic citations with an LPS trilateration or planar closed-form test plus an import check.",
+   "prior_reason": "The LPS closed-form test is genuine. The ENU equator and WGS84/PROJ tests are irrelevant to the planar LPS path, and no cited test checks the LPS engine's import independence.",
+   "prior_verdict": "PARTIAL",
+   "reason": "LPS native processing uses an independent planar motion and rigid-body oracle, and matches it without sharing production reconstruction code. On the quadratic track x=t+t\u00b2 the interior smoothing adjustment is \u03bc\u2082/25\u00b2 with \u03bc\u2082=0,2,1. Speed 1+2t and acceleration 2 agree at absolute 2e-12 m and m/s, and 2e-10 m/s\u00b2, with zero relative tolerance. Linear and quadratic sensitivity use the rate, duration and boundary values detailed in RCP-gnss_lps-lps-E.",
+   "verdict": "SUPPORTED"
   },
   "RCP-gnss_lps-lps-K": {
    "bound_digest": "758605b17e392a90f0c387df3c22ff812c45300a2aea222bbbbb9b8a8101284b",
@@ -313,9 +343,14 @@
    "verdict": "PARTIAL"
   },
   "RCP-gnss_lps-lps-M": {
-   "fix": "Use the same fix as gnss-M, parametrized for lps.",
-   "reason": "For lps, data_sha256 is also None (probe), so the hash assertion passes vacuously. The frozen-bytes test covers only the GNSS reference export, not LPS processing.",
-   "verdict": "UNSUPPORTED"
+   "bound_digest": "e62d3d01b03ea979e885f5301486ad229534710ba3d1a822af85d4cca64a5981",
+   "evidence_head": "2b1aeced0cdf8613fd09b23737f711bda88a53b1",
+   "fix": "",
+   "prior_fix": "Use the same fix as gnss-M, parametrized for lps.",
+   "prior_reason": "For lps, data_sha256 is also None (probe), so the hash assertion passes vacuously. The frozen-bytes test covers only the GNSS reference export, not LPS processing.",
+   "prior_verdict": "UNSUPPORTED",
+   "reason": "File-backed LPS processing records the verified synthetic observation hash and deterministically replays the seeded export, declaration and processing result. Exact outcomes: independent seed-700 regeneration gives identical Parquet, sidecar and processing report bytes. The acquisition digest equals the independently hashed Parquet, changes after a 0.005 m sample mutation, and tampering results in an input integrity refusal.",
+   "verdict": "SUPPORTED"
   },
   "RCP-gnss_lps-lps-O": {
    "fix": "Bind the limitations to sourced records.",
