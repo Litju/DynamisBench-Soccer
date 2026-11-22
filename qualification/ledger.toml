@@ -9,7 +9,7 @@ paradigm = "continuous_signal"
 issue = "RES-670"
 engine_id = "fp_single"
 methods = ["filter", "integrate"]
-ratings = { A = "specified", B = "specified", C = "specified", D = "partial", E = "partial", F = "partial", G = "verified", H = "partial", I = "partial", J = "partial", K = "partial", L = "verified", M = "verified", N = "absent", O = "partial" }
+ratings = { A = "specified", B = "specified", C = "specified", D = "partial", E = "partial", F = "verified", G = "verified", H = "partial", I = "partial", J = "verified", K = "partial", L = "verified", M = "verified", N = "absent", O = "partial" }
 empirical_gaps = ["Production engine and numerical checks available (RES-670); G/H assessment qualification remains RES-671/672", "Measured-device calibration/compliance/uncertainty and L agreement evidence remain open (RES-694/703/675)"]
 blockers = []
 
@@ -21,7 +21,7 @@ paradigm = "continuous_signal"
 issue = "RES-670"
 engine_id = "fp_dual"
 methods = ["filter", "integrate"]
-ratings = { A = "specified", B = "specified", C = "verified", D = "verified", E = "partial", F = "partial", G = "partial", H = "partial", I = "partial", J = "partial", K = "partial", L = "partial", M = "verified", N = "absent", O = "partial" }
+ratings = { A = "specified", B = "specified", C = "verified", D = "verified", E = "partial", F = "verified", G = "partial", H = "partial", I = "partial", J = "verified", K = "partial", L = "partial", M = "verified", N = "absent", O = "partial" }
 empirical_gaps = ["Dual production processing verified on analytical controls (RES-670); actual bilateral calibration, cross-talk, assignment and timing remain unqualified", "G/H assessment and L agreement qualification remain open (RES-671/672/703/675)"]
 blockers = []
 
@@ -93,7 +93,7 @@ paradigm = "continuous_signal"
 issue = "RES-697"
 engine_id = "hip"
 methods = ["filter"]
-ratings = { A = "specified", B = "specified", C = "specified", D = "partial", E = "partial", F = "partial", G = "partial", H = "partial", I = "partial", J = "partial", K = "partial", L = "partial", M = "partial", N = "absent", O = "partial" }
+ratings = { A = "specified", B = "specified", C = "specified", D = "partial", E = "partial", F = "partial", G = "partial", H = "partial", I = "partial", J = "verified", K = "partial", L = "partial", M = "partial", N = "absent", O = "partial" }
 empirical_gaps = ["Engine verified on analytical isometric controls (RES-697); squeeze protocol geometry validity and device metrology remain unqualified (RES-694)", "G/H assessment qualification remains RES-672"]
 blockers = []
 
@@ -141,7 +141,7 @@ paradigm = "continuous_signal"
 issue = "RES-699"
 engine_id = "laser"
 methods = ["differentiate", "filter"]
-ratings = { A = "specified", B = "specified", C = "verified", D = "partial", E = "partial", F = "partial", G = "partial", H = "partial", I = "partial", J = "partial", K = "partial", L = "verified", M = "partial", N = "absent", O = "partial" }
+ratings = { A = "specified", B = "specified", C = "verified", D = "partial", E = "partial", F = "verified", G = "partial", H = "partial", I = "partial", J = "partial", K = "partial", L = "verified", M = "partial", N = "absent", O = "partial" }
 empirical_gaps = ["Engine verified on analytical sprint controls (RES-699); no raw laser validity or range-noise study (RES-694)", "Range-rate versus Doppler agreement is analytical only (RES-703)"]
 blockers = []
 
@@ -153,7 +153,7 @@ paradigm = "position_track"
 issue = "RES-700"
 engine_id = "gnss"
 methods = ["resample", "smooth"]
-ratings = { A = "verified", B = "specified", C = "verified", D = "partial", E = "partial", F = "verified", G = "verified", H = "partial", I = "partial", J = "verified", K = "verified", L = "verified", M = "partial", N = "absent", O = "partial" }
+ratings = { A = "verified", B = "specified", C = "verified", D = "verified", E = "partial", F = "verified", G = "verified", H = "partial", I = "partial", J = "verified", K = "verified", L = "verified", M = "partial", N = "absent", O = "partial" }
 empirical_gaps = ["Engine verified on analytical tracks (RES-700); audited native GNSS data and empirical latency, HDOP and multipath evidence remain open (RES-694)", "Positional versus Doppler/radar agreement is analytical only (RES-703)"]
 blockers = []
 
@@ -165,7 +165,7 @@ paradigm = "position_track"
 issue = "RES-700"
 engine_id = "lps"
 methods = ["resample", "smooth"]
-ratings = { A = "specified", B = "specified", C = "specified", D = "partial", E = "partial", F = "verified", G = "partial", H = "partial", I = "partial", J = "partial", K = "verified", L = "partial", M = "partial", N = "absent", O = "partial" }
+ratings = { A = "specified", B = "verified", C = "specified", D = "verified", E = "partial", F = "verified", G = "partial", H = "partial", I = "partial", J = "partial", K = "verified", L = "partial", M = "partial", N = "absent", O = "partial" }
 empirical_gaps = ["Engine verified on analytical tracks (RES-700); audited native LPS data, anchor survey and latency evidence remain open (RES-694)", "Positional versus radar agreement is analytical only (RES-703)"]
 blockers = []
 
@@ -4531,3 +4531,27 @@ issue = "RES-703"
 rationale = "Computational verification receipt RCP-timing_contact-gates-L (independent audit: SUPPORTED). Software correctness under declared conditions only; no physical-device validity claimed."
 independence_from = "gates"
 implementation = "src/dynamisbench_soccer/reference/motion_models.py"
+
+[[evidence]]
+subfamily = "force_platform.single"
+dimension = "F"
+kind = "independent_test"
+ref = "repo:tests/test_force_platform_policy_a.py"
+issue = "RES-670"
+rationale = "Accepted single-plate production results reproduce independent vertical velocity and displacement within the unit-specific bounds in RCP-force_platform-single-F."
+
+[[evidence]]
+subfamily = "force_platform.dual"
+dimension = "F"
+kind = "independent_test"
+ref = "repo:tests/test_force_platform_policy_a.py"
+issue = "RES-670"
+rationale = "Accepted dual-plate production results reproduce independent vertical velocity and displacement within the unit-specific bounds in RCP-force_platform-dual-F."
+
+[[evidence]]
+subfamily = "gnss_lps.lps"
+dimension = "B"
+kind = "independent_test"
+ref = "repo:tests/test_gnss_lps_acquisition.py"
+issue = "RES-700"
+rationale = "Native LPS admits surveyed anchor and Z-up declarations, preserves analytical XYZ and refuses missing or invalid geometry under RCP-gnss_lps-lps-B."

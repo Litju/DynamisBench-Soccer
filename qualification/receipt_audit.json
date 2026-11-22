@@ -2,7 +2,7 @@
  "auditor": "separate-model review (three independent Claude Opus agents, one pass, read-only)",
  "limitations": [
   "Model-based review, not a human domain-expert review.",
-  "Single pass: receipts the auditors marked PARTIAL/UNSUPPORTED were not revised and re-audited.",
+  "The baseline review was a single pass. Follow-up evidence and review heads are recorded on individual re-audited entries.",
   "One receipt (radar_laser.radar L) received no verdict and was not promoted.",
   "Reviewers could run the cited tests; they did not review the engines line by line."
  ],
@@ -35,9 +35,14 @@
    "verdict": "PARTIAL"
   },
   "RCP-force_platform-dual-F": {
-   "fix": "Re-issue with 0.07 m tolerance.",
-   "reason": "The dual reconstruction against the closed form is real, but the asserted bounds are 0.06 m/s and 0.07 m, against a recorded tolerance of 1e-10.",
-   "verdict": "PARTIAL"
+   "bound_digest": "d76c804dccca7032e33f09e8a0f24b96be2de5221dcaf03b3daccded0ff01734",
+   "evidence_head": "fbf4665885047e52c6cdd2829b6d2c01937fee9b",
+   "fix": "",
+   "prior_fix": "Re-issue with 0.07 m tolerance.",
+   "prior_reason": "The dual reconstruction against the closed form is real, but the asserted bounds are 0.06 m/s and 0.07 m, against a recorded tolerance of 1e-10.",
+   "prior_verdict": "PARTIAL",
+   "reason": "The independent closed form matches production dual-plate reconstruction within both unit-specific bounds, including the accepted nonflat trials. Exact-flat trajectories also exercise diagnostic reconstruction.",
+   "verdict": "SUPPORTED"
   },
   "RCP-force_platform-dual-G": {
    "fix": "Run dual export through process()->JumpSignal->assess for CMJ events and bilateral split.",
@@ -55,9 +60,14 @@
    "verdict": "UNSUPPORTED"
   },
   "RCP-force_platform-dual-J": {
-   "fix": "Record 0.07 m tolerance.",
-   "reason": "The reference is independent, and the reconstruction test covers dual against the closed form. The recorded 1e-10 comes from engine-internal and metamorphic checks; the reference comparison is at 0.06/0.07.",
-   "verdict": "PARTIAL"
+   "bound_digest": "4eaa7dc3b451bfd54d71e3cdcf28dfa57974ef10c1ea3a7ee3b371f32aeae4e8",
+   "evidence_head": "fbf4665885047e52c6cdd2829b6d2c01937fee9b",
+   "fix": "",
+   "prior_fix": "Record 0.07 m tolerance.",
+   "prior_reason": "The reference is independent, and the reconstruction test covers dual against the closed form. The recorded 1e-10 comes from engine-internal and metamorphic checks; the reference comparison is at 0.06/0.07.",
+   "prior_verdict": "PARTIAL",
+   "reason": "The independent closed form matches production dual-plate reconstruction within both unit-specific bounds, including the accepted nonflat trials. Exact-flat trajectories also exercise diagnostic reconstruction.",
+   "verdict": "SUPPORTED"
   },
   "RCP-force_platform-dual-K": {
    "fix": "Parametrize remaining continuous/protocol fault classes on dual export with expected verdicts.",
@@ -96,9 +106,14 @@
    "verdict": "PARTIAL"
   },
   "RCP-force_platform-single-F": {
-   "fix": "Re-issue with tolerance 0.07 m (velocity 0.06 m/s).",
-   "reason": "test_reconstructs_all_vertical_fixtures runs single and dual against the Trajectory closed form, but the asserted bounds are 0.06 m/s and 0.07 m, against a recorded tolerance of 1e-10, which overstates precision by roughly 9 orders of magnitude.",
-   "verdict": "PARTIAL"
+   "bound_digest": "dfdbad44a3e56e7a79acd8b6def772500a2a5d66ccf292fa5b09dc4407cff55e",
+   "evidence_head": "fbf4665885047e52c6cdd2829b6d2c01937fee9b",
+   "fix": "",
+   "prior_fix": "Re-issue with tolerance 0.07 m (velocity 0.06 m/s).",
+   "prior_reason": "test_reconstructs_all_vertical_fixtures runs single and dual against the Trajectory closed form, but the asserted bounds are 0.06 m/s and 0.07 m, against a recorded tolerance of 1e-10, which overstates precision by roughly 9 orders of magnitude.",
+   "prior_verdict": "PARTIAL",
+   "reason": "The independent closed form matches production single-plate reconstruction within both unit-specific bounds, including the accepted nonflat trials. Exact-flat trajectories also exercise diagnostic reconstruction.",
+   "verdict": "SUPPORTED"
   },
   "RCP-force_platform-single-G": {
    "bound_digest": "df9c153e770ebaa74112c3f1e3ef5e0c08d8e2b814529833f39d47a1e8f0f242",
@@ -117,9 +132,14 @@
    "verdict": "PARTIAL"
   },
   "RCP-force_platform-single-J": {
-   "fix": "Record 0.07 m tolerance.",
-   "reason": "The reference is genuinely independent (kinematics.py imports only stdlib, and the import-boundary test passes). The only reference comparison is at 0.06/0.07 bounds, while the receipt records 1e-10 (from the engine-internal power identity and the metamorphic engine-vs-engine test).",
-   "verdict": "PARTIAL"
+   "bound_digest": "8b69797aae990236f154e716eddf0bc56f5722fa6826a7187430c6852e777c50",
+   "evidence_head": "fbf4665885047e52c6cdd2829b6d2c01937fee9b",
+   "fix": "",
+   "prior_fix": "Record 0.07 m tolerance.",
+   "prior_reason": "The reference is genuinely independent (kinematics.py imports only stdlib, and the import-boundary test passes). The only reference comparison is at 0.06/0.07 bounds, while the receipt records 1e-10 (from the engine-internal power identity and the metamorphic engine-vs-engine test).",
+   "prior_verdict": "PARTIAL",
+   "reason": "The independent closed form matches production single-plate reconstruction within both unit-specific bounds, including the accepted nonflat trials. Exact-flat trajectories also exercise diagnostic reconstruction.",
+   "verdict": "SUPPORTED"
   },
   "RCP-force_platform-single-K": {
    "fix": "Parametrize OFFSET/CLIPPING/DROP/STEP_OFF on single export with expected process() verdicts.",
@@ -156,9 +176,14 @@
    "verdict": "SUPPORTED"
   },
   "RCP-gnss_lps-gnss-D": {
-   "fix": "Cite test_admit_native_times_clock_latency_and_positions[gnss] as the clean control.",
-   "reason": "Refusals are strong: res669 dropout/jump/interpolation plus satellites, HDOP, fix, multipath and signal integrity. But neither cited test includes a clean-control pass.",
-   "verdict": "PARTIAL"
+   "bound_digest": "ea4ad21edd788220a5df539f32e0c72a9e966580c3f00383dc735d797eec95e1",
+   "evidence_head": "fbf4665885047e52c6cdd2829b6d2c01937fee9b",
+   "fix": "",
+   "prior_fix": "Cite test_admit_native_times_clock_latency_and_positions[gnss] as the clean control.",
+   "prior_reason": "Refusals are strong: res669 dropout/jump/interpolation plus satellites, HDOP, fix, multipath and signal integrity. But neither cited test includes a clean-control pass.",
+   "prior_verdict": "PARTIAL",
+   "reason": "The GNSS clean control and position-mutation cases execute against the named subfamily. The remaining cited controls verify refusal for invalid satellites, HDOP, fix quality, multipath, signal flag and Doppler.",
+   "verdict": "SUPPORTED"
   },
   "RCP-gnss_lps-gnss-E": {
    "fix": "Parametrize the E tests over gnss and compare each variant with the GeodeticTrack truth.",
@@ -221,9 +246,14 @@
    "verdict": "PARTIAL"
   },
   "RCP-gnss_lps-lps-B": {
-   "fix": "Cite test_admit_native_times_clock_latency_and_positions[lps] (anchors and positions at 4e-9).",
-   "reason": "The anchor geometry and Z-up frame refusals are good. But no cited test shows the anchor geometry or frame being applied exactly (positional exactness is in an uncited test). Recorded categorical.",
-   "verdict": "PARTIAL"
+   "bound_digest": "6f3babba45e90bba709069ef7abb5f75d0baaebf07b04032119d3b2cfaf8d9b1",
+   "evidence_head": "fbf4665885047e52c6cdd2829b6d2c01937fee9b",
+   "fix": "",
+   "prior_fix": "Cite test_admit_native_times_clock_latency_and_positions[lps] (anchors and positions at 4e-9).",
+   "prior_reason": "The anchor geometry and Z-up frame refusals are good. But no cited test shows the anchor geometry or frame being applied exactly (positional exactness is in an uncited test). Recorded categorical.",
+   "prior_verdict": "PARTIAL",
+   "reason": "The native LPS control returns the closed-form Z-up XYZ and its surveyed anchors. Explicit frame and anchor checks refuse unknown, duplicate or collinear declarations and missing or occluded anchors.",
+   "verdict": "SUPPORTED"
   },
   "RCP-gnss_lps-lps-C": {
    "fix": "Parametrize the sync-pulse refusal over lps.",
@@ -231,9 +261,14 @@
    "verdict": "PARTIAL"
   },
   "RCP-gnss_lps-lps-D": {
-   "fix": "Cite a clean LPS admission control.",
-   "reason": "On LPS, dropout, jump, interpolation, occlusion and degenerate anchors are refused. Neither cited test includes a clean-control pass.",
-   "verdict": "PARTIAL"
+   "bound_digest": "fa40b2211e53233f69c893f941bfa6c41305d226ea1808d373d4e2380e21fadd",
+   "evidence_head": "fbf4665885047e52c6cdd2829b6d2c01937fee9b",
+   "fix": "",
+   "prior_fix": "Cite a clean LPS admission control.",
+   "prior_reason": "On LPS, dropout, jump, interpolation, occlusion and degenerate anchors are refused. Neither cited test includes a clean-control pass.",
+   "prior_verdict": "PARTIAL",
+   "reason": "The LPS clean control and position-mutation cases execute against the named subfamily. The remaining cited controls verify refusal for occlusion, missing visibility declaration and duplicate, collinear or unknown anchors.",
+   "verdict": "SUPPORTED"
   },
   "RCP-gnss_lps-lps-E": {
    "fix": "Compare five_point and binomial5 against the PlanarTrajectory truth with stated bounds.",
@@ -601,18 +636,30 @@
    "verdict": "PARTIAL"
   },
   "RCP-nordic_hip-hip-B": {
-   "fix": "Cite test_hip_squeeze_metrics_and_geometry_gate and add hip torque refusal and calibration application tests.",
-   "reason": "The torque refusal and gain tests use nordic data. The hip geometry gate (the hip_flexion_deg refusal in test_hip_squeeze_metrics_and_geometry_gate) is not cited, and hip calibration and lever application are not tested here.",
-   "verdict": "UNSUPPORTED"
+   "evidence_head": "f8ff6a845e022cd041f28c85640322d86433b82b",
+   "fix": "Refuse contradictory lever declarations and add a test with the two declared arms.",
+   "prior_fix": "Cite test_hip_squeeze_metrics_and_geometry_gate and add hip torque refusal and calibration application tests.",
+   "prior_reason": "The torque refusal and gain tests use nordic data. The hip geometry gate (the hip_flexion_deg refusal in test_hip_squeeze_metrics_and_geometry_gate) is not cited, and hip calibration and lever application are not tested here.",
+   "prior_verdict": "UNSUPPORTED",
+   "reason": "The calibrated 500 N/V ramp and the missing or double calibration refusals pass. A 0.35 m configured lever overrides a surveyed 0.40 m lever.",
+   "verdict": "PARTIAL"
   },
   "RCP-nordic_hip-hip-D": {
-   "fix": "Inject faults into the hip export and assert the QC verdicts, with a clean hip control.",
-   "reason": "Both cited tests run only nordic _case() data. No hip fault or clean control is exercised, and a probe of hip clipping returns accept_with_flags with no rails failure.",
-   "verdict": "UNSUPPORTED"
+   "evidence_head": "f8ff6a845e022cd041f28c85640322d86433b82b",
+   "fix": "Define and verify the admissible dropped-sample policy and complete clean and fault coverage.",
+   "prior_fix": "Inject faults into the hip export and assert the QC verdicts, with a clean hip control.",
+   "prior_reason": "Both cited tests run only nordic _case() data. No hip fault or clean control is exercised, and a probe of hip clipping returns accept_with_flags with no rails failure.",
+   "prior_verdict": "UNSUPPORTED",
+   "reason": "The declared 2000 N rail yields 841 hits and rejects. The clean fixture has no rail hits. Dropped samples still produce accept_with_flags on the default method.",
+   "verdict": "PARTIAL"
   },
   "RCP-nordic_hip-hip-F": {
-   "fix": "Cite IsometricRamp as the reference, set tolerance 1e-5, and add hip impulse and RFD closed-form checks.",
-   "reason": "test_hip_squeeze... checks peak, max-mean and torque against the IsometricRamp closed form (abs 1e-5), but the receipt cites EccentricCurve as reference. The recorded 0.1 tolerance comes from the nordic test, and hip impulse is not checked.",
+   "evidence_head": "f8ff6a845e022cd041f28c85640322d86433b82b",
+   "fix": "Resolve the documented hip RFD scope and verify applicable angle-enabled reconstruction against an independent control.",
+   "prior_fix": "Cite IsometricRamp as the reference, set tolerance 1e-5, and add hip impulse and RFD closed-form checks.",
+   "prior_reason": "test_hip_squeeze... checks peak, max-mean and torque against the IsometricRamp closed form (abs 1e-5), but the receipt cites EccentricCurve as reference. The recorded 0.1 tolerance comes from the nordic test, and hip impulse is not checked.",
+   "prior_verdict": "PARTIAL",
+   "reason": "The ramp yields 2500 N peak, 1000 N\u00b7m, 500 N\u00b7s to peak and 2625 N\u00b7s total within 1e-8 in each unit. The historical RFD scope remains unresolved.",
    "verdict": "PARTIAL"
   },
   "RCP-nordic_hip-hip-G": {
@@ -626,19 +673,41 @@
    "verdict": "UNSUPPORTED"
   },
   "RCP-nordic_hip-hip-I": {
-   "fix": "Run the gain and lever-uncertainty propagation on the hip export against 2500*(1\u00b1e) and 1000*\u03c3/0.4.",
-   "reason": "test_gain_sensitivity_and_lever_uncertainty_are_propagated uses only nordic _case() data. No hip uncertainty propagation is tested.",
-   "verdict": "UNSUPPORTED"
+   "evidence_head": "f8ff6a845e022cd041f28c85640322d86433b82b",
+   "fix": "Derive and assert independent filter and applicable repetition sensitivity bounds.",
+   "prior_fix": "Run the gain and lever-uncertainty propagation on the hip export against 2500*(1\u00b1e) and 1000*\u03c3/0.4.",
+   "prior_reason": "test_gain_sensitivity_and_lever_uncertainty_are_propagated uses only nordic _case() data. No hip uncertainty propagation is tested.",
+   "prior_verdict": "UNSUPPORTED",
+   "reason": "Independent gain expectations 2475 and 2525 N and lever uncertainty 25 N\u00b7m match at absolute 1e-8. Butterworth cutoff sensitivity is unbounded.",
+   "verdict": "PARTIAL"
   },
   "RCP-nordic_hip-hip-J": {
-   "fix": "Cite IsometricRamp and test_hip_squeeze_metrics_and_geometry_gate.",
-   "reason": "The cited reference, EccentricCurve, is nordic's, while hip data is generated from IsometricRamp. The engine-versus-reference test cited runs nordic data, and the only hip closed-form test (test_hip_squeeze...) is not cited.",
-   "verdict": "UNSUPPORTED"
+   "bound_digest": "badf0d1089373c5e04a4c53f0d9f3354b674fcb576daf46e98a424d46264c5c9",
+   "evidence_head": "f8ff6a845e022cd041f28c85640322d86433b82b",
+   "fix": "",
+   "prior_fix": "Cite IsometricRamp and test_hip_squeeze_metrics_and_geometry_gate.",
+   "prior_reason": "The cited reference, EccentricCurve, is nordic's, while hip data is generated from IsometricRamp. The engine-versus-reference test cited runs nordic data, and the only hip closed-form test (test_hip_squeeze...) is not cited.",
+   "prior_verdict": "UNSUPPORTED",
+   "reason": "Hip processing executes against IsometricRamp and the engine/reference import boundary is tested. Independent hard-coded expected force, torque and impulses agree within the stated strict absolute bound.",
+   "verdict": "SUPPORTED"
   },
   "RCP-nordic_hip-hip-K": {
-   "fix": "Add hip fault fixtures with expected engine verdicts.",
-   "reason": "For hip the only coverage is injection determinism. test_protocol_faults... is force_platform.dual and test_corruption... is nordic. No hip engine verdict on any fault is asserted.",
-   "verdict": "UNSUPPORTED"
+   "evidence_head": "f8ff6a845e022cd041f28c85640322d86433b82b",
+   "fix": "Execute each remaining declared hip fault class and verify its expected verdict.",
+   "prior_fix": "Add hip fault fixtures with expected engine verdicts.",
+   "prior_reason": "For hip the only coverage is injection determinism. test_protocol_faults... is force_platform.dual and test_corruption... is nordic. No hip engine verdict on any fault is asserted.",
+   "prior_verdict": "UNSUPPORTED",
+   "reason": "Hip clipping and dropped-sample fixtures now assert fault outcomes. The full declared hip fault matrix remains uncovered.",
+   "verdict": "PARTIAL"
+  },
+  "RCP-nordic_hip-hip-M": {
+   "evidence_head": "f8ff6a845e022cd041f28c85640322d86433b82b",
+   "fix": "Bind the direct processing report and independently regenerate the seeded source and result.",
+   "prior_fix": "",
+   "prior_reason": "",
+   "prior_verdict": "NO_DRAFT",
+   "reason": "CLI output binds Parquet, validated metadata and configuration hashes, with byte-identical replay and tamper refusal. Direct process reports do not carry those hashes.",
+   "verdict": "PARTIAL"
   },
   "RCP-nordic_hip-nordic-A": {
    "fix": "Add refusal tests for the wrong-device bundle, wrong channel quantity and non-deg angle unit.",
@@ -722,9 +791,14 @@
    "verdict": "PARTIAL"
   },
   "RCP-radar_laser-laser-F": {
-   "fix": "Record check_kind numeric, tolerance 0.004 m/s.",
-   "reason": "Real closed-form check: central and five_point at 47/100/256 Hz against MonoExponentialSprint, error<0.004. But the receipt is recorded categorical with tolerance 0.0, contradicting the asserted numeric bound.",
-   "verdict": "PARTIAL"
+   "bound_digest": "490b7c127094b027e9584bbbba32189c6cfb51874f8ec35a4dae2cf17f26e7c1",
+   "evidence_head": "fbf4665885047e52c6cdd2829b6d2c01937fee9b",
+   "fix": "",
+   "prior_fix": "Record check_kind numeric, tolerance 0.004 m/s.",
+   "prior_reason": "Real closed-form check: central and five_point at 47/100/256 Hz against MonoExponentialSprint, error<0.004. But the receipt is recorded categorical with tolerance 0.0, contradicting the asserted numeric bound.",
+   "prior_verdict": "PARTIAL",
+   "reason": "Both native laser derivative implementations meet the explicit absolute 0.004 m/s ceiling at all three rates against the independent monoexponential velocity.",
+   "verdict": "SUPPORTED"
   },
   "RCP-radar_laser-laser-G": {
    "fix": "Pipe radar_laser.laser process output into sprint.milestones and check against gate_time_s.",
