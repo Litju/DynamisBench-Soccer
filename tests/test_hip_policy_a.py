@@ -14,7 +14,7 @@ from dynamisbench_soccer.reference.exporters import export_case
 from dynamisbench_soccer.reference.faults import ContinuousFault, ContinuousKind, inject
 from dynamisbench_soccer.reference.motion_models import IsometricRamp
 from dynamisbench_soccer.signals import io
-from dynamisbench_soccer.signals.schema import Calibration, Quantity, SignalBundle
+from dynamisbench_soccer.signals.schema import BundleMeta, Calibration, Quantity, SignalBundle
 
 RAMP = IsometricRamp()
 HZ = 1000
@@ -213,3 +213,14 @@ def test_hip_refuses_conflicting_configured_lever() -> None:
     with pytest.raises(ValueError, match="configured lever arm contradicts bundle geometry"):
         process(observation, _spec().model_copy(update={"lever_arm_m": 0.35}))
     assert process(observation, _spec()).sides["unilateral"].metrics["peak_torque_n_m"] == 1000
+
+
+@pytest.mark.parametrize(("field", "value"), [("lever_arm_m", 0.35), ("hip_flexion_deg", 90)])
+def test_hip_refuses_conflicting_source_geometry(field: str, value: float) -> None:
+    observation = export_case("nordic_hip.hip", scenario=RAMP, hz=HZ).observation
+    meta = observation.meta.model_dump()
+    assert meta["geometry"][field] != value
+    meta["acquisition"]["sources"][0]["geometry"][field] = value
+    mismatched = SignalBundle(BundleMeta.model_validate(meta), observation.data)
+    with pytest.raises(ValueError, match=f"{field} contradicts trial geometry"):
+        process(mismatched, _spec())

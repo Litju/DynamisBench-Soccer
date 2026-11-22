@@ -223,6 +223,29 @@ def _admit(bundle: SignalBundle, spec: NordicSpec) -> tuple[object, list[str]]:
     return meta, notes
 
 
+def _check_source_geometry(bundle: SignalBundle, spec: NordicSpec) -> None:
+    trial = bundle.meta.geometry
+    acquisition = bundle.meta.acquisition
+    if acquisition is None or trial is None:
+        return
+    channels = {decl.channel for decl in spec.sides}
+    angle = "hip_flexion_deg" if spec.protocol == "hip_squeeze" else "knee_angle_deg"
+    for source in acquisition.sources:
+        if channels.isdisjoint(source.channels):
+            continue
+        for field in ("lever_arm_m", angle):
+            recorded = getattr(source.geometry, field)
+            if recorded is None or field in source.geometry.unknown:
+                continue
+            expected = getattr(trial, field) if field not in trial.unknown else None
+            if field == "lever_arm_m" and spec.lever_arm_m is not None:
+                expected = spec.lever_arm_m
+            if expected is not None and not math.isclose(
+                expected, recorded, rel_tol=0, abs_tol=1e-9
+            ):
+                raise ValueError(f"{source.id}: declared {field} contradicts trial geometry")
+
+
 def _lever(spec: NordicSpec, meta: object) -> tuple[float | None, str | None, str | None]:
     geometry = getattr(meta, "geometry", None)
     recorded = (
@@ -428,6 +451,7 @@ def process(bundle: SignalBundle, spec: NordicSpec, method: MethodSpec | None = 
     spec = NordicSpec.model_validate(spec.model_dump())
     meta, notes = _admit(bundle, spec)
     lever, definition, lever_refusal = _lever(spec, meta)
+    _check_source_geometry(bundle, spec)
     geometry = bundle.meta.geometry
     checks: list[qc.Result] = []
     if spec.protocol == "hip_squeeze" and (
