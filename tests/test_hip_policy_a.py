@@ -9,7 +9,9 @@ import pytest
 from dynamisbench_soccer.cli import main
 from dynamisbench_soccer.engines.load_cell_acquisition import CellSpec
 from dynamisbench_soccer.engines.nordic_hip import MethodSpec, NordicSpec, SideDeclaration, process
+from dynamisbench_soccer.qc.spec import Status
 from dynamisbench_soccer.reference.exporters import export_case
+from dynamisbench_soccer.reference.faults import ContinuousFault, ContinuousKind, inject
 from dynamisbench_soccer.reference.motion_models import IsometricRamp
 from dynamisbench_soccer.signals import io
 from dynamisbench_soccer.signals.schema import Calibration, Quantity, SignalBundle
@@ -165,3 +167,40 @@ def test_hip_cli_hashes_processed_inputs_and_reproduces_report(tmp_path: Path) -
     parquet.write_bytes(parquet.read_bytes() + b"altered")
     assert main(args) == 2
     assert "sha256 mismatch" in json.loads(out.read_bytes())["error"]
+
+
+def test_hip_declared_rails_and_undeclared_clipping() -> None:
+    observation = export_case("nordic_hip.hip", scenario=RAMP, hz=HZ).observation
+    clipped = inject(observation, ContinuousFault(ContinuousKind.CLIPPING, ("force",), 2000))
+    for bundle, spec, status, verdict, hits in (
+        (observation, _spec(CellSpec(raw_range=(-100, 3000))), Status.PASS, "accept_with_flags", 0),
+        (clipped, _spec(CellSpec(raw_range=(-100, 2000))), Status.FAIL, "reject", 841),
+        (clipped, _spec(), Status.NOT_APPLICABLE, "accept_with_flags", None),
+    ):
+        result = process(bundle, spec)
+        rails = next(check for check in result.qc if check.rule_id == "LC-RAILS")
+        assert rails.status is status
+        # The clipped samples span [0.820, 1.660] on the 1 ms grid.
+        assert rails.values.get("samples_at_rail") == hits
+        assert result.verdict == verdict
+        assert result.report()["diagnostic_only"] is (verdict == "reject")
+
+
+def test_hip_irregular_timing_flag_and_uniform_filter_refusal() -> None:
+    observation = export_case("nordic_hip.hip", scenario=RAMP, hz=HZ).observation
+    dropped = inject(observation, ContinuousFault(ContinuousKind.DROP, ("force",), stride=3))
+    result = process(dropped, _spec())
+    timing = next(check for check in result.qc if check.rule_id == "LC-TIMING")
+    assert timing.status is Status.FAIL
+    assert result.verdict == "accept_with_flags"
+    with pytest.raises(ValueError, match="uniform sampling"):
+        process(dropped, _spec(), MethodSpec(filter={"kind": "butterworth_lowpass"}))
+
+
+def test_hip_contradictory_protocol_and_missing_channel_refusals() -> None:
+    observation = export_case("nordic_hip.hip", scenario=RAMP, hz=HZ).observation
+    with pytest.raises(ValueError, match="contradicts device class"):
+        process(observation, _spec().model_copy(update={"protocol": "nordic_eccentric"}))
+    missing = SideDeclaration(channel="absent", side="unilateral")
+    with pytest.raises(ValueError, match="missing or not a force/voltage channel"):
+        process(observation, _spec().model_copy(update={"sides": (missing,)}))
