@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import subprocess
 import sys
@@ -18,6 +19,7 @@ from dynamisbench_soccer.reference.clocks import DeviceClock
 from dynamisbench_soccer.reference.exporters import export_case
 from dynamisbench_soccer.reference.faults import PositionFault, PositionKind, inject
 from dynamisbench_soccer.reference.spatial import PlanarPhase, PlanarTrajectory, RigidBody
+from dynamisbench_soccer.signals import io
 
 
 @pytest.mark.parametrize(("kind", "hz"), [("gnss", 18), ("lps", 25)])
@@ -317,3 +319,45 @@ def test_lps_positional_threshold_recovers_known_interval_and_refuses_short_dwel
         assert refused.runs == 0
         assert refused.duration_s == 0
         assert refused.horizontal_path_distance_m == 0
+
+
+@pytest.mark.parametrize(("kind", "channel"), [("gnss", "height"), ("lps", "position_z")])
+def test_position_engines_reproduce_seeded_inputs_and_bind_the_source_hash(
+    kind: str, channel: str, tmp_path: Path
+) -> None:
+    stem = tmp_path / "observation"
+    config = tmp_path / "declaration.json"
+    out = tmp_path / "report.json"
+    fault = PositionFault(PositionKind.NOISE, index=4, count=6, noise_sd_m=0.001, seed=700)
+    args = ["gnss-lps", "process", str(stem), "--declaration", str(config), "--out", str(out)]
+    replay = []
+    for _ in range(2):
+        trial, declaration = track_case(kind)
+        observation = inject(trial.observation, fault)
+        parquet, sidecar = io.write(observation, stem)
+        config.write_text(
+            declaration.model_copy(
+                update={"bundle_id": observation.meta.bundle_id}
+            ).model_dump_json()
+        )
+        assert main(args) == 0
+        result = out.read_bytes()
+        assert (
+            json.loads(result)["acquisition"]["data_sha256"]
+            == hashlib.sha256(parquet.read_bytes()).hexdigest()
+        )
+        replay.append((parquet.read_bytes(), sidecar.read_bytes(), result))
+    assert replay[0] == replay[1]
+
+    data = observation[channel]
+    data[7] += 0.005
+    io.write(observation, stem)
+    assert main(args) == 0
+    changed = json.loads(out.read_bytes())
+    assert (
+        changed["acquisition"]["data_sha256"]
+        != json.loads(replay[0][2])["acquisition"]["data_sha256"]
+    )
+    assert changed["acquisition"]["data_sha256"] == hashlib.sha256(parquet.read_bytes()).hexdigest()
+    parquet.write_bytes(parquet.read_bytes() + b"altered")
+    assert main(args) == 2
