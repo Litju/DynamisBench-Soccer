@@ -149,8 +149,13 @@ def _read_cable(bundle: SignalBundle, spec: CableSpec, gap_factor: float) -> Cab
 
     faults = {}
     limitations = [] if times else ["nominal timestamps synthesized"]
-    edge = np.diff(length)
-    allowance = spec.max_speed_m_s * dt + (resolution or 0.0)
+    if resolution is None:
+        edge = np.diff(length)
+        allowance = spec.max_speed_m_s * dt
+    else:
+        # Compare in counts to keep the one-count allowance exact near a large counter value.
+        edge = np.diff(raw) * spec.count_direction
+        allowance = spec.max_speed_m_s * dt / resolution + 1
     for flag, mask in (
         ("dropout_gap", dt > gap_factor / sampling.nominal_hz),
         ("count_jump_or_overspeed" if resolution else "overspeed", edge > allowance),

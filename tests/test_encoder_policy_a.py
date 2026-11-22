@@ -99,12 +99,27 @@ def test_encoder_rollover_does_not_mask_overspeed() -> None:
     assert result["motion"] is None
 
 
-def _count_observation(counts: list[int]) -> SignalBundle:
-    observation = export_case("lpt_encoder.encoder", MOTION, test_id="cmj", hz=100).observation
+def _count_observation(counts: list[int], *, hz: int = 100) -> SignalBundle:
+    observation = export_case("lpt_encoder.encoder", MOTION, test_id="cmj", hz=hz).observation
     meta = observation.meta.model_dump()
     meta["n_rows"] = len(counts)
     meta["acquisition"]["sources"][0]["geometry"]["cable_angle_rad"] = 0
     return SignalBundle(
         BundleMeta.model_validate(meta),
-        {"time": np.arange(len(counts)) / 100, "counts": np.array(counts, dtype=float)},
+        {"time": np.arange(len(counts)) / hz, "counts": np.array(counts, dtype=float)},
     )
+
+
+def test_encoder_count_allowance_survives_large_counter_origin() -> None:
+    modulus = 2**32
+    observation = _count_observation([modulus - 1, 1, 3, 5, 7], hz=128)
+    # 0.125 m/s * (1 / 128 s) * 1000 count/m is just under one count.
+    # Use 0.128 m/s for exactly one permitted count plus one quantisation count.
+    declared = CableSpec(
+        source="instrument",
+        channel="counts",
+        count_modulus=modulus,
+        max_speed_m_s=0.128,
+    )
+    cable = acquire(observation, (declared,), GEOMETRY).cables[0]
+    assert cable.faults == {}
