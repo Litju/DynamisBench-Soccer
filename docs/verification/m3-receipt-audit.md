@@ -4,17 +4,17 @@
 
 The baseline audit reviewed 177 draft receipts. Its findings and the 147
 baseline open cells are indexed in the [evidence gap inventory](m3-evidence-gaps.md).
-Follow-up reviews support nine further receipts covering accepted single- and
+Follow-up reviews support ten further receipts covering accepted single- and
 dual-plate reconstruction, GNSS and LPS integrity, LPS surveyed geometry,
-native laser range rate, and the independent hip reference. The audit JSON
+native laser range rate, the independent hip reference and hip calibration and geometry. The audit JSON
 retains the prior verdicts and binds accepted receipts to their content digests.
-The six other re-reviewed hip candidates remain partial.
+The five other re-reviewed hip candidates remain partial.
 
 Only SUPPORTED receipts are committed in `qualification/receipts.toml` and
 rated verified. `scripts/bind_audit.py --check` verifies their receipt bindings.
 These are model-based independent engineering checks. Radar L has no verdict.
 
-Verdicts: {'PARTIAL': 93, 'SUPPORTED': 72, 'UNSUPPORTED': 12, 'NOT_AUDITED': 1}
+Verdicts: {'PARTIAL': 92, 'SUPPORTED': 73, 'UNSUPPORTED': 12, 'NOT_AUDITED': 1}
 
 ## SUPPORTED
 
@@ -65,11 +65,12 @@ Verdicts: {'PARTIAL': 93, 'SUPPORTED': 72, 'UNSUPPORTED': 12, 'NOT_AUDITED': 1}
 | RCP-lpt_encoder-lpt-F | Fixed-line and dual LPT controls assert 1e-13 m, 5e-4 m/s and 0.012 m/s² absolute with zero relative allowance. The encoder-only power tolerance is outside this scope. |  |
 | RCP-lpt_encoder-lpt-J | Fixed-line and dual LPT outcomes agree with the independent kinematic expressions under the absolute F bounds, and the source import-boundary check passes. |  |
 | RCP-lpt_encoder-lpt-M | bundle_id and data_sha256 equal the file hash, and the result reproduces exactly and changes when the input is mutated. |  |
-| RCP-nordic_hip-hip-J | Hip processing executes against IsometricRamp and the engine/reference import boundary is tested. Independent hard-coded expected force, torque and impulses agree within the stated strict absolute bound. |  |
-| RCP-nordic_hip-nordic-F | test_peak_torque_impulse_and_asymmetry_match_closed_forms and test_measured_angle_gives_work... compare peak, time, torque, impulse, work and angle with hand-derived EccentricCurve closed forms. The 0.1 N bound (sum_peak) matches the recorded tolerance. |  |
-| RCP-nordic_hip-nordic-G | The break angle is recovered from an independent angle fixture (abs 0.5 deg, matching the tolerance), with refusals for no controlled descent and for an angle taken from force. Note that test_repetition_detection_finds_each_effort uses hip data, not nordic. |  |
-| RCP-nordic_hip-nordic-H | Both asymmetry definitions are executed against closed forms. Force basis is mandatory and carried through, peak, impulse and torque estimands are named, and the limitation text disclaims muscle force. |  |
-| RCP-nordic_hip-nordic-J | Engine output matches the hand-derived EccentricCurve closed forms. The engine imports only load_cell and qc, and both the AST import-boundary test and the nordic_hip import test pass. |  |
+| RCP-nordic_hip-hip-B | The hip affine calibration recovers 2500 N and 1000 N·m within the stated bound. Negative controls refuse conflicting trial, source or configured geometry and missing/double calibration. |  |
+| RCP-nordic_hip-hip-J | The corrected source-geometry gate preserves independent hip force, torque and impulse agreement on the sample-aligned ramp at 1e-8 absolute in each metric's unit. |  |
+| RCP-nordic_hip-nordic-F | The source-geometry gate preserves Nordic eccentric force, impulse, torque, work and asymmetry agreement with the existing closed-form fixture. |  |
+| RCP-nordic_hip-nordic-G | The Nordic measured kinematic break-angle test asserts 0.5° absolute, and controlled-descent and no-angle cases verify refusal. The hip repetition fixture is excluded. |  |
+| RCP-nordic_hip-nordic-H | NH-002 and AS-001 are checked against sourced registry claims and the running engine produces the declared sided forces, torque and two named asymmetry formulas. |  |
+| RCP-nordic_hip-nordic-J | The revised geometry gate preserves independent eccentric-ramp agreement and the reference-to-engine import boundary remains clean. |  |
 | RCP-nordic_hip-nordic-L | The raw versus vendor_corrected study is classified unsupported with no pairs, assess_nordic refuses pooling ('cannot be combined'), and the global test forbids interchangeability claims. |  |
 | RCP-radar_laser-laser-C | On laser: the affine clock maps to truth time at atol 1e-12, a non-monotonic timestamp and DROP-fault gaps are refused, and range_change start is exercised. The tolerance matches. |  |
 | RCP-radar_laser-laser-F | Both native laser derivative implementations meet the explicit absolute 0.004 m/s ceiling at all three rates against the independent monoexponential velocity. |  |
@@ -153,7 +154,6 @@ Verdicts: {'PARTIAL': 93, 'SUPPORTED': 72, 'UNSUPPORTED': 12, 'NOT_AUDITED': 1}
 | RCP-lpt_encoder-lpt-L | All LPT studies (cable_vs_vertical, attachment_vs_com_power, force_vs_lpt_jump_height) have execution_basis closed_form/closed_form, so the LPT engine is never executed in any study. force_vs_lpt_jump_height is not asserted. | Run LPT engine in at least one study and assert its classification. |
 | RCP-lpt_encoder-lpt-O | test_every_result_carries_substantive_limitation_statements checks one default config for at least 2 hedged distinct strings. It does not check a declared or sourced limitation set, or the cable-only and dual result paths. | Assert a declared LPT LIMITATIONS set is emitted on cable-only, fixed-line and dual results. |
 | RCP-nordic_hip-hip-A | Only test_protocol_must_match... has hip-relevant refusals. test_side_ambiguity... and test_force_basis... run nordic _case() data, and no hip-specific admission refusal is tested (unilateral misdeclaration, wrong channel). | Add hip-data refusal tests: left/right declared on the hip export, a missing 'force' channel, and force_basis on hip. |
-| RCP-nordic_hip-hip-B | The calibrated 500 N/V ramp and the missing or double calibration refusals pass. A 0.35 m configured lever overrides a surveyed 0.40 m lever. | Refuse contradictory lever declarations and add a test with the two declared arms. |
 | RCP-nordic_hip-hip-D | The declared 2000 N rail yields 841 hits and rejects. The clean fixture has no rail hits. Dropped samples still produce accept_with_flags on the default method. | Define and verify the admissible dropped-sample policy and complete clean and fault coverage. |
 | RCP-nordic_hip-hip-F | The ramp yields 2500 N peak, 1000 N·m, 500 N·s to peak and 2625 N·s total within 1e-8 in each unit. The historical RFD scope remains unresolved. | Resolve the documented hip RFD scope and verify applicable angle-enabled reconstruction against an independent control. |
 | RCP-nordic_hip-hip-G | test_repetition_detection_finds_each_effort checks repetition peak values only, not event or onset times. No eligibility refusal for repetition or hold detection is tested, and the only refusal is the geometry gate. | Assert repetition onset and peak times against the stacked IsometricRamp timings, and add a refusal for too-close or absent repetitions. |

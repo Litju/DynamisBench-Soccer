@@ -652,13 +652,14 @@
    "verdict": "PARTIAL"
   },
   "RCP-nordic_hip-hip-B": {
-   "evidence_head": "f8ff6a845e022cd041f28c85640322d86433b82b",
-   "fix": "Refuse contradictory lever declarations and add a test with the two declared arms.",
+   "bound_digest": "7e081bc65ae042f847fdba7b9e42867b1749db1296171f76288e801bb2421b41",
+   "evidence_head": "f0af0237b22c7529fc4405942f66c9332f652b5e",
+   "fix": "",
    "prior_fix": "Cite test_hip_squeeze_metrics_and_geometry_gate and add hip torque refusal and calibration application tests.",
    "prior_reason": "The torque refusal and gain tests use nordic data. The hip geometry gate (the hip_flexion_deg refusal in test_hip_squeeze_metrics_and_geometry_gate) is not cited, and hip calibration and lever application are not tested here.",
    "prior_verdict": "UNSUPPORTED",
-   "reason": "The calibrated 500 N/V ramp and the missing or double calibration refusals pass. A 0.35 m configured lever overrides a surveyed 0.40 m lever.",
-   "verdict": "PARTIAL"
+   "reason": "The hip affine calibration recovers 2500 N and 1000 N\u00b7m within the stated bound. Negative controls refuse conflicting trial, source or configured geometry and missing/double calibration.",
+   "verdict": "SUPPORTED"
   },
   "RCP-nordic_hip-hip-D": {
    "evidence_head": "f8ff6a845e022cd041f28c85640322d86433b82b",
@@ -698,13 +699,13 @@
    "verdict": "PARTIAL"
   },
   "RCP-nordic_hip-hip-J": {
-   "bound_digest": "badf0d1089373c5e04a4c53f0d9f3354b674fcb576daf46e98a424d46264c5c9",
-   "evidence_head": "f8ff6a845e022cd041f28c85640322d86433b82b",
+   "bound_digest": "f578fad522a9b0e139478e6f301451f2c42d405b3e5719f1c8e488f4734b8a37",
+   "evidence_head": "f0af0237b22c7529fc4405942f66c9332f652b5e",
    "fix": "",
-   "prior_fix": "Cite IsometricRamp and test_hip_squeeze_metrics_and_geometry_gate.",
-   "prior_reason": "The cited reference, EccentricCurve, is nordic's, while hip data is generated from IsometricRamp. The engine-versus-reference test cited runs nordic data, and the only hip closed-form test (test_hip_squeeze...) is not cited.",
-   "prior_verdict": "UNSUPPORTED",
-   "reason": "Hip processing executes against IsometricRamp and the engine/reference import boundary is tested. Independent hard-coded expected force, torque and impulses agree within the stated strict absolute bound.",
+   "prior_fix": "",
+   "prior_reason": "Hip processing executes against IsometricRamp and the engine/reference import boundary is tested. Independent hard-coded expected force, torque and impulses agree within the stated strict absolute bound.",
+   "prior_verdict": "SUPPORTED",
+   "reason": "The corrected source-geometry gate preserves independent hip force, torque and impulse agreement on the sample-aligned ramp at 1e-8 absolute in each metric's unit.",
    "verdict": "SUPPORTED"
   },
   "RCP-nordic_hip-hip-K": {
@@ -741,21 +742,33 @@
    "verdict": "PARTIAL"
   },
   "RCP-nordic_hip-nordic-F": {
-   "bound_digest": "50caebcd58d21e198956d7b2c4f6cef7c6c99786791d93455be4280037d08518",
+   "bound_digest": "a1b4ab9e40ff316e8731c87dd4a90a97c071aae44840b9e9f1cd5f96d58df59d",
+   "evidence_head": "f0af0237b22c7529fc4405942f66c9332f652b5e",
    "fix": "",
-   "reason": "test_peak_torque_impulse_and_asymmetry_match_closed_forms and test_measured_angle_gives_work... compare peak, time, torque, impulse, work and angle with hand-derived EccentricCurve closed forms. The 0.1 N bound (sum_peak) matches the recorded tolerance.",
+   "prior_fix": "",
+   "prior_reason": "test_peak_torque_impulse_and_asymmetry_match_closed_forms and test_measured_angle_gives_work... compare peak, time, torque, impulse, work and angle with hand-derived EccentricCurve closed forms. The 0.1 N bound (sum_peak) matches the recorded tolerance.",
+   "prior_verdict": "SUPPORTED",
+   "reason": "The source-geometry gate preserves Nordic eccentric force, impulse, torque, work and asymmetry agreement with the existing closed-form fixture.",
    "verdict": "SUPPORTED"
   },
   "RCP-nordic_hip-nordic-G": {
-   "bound_digest": "452fd59671c04b7f00936adb6546b84061ff06605126fa3f4dd0054ab82194f6",
+   "bound_digest": "8f4cfc1f09ccc7eb89473b906e9c51c6c874764c4da12e4ed1e5695d6239ef88",
+   "evidence_head": "f0af0237b22c7529fc4405942f66c9332f652b5e",
    "fix": "",
-   "reason": "The break angle is recovered from an independent angle fixture (abs 0.5 deg, matching the tolerance), with refusals for no controlled descent and for an angle taken from force. Note that test_repetition_detection_finds_each_effort uses hip data, not nordic.",
+   "prior_fix": "",
+   "prior_reason": "The break angle is recovered from an independent angle fixture (abs 0.5 deg, matching the tolerance), with refusals for no controlled descent and for an angle taken from force. Note that test_repetition_detection_finds_each_effort uses hip data, not nordic.",
+   "prior_verdict": "SUPPORTED",
+   "reason": "The Nordic measured kinematic break-angle test asserts 0.5\u00b0 absolute, and controlled-descent and no-angle cases verify refusal. The hip repetition fixture is excluded.",
    "verdict": "SUPPORTED"
   },
   "RCP-nordic_hip-nordic-H": {
-   "bound_digest": "3e5abe36ddd376857998e538ded38e9a56fd86572b327f9da73e08072744f4fd",
+   "bound_digest": "1d51474c66ddf8e28e99f5d837e04a10db0c9395c340b55ed617020ecb8df249",
+   "evidence_head": "f0af0237b22c7529fc4405942f66c9332f652b5e",
    "fix": "",
-   "reason": "Both asymmetry definitions are executed against closed forms. Force basis is mandatory and carried through, peak, impulse and torque estimands are named, and the limitation text disclaims muscle force.",
+   "prior_fix": "",
+   "prior_reason": "Both asymmetry definitions are executed against closed forms. Force basis is mandatory and carried through, peak, impulse and torque estimands are named, and the limitation text disclaims muscle force.",
+   "prior_verdict": "SUPPORTED",
+   "reason": "NH-002 and AS-001 are checked against sourced registry claims and the running engine produces the declared sided forces, torque and two named asymmetry formulas.",
    "verdict": "SUPPORTED"
   },
   "RCP-nordic_hip-nordic-I": {
@@ -764,9 +777,13 @@
    "verdict": "PARTIAL"
   },
   "RCP-nordic_hip-nordic-J": {
-   "bound_digest": "912eabdb476c26a0693572177cbaf4a5626c2e1f756d7256f82c7ea40e329111",
+   "bound_digest": "a351bfa73e34465125915ff3258b8fac4874edad9442cbcfce18bc6b1adfc47d",
+   "evidence_head": "f0af0237b22c7529fc4405942f66c9332f652b5e",
    "fix": "",
-   "reason": "Engine output matches the hand-derived EccentricCurve closed forms. The engine imports only load_cell and qc, and both the AST import-boundary test and the nordic_hip import test pass.",
+   "prior_fix": "",
+   "prior_reason": "Engine output matches the hand-derived EccentricCurve closed forms. The engine imports only load_cell and qc, and both the AST import-boundary test and the nordic_hip import test pass.",
+   "prior_verdict": "SUPPORTED",
+   "reason": "The revised geometry gate preserves independent eccentric-ramp agreement and the reference-to-engine import boundary remains clean.",
    "verdict": "SUPPORTED"
   },
   "RCP-nordic_hip-nordic-K": {
