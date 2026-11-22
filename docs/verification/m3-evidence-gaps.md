@@ -22,9 +22,9 @@ additional requirements from the audit and clarifies them against baseline code 
 | Cross-device agreement | 8 | Execute each named subfamily in controlled comparisons and check numerical disagreement and its classification. The empirical verdict stays unknown. |
 
 The draft audit left 96 PARTIAL, 17 UNSUPPORTED and one NOT_AUDITED. The other 33
-open cells had no draft. The audit also requested follow-up on three SUPPORTED
-receipts outside this count: the 0.006 s bound for force-platform single L, the
-0.0005 m bound for encoder B, and an explicit import-boundary check for GNSS J.
+open cells had no draft. Two numerical follow-ups on SUPPORTED receipts were
+already incorporated at the baseline: 0.006 s for force-platform single L and
+0.0005 m for encoder B. The explicit GNSS J import-boundary check remains open.
 
 ## Per-cell evidence
 
