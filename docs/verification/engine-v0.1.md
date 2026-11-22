@@ -19,18 +19,18 @@ Engineering calculations only; no scientific qualification of any device or metr
 
 | Subfamily | State | Independent reference | Unverified A-M,O |
 | -- | -- | -- | -- |
-| force_platform.dual | SPECIFIED | yes | 11 of 14 |
-| force_platform.single | SPECIFIED | yes | 11 of 14 |
-| gnss_lps.gnss | SPECIFIED | yes | 7 of 14 |
-| gnss_lps.lps | SPECIFIED | yes | 12 of 14 |
+| force_platform.dual | SPECIFIED | yes | 9 of 14 |
+| force_platform.single | SPECIFIED | yes | 9 of 14 |
+| gnss_lps.gnss | SPECIFIED | yes | 6 of 14 |
+| gnss_lps.lps | SPECIFIED | yes | 10 of 14 |
 | imu.inertial | SPECIFIED | yes | 8 of 14 |
 | load_cell_isometric.isometric_rig | SPECIFIED | yes | 11 of 14 |
 | load_cell_isometric.load_cell | SPECIFIED | yes | 5 of 14 |
 | lpt_encoder.encoder | SPECIFIED | yes | 13 of 14 |
 | lpt_encoder.lpt | SPECIFIED | yes | 10 of 14 |
-| nordic_hip.hip | SPECIFIED | yes | 14 of 14 |
+| nordic_hip.hip | SPECIFIED | yes | 13 of 14 |
 | nordic_hip.nordic | SPECIFIED | yes | 9 of 14 |
-| radar_laser.laser | SPECIFIED | yes | 12 of 14 |
+| radar_laser.laser | SPECIFIED | yes | 11 of 14 |
 | radar_laser.radar | SPECIFIED | yes | 7 of 14 |
 | timing_contact.contact | SPECIFIED | yes | 7 of 14 |
 | timing_contact.gates | SPECIFIED | yes | 10 of 14 |
@@ -41,22 +41,18 @@ Engineering calculations only; no scientific qualification of any device or metr
 * computational blocker: A: executable admission contract: native/vendor stage, units and integrity refusals tested (owner RES-670; rated specified)
 * computational blocker: B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-670; rated specified)
 * computational blocker: E: every processing method variant is compared with an independent reference with stated sensitivity bounds (owner RES-670; rated partial)
-* computational blocker: F: reconstructed quantities agree with an independent analytical truth within tolerance (owner RES-670; rated partial)
 * computational blocker: G: protocol events are recovered against analytically known event times, with eligibility refusals (owner RES-671; rated partial)
 * computational blocker: H: metric definitions are bound to sourced registry claims and executable exactly (owner RES-671; rated partial)
 * computational blocker: I: declared uncertainty propagation is checked against an independent analytical result (owner RES-670; rated partial)
-* computational blocker: J: an independent reference implementation or closed form that shares no code with the engine (owner RES-669; rated partial)
 * computational blocker: K: synthetic fault fixtures cover the declared fault classes with expected verdicts (owner RES-669; rated partial)
 * computational blocker: L: analytical cross-device studies are executed and classified, never read as interchangeability (owner RES-703; rated partial)
 * computational blocker: O: limitation statements are sourced and emitted with every result (owner RES-670; rated partial)
-* J - owner RES-669: an independent reference implementation or closed form that shares no code with the engine
 * K - owner RES-669: synthetic fault fixtures cover the declared fault classes with expected verdicts
 * B - owner RES-670: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused
 * I - owner RES-670: declared uncertainty propagation is checked against an independent analytical result
 * E - owner RES-670: every processing method variant is compared with an independent reference with stated sensitivity bounds
 * A - owner RES-670: executable admission contract: native/vendor stage, units and integrity refusals tested
 * O - owner RES-670: limitation statements are sourced and emitted with every result
-* F - owner RES-670: reconstructed quantities agree with an independent analytical truth within tolerance
 * H - owner RES-671: metric definitions are bound to sourced registry claims and executable exactly
 * G - owner RES-671: protocol events are recovered against analytically known event times, with eligibility refusals
 * L - owner RES-703: analytical cross-device studies are executed and classified, never read as interchangeability
@@ -67,13 +63,10 @@ Engineering calculations only; no scientific qualification of any device or metr
 * computational blocker: C: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused (owner RES-693; rated specified)
 * computational blocker: D: integrity and QC checks reject injected faults and pass clean controls (owner RES-670; rated partial)
 * computational blocker: E: every processing method variant is compared with an independent reference with stated sensitivity bounds (owner RES-670; rated partial)
-* computational blocker: F: reconstructed quantities agree with an independent analytical truth within tolerance (owner RES-670; rated partial)
 * computational blocker: H: metric definitions are bound to sourced registry claims and executable exactly (owner RES-671; rated partial)
 * computational blocker: I: declared uncertainty propagation is checked against an independent analytical result (owner RES-670; rated partial)
-* computational blocker: J: an independent reference implementation or closed form that shares no code with the engine (owner RES-669; rated partial)
 * computational blocker: K: synthetic fault fixtures cover the declared fault classes with expected verdicts (owner RES-669; rated partial)
 * computational blocker: O: limitation statements are sourced and emitted with every result (owner RES-670; rated partial)
-* J - owner RES-669: an independent reference implementation or closed form that shares no code with the engine
 * K - owner RES-669: synthetic fault fixtures cover the declared fault classes with expected verdicts
 * B - owner RES-670: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused
 * I - owner RES-670: declared uncertainty propagation is checked against an independent analytical result
@@ -81,13 +74,11 @@ Engineering calculations only; no scientific qualification of any device or metr
 * A - owner RES-670: executable admission contract: native/vendor stage, units and integrity refusals tested
 * D - owner RES-670: integrity and QC checks reject injected faults and pass clean controls
 * O - owner RES-670: limitation statements are sourced and emitted with every result
-* F - owner RES-670: reconstructed quantities agree with an independent analytical truth within tolerance
 * H - owner RES-671: metric definitions are bound to sourced registry claims and executable exactly
 * C - owner RES-693: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused
 
 **gnss_lps.gnss** (SPECIFIED)
 * computational blocker: B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-700; rated specified)
-* computational blocker: D: integrity and QC checks reject injected faults and pass clean controls (owner RES-700; rated partial)
 * computational blocker: E: every processing method variant is compared with an independent reference with stated sensitivity bounds (owner RES-700; rated partial)
 * computational blocker: H: metric definitions are bound to sourced registry claims and executable exactly (owner RES-673; rated partial)
 * computational blocker: I: declared uncertainty propagation is checked against an independent analytical result (owner RES-700; rated partial)
@@ -97,15 +88,12 @@ Engineering calculations only; no scientific qualification of any device or metr
 * B - owner RES-700: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused
 * I - owner RES-700: declared uncertainty propagation is checked against an independent analytical result
 * E - owner RES-700: every processing method variant is compared with an independent reference with stated sensitivity bounds
-* D - owner RES-700: integrity and QC checks reject injected faults and pass clean controls
 * O - owner RES-700: limitation statements are sourced and emitted with every result
 * M - owner RES-700: seeded, hash-bound provenance chain for every processing stage, reproduced exactly
 
 **gnss_lps.lps** (SPECIFIED)
 * computational blocker: A: executable admission contract: native/vendor stage, units and integrity refusals tested (owner RES-693; rated specified)
-* computational blocker: B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-700; rated specified)
 * computational blocker: C: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused (owner RES-693; rated specified)
-* computational blocker: D: integrity and QC checks reject injected faults and pass clean controls (owner RES-700; rated partial)
 * computational blocker: E: every processing method variant is compared with an independent reference with stated sensitivity bounds (owner RES-700; rated partial)
 * computational blocker: G: protocol events are recovered against analytically known event times, with eligibility refusals (owner RES-673; rated partial)
 * computational blocker: H: metric definitions are bound to sourced registry claims and executable exactly (owner RES-673; rated partial)
@@ -119,10 +107,8 @@ Engineering calculations only; no scientific qualification of any device or metr
 * G - owner RES-673: protocol events are recovered against analytically known event times, with eligibility refusals
 * C - owner RES-693: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused
 * A - owner RES-693: executable admission contract: native/vendor stage, units and integrity refusals tested
-* B - owner RES-700: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused
 * I - owner RES-700: declared uncertainty propagation is checked against an independent analytical result
 * E - owner RES-700: every processing method variant is compared with an independent reference with stated sensitivity bounds
-* D - owner RES-700: integrity and QC checks reject injected faults and pass clean controls
 * O - owner RES-700: limitation statements are sourced and emitted with every result
 * M - owner RES-700: seeded, hash-bound provenance chain for every processing stage, reproduced exactly
 * L - owner RES-703: analytical cross-device studies are executed and classified, never read as interchangeability
@@ -241,12 +227,10 @@ Engineering calculations only; no scientific qualification of any device or metr
 * computational blocker: G: protocol events are recovered against analytically known event times, with eligibility refusals (owner RES-672; rated partial)
 * computational blocker: H: metric definitions are bound to sourced registry claims and executable exactly (owner RES-672; rated partial)
 * computational blocker: I: declared uncertainty propagation is checked against an independent analytical result (owner RES-697; rated partial)
-* computational blocker: J: an independent reference implementation or closed form that shares no code with the engine (owner RES-669; rated partial)
 * computational blocker: K: synthetic fault fixtures cover the declared fault classes with expected verdicts (owner RES-669; rated partial)
 * computational blocker: L: analytical cross-device studies are executed and classified, never read as interchangeability (owner RES-703; rated partial)
 * computational blocker: M: seeded, hash-bound provenance chain for every processing stage, reproduced exactly (owner RES-697; rated partial)
 * computational blocker: O: limitation statements are sourced and emitted with every result (owner RES-697; rated partial)
-* J - owner RES-669: an independent reference implementation or closed form that shares no code with the engine
 * K - owner RES-669: synthetic fault fixtures cover the declared fault classes with expected verdicts
 * H - owner RES-672: metric definitions are bound to sourced registry claims and executable exactly
 * G - owner RES-672: protocol events are recovered against analytically known event times, with eligibility refusals
@@ -286,7 +270,6 @@ Engineering calculations only; no scientific qualification of any device or metr
 * computational blocker: B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-699; rated specified)
 * computational blocker: D: integrity and QC checks reject injected faults and pass clean controls (owner RES-699; rated partial)
 * computational blocker: E: every processing method variant is compared with an independent reference with stated sensitivity bounds (owner RES-699; rated partial)
-* computational blocker: F: reconstructed quantities agree with an independent analytical truth within tolerance (owner RES-699; rated partial)
 * computational blocker: G: protocol events are recovered against analytically known event times, with eligibility refusals (owner RES-673; rated partial)
 * computational blocker: H: metric definitions are bound to sourced registry claims and executable exactly (owner RES-673; rated partial)
 * computational blocker: I: declared uncertainty propagation is checked against an independent analytical result (owner RES-699; rated partial)
@@ -304,7 +287,6 @@ Engineering calculations only; no scientific qualification of any device or metr
 * E - owner RES-699: every processing method variant is compared with an independent reference with stated sensitivity bounds
 * D - owner RES-699: integrity and QC checks reject injected faults and pass clean controls
 * O - owner RES-699: limitation statements are sourced and emitted with every result
-* F - owner RES-699: reconstructed quantities agree with an independent analytical truth within tolerance
 * M - owner RES-699: seeded, hash-bound provenance chain for every processing stage, reproduced exactly
 
 **radar_laser.radar** (SPECIFIED)
@@ -462,18 +444,18 @@ Open empirical requirements (what only physical measurement can close):
 
 | Subfamily | A | B | C | D | E | F | G | H | I | J | K | L | M | N | O |
 | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- |
-| force_platform.dual | s | s | V | V | p | p | p | p | p | p | p | p | V | - | p |
-| force_platform.single | s | s | s | p | p | p | V | p | p | p | p | V | V | - | p |
-| gnss_lps.gnss | V | s | V | p | p | V | V | p | p | V | V | V | p | - | p |
-| gnss_lps.lps | s | s | s | p | p | V | p | p | p | p | V | p | p | - | p |
+| force_platform.dual | s | s | V | V | p | V | p | p | p | V | p | p | V | - | p |
+| force_platform.single | s | s | s | p | p | V | V | p | p | V | p | V | V | - | p |
+| gnss_lps.gnss | V | s | V | V | p | V | V | p | p | V | V | V | p | - | p |
+| gnss_lps.lps | s | V | s | V | p | V | p | p | p | p | V | p | p | - | p |
 | imu.inertial | s | V | s | V | V | V | p | p | V | V | p | p | p | - | p |
 | load_cell_isometric.isometric_rig | V | s | s | p | p | p | p | p | p | p | p | p | V | - | V |
 | load_cell_isometric.load_cell | V | V | s | V | p | V | V | p | p | V | p | V | V | - | V |
 | lpt_encoder.encoder | s | V | s | p | p | p | p | p | p | p | p | p | p | - | p |
 | lpt_encoder.lpt | s | s | V | p | p | V | p | p | p | V | p | p | V | - | p |
-| nordic_hip.hip | s | s | s | p | p | p | p | p | p | p | p | p | p | - | p |
+| nordic_hip.hip | s | s | s | p | p | p | p | p | p | V | p | p | p | - | p |
 | nordic_hip.nordic | s | s | s | p | p | V | V | V | p | V | p | V | p | - | p |
-| radar_laser.laser | s | s | V | p | p | p | p | p | p | p | p | V | p | - | p |
+| radar_laser.laser | s | s | V | p | p | V | p | p | p | p | p | V | p | - | p |
 | radar_laser.radar | V | s | V | V | p | V | V | V | p | V | p | p | p | - | p |
 | timing_contact.contact | V | s | s | V | V | V | p | V | p | V | p | V | p | - | p |
 | timing_contact.gates | V | s | s | V | p | p | p | V | p | p | p | V | p | - | p |

@@ -1497,3 +1497,220 @@ tests = ["tests/test_policy_a_provenance.py::test_lpt_results_record_bundle_iden
 "tests/test_reference_exporters.py::test_every_export_is_v2_deterministic_separate_and_hash_linked" = "dd5083a390846e2a8e59502d253a571f08ffc5bfab0a6b4d0220e225103805ad"
 "tests/test_signals_schema_io.py::test_golden_hashes" = "87421b61e933b9890fba334b2d99618aed3702ad22e0c8f925489ad43cde02f7"
 "tests/test_signals_schema_io.py::test_tampered_parquet_is_rejected" = "8a29c36fd63d8686b7a8cdd26b5d295bb67cef0f2c0b80a70234c2a1c7baa4b6"
+
+[[receipt]]
+id = "RCP-force_platform-single-F"
+dimension = "F"
+claim = "The single-plate raw trapezoidal integration reconstructs vertical velocity and displacement for CMJ, SJ, DJ and 10/5 hops on 600, 1000 and 2000 Hz analytical controls."
+issue = "RES-670"
+reference_kind = "closed_form"
+independence = "The cited reference computes analytical truth or deterministic fault mutations independently of the production engine. Neither imports the other."
+check_kind = "numeric"
+tolerance_unit = "m (displacement); secondary bound 0.06 m/s"
+tolerance_basis = "Strict absolute error <0.06 m/s for velocity and <0.07 m for displacement. Expected velocity and displacement are the piecewise solutions v0+a·dt and x0+v0·dt+a·dt²/2. Sampling and trapezoidal integration across phase boundaries give unperturbed maxima below 0.045 m/s and 0.046 m. The clean-control total force ripple is at most 0.05 N and all perturbed trials remain within both bounds."
+tolerance = 0.07
+subfamilies = ["force_platform.single"]
+implementation = ["src/dynamisbench_soccer/engines/force_platform.py::process"]
+reference = ["src/dynamisbench_soccer/reference/kinematics.py::cmj", "src/dynamisbench_soccer/reference/kinematics.py::sj", "src/dynamisbench_soccer/reference/kinematics.py::dj", "src/dynamisbench_soccer/reference/kinematics.py::hops"]
+tests = ["tests/test_force_platform_engine.py::test_reconstructs_all_vertical_fixtures_single_dual_and_rates", "tests/test_force_platform_policy_a.py::test_force_platform_numerical_reconstruction_on_accepted_trials"]
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/force_platform.py::process" = "ca3b9be95416aa1c48dbeeaadea7ccbe8ca9dbd7aaf341eec2572db5d0ec6e13"
+"src/dynamisbench_soccer/reference/kinematics.py::cmj" = "c37e0d387e173c0b92a8e7a8f277195382a981a228bd6784f6b306b1be3f0821"
+"src/dynamisbench_soccer/reference/kinematics.py::dj" = "a1b44247377eee51f943643bbfde176fa34de1bfc1cde05b9e98ee7ac8b7d24f"
+"src/dynamisbench_soccer/reference/kinematics.py::hops" = "7756b72923492fe6616dbe427152dbc57d202669b2fe71c468a414c445862bb5"
+"src/dynamisbench_soccer/reference/kinematics.py::sj" = "a10935f0ad2b9e30c6b79426dc2a9781148404ff1f960bca78353416e6712a66"
+"tests/test_force_platform_engine.py::test_reconstructs_all_vertical_fixtures_single_dual_and_rates" = "fa5a020baa02b3ba89d6e5ceac9858c089fc0050c3769d472a728af9b3535f95"
+"tests/test_force_platform_policy_a.py::test_force_platform_numerical_reconstruction_on_accepted_trials" = "8347db0d0ac282b24f845feed80e39f38a5193fd065424c0cf1a8eced01f2dfc"
+
+[[receipt]]
+id = "RCP-force_platform-single-J"
+dimension = "J"
+claim = "The single-plate raw trapezoidal integration reconstructs vertical velocity and displacement for CMJ, SJ, DJ and 10/5 hops on 600, 1000 and 2000 Hz analytical controls."
+issue = "RES-669"
+reference_kind = "closed_form"
+independence = "The cited reference computes analytical truth or deterministic fault mutations independently of the production engine. Neither imports the other."
+check_kind = "numeric"
+tolerance_unit = "m (displacement); secondary bound 0.06 m/s"
+tolerance_basis = "Strict absolute error <0.06 m/s for velocity and <0.07 m for displacement. Expected velocity and displacement are the piecewise solutions v0+a·dt and x0+v0·dt+a·dt²/2. Sampling and trapezoidal integration across phase boundaries give unperturbed maxima below 0.045 m/s and 0.046 m. The clean-control total force ripple is at most 0.05 N and all perturbed trials remain within both bounds."
+tolerance = 0.07
+subfamilies = ["force_platform.single"]
+implementation = ["src/dynamisbench_soccer/engines/force_platform.py::process"]
+reference = ["src/dynamisbench_soccer/reference/kinematics.py::cmj", "src/dynamisbench_soccer/reference/kinematics.py::sj", "src/dynamisbench_soccer/reference/kinematics.py::dj", "src/dynamisbench_soccer/reference/kinematics.py::hops"]
+tests = ["tests/test_force_platform_engine.py::test_reconstructs_all_vertical_fixtures_single_dual_and_rates", "tests/test_force_platform_policy_a.py::test_force_platform_numerical_reconstruction_on_accepted_trials", "tests/test_reference_spatial_observations.py::test_import_boundary_between_references_and_engines"]
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/force_platform.py::process" = "ca3b9be95416aa1c48dbeeaadea7ccbe8ca9dbd7aaf341eec2572db5d0ec6e13"
+"src/dynamisbench_soccer/reference/kinematics.py::cmj" = "c37e0d387e173c0b92a8e7a8f277195382a981a228bd6784f6b306b1be3f0821"
+"src/dynamisbench_soccer/reference/kinematics.py::dj" = "a1b44247377eee51f943643bbfde176fa34de1bfc1cde05b9e98ee7ac8b7d24f"
+"src/dynamisbench_soccer/reference/kinematics.py::hops" = "7756b72923492fe6616dbe427152dbc57d202669b2fe71c468a414c445862bb5"
+"src/dynamisbench_soccer/reference/kinematics.py::sj" = "a10935f0ad2b9e30c6b79426dc2a9781148404ff1f960bca78353416e6712a66"
+"tests/test_force_platform_engine.py::test_reconstructs_all_vertical_fixtures_single_dual_and_rates" = "fa5a020baa02b3ba89d6e5ceac9858c089fc0050c3769d472a728af9b3535f95"
+"tests/test_force_platform_policy_a.py::test_force_platform_numerical_reconstruction_on_accepted_trials" = "8347db0d0ac282b24f845feed80e39f38a5193fd065424c0cf1a8eced01f2dfc"
+"tests/test_reference_spatial_observations.py::test_import_boundary_between_references_and_engines" = "9da921ff81d53361dc6491bd84940e7f356b20de83804dc104d8d502e812e54a"
+
+[[receipt]]
+id = "RCP-force_platform-dual-F"
+dimension = "F"
+claim = "The dual-plate raw trapezoidal integration reconstructs vertical velocity and displacement for CMJ, SJ, DJ and 10/5 hops on 600, 1000 and 2000 Hz analytical controls."
+issue = "RES-670"
+reference_kind = "closed_form"
+independence = "The cited reference computes analytical truth or deterministic fault mutations independently of the production engine. Neither imports the other."
+check_kind = "numeric"
+tolerance_unit = "m (displacement); secondary bound 0.06 m/s"
+tolerance_basis = "Strict absolute error <0.06 m/s for velocity and <0.07 m for displacement. Expected velocity and displacement are the piecewise solutions v0+a·dt and x0+v0·dt+a·dt²/2. Sampling and trapezoidal integration across phase boundaries give unperturbed maxima below 0.045 m/s and 0.046 m. The clean-control total force ripple is at most 0.05 N and all perturbed trials remain within both bounds."
+tolerance = 0.07
+subfamilies = ["force_platform.dual"]
+implementation = ["src/dynamisbench_soccer/engines/force_platform.py::process"]
+reference = ["src/dynamisbench_soccer/reference/kinematics.py::cmj", "src/dynamisbench_soccer/reference/kinematics.py::sj", "src/dynamisbench_soccer/reference/kinematics.py::dj", "src/dynamisbench_soccer/reference/kinematics.py::hops"]
+tests = ["tests/test_force_platform_engine.py::test_reconstructs_all_vertical_fixtures_single_dual_and_rates", "tests/test_force_platform_policy_a.py::test_force_platform_numerical_reconstruction_on_accepted_trials"]
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/force_platform.py::process" = "ca3b9be95416aa1c48dbeeaadea7ccbe8ca9dbd7aaf341eec2572db5d0ec6e13"
+"src/dynamisbench_soccer/reference/kinematics.py::cmj" = "c37e0d387e173c0b92a8e7a8f277195382a981a228bd6784f6b306b1be3f0821"
+"src/dynamisbench_soccer/reference/kinematics.py::dj" = "a1b44247377eee51f943643bbfde176fa34de1bfc1cde05b9e98ee7ac8b7d24f"
+"src/dynamisbench_soccer/reference/kinematics.py::hops" = "7756b72923492fe6616dbe427152dbc57d202669b2fe71c468a414c445862bb5"
+"src/dynamisbench_soccer/reference/kinematics.py::sj" = "a10935f0ad2b9e30c6b79426dc2a9781148404ff1f960bca78353416e6712a66"
+"tests/test_force_platform_engine.py::test_reconstructs_all_vertical_fixtures_single_dual_and_rates" = "fa5a020baa02b3ba89d6e5ceac9858c089fc0050c3769d472a728af9b3535f95"
+"tests/test_force_platform_policy_a.py::test_force_platform_numerical_reconstruction_on_accepted_trials" = "8347db0d0ac282b24f845feed80e39f38a5193fd065424c0cf1a8eced01f2dfc"
+
+[[receipt]]
+id = "RCP-force_platform-dual-J"
+dimension = "J"
+claim = "The dual-plate raw trapezoidal integration reconstructs vertical velocity and displacement for CMJ, SJ, DJ and 10/5 hops on 600, 1000 and 2000 Hz analytical controls."
+issue = "RES-669"
+reference_kind = "closed_form"
+independence = "The cited reference computes analytical truth or deterministic fault mutations independently of the production engine. Neither imports the other."
+check_kind = "numeric"
+tolerance_unit = "m (displacement); secondary bound 0.06 m/s"
+tolerance_basis = "Strict absolute error <0.06 m/s for velocity and <0.07 m for displacement. Expected velocity and displacement are the piecewise solutions v0+a·dt and x0+v0·dt+a·dt²/2. Sampling and trapezoidal integration across phase boundaries give unperturbed maxima below 0.045 m/s and 0.046 m. The clean-control total force ripple is at most 0.05 N and all perturbed trials remain within both bounds."
+tolerance = 0.07
+subfamilies = ["force_platform.dual"]
+implementation = ["src/dynamisbench_soccer/engines/force_platform.py::process"]
+reference = ["src/dynamisbench_soccer/reference/kinematics.py::cmj", "src/dynamisbench_soccer/reference/kinematics.py::sj", "src/dynamisbench_soccer/reference/kinematics.py::dj", "src/dynamisbench_soccer/reference/kinematics.py::hops"]
+tests = ["tests/test_force_platform_engine.py::test_reconstructs_all_vertical_fixtures_single_dual_and_rates", "tests/test_force_platform_policy_a.py::test_force_platform_numerical_reconstruction_on_accepted_trials", "tests/test_reference_spatial_observations.py::test_import_boundary_between_references_and_engines"]
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/force_platform.py::process" = "ca3b9be95416aa1c48dbeeaadea7ccbe8ca9dbd7aaf341eec2572db5d0ec6e13"
+"src/dynamisbench_soccer/reference/kinematics.py::cmj" = "c37e0d387e173c0b92a8e7a8f277195382a981a228bd6784f6b306b1be3f0821"
+"src/dynamisbench_soccer/reference/kinematics.py::dj" = "a1b44247377eee51f943643bbfde176fa34de1bfc1cde05b9e98ee7ac8b7d24f"
+"src/dynamisbench_soccer/reference/kinematics.py::hops" = "7756b72923492fe6616dbe427152dbc57d202669b2fe71c468a414c445862bb5"
+"src/dynamisbench_soccer/reference/kinematics.py::sj" = "a10935f0ad2b9e30c6b79426dc2a9781148404ff1f960bca78353416e6712a66"
+"tests/test_force_platform_engine.py::test_reconstructs_all_vertical_fixtures_single_dual_and_rates" = "fa5a020baa02b3ba89d6e5ceac9858c089fc0050c3769d472a728af9b3535f95"
+"tests/test_force_platform_policy_a.py::test_force_platform_numerical_reconstruction_on_accepted_trials" = "8347db0d0ac282b24f845feed80e39f38a5193fd065424c0cf1a8eced01f2dfc"
+"tests/test_reference_spatial_observations.py::test_import_boundary_between_references_and_engines" = "9da921ff81d53361dc6491bd84940e7f356b20de83804dc104d8d502e812e54a"
+
+[[receipt]]
+id = "RCP-gnss_lps-gnss-D"
+dimension = "D"
+claim = "The GNSS observation admission accepts its clean native control and refuses the injected integrity faults and invalid satellites, HDOP, fix quality, multipath, signal flag and Doppler."
+issue = "RES-700"
+reference_kind = "independent_implementation"
+independence = "The cited reference computes analytical truth or deterministic fault mutations independently of the production engine. Neither imports the other."
+check_kind = "categorical"
+tolerance_unit = ""
+tolerance_basis = "Exact outcomes. The clean control completes admission. Position dropout, a 15 m position jump and interpolated data raise AcquisitionRefusal. The device-specific faults raise AcquisitionRefusal with the class messages asserted in the cited tests."
+tolerance = 0
+subfamilies = ["gnss_lps.gnss"]
+implementation = ["src/dynamisbench_soccer/engines/gnss_lps_acquisition.py::admit"]
+reference = ["src/dynamisbench_soccer/reference/faults.py::inject", "src/dynamisbench_soccer/reference/spatial.py::RigidBody"]
+tests = ["tests/test_gnss_lps_acquisition.py::test_admit_native_times_clock_latency_and_positions", "tests/test_gnss_lps_acquisition.py::test_res669_adversarial_observations", "tests/test_gnss_lps_acquisition.py::test_single_bad_gnss_sample_refuses"]
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/gnss_lps_acquisition.py::admit" = "9debfad0fb7859e175ed2ce9f125e59c7ed7f18719af7fdef075a99b79ee1a3b"
+"src/dynamisbench_soccer/reference/faults.py::inject" = "bc803ce121a3bf35662d04ca34370d2f1525a44ac1503ab51c6678a39905bc7e"
+"src/dynamisbench_soccer/reference/spatial.py::RigidBody" = "3f6ce7c7d3d600665ad4e580bff84c581243abbb2cad1dc11c92c8e51ab42fe7"
+"tests/test_gnss_lps_acquisition.py::test_admit_native_times_clock_latency_and_positions" = "88876c7df6e0fade7e0e6caf3cb0cf79f3aef5250557b748140b16c610f3a106"
+"tests/test_gnss_lps_acquisition.py::test_res669_adversarial_observations" = "957512dd141397318bbaaacd1730bec24a1bd758233ef85a77aeae6d4f3b7b9e"
+"tests/test_gnss_lps_acquisition.py::test_single_bad_gnss_sample_refuses" = "1b10b47c4621a5d0e65df3ec9703c2cfb8da30ba7212930a22740850850e25b6"
+
+[[receipt]]
+id = "RCP-gnss_lps-lps-D"
+dimension = "D"
+claim = "The LPS observation admission accepts its clean native control and refuses the injected integrity faults and occlusion, missing visibility declaration and duplicate, collinear or unknown anchors."
+issue = "RES-700"
+reference_kind = "independent_implementation"
+independence = "The cited reference computes analytical truth or deterministic fault mutations independently of the production engine. Neither imports the other."
+check_kind = "categorical"
+tolerance_unit = ""
+tolerance_basis = "Exact outcomes. The clean control completes admission. Position dropout, a 15 m position jump and interpolated data raise AcquisitionRefusal. The device-specific faults raise AcquisitionRefusal with the class messages asserted in the cited tests."
+tolerance = 0
+subfamilies = ["gnss_lps.lps"]
+implementation = ["src/dynamisbench_soccer/engines/gnss_lps_acquisition.py::admit"]
+reference = ["src/dynamisbench_soccer/reference/faults.py::inject", "src/dynamisbench_soccer/reference/spatial.py::RigidBody"]
+tests = ["tests/test_gnss_lps_acquisition.py::test_admit_native_times_clock_latency_and_positions", "tests/test_gnss_lps_acquisition.py::test_res669_adversarial_observations", "tests/test_gnss_lps_acquisition.py::test_lps_geometry_and_visibility"]
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/gnss_lps_acquisition.py::admit" = "9debfad0fb7859e175ed2ce9f125e59c7ed7f18719af7fdef075a99b79ee1a3b"
+"src/dynamisbench_soccer/reference/faults.py::inject" = "bc803ce121a3bf35662d04ca34370d2f1525a44ac1503ab51c6678a39905bc7e"
+"src/dynamisbench_soccer/reference/spatial.py::RigidBody" = "3f6ce7c7d3d600665ad4e580bff84c581243abbb2cad1dc11c92c8e51ab42fe7"
+"tests/test_gnss_lps_acquisition.py::test_admit_native_times_clock_latency_and_positions" = "88876c7df6e0fade7e0e6caf3cb0cf79f3aef5250557b748140b16c610f3a106"
+"tests/test_gnss_lps_acquisition.py::test_lps_geometry_and_visibility" = "455d7d3ab2fe35c602f3cee1d5a9ee752dc7d94d3eaeb2a84ac5fb02eafa0ef8"
+"tests/test_gnss_lps_acquisition.py::test_res669_adversarial_observations" = "957512dd141397318bbaaacd1730bec24a1bd758233ef85a77aeae6d4f3b7b9e"
+
+[[receipt]]
+id = "RCP-gnss_lps-lps-B"
+dimension = "B"
+claim = "LPS admission preserves declared native Z-up XYZ and typed surveyed anchor coordinates, and refuses contradictory or unavailable frame and anchor declarations."
+issue = "RES-700"
+reference_kind = "closed_form"
+independence = "The cited reference computes analytical truth or deterministic fault mutations independently of the production engine. Neither imports the other."
+check_kind = "numeric"
+tolerance_unit = "m (absolute ceiling for fixture position components)"
+tolerance_basis = "Expected XYZ is the independent rigid-body translation plus the rotated sensor offset. The largest fixture component is 15.85162194035 m. NumPy allows 4e-9 m + 1e-7 × |expected component|, so the componentwise absolute ceiling is 1.59e-6 m. Expected anchors a=(-10,-10,0), b=(10,-10,0), c=(0,10,0) are retained exactly."
+tolerance = 1.59e-06
+subfamilies = ["gnss_lps.lps"]
+implementation = ["src/dynamisbench_soccer/engines/gnss_lps_acquisition.py::admit"]
+reference = ["src/dynamisbench_soccer/reference/spatial.py::RigidBody"]
+tests = ["tests/test_gnss_lps_acquisition.py::test_admit_native_times_clock_latency_and_positions", "tests/test_gnss_lps_acquisition.py::test_lps_geometry_and_visibility", "tests/test_gnss_lps_acquisition.py::test_lps_field_axes_require_an_explicit_z_up_frame"]
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/gnss_lps_acquisition.py::admit" = "9debfad0fb7859e175ed2ce9f125e59c7ed7f18719af7fdef075a99b79ee1a3b"
+"src/dynamisbench_soccer/reference/spatial.py::RigidBody" = "3f6ce7c7d3d600665ad4e580bff84c581243abbb2cad1dc11c92c8e51ab42fe7"
+"tests/test_gnss_lps_acquisition.py::test_admit_native_times_clock_latency_and_positions" = "88876c7df6e0fade7e0e6caf3cb0cf79f3aef5250557b748140b16c610f3a106"
+"tests/test_gnss_lps_acquisition.py::test_lps_field_axes_require_an_explicit_z_up_frame" = "d4a00edda57809bfacf6dd2b65a07fa58ed441475520759a05b48628ee1ac3ff"
+"tests/test_gnss_lps_acquisition.py::test_lps_geometry_and_visibility" = "455d7d3ab2fe35c602f3cee1d5a9ee752dc7d94d3eaeb2a84ac5fb02eafa0ef8"
+
+[[receipt]]
+id = "RCP-nordic_hip-hip-J"
+dimension = "J"
+claim = "The unilateral hip engine reproduces the independent, sample-aligned isometric ramp's cuff-force, lever-torque and impulse results."
+issue = "RES-669"
+reference_kind = "closed_form"
+independence = "The cited reference computes analytical truth or deterministic fault mutations independently of the production engine. Neither imports the other."
+check_kind = "numeric"
+tolerance_unit = "absolute in each checked unit (N, N·m, N·s)"
+tolerance_basis = "Peak and maximum 0.5 s mean are 2500 N. At a 0.4 m lever, peak torque is 1000 N·m. Impulse to peak is 500 N·s and record impulse is 2625 N·s. The trapezoid is exact in real arithmetic on the knot-aligned 1 ms grid. Allow 1e-8 absolute in each metric's units for floating-point arithmetic, with zero relative allowance."
+tolerance = 1e-08
+subfamilies = ["nordic_hip.hip"]
+implementation = ["src/dynamisbench_soccer/engines/nordic_hip.py::process"]
+reference = ["src/dynamisbench_soccer/reference/motion_models.py::IsometricRamp"]
+tests = ["tests/test_hip_policy_a.py::test_hip_cuff_force_reconstruction", "tests/test_nordic_hip.py::test_engine_does_not_import_reference_or_claim_muscle_force", "tests/test_reference_spatial_observations.py::test_import_boundary_between_references_and_engines"]
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/nordic_hip.py::process" = "b1435143b1f8e8b9ef7ea85b982a46ea360499bb153543430974606c47bd9239"
+"src/dynamisbench_soccer/reference/motion_models.py::IsometricRamp" = "fb30c889a909acd458dae981957a34ea33ce883f396d88610ac5ec87d75cb710"
+"tests/test_hip_policy_a.py::test_hip_cuff_force_reconstruction" = "3936a489477f841aa4c00b663db0ce159c5e0075fc5c34f551ac8cabfebaf889"
+"tests/test_nordic_hip.py::test_engine_does_not_import_reference_or_claim_muscle_force" = "e7941cb6f51b9da4622323291a1280542de7a13fd97914b55ca8802c89c33fe7"
+"tests/test_reference_spatial_observations.py::test_import_boundary_between_references_and_engines" = "9da921ff81d53361dc6491bd84940e7f356b20de83804dc104d8d502e812e54a"
+
+[[receipt]]
+id = "RCP-radar_laser-laser-F"
+dimension = "F"
+claim = "Native laser range is reconstructed as line-of-sight range rate with central and five-point differentiation at 47, 100 and 256 Hz."
+issue = "RES-699"
+reference_kind = "closed_form"
+independence = "The cited reference computes analytical truth or deterministic fault mutations independently of the production engine. Neither imports the other."
+check_kind = "numeric"
+tolerance_unit = "m/s (maximum absolute error)"
+tolerance_basis = "Expected v(t)=9(1−exp(−t/1.2)) m/s. The strict maximum absolute bound is 0.004 m/s. The conservative three-point endpoint bound at 47 Hz is 9/(3×1.2²×47²) m/s, below 0.000944 m/s, and also applies to the five-point fallback at the endpoints."
+tolerance = 0.004
+subfamilies = ["radar_laser.laser"]
+implementation = ["src/dynamisbench_soccer/engines/radar_laser.py::process"]
+reference = ["src/dynamisbench_soccer/reference/motion_models.py::MonoExponentialSprint"]
+tests = ["tests/test_radar_laser_processing.py::test_laser_distance_derivative_recovers_analytical_speed"]
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/radar_laser.py::process" = "9ab9db6c532a1c8b13f97eceb8135e8e86058cba526ec9f9dcf42f31e0fc9228"
+"src/dynamisbench_soccer/reference/motion_models.py::MonoExponentialSprint" = "6f5cf86ba81df676877c7e99492f9df0400e35228a59a0f34a1d65bba5e3d493"
+"tests/test_radar_laser_processing.py::test_laser_distance_derivative_recovers_analytical_speed" = "2a514b17e5f70d07a7d6b444db3210ac0683c59e628a7a765d97704c6bcb07c3"
