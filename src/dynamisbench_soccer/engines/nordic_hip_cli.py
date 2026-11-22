@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import sys
 from pathlib import Path
@@ -25,9 +26,20 @@ def _process(args: argparse.Namespace) -> int:
         print("FAIL output path must not overwrite inputs/configuration", file=sys.stderr)
         return 2
     try:
-        config = RunConfig.model_validate(json.loads(args.config.read_text()))
-        result = process(io.read(args.input), config.spec, config.method)
-        text = result.report_json()
+        config_bytes = args.config.read_bytes()
+        config = RunConfig.model_validate_json(config_bytes)
+        bundle = io.read(args.input)
+        result = process(bundle, config.spec, config.method)
+        report = result.report()
+        report["provenance"] = {
+            "bundle_id": bundle.meta.bundle_id,
+            "data_sha256": bundle.meta.data_sha256,
+            "validated_metadata_sha256": hashlib.sha256(
+                io.meta_json(bundle.meta).encode()
+            ).hexdigest(),
+            "configuration_sha256": hashlib.sha256(config_bytes).hexdigest(),
+        }
+        text = json.dumps(report, indent=2, sort_keys=True, allow_nan=False) + "\n"
         code = 1 if result.verdict == "reject" else 0
     except (ValueError, OSError, RuntimeError) as exc:
         text = json.dumps({"engine": ENGINE, "verdict": "reject", "error": str(exc)}, indent=2)
