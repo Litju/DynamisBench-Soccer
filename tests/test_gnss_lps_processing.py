@@ -246,3 +246,74 @@ def test_cli_refuses_hard_link_to_input(source: str, tmp_path: Path, capsys) -> 
     assert status == 2
     assert "output path overlaps an input" in capsys.readouterr().err
     assert protected.read_bytes() == original
+
+
+@pytest.mark.parametrize("derivative", ["three_point", "five_point"])
+@pytest.mark.parametrize(
+    ("position_filter", "second_moment"), [("none", 0), ("boxcar5", 2), ("binomial5", 1)]
+)
+def test_lps_processing_variants_and_reported_sensitivity(
+    derivative: str, position_filter: str, second_moment: int
+) -> None:
+    hz = 25
+    # On x=0.75t each symmetric filter and both derivative stencils are exact,
+    # including linear endpoint extension and every-second-sample comparison.
+    linear = RigidBody(
+        PlanarTrajectory((PlanarPhase(3.2, (0, 0)),), initial_velocity_m_s=(0.75, 0))
+    )
+    raw = export_case("gnss_lps.lps", linear, hz=hz)
+    case, declaration = track_case("lps", hz=hz, latency=0, raw=raw)
+    options = ProcessingOptions(derivative=derivative, position_filter=position_filter)
+    result = process(case.observation, declaration, options)
+    assert result.sensitivity.comparison_duration_s == pytest.approx(3.2, abs=1e-12, rel=0)
+    assert result.sensitivity.every_second_sample is not None
+    for peak, rate in (
+        (result.sensitivity.native, 25),
+        (result.sensitivity.alternate_filter, 25),
+        (result.sensitivity.every_second_sample, 12.5),
+    ):
+        assert peak.reference_rate_hz == pytest.approx(rate, rel=0, abs=1e-9)
+        assert peak.horizontal_positional_speed_m_s == pytest.approx(0.75, rel=0, abs=2e-12)
+        assert peak.horizontal_positional_acceleration_m_s2 == pytest.approx(0, rel=0, abs=2e-10)
+
+    # The second moment of each symmetric kernel shifts x=t+t² by μ₂h².
+    quadratic = RigidBody(PlanarTrajectory((PlanarPhase(3, (2, 0)),), initial_velocity_m_s=(1, 0)))
+    raw = export_case("gnss_lps.lps", quadratic, hz=hz)
+    case, declaration = track_case("lps", hz=hz, latency=0, raw=raw)
+    result = process(case.observation, declaration, options)
+    t = case.truth["time"][6:-6]
+    kinematics = result.kinematics
+    np.testing.assert_allclose(
+        kinematics.position_m[6:-6, 0], t + t**2 + second_moment / hz**2, rtol=0, atol=2e-12
+    )
+    np.testing.assert_allclose(
+        kinematics.horizontal_positional_speed_m_s[6:-6], 1 + 2 * t, rtol=0, atol=2e-12
+    )
+    np.testing.assert_allclose(
+        kinematics.positional_acceleration_m_s2[6:-6, 0], 2, rtol=0, atol=2e-10
+    )
+
+
+def test_lps_positional_threshold_recovers_known_interval_and_refuses_short_dwell() -> None:
+    hz = 25
+    body = RigidBody(PlanarTrajectory((PlanarPhase(3, (2, 0)),), initial_velocity_m_s=(1, 0)))
+    raw = export_case("gnss_lps.lps", body, hz=hz)
+    case, declaration = track_case("lps", hz=hz, latency=0, raw=raw)
+    options = ProcessingOptions(
+        thresholds=(
+            SpeedThreshold(threshold_m_s=3.01, dwell_s=1.95),
+            SpeedThreshold(threshold_m_s=3.01, dwell_s=1.97),
+            SpeedThreshold(threshold_m_s=6.99, dwell_s=0),
+        )
+    )
+    passed, too_short, isolated = process(case.observation, declaration, options).thresholds
+    # v=1+2t crosses 3.01 m/s between samples at 1.00 and 1.04 s.
+    assert passed.estimand == "horizontal_positional_speed"
+    assert passed.runs == 1
+    assert passed.duration_s == pytest.approx(1.96, rel=0, abs=1e-12)
+    assert passed.horizontal_path_distance_m == pytest.approx(9.8784, rel=0, abs=2e-12)
+    assert passed.integrated_doppler_distance_m is None
+    for refused in (too_short, isolated):
+        assert refused.runs == 0
+        assert refused.duration_s == 0
+        assert refused.horizontal_path_distance_m == 0
