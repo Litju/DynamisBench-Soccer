@@ -282,6 +282,8 @@ def test_lps_declared_clock_and_latency_against_affine_reference() -> None:
     np.testing.assert_allclose(
         result.clock.reference_stamp_s, expected_time + 0.038, rtol=0, atol=1e-12
     )
+    assert result.clock.alignment_uncertainty_s == 1e-12
+    assert result.declaration.latency_uncertainty_s == 0.001
     acquisition = case.observation.meta.acquisition
     assert acquisition is not None
     acquisition.alignments[0].sync_events.pop()
