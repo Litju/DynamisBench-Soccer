@@ -19,10 +19,10 @@ Specified is NOT verified. Analytical agreement is NOT empirical equivalence.
 
 ## Ratings and blockers
 
-- force_platform.single (RES-670): A:specified (RES-670), B:specified (RES-670), C:specified (RES-693), D:partial (RES-670), E:partial (RES-670), F:verified (RES-670), G:verified (RES-671), H:partial (RES-671), I:partial (RES-670), J:verified (RES-669), K:partial (RES-669), L:verified (RES-703), M:verified (RES-675), N:absent (RES-680), O:partial (RES-670)
+- force_platform.single (RES-670): A:specified (RES-670), B:specified (RES-670), C:specified (RES-693), D:partial (RES-670), E:partial (RES-670), F:verified (RES-670), G:verified (RES-671), H:partial (RES-671), I:verified (RES-670), J:verified (RES-669), K:partial (RES-669), L:verified (RES-703), M:verified (RES-675), N:absent (RES-680), O:partial (RES-670)
   - empirical gap: Production engine and numerical checks available (RES-670); G/H assessment qualification remains RES-671/672
   - empirical gap: Measured-device calibration/compliance/uncertainty and L agreement evidence remain open (RES-694/703/675)
-- force_platform.dual (RES-670): A:specified (RES-670), B:specified (RES-670), C:verified (RES-693), D:verified (RES-670), E:partial (RES-670), F:verified (RES-670), G:partial (RES-671), H:partial (RES-671), I:partial (RES-670), J:verified (RES-669), K:partial (RES-669), L:partial (RES-703), M:verified (RES-675), N:absent (RES-680), O:partial (RES-670)
+- force_platform.dual (RES-670): A:specified (RES-670), B:specified (RES-670), C:verified (RES-693), D:verified (RES-670), E:partial (RES-670), F:verified (RES-670), G:partial (RES-671), H:partial (RES-671), I:verified (RES-670), J:verified (RES-669), K:partial (RES-669), L:partial (RES-703), M:verified (RES-675), N:absent (RES-680), O:partial (RES-670)
   - empirical gap: Dual production processing verified on analytical controls (RES-670); actual bilateral calibration, cross-talk, assignment and timing remain unqualified
   - empirical gap: G/H assessment and L agreement qualification remain open (RES-671/672/703/675)
 - lpt_encoder.lpt (RES-695): A:specified (RES-693), B:specified (RES-695), C:verified (RES-693), D:partial (RES-695), E:partial (RES-695), F:verified (RES-695), G:partial (RES-671), H:partial (RES-671), I:partial (RES-695), J:verified (RES-669), K:partial (RES-669), L:partial (RES-703), M:verified (RES-695), N:absent (RES-704), O:partial (RES-695)

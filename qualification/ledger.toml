@@ -9,7 +9,7 @@ paradigm = "continuous_signal"
 issue = "RES-670"
 engine_id = "fp_single"
 methods = ["filter", "integrate"]
-ratings = { A = "specified", B = "specified", C = "specified", D = "partial", E = "partial", F = "verified", G = "verified", H = "partial", I = "partial", J = "verified", K = "partial", L = "verified", M = "verified", N = "absent", O = "partial" }
+ratings = { A = "specified", B = "specified", C = "specified", D = "partial", E = "partial", F = "verified", G = "verified", H = "partial", I = "verified", J = "verified", K = "partial", L = "verified", M = "verified", N = "absent", O = "partial" }
 empirical_gaps = ["Production engine and numerical checks available (RES-670); G/H assessment qualification remains RES-671/672", "Measured-device calibration/compliance/uncertainty and L agreement evidence remain open (RES-694/703/675)"]
 blockers = []
 
@@ -21,7 +21,7 @@ paradigm = "continuous_signal"
 issue = "RES-670"
 engine_id = "fp_dual"
 methods = ["filter", "integrate"]
-ratings = { A = "specified", B = "specified", C = "verified", D = "verified", E = "partial", F = "verified", G = "partial", H = "partial", I = "partial", J = "verified", K = "partial", L = "partial", M = "verified", N = "absent", O = "partial" }
+ratings = { A = "specified", B = "specified", C = "verified", D = "verified", E = "partial", F = "verified", G = "partial", H = "partial", I = "verified", J = "verified", K = "partial", L = "partial", M = "verified", N = "absent", O = "partial" }
 empirical_gaps = ["Dual production processing verified on analytical controls (RES-670); actual bilateral calibration, cross-talk, assignment and timing remain unqualified", "G/H assessment and L agreement qualification remain open (RES-671/672/703/675)"]
 blockers = []
 
@@ -4651,3 +4651,19 @@ kind = "independent_test"
 issue = "RES-669"
 ref = "repo:tests/test_timing_contact.py"
 rationale = "Contact switching exercises missing, duplicate, reordered, latency, double-contact and step-off faults under a single-flight CMJ protocol."
+
+[[evidence]]
+subfamily = "force_platform.single"
+dimension = "I"
+kind = "independent_test"
+issue = "RES-670"
+ref = "repo:tests/test_force_platform_policy_a.py"
+rationale = "Single-plate raw fixed-grid processing propagates the declared aggregate force, body-weight and initial-velocity error bounds under trapezoid and Simpson integration."
+
+[[evidence]]
+subfamily = "force_platform.dual"
+dimension = "I"
+kind = "independent_test"
+issue = "RES-670"
+ref = "repo:tests/test_force_platform_policy_a.py"
+rationale = "Dual-plate raw fixed-grid processing propagates the declared aggregate force, body-weight and initial-velocity error bounds under trapezoid and Simpson integration."

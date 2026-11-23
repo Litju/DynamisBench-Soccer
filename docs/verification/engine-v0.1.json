@@ -1657,7 +1657,6 @@
         "E: every processing method variant is compared with an independent reference with stated sensitivity bounds (owner RES-670; rated partial)",
         "G: protocol events are recovered against analytically known event times, with eligibility refusals (owner RES-671; rated partial)",
         "H: metric definitions are bound to sourced registry claims and executable exactly (owner RES-671; rated partial)",
-        "I: declared uncertainty propagation is checked against an independent analytical result (owner RES-670; rated partial)",
         "K: synthetic fault fixtures cover the declared fault classes with expected verdicts (owner RES-669; rated partial)",
         "L: analytical cross-device studies are executed and classified, never read as interchangeability (owner RES-703; rated partial)",
         "O: limitation statements are sourced and emitted with every result (owner RES-670; rated partial)"
@@ -1669,7 +1668,6 @@
         "D: integrity and QC checks reject injected faults and pass clean controls (owner RES-670; rated partial)",
         "E: every processing method variant is compared with an independent reference with stated sensitivity bounds (owner RES-670; rated partial)",
         "H: metric definitions are bound to sourced registry claims and executable exactly (owner RES-671; rated partial)",
-        "I: declared uncertainty propagation is checked against an independent analytical result (owner RES-670; rated partial)",
         "K: synthetic fault fixtures cover the declared fault classes with expected verdicts (owner RES-669; rated partial)",
         "O: limitation statements are sourced and emitted with every result (owner RES-670; rated partial)"
       ],
@@ -2066,6 +2064,7 @@
         "C",
         "D",
         "F",
+        "I",
         "J",
         "M"
       ],
@@ -2075,7 +2074,6 @@
         "E: every processing method variant is compared with an independent reference with stated sensitivity bounds (owner RES-670; rated partial)",
         "G: protocol events are recovered against analytically known event times, with eligibility refusals (owner RES-671; rated partial)",
         "H: metric definitions are bound to sourced registry claims and executable exactly (owner RES-671; rated partial)",
-        "I: declared uncertainty propagation is checked against an independent analytical result (owner RES-670; rated partial)",
         "K: synthetic fault fixtures cover the declared fault classes with expected verdicts (owner RES-669; rated partial)",
         "L: analytical cross-device studies are executed and classified, never read as interchangeability (owner RES-703; rated partial)",
         "O: limitation statements are sourced and emitted with every result (owner RES-670; rated partial)"
@@ -2132,7 +2130,7 @@
         "F": "verified",
         "G": "partial",
         "H": "partial",
-        "I": "partial",
+        "I": "verified",
         "J": "verified",
         "K": "partial",
         "L": "partial",
@@ -2150,6 +2148,9 @@
         "F": [
           "RCP-force_platform-dual-F"
         ],
+        "I": [
+          "RCP-force_platform-dual-I"
+        ],
         "J": [
           "RCP-force_platform-dual-J"
         ],
@@ -2163,7 +2164,6 @@
         "E": "every processing method variant is compared with an independent reference with stated sensitivity bounds",
         "G": "protocol events are recovered against analytically known event times, with eligibility refusals",
         "H": "metric definitions are bound to sourced registry claims and executable exactly",
-        "I": "declared uncertainty propagation is checked against an independent analytical result",
         "K": "synthetic fault fixtures cover the declared fault classes with expected verdicts",
         "L": "analytical cross-device studies are executed and classified, never read as interchangeability",
         "O": "limitation statements are sourced and emitted with every result"
@@ -2176,7 +2176,6 @@
         "E",
         "G",
         "H",
-        "I",
         "K",
         "L",
         "O"
@@ -2185,6 +2184,7 @@
         "C",
         "D",
         "F",
+        "I",
         "J",
         "M"
       ]
@@ -2193,6 +2193,7 @@
       "analytical_only_dimensions": [
         "F",
         "G",
+        "I",
         "J",
         "L",
         "M"
@@ -2204,7 +2205,6 @@
         "D: integrity and QC checks reject injected faults and pass clean controls (owner RES-670; rated partial)",
         "E: every processing method variant is compared with an independent reference with stated sensitivity bounds (owner RES-670; rated partial)",
         "H: metric definitions are bound to sourced registry claims and executable exactly (owner RES-671; rated partial)",
-        "I: declared uncertainty propagation is checked against an independent analytical result (owner RES-670; rated partial)",
         "K: synthetic fault fixtures cover the declared fault classes with expected verdicts (owner RES-669; rated partial)",
         "O: limitation statements are sourced and emitted with every result (owner RES-670; rated partial)"
       ],
@@ -2260,7 +2260,7 @@
         "F": "verified",
         "G": "verified",
         "H": "partial",
-        "I": "partial",
+        "I": "verified",
         "J": "verified",
         "K": "partial",
         "L": "verified",
@@ -2274,6 +2274,9 @@
         ],
         "G": [
           "RCP-force_platform-single-G"
+        ],
+        "I": [
+          "RCP-force_platform-single-I"
         ],
         "J": [
           "RCP-force_platform-single-J"
@@ -2292,7 +2295,6 @@
         "D": "integrity and QC checks reject injected faults and pass clean controls",
         "E": "every processing method variant is compared with an independent reference with stated sensitivity bounds",
         "H": "metric definitions are bound to sourced registry claims and executable exactly",
-        "I": "declared uncertainty propagation is checked against an independent analytical result",
         "K": "synthetic fault fixtures cover the declared fault classes with expected verdicts",
         "O": "limitation statements are sourced and emitted with every result"
       },
@@ -2305,13 +2307,13 @@
         "D",
         "E",
         "H",
-        "I",
         "K",
         "O"
       ],
       "verified_m3": [
         "F",
         "G",
+        "I",
         "J",
         "L",
         "M"

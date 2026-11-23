@@ -19,8 +19,8 @@ Engineering calculations only; no scientific qualification of any device or metr
 
 | Subfamily | State | Independent reference | Unverified A-M,O |
 | -- | -- | -- | -- |
-| force_platform.dual | SPECIFIED | yes | 9 of 14 |
-| force_platform.single | SPECIFIED | yes | 9 of 14 |
+| force_platform.dual | SPECIFIED | yes | 8 of 14 |
+| force_platform.single | SPECIFIED | yes | 8 of 14 |
 | gnss_lps.gnss | SPECIFIED | yes | 5 of 14 |
 | gnss_lps.lps | SPECIFIED | yes | 4 of 14 |
 | imu.inertial | SPECIFIED | yes | 8 of 14 |
@@ -43,13 +43,11 @@ Engineering calculations only; no scientific qualification of any device or metr
 * computational blocker: E: every processing method variant is compared with an independent reference with stated sensitivity bounds (owner RES-670; rated partial)
 * computational blocker: G: protocol events are recovered against analytically known event times, with eligibility refusals (owner RES-671; rated partial)
 * computational blocker: H: metric definitions are bound to sourced registry claims and executable exactly (owner RES-671; rated partial)
-* computational blocker: I: declared uncertainty propagation is checked against an independent analytical result (owner RES-670; rated partial)
 * computational blocker: K: synthetic fault fixtures cover the declared fault classes with expected verdicts (owner RES-669; rated partial)
 * computational blocker: L: analytical cross-device studies are executed and classified, never read as interchangeability (owner RES-703; rated partial)
 * computational blocker: O: limitation statements are sourced and emitted with every result (owner RES-670; rated partial)
 * K - owner RES-669: synthetic fault fixtures cover the declared fault classes with expected verdicts
 * B - owner RES-670: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused
-* I - owner RES-670: declared uncertainty propagation is checked against an independent analytical result
 * E - owner RES-670: every processing method variant is compared with an independent reference with stated sensitivity bounds
 * A - owner RES-670: executable admission contract: native/vendor stage, units and integrity refusals tested
 * O - owner RES-670: limitation statements are sourced and emitted with every result
@@ -64,12 +62,10 @@ Engineering calculations only; no scientific qualification of any device or metr
 * computational blocker: D: integrity and QC checks reject injected faults and pass clean controls (owner RES-670; rated partial)
 * computational blocker: E: every processing method variant is compared with an independent reference with stated sensitivity bounds (owner RES-670; rated partial)
 * computational blocker: H: metric definitions are bound to sourced registry claims and executable exactly (owner RES-671; rated partial)
-* computational blocker: I: declared uncertainty propagation is checked against an independent analytical result (owner RES-670; rated partial)
 * computational blocker: K: synthetic fault fixtures cover the declared fault classes with expected verdicts (owner RES-669; rated partial)
 * computational blocker: O: limitation statements are sourced and emitted with every result (owner RES-670; rated partial)
 * K - owner RES-669: synthetic fault fixtures cover the declared fault classes with expected verdicts
 * B - owner RES-670: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused
-* I - owner RES-670: declared uncertainty propagation is checked against an independent analytical result
 * E - owner RES-670: every processing method variant is compared with an independent reference with stated sensitivity bounds
 * A - owner RES-670: executable admission contract: native/vendor stage, units and integrity refusals tested
 * D - owner RES-670: integrity and QC checks reject injected faults and pass clean controls
@@ -420,8 +416,8 @@ Open empirical requirements (what only physical measurement can close):
 
 | Subfamily | A | B | C | D | E | F | G | H | I | J | K | L | M | N | O |
 | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- |
-| force_platform.dual | s | s | V | V | p | V | p | p | p | V | p | p | V | - | p |
-| force_platform.single | s | s | s | p | p | V | V | p | p | V | p | V | V | - | p |
+| force_platform.dual | s | s | V | V | p | V | p | p | V | V | p | p | V | - | p |
+| force_platform.single | s | s | s | p | p | V | V | p | V | V | p | V | V | - | p |
 | gnss_lps.gnss | V | s | V | V | p | V | V | p | p | V | V | V | V | - | p |
 | gnss_lps.lps | V | V | V | V | V | V | V | p | p | V | V | p | V | - | p |
 | imu.inertial | s | V | s | V | V | V | p | p | V | V | p | p | p | - | p |
