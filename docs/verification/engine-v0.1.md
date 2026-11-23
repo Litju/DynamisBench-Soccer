@@ -30,8 +30,8 @@ Engineering calculations only; no scientific qualification of any device or metr
 | lpt_encoder.lpt | SPECIFIED | yes | 9 of 14 |
 | nordic_hip.hip | SPECIFIED | yes | 11 of 14 |
 | nordic_hip.nordic | SPECIFIED | yes | 9 of 14 |
-| radar_laser.laser | SPECIFIED | yes | 11 of 14 |
-| radar_laser.radar | SPECIFIED | yes | 6 of 14 |
+| radar_laser.laser | SPECIFIED | yes | 10 of 14 |
+| radar_laser.radar | SPECIFIED | yes | 5 of 14 |
 | timing_contact.contact | SPECIFIED | yes | 4 of 14 |
 | timing_contact.gates | SPECIFIED | yes | 5 of 14 |
 
@@ -240,11 +240,9 @@ Engineering calculations only; no scientific qualification of any device or metr
 * computational blocker: H: metric definitions are bound to sourced registry claims and executable exactly (owner RES-673; rated partial)
 * computational blocker: I: declared uncertainty propagation is checked against an independent analytical result (owner RES-699; rated partial)
 * computational blocker: J: an independent reference implementation or closed form that shares no code with the engine (owner RES-669; rated partial)
-* computational blocker: K: synthetic fault fixtures cover the declared fault classes with expected verdicts (owner RES-669; rated partial)
 * computational blocker: M: seeded, hash-bound provenance chain for every processing stage, reproduced exactly (owner RES-699; rated partial)
 * computational blocker: O: limitation statements are sourced and emitted with every result (owner RES-699; rated partial)
 * J - owner RES-669: an independent reference implementation or closed form that shares no code with the engine
-* K - owner RES-669: synthetic fault fixtures cover the declared fault classes with expected verdicts
 * H - owner RES-673: metric definitions are bound to sourced registry claims and executable exactly
 * G - owner RES-673: protocol events are recovered against analytically known event times, with eligibility refusals
 * A - owner RES-693: executable admission contract: native/vendor stage, units and integrity refusals tested
@@ -258,11 +256,9 @@ Engineering calculations only; no scientific qualification of any device or metr
 **radar_laser.radar** (SPECIFIED)
 * computational blocker: B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-699; rated specified)
 * computational blocker: E: every processing method variant is compared with an independent reference with stated sensitivity bounds (owner RES-699; rated partial)
-* computational blocker: K: synthetic fault fixtures cover the declared fault classes with expected verdicts (owner RES-669; rated partial)
 * computational blocker: L: analytical cross-device studies are executed and classified, never read as interchangeability (owner RES-703; rated partial)
 * computational blocker: M: seeded, hash-bound provenance chain for every processing stage, reproduced exactly (owner RES-699; rated partial)
 * computational blocker: O: limitation statements are sourced and emitted with every result (owner RES-699; rated partial)
-* K - owner RES-669: synthetic fault fixtures cover the declared fault classes with expected verdicts
 * B - owner RES-699: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused
 * E - owner RES-699: every processing method variant is compared with an independent reference with stated sensitivity bounds
 * O - owner RES-699: limitation statements are sourced and emitted with every result
@@ -403,8 +399,8 @@ Open empirical requirements (what only physical measurement can close):
 | lpt_encoder.lpt | s | s | V | p | p | V | p | p | V | V | p | p | V | - | p |
 | nordic_hip.hip | s | V | s | p | p | p | p | V | p | V | p | p | p | - | p |
 | nordic_hip.nordic | s | s | s | p | p | V | V | V | p | V | p | V | p | - | p |
-| radar_laser.laser | s | s | V | p | p | V | p | p | p | p | p | V | p | - | p |
-| radar_laser.radar | V | s | V | V | p | V | V | V | V | V | p | p | p | - | p |
+| radar_laser.laser | s | s | V | p | p | V | p | p | p | p | V | V | p | - | p |
+| radar_laser.radar | V | s | V | V | p | V | V | V | V | V | V | p | p | - | p |
 | timing_contact.contact | V | s | s | V | V | V | p | V | V | V | V | V | V | - | p |
 | timing_contact.gates | V | s | s | V | V | V | p | V | V | p | V | V | V | - | p |
 

@@ -917,8 +917,8 @@
    "verdict": "PARTIAL"
   },
   "RCP-radar_laser-laser-C": {
-   "bound_digest": "1af5f429b64d15c0410509474dee2df2838276a64723b07b1ddd2af81bcc7877",
-   "evidence_head": "3b8c6e2309cb9283aac4a8dc63b0d8443628748d",
+   "bound_digest": "9770a1fe3e39ab21a3e2960d17cf04a1faa16bf76a096d8df5632b7aabf15634",
+   "evidence_head": "699b4c1c138655c7b2164a01e3ec84eb4aff697f",
    "fix": "",
    "prior_fix": "",
    "prior_reason": "On laser: the affine clock maps to truth time at atol 1e-12, a non-monotonic timestamp and DROP-fault gaps are refused, and range_change start is exercised. The tolerance matches.",
@@ -967,9 +967,14 @@
    "verdict": "PARTIAL"
   },
   "RCP-radar_laser-laser-K": {
-   "fix": "Inject each continuous fault class into laser bundles and assert the engine refusal or verdict.",
-   "reason": "The fault-coverage test checks only inject determinism and lineage, not verdicts. The continuous-fault and clipping-verdict tests are radar-only. The laser verdict comes only from the target-switch test.",
-   "verdict": "PARTIAL"
+   "bound_digest": "1e2c225bd8378383166bad50ab56e825d5b1741dcfde9bae46335cee620923ad",
+   "evidence_head": "699b4c1c138655c7b2164a01e3ec84eb4aff697f",
+   "fix": "",
+   "prior_fix": "Inject each continuous fault class into laser bundles and assert the engine refusal or verdict.",
+   "prior_reason": "The fault-coverage test checks only inject determinism and lineage, not verdicts. The continuous-fault and clipping-verdict tests are radar-only. The laser verdict comes only from the target-switch test.",
+   "prior_verdict": "PARTIAL",
+   "reason": "Native laser processing exercises all six declared continuous fault classes, including expected transfer of small biases and noise and refusal of clipping, dropout and explicit resampling. At 100 Hz compare each changed result to the clean path under native unfiltered processing. A 0.08 m range offset cancels, a 0.04 m/s linear range drift gives a constant 0.04 m/s speed change, and PCG64 seed 823, 1 micrometre SD gives the independent five-point derivative of the drawn noise on interior samples. An 8 m clipped range produces a negative reconstructed speed and refuses. Stride-five drops refuse timestamp gaps; stride-two decimation with updated 50 Hz metadata refuses when identified by provenance or source format. Plain decimation alone cannot authorize the opaque manufacturer route. Numeric comparisons use absolute 1e-11 m/s and zero relative tolerance for floating-point arithmetic. Verdicts are categorical.",
+   "verdict": "SUPPORTED"
   },
   "RCP-radar_laser-laser-L": {
    "bound_digest": "48e035e5869cb572ba79729062a685decf5496daa7fc51432ab190402b71b60f",
@@ -983,10 +988,13 @@
    "verdict": "PARTIAL"
   },
   "RCP-radar_laser-radar-A": {
-   "bound_digest": "e64dc940cea8f9925952a1d9972aaaefdcad3f8b620b5f55d4f4e95dbb6dcf12",
-   "evidence_head": "3b8c6e2309cb9283aac4a8dc63b0d8443628748d",
+   "bound_digest": "4ae04bb92c37bc23701d8356a3a7d011794e2efe49fe79eb03f5a1381ebba17b",
+   "evidence_head": "699b4c1c138655c7b2164a01e3ec84eb4aff697f",
    "fix": "",
-   "reason": "The tests admit native radar with an affine clock and refuse truth data, a string stage, GNSS data, a mislabelled processed stage and ambiguous calibration, all through admit().",
+   "prior_fix": "",
+   "prior_reason": "The tests admit native radar with an affine clock and refuse truth data, a string stage, GNSS data, a mislabelled processed stage and ambiguous calibration, all through admit().",
+   "prior_verdict": "SUPPORTED",
+   "reason": "Native radar accepts the intact source and refuses processed, decoded as analytical truth, wrong-device, conflicting declaration, decimated and invalid timing data as asserted by the cited categorical controls. A decimation tag alone cannot authorize manufacturer processing.",
    "verdict": "SUPPORTED"
   },
   "RCP-radar_laser-radar-B": {
@@ -995,8 +1003,8 @@
    "verdict": "PARTIAL"
   },
   "RCP-radar_laser-radar-C": {
-   "bound_digest": "4b537ffadc60e601222e8c6288bc8faece316d1e36f09680d988e43ac590617f",
-   "evidence_head": "3b8c6e2309cb9283aac4a8dc63b0d8443628748d",
+   "bound_digest": "f6a000f6cdf7d3311454b34692d9b68dfb7e329172b848a3f4ec0b84eb87654b",
+   "evidence_head": "699b4c1c138655c7b2164a01e3ec84eb4aff697f",
    "fix": "",
    "prior_fix": "",
    "prior_reason": "The affine DeviceClock maps to reference time within 1e-12, non-monotonic timestamps and gaps are refused, and the start modes refuse missing triggers.",
@@ -1005,8 +1013,8 @@
    "verdict": "SUPPORTED"
   },
   "RCP-radar_laser-radar-D": {
-   "bound_digest": "6627a23588c693725914e58b5a984009eb94efb415bf6d52640f6a7ebb702e0d",
-   "evidence_head": "3b8c6e2309cb9283aac4a8dc63b0d8443628748d",
+   "bound_digest": "fe2083f1100c1a0d7e5a05132d7c7a6274ded9c35ceb853635eba0eac81cc4a5",
+   "evidence_head": "699b4c1c138655c7b2164a01e3ec84eb4aff697f",
    "fix": "",
    "prior_fix": "",
    "prior_reason": "Timestamp faults, dropouts, reflection or target switch and clipped plateaus are refused, and stationary pre-start zeros are not falsely flagged, which serves as the clean control.",
@@ -1046,8 +1054,8 @@
    "verdict": "SUPPORTED"
   },
   "RCP-radar_laser-radar-I": {
-   "bound_digest": "90225bdf490cd6c4ea7307dcf034a6639477b6bd2290a0eef6599da430e0b9ef",
-   "evidence_head": "3b8c6e2309cb9283aac4a8dc63b0d8443628748d",
+   "bound_digest": "21e05d53720b64908d3968fe51ff639004945085ce8e9ff7d69adf5d6ef0b6a8",
+   "evidence_head": "699b4c1c138655c7b2164a01e3ec84eb4aff697f",
    "fix": "",
    "prior_fix": "Compare the start \u00b1 sensitivity values with MonoExponentialSprint velocity at the shifted times, and use radar for the filter sensitivity.",
    "prior_reason": "The start-offset sensitivity checks only ordering and baseline equals interp(engine output), which is self-referential. The filter-sensitivity test uses laser. Only the noisy fit is within 3 SE of the truth.",
@@ -1066,9 +1074,14 @@
    "verdict": "SUPPORTED"
   },
   "RCP-radar_laser-radar-K": {
-   "fix": "Add expected radar process/admit verdicts for the offset, drift, noise, resample and drop fixtures.",
-   "reason": "Engine verdicts exist only for clipping and discontinuity. The offset, drift, noise, resample and drop faults are checked only for their injection effects (test_continuous_fault_effects...), with no radar engine verdict.",
-   "verdict": "PARTIAL"
+   "bound_digest": "ec6aacf15daabf8b57c5dea41d3b950d6be9a8b86f552287fbf1b5a2fac0fe3b",
+   "evidence_head": "699b4c1c138655c7b2164a01e3ec84eb4aff697f",
+   "fix": "",
+   "prior_fix": "Add expected radar process/admit verdicts for the offset, drift, noise, resample and drop fixtures.",
+   "prior_reason": "Engine verdicts exist only for clipping and discontinuity. The offset, drift, noise, resample and drop faults are checked only for their injection effects (test_continuous_fault_effects...), with no radar engine verdict.",
+   "prior_verdict": "PARTIAL",
+   "reason": "Native radar processing exercises all six declared continuous fault classes, including expected transfer of small biases and noise and refusal of clipping, dropout and explicit resampling. At 100 Hz compare each changed result to the clean path under native unfiltered processing. A 0.08 m/s offset adds 0.08 m/s, a 0.04 m/s per second drift adds 0.04t m/s, and PCG64 seed 823, 0.002 m/s SD contributes its drawn sequence directly. A sustained 3 m/s clipped rail refuses. Stride-five drops refuse timestamp gaps; stride-two decimation with updated 50 Hz metadata refuses when identified by provenance or source format. Plain decimation alone cannot authorize the opaque manufacturer route. Numeric comparisons use absolute 1e-11 m/s and zero relative tolerance for floating-point arithmetic. Verdicts are categorical.",
+   "verdict": "SUPPORTED"
   },
   "RCP-radar_laser-radar-L": {
    "fix": "",
