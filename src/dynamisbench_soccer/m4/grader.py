@@ -262,7 +262,7 @@ def _measurement_binding(task: RegistryTask, review: ReviewedSlice) -> bool:
         == (procedure.estimand, procedure.dimension, procedure.unit)
         and method.source_claims == procedure.claims
         and all(
-            f"src/dynamisbench_soccer/engines/{dependency}" in review.implementations
+            f"src/dynamisbench_soccer/{dependency}" in review.implementations
             for dependency in procedure.dependencies
         )
     )
@@ -295,7 +295,7 @@ def _replay_measurement(
         decision="compute" if computed else "refuse",
         method=method.id,
         reason=reading.reason,
-        selected_trials=(artifact,) if computed else (),
+        selected_trials=(reading.selected_trials or (artifact,)) if computed else (),
         claims=reading.claims,
         citations=method.source_claims,
         quantity=quantity,
