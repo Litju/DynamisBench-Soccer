@@ -1913,7 +1913,7 @@ claim = "Wireless gate splits and segment-average speeds propagate declared cloc
 check_kind = "numeric"
 tolerance_basis = "At 800 ppm and 0.5 ms native resolution, each timing radius includes 0.0002502 s from the clock, 1e-12 s alignment uncertainty, 0 or 0.0015 s synchronization error, 0.0007 s trigger error and 0.0002 s definition error. The two endpoint radii sum to 0.002300400002 or 0.005300400002 s. Split centers are 0.7324799388172911, 1.2470407645364006 and 1.1571471988932043 s, for 5, 10 and 10 m. Speed endpoints are distance divided by the opposite time endpoints. Use absolute 1e-12 s and 1e-11 m/s with zero relative allowance for floating-point arithmetic. Refuse unresolved ordering."
 tolerance = 1e-11
-tolerance_unit = "m/s (absolute); separate time and height bounds in the test basis"
+tolerance_unit = "m/s (absolute); separate time bounds in the test basis"
 issue = "RES-698"
 
 [receipt.digests]
