@@ -105,7 +105,7 @@ paradigm = "discrete_event"
 issue = "RES-698"
 engine_id = "gates"
 methods = ["debounce", "multi_beam_voting", "trigger_latency_correction"]
-ratings = { A = "verified", B = "specified", C = "verified", D = "verified", E = "verified", F = "verified", G = "verified", H = "verified", I = "verified", J = "partial", K = "verified", L = "verified", M = "verified", N = "absent", O = "partial" }
+ratings = { A = "verified", B = "specified", C = "verified", D = "verified", E = "verified", F = "verified", G = "verified", H = "verified", I = "verified", J = "verified", K = "verified", L = "verified", M = "verified", N = "absent", O = "partial" }
 empirical_gaps = ["Gate geometry, trigger validity and timing-error bounds need empirical metrology (RES-694)", "Sprint assessment variants and cross-device agreement remain open (RES-673/703)"]
 blockers = []
 
@@ -4867,3 +4867,11 @@ kind = "independent_test"
 issue = "RES-671"
 ref = "repo:tests/test_timing_assessment_policy_a.py"
 rationale = "Independent native timing controls preserve protocol eligibility in the actual assessment handoff and refuse incomplete support."
+
+[[evidence]]
+subfamily = "timing_contact.gates"
+dimension = "J"
+kind = "independent_test"
+issue = "RES-669"
+ref = "repo:tests/test_gate_oracle_policy_a.py"
+rationale = "Independent spherical beam interruption geometry and displacement equations verify native gate engine events under declared clock and edge assumptions."
