@@ -1,5 +1,6 @@
 """RES-703 agreement controls use independently prescribed rational motion."""
 
+import hashlib
 import math
 
 import pytest
@@ -15,6 +16,15 @@ def _motion(hz):
     bundle = case.observation
     for name, velocity in (("position_x", 3), ("position_y", 4), ("position_z", 2)):
         bundle[name][:] = velocity * case.truth["time"]
+    raw = hashlib.sha256()
+    for name, values in bundle.data.items():
+        raw.update(name.encode())
+        raw.update(values.astype("<f8").tobytes())
+    assert bundle.meta.acquisition is not None
+    bundle.meta.acquisition.sources[0].source_sha256 = raw.hexdigest()
+    bundle.meta.provenance.created_by = "RES-703-constant-velocity-control@1"
+    bundle.meta.provenance.parents = []
+    bundle.meta.provenance.transforms = ["prescribed independent constant velocity; RES-669 schema"]
     return bundle, declaration
 
 
@@ -35,6 +45,7 @@ def test_matched_lps_radar_control(hz, derivative, position_filter):
     )
     assert result.classification == "analytical_model_agreement"
     assert result.interchangeable == "unknown"
+    assert result.source_evidence[0]["source_sha256"]
     for radar, lps in result.pairs:
         assert radar == pytest.approx(5, rel=0, abs=1e-10)
         assert lps == pytest.approx(5, rel=0, abs=1e-10)
@@ -72,4 +83,17 @@ def test_radial_component_is_a_mismatch_and_faults_refuse():
             0,
             correct_projection=True,
             options=opts,
+        )
+
+
+def test_unmatched_speed_cannot_report_agreement():
+    bundle, declaration = _motion(25)
+    with pytest.raises(ValueError, match="does not match"):
+        compare_lps_radar(
+            bundle,
+            declaration,
+            (3, 5),
+            0,
+            correct_projection=True,
+            options=ProcessingOptions(thresholds=()),
         )

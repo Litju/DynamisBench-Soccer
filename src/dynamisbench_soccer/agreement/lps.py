@@ -5,6 +5,7 @@ from __future__ import annotations
 import math
 
 from dynamisbench_soccer.agreement.studies import Study, _native_evidence, _study
+from dynamisbench_soccer.data.manifest import DataCategory
 from dynamisbench_soccer.engines.gnss_lps import ProcessingOptions, process
 from dynamisbench_soccer.engines.gnss_lps_acquisition import (
     AcquisitionDeclaration,
@@ -23,8 +24,11 @@ def compare_lps_radar(
     options: ProcessingOptions,
 ) -> Study:
     """Compare identical planar motions at interior samples of a constant-speed trial."""
-    if observation.meta.device.device_class is not DeviceClass.LPS:
-        raise AcquisitionRefusal("the positional input must be LPS")
+    if (
+        observation.meta.device.device_class is not DeviceClass.LPS
+        or observation.meta.data_category is not DataCategory.SYNTHETIC
+    ):
+        raise AcquisitionRefusal("the positional input must be a synthetic LPS observation")
     if not all(math.isfinite(x) for x in (*velocities_m_s, beam_rad)):
         raise ValueError("finite analytical velocity and beam direction required")
     if options.thresholds:
@@ -41,6 +45,8 @@ def compare_lps_radar(
     speed = result.kinematics.horizontal_positional_speed_m_s[4:-4]
     if len(speed) < 3:
         raise ValueError("at least three interior comparisons required")
+    if not all(math.isclose(float(value), horizontal, abs_tol=1e-10, rel_tol=0) for value in speed):
+        raise ValueError("track does not match the declared constant-speed reference")
     pairs = [(radar, float(value)) for value in speed]
     evidence = _native_evidence(
         "gnss_lps.lps",
@@ -68,6 +74,7 @@ def compare_lps_radar(
         tolerance=1e-10,
         assumptions=[
             "one declared constant planar velocity; ideal synthetic positions and fixed radar beam",
+            "repeated rows within one synthetic trial are correlated",
             "no empirical ranging, survey, or alignment evidence",
         ],
         source_evidence=[evidence],
