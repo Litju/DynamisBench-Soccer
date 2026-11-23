@@ -150,12 +150,11 @@ speed, acceleration and distance, WGS84 longitude wrap, clock recovery,
 measured-time dwell, Doppler separation, and refusal of corrupted observations.
 Both modalities run through the installed wheel.
 
-The GNSS and LPS ledger remains `IN_PROGRESS`. Open requirements include
-accepted independent engineering and instrument evidence, audited raw
-observations and metrology, sprint assessment profiling in RES-673, and
-empirical agreement in RES-703. GNSS Doppler, differentiated GNSS/LPS
-position, radar, laser, and timing-gate splits have distinct measurement models.
-RES-721 data rights and any empirical validity claims remain outside RES-700.
+The [computed disposition](verification/m3-disposition.md) tracks Policy A
+engineering status. Audited native field observations, instrument metrology,
+and empirical agreement remain open. GNSS Doppler, differentiated GNSS/LPS
+position, radar, laser, and timing gates have distinct measurement models.
+RES-721 data rights and empirical validity remain outside this verification.
 
 ### Conditional uncertainty on admitted tracks
 
