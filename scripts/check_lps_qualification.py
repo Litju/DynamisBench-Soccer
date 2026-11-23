@@ -71,8 +71,17 @@ def main() -> None:
     row = track["row"]
     quantity = clean["quantity"]
 
+    differences = int(oracle.admission != replay.admission)
+    differences += sum(
+        (a.candidate_payload_sha256, a.output_sha256, a.grade)
+        != (b.candidate_payload_sha256, b.output_sha256, b.grade)
+        for a, b in zip(oracle.attempts, replay.attempts, strict=True)
+    )
+    differences += int(legacy["replay_differences"])
+
     def check(candidate: dict, checkpoint: str) -> str:
-        return score_checkpoint(
+        nonlocal differences
+        parameters = (
             root,
             task,
             catalog,
@@ -81,7 +90,10 @@ def main() -> None:
             checkpoint,
             inputs,
             json.dumps(candidate).encode(),
-        ).outcome
+        )
+        first = score_checkpoint(*parameters)
+        differences += first != score_checkpoint(*parameters)
+        return first.outcome
 
     higher_dimensional = (
         quantity["value"] ** 2
@@ -142,12 +154,17 @@ def main() -> None:
     )
     changed_artifact = task.artifacts[0].model_copy(update={"sha256": "0" * 64})
     tampered = task.model_copy(update={"artifacts": (changed_artifact, *task.artifacts[1:])})
-    rejections = [
-        evaluate(root, bad_source, catalog, args.catalog_sha256),
-        evaluate(root, tampered, catalog, args.catalog_sha256),
-        evaluate(root, task, stale_catalog, digest(stale_catalog)),
-        evaluate(root, task, catalog, "0" * 64),
-    ]
+    rejected_inputs = (
+        (root, bad_source, catalog, args.catalog_sha256),
+        (root, tampered, catalog, args.catalog_sha256),
+        (root, task, stale_catalog, digest(stale_catalog)),
+        (root, task, catalog, "0" * 64),
+    )
+    rejections = [evaluate(*parameters) for parameters in rejected_inputs]
+    differences += sum(
+        result != evaluate(*parameters)
+        for result, parameters in zip(rejections, rejected_inputs, strict=True)
+    )
     false_admits = sum(x.status != "REFUSED" for x in rejections)
     private_path = private / f"{review.answer.id}.json"
     probe = (
@@ -157,16 +174,22 @@ def main() -> None:
     projection = task.candidate_payload("clean", inputs, 17)
     isolation = execute_payload(projection, probe)
     keys_hidden = isolation.stdout == b"isolated\n" and isolation.workspace_removed
-    differences = sum(
-        a.output_sha256 != b.output_sha256
-        for a, b in zip(oracle.attempts, replay.attempts, strict=True)
+    repeated_probe = execute_payload(projection, probe)
+    differences += (isolation.outcome, isolation.stdout, isolation.workspace_removed) != (
+        repeated_probe.outcome,
+        repeated_probe.stdout,
+        repeated_probe.workspace_removed,
+    )
+    false_reject = int(oracle.admission.status != "ENGINEERING_ADMITTED")
+    oracle_passed = len(oracle.attempts) == len(task.checkpoints) and all(
+        attempt.grade.outcome == "PASS" for attempt in oracle.attempts
     )
     summary = {
         "scope": task.task.id,
         "admission": oracle.admission.status,
         "receipts": oracle.admission.evidence,
         "admission_positive": 1,
-        "admission_false_reject": 0,
+        "admission_false_reject": false_reject,
         "admission_negative": len(rejections),
         "admission_false_accept": false_admits,
         "baselines": {
@@ -181,6 +204,8 @@ def main() -> None:
     passed = (
         legacy["diagnostic_thresholds_met"]
         and not false_admits
+        and not false_reject
+        and oracle_passed
         and keys_hidden
         and not differences
         and all(
