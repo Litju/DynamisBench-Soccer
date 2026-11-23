@@ -81,3 +81,8 @@ IMU and LPT sources are unchanged and remain unestablished (RES-703).
 Test finding: the synthetic CMJ fixture trips the clipping rule (QC-S03) and was previously compared as
 an accepted source. Tests now use a device-accepted fixture (`_accepted_signal`) and keep the rejected
 fixture as the negative control.
+
+Native contact-switch results can supply a flight-time height to the source-specific
+assessment only if the contact engine has accepted the ballistic height calculation.
+A measured flight duration can remain valid when equal centre-of-mass height has
+not been affirmed. The assessment then refuses to report a height from that duration.

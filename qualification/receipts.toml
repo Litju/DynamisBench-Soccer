@@ -747,7 +747,7 @@ reference = ["src/dynamisbench_soccer/reference/spatial_observations.py::contact
 tests = ["tests/test_timing_contact.py::test_standing_jumps_report_flight_height_but_no_contact_phase_or_rsi", "tests/test_timing_contact.py::test_repeated_hops_keep_the_unobserved_initial_stance_and_posture_out_of_rsi", "tests/test_jump_assessment.py::test_latency_bias_shows_up_as_a_difference_not_a_correction"]
 
 [receipt.digests]
-"src/dynamisbench_soccer/assessment/jumps.py::contact_system_estimates" = "ab86b204e4d09593092a6c3c4d07f0b596999869b6988ea21864dfeff32c5b8f"
+"src/dynamisbench_soccer/assessment/jumps.py::contact_system_estimates" = "e2b4807aa7de5c1611aefca6663a29ef3d3832d24f588edbeedb8ad1c516ddd3"
 "src/dynamisbench_soccer/engines/contact.py::contact" = "fe638e0b5fc9e1974c99c48164e4c703aa43187a512d62ee5019cc4078f6d0fd"
 "src/dynamisbench_soccer/reference/kinematics.py::Trajectory" = "6c5d2b8879d0384ef30a4044c4ff13b6fe3f69f0ed33232c74da454f9da7d9a7"
 "src/dynamisbench_soccer/reference/spatial_observations.py::contact_events" = "226173ea25f5ef36da8d4c510519743351e1cb70235f071d37999eef5b1df52d"
@@ -2421,3 +2421,50 @@ issue = "RES-700"
 "src/dynamisbench_soccer/reference/lps_speed.py::exact_grid_extreme_speed" = "35ca59411bad9aa71dc02b65c13c2a33245986ce998ee152c7faf09d9f27ca7f"
 "tests/test_lps_speed_slice.py::test_lps_speed_refuses_unverified_clock_and_signal" = "9304fad18d72cea14cfd29c3df475274f2508f93bbbab9f6ffe1dc9d6e746d80"
 "tests/test_lps_speed_slice.py::test_position_only_radius_contains_and_attains_analytical_extreme" = "504cd18b6b3579ef19442ffb842a27bf469e2626053fee6aa8a4fb1d498fc615"
+
+[[receipt]]
+id = "RCP-timing_contact-contact-G"
+dimension = "G"
+subfamilies = ["timing_contact.contact"]
+implementation = ["src/dynamisbench_soccer/engines/contact.py::contact", "src/dynamisbench_soccer/assessment/jumps.py::contact_system_estimates"]
+reference = ["src/dynamisbench_soccer/reference/kinematics.py::Trajectory"]
+tests = ["tests/test_timing_assessment_policy_a.py::test_native_contact_height_requires_engine_eligibility", "tests/test_timing_assessment_policy_a.py::test_rebound_assessment_keeps_each_eligible_flight", "tests/test_timing_contact.py::test_airborne_capture_excludes_initial_fall_from_rebound_flight", "tests/test_timing_contact.py::test_repeated_hops_keep_the_unobserved_initial_stance_and_posture_out_of_rsi"]
+reference_kind = "closed_form"
+independence = "Independent piecewise-constant-acceleration trajectories give exact flight intervals and velocity-based ballistic height without calling contact or assessment engines."
+claim = "Native contact timing preserves complete jump and rebound phases, excludes an initial fall and retains the ballistic eligibility decision at the assessment handoff."
+tolerance_basis = "Standing and repeated flight times and analytic height agree at 1e-12 s or m absolute with zero relative tolerance in direct handoff tests. Missing posture eligibility refuses height categorically."
+tolerance = 1e-12
+tolerance_unit = "s and m (absolute)"
+issue = "RES-671"
+
+[receipt.digests]
+"src/dynamisbench_soccer/assessment/jumps.py::contact_system_estimates" = "e2b4807aa7de5c1611aefca6663a29ef3d3832d24f588edbeedb8ad1c516ddd3"
+"src/dynamisbench_soccer/engines/contact.py::contact" = "fe638e0b5fc9e1974c99c48164e4c703aa43187a512d62ee5019cc4078f6d0fd"
+"src/dynamisbench_soccer/reference/kinematics.py::Trajectory" = "6c5d2b8879d0384ef30a4044c4ff13b6fe3f69f0ed33232c74da454f9da7d9a7"
+"tests/test_timing_assessment_policy_a.py::test_native_contact_height_requires_engine_eligibility" = "12cf4cf593912ff2fc47502d8eb96da1df9c5f578dc9a95a2cc00bc68294f652"
+"tests/test_timing_assessment_policy_a.py::test_rebound_assessment_keeps_each_eligible_flight" = "4512c4b834a0395bc9c589337e144fcc6e14b1dedebfedb22f1adf6bb4b38087"
+"tests/test_timing_contact.py::test_airborne_capture_excludes_initial_fall_from_rebound_flight" = "70256ab684837654b3b28260244a045b445dd40591ee77a02ac188467b1c431f"
+"tests/test_timing_contact.py::test_repeated_hops_keep_the_unobserved_initial_stance_and_posture_out_of_rsi" = "f72781675ec5276fb370cb74886ad353f69b109537cf7ceedd0e76c4b55d2fbc"
+
+[[receipt]]
+id = "RCP-timing_contact-gates-G"
+dimension = "G"
+subfamilies = ["timing_contact.gates"]
+implementation = ["src/dynamisbench_soccer/engines/timing_gates.py::sprint", "src/dynamisbench_soccer/assessment/cod.py::assess_gates"]
+reference = ["src/dynamisbench_soccer/reference/observations.py::spherical_gate_trigger_s"]
+tests = ["tests/test_timing_assessment_policy_a.py::test_native_gate_course_to_declared_path_assessment", "tests/test_timing_gates.py::test_gate_start_methods_match_independent_absolute_and_elapsed_times", "tests/test_timing_gates.py::test_impossible_route_even_with_monotonic_rows_and_plausible_total"]
+reference_kind = "closed_form"
+independence = "The reference beam geometry generates analytic crossing times from prescribed sprint motion, without querying the event engine. Differences of those crossings define the independent segment times."
+claim = "Native gate splits reach the declared-path assessment with exact segment times and eligibility, refusing an incomplete course and withholding instantaneous speeds."
+tolerance_basis = "Actual engine-to-assessment total and split times agree with independent beam differences at 1e-12 s absolute, zero relative tolerance. Incomplete and impossible routes are refused categorically."
+tolerance = 1e-12
+tolerance_unit = "s (absolute)"
+issue = "RES-671"
+
+[receipt.digests]
+"src/dynamisbench_soccer/assessment/cod.py::assess_gates" = "1199ab444577277d39e4a8c3ef1d5d5f22681fc1b142c26a3439837fa820301c"
+"src/dynamisbench_soccer/engines/timing_gates.py::sprint" = "0f0ee5d59d56329cfd6011e471c2107e25c210a8a22f578d4109d13ab85a8cac"
+"src/dynamisbench_soccer/reference/observations.py::spherical_gate_trigger_s" = "a3beced3dd0b05c5e5653e5dce37c3a6d8fdd83d71ef99ecf4a130e9baccbff5"
+"tests/test_timing_assessment_policy_a.py::test_native_gate_course_to_declared_path_assessment" = "424b5b91c77378eb7df6d635fa5cb8fb4d1b2ab12bc9162495648752b73f58e5"
+"tests/test_timing_gates.py::test_gate_start_methods_match_independent_absolute_and_elapsed_times" = "07e281951212c8cf12c01eb7508041d07ac1986ea56554bc87aaa8d918329373"
+"tests/test_timing_gates.py::test_impossible_route_even_with_monotonic_rows_and_plausible_total" = "454cdc7c3853d4cb55e63ceb74bbf48d64ae03eff60e678b736b8de6b532becb"

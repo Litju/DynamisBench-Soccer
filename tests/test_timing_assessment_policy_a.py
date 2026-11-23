@@ -10,7 +10,7 @@ from dynamisbench_soccer.assessment.jumps import contact_system_estimates
 from dynamisbench_soccer.engines.contact import contact
 from dynamisbench_soccer.engines.timing_gates import sprint
 from dynamisbench_soccer.reference.exporters import export_case
-from dynamisbench_soccer.reference.kinematics import cmj, sj
+from dynamisbench_soccer.reference.kinematics import cmj, hops, sj
 
 
 @pytest.mark.parametrize("motion", [cmj(), sj()])
@@ -25,6 +25,21 @@ def test_native_contact_height_requires_engine_eligibility(motion):
     assert gated.flights[0].flight_time_height_m is None
     with pytest.raises(ValueError, match="eligible ballistic flight"):
         contact_system_estimates(gated)
+
+
+def test_rebound_assessment_keeps_each_eligible_flight():
+    motion = hops(3)
+    native = export_case("timing_contact.contact", motion).observation
+    result = contact(native, contact_policy(expected_flights=3))
+    estimates = contact_system_estimates(result)
+    assert len(estimates) == 3
+    for estimate, (off, on) in zip(estimates, motion.flight_intervals(), strict=True):
+        assert estimate.flight_time_s == pytest.approx(on - off, abs=1e-12, rel=0)
+        assert estimate.height_flight_time_m == pytest.approx(
+            motion.state(off).velocity_m_s ** 2 / (2 * motion.gravity_m_s2),
+            abs=1e-12,
+            rel=0,
+        )
 
 
 def test_native_gate_course_to_declared_path_assessment():
@@ -46,7 +61,7 @@ def test_native_gate_course_to_declared_path_assessment():
     assert [part["time_s"] for part in result["segments"]] == pytest.approx(
         independent, abs=1e-12, rel=0
     )
-    assert result["entry_speed_m_s"] is None
+    assert result["source"] == "gates" and result["entry_speed_m_s"] is None
     with pytest.raises(ValueError, match="full-course"):
         assess_gates(path[1:], cumulative[1:], spec)
     with pytest.raises(ValueError, match="last gate"):
