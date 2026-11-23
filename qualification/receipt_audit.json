@@ -169,36 +169,46 @@
    "verdict": "SUPPORTED"
   },
   "RCP-gnss_lps-gnss-A": {
-   "bound_digest": "b1822223a0255bfc6574a413c5951a226f6e7a6feb53d3119d34d1fbd0576838",
+   "bound_digest": "6045ba2aae7d0b48b645c8f650b641e4bb70b87c9f619b2a582c17d2a3655a39",
    "fix": "",
    "reason": "GNSS: 9 contradictory declarations (rate, stage, latency, drift, bundle, ENU, Doppler) and resampled provenance are refused, and positive admission is exact. The missing-time and truth-input refusals are LPS-only but share the code path.",
+   "rebind_evidence_head": "178183e2fd2f56fe6a0e31109022bc0a7f817954",
+   "rebind_reason": "Independent review of the explicit GNSS geodetic-frame guard and exporter binding found the prior claim and tolerance preserved.",
    "verdict": "SUPPORTED"
   },
   "RCP-gnss_lps-gnss-B": {
-   "fix": "Cite the enu_origin=None case and add contradictory geometry or antenna-offset refusals.",
-   "reason": "The ENU equator closed form at 4e-9 is good. test_single_bad_gnss_sample_refuses is QC, not calibration or geometry. The missing ENU-origin refusal sits in an uncited test, and no antenna or lever-arm record is exercised.",
-   "verdict": "PARTIAL"
+   "bound_digest": "329663525c992c48baac87424f427495df492e664f068d071aa0019b734e6402",
+   "evidence_head": "178183e2fd2f56fe6a0e31109022bc0a7f817954",
+   "fix": "",
+   "reason": "Independent GPT-6.2 Astra review supported local WGS-84 ENU, declared frames and axis signs, and missing-frame/out-of-domain refusal.",
+   "verdict": "SUPPORTED"
   },
   "RCP-gnss_lps-gnss-C": {
-   "bound_digest": "76e2129c4728a69449ffe6fbf537ad8f63d3f211b4495ad235ae5f4b348d01a0",
+   "bound_digest": "74ca509b4443c60cc0c8769cd0a0eb76c6747367e4b3d9a8a0b41600acb761e9",
    "fix": "",
    "reason": "For GNSS, latency and \u2212160 ppm drift are mapped to truth at 1e-12, and drift without bracketing sync pulses is refused. Jitter refusal for five_point is shown on LPS (shared engine). The tolerance matches.",
+   "rebind_evidence_head": "178183e2fd2f56fe6a0e31109022bc0a7f817954",
+   "rebind_reason": "Independent review of the explicit GNSS geodetic-frame guard and exporter binding found the prior claim and tolerance preserved.",
    "verdict": "SUPPORTED"
   },
   "RCP-gnss_lps-gnss-D": {
-   "bound_digest": "ea4ad21edd788220a5df539f32e0c72a9e966580c3f00383dc735d797eec95e1",
+   "bound_digest": "a07ea69110c8f8c1097b9814a2d7e298004a4f27d75241588823cf40aeb8729a",
    "evidence_head": "fbf4665885047e52c6cdd2829b6d2c01937fee9b",
    "fix": "",
    "prior_fix": "Cite test_admit_native_times_clock_latency_and_positions[gnss] as the clean control.",
    "prior_reason": "Refusals are strong: res669 dropout/jump/interpolation plus satellites, HDOP, fix, multipath and signal integrity. But neither cited test includes a clean-control pass.",
    "prior_verdict": "PARTIAL",
    "reason": "The GNSS clean control and position-mutation cases execute against the named subfamily. The remaining cited controls verify refusal for invalid satellites, HDOP, fix quality, multipath, signal flag and Doppler.",
+   "rebind_evidence_head": "178183e2fd2f56fe6a0e31109022bc0a7f817954",
+   "rebind_reason": "Independent review of the explicit GNSS geodetic-frame guard and exporter binding found the prior claim and tolerance preserved.",
    "verdict": "SUPPORTED"
   },
   "RCP-gnss_lps-gnss-E": {
-   "fix": "Parametrize the E tests over gnss and compare each variant with the GeodeticTrack truth.",
-   "reason": "All three cited tests (three_point/five_point jitter, seeded-noise sensitivity, five_point rate-unavailable) run track_case('lps') only. No GNSS variant is exercised, and sensitivity is not compared with a reference.",
-   "verdict": "UNSUPPORTED"
+   "bound_digest": "17a0beb5c0d88b8faffdadc6d13908a2bfa0b9c62628ff2f41c3707868bc11d8",
+   "evidence_head": "178183e2fd2f56fe6a0e31109022bc0a7f817954",
+   "fix": "",
+   "reason": "Independent GPT-6.2 Astra review supported independent polynomial replay of all GNSS filter and derivative combinations and common-duration sensitivity.",
+   "verdict": "SUPPORTED"
   },
   "RCP-gnss_lps-gnss-F": {
    "bound_digest": "6ed12333aa94faf579de653fe14183c314891582046b951879f14f12f51a989d",
@@ -229,16 +239,27 @@
    "reason": "Both cited tests are LPS-only. They check sensitivity inequalities or absence and make no analytical uncertainty comparison.",
    "verdict": "UNSUPPORTED"
   },
+  "RCP-gnss_lps-gnss-I-native-bounds": {
+   "bound_digest": "31df74a9826fb3571c4d63e3af15ffc9e499c204dafff6fe960337cfd6e40eff",
+   "evidence_head": "20c439e8fc7fec7f5d899e59ae73f3ed9293f627",
+   "fix": "",
+   "reason": "Independent GPT-6.2 Astra review supported affine-clock bounds, deterministic radii, and dense independent verification of component SD and magnitude RMS bounds for supported stencils and filters. All 39 focused controls passed.",
+   "verdict": "SUPPORTED"
+  },
   "RCP-gnss_lps-gnss-J": {
-   "bound_digest": "ea0be2243a00838f8b008f569d399ece9974eee7e72937031698f29706e5d36f",
+   "bound_digest": "c1d916d857f5b1aa57b50721d7490738dbf069e60fb083793eab948f99ddb133",
    "fix": "Add an AST no-reference-import test for gnss_lps engines.",
    "reason": "The engine matches the independent closed form (ENU equator, t+t\u00b2 track). The reference geodetic_ecef is checked against the PROJ published example at 1 mm. The engine imports no reference code (verified by grep), though no cited test checks this.",
+   "rebind_evidence_head": "178183e2fd2f56fe6a0e31109022bc0a7f817954",
+   "rebind_reason": "Independent review of the explicit GNSS geodetic-frame guard and exporter binding found the prior claim and tolerance preserved.",
    "verdict": "SUPPORTED"
   },
   "RCP-gnss_lps-gnss-K": {
-   "bound_digest": "a28d6fcd62645d624b04283c6e2442e2e5880eced51641cd7908f2584f99a37c",
+   "bound_digest": "8c47c1f22f79aef448e2235465490378f523f436a9ebc62f4fd09264b8eb2fdf",
    "fix": "",
    "reason": "The inject outputs (jump in metres, dropout, interpolation, seeded noise) are verified against independent closed forms and are deterministic. test_res669 asserts engine refusal verdicts for each class on GNSS.",
+   "rebind_evidence_head": "178183e2fd2f56fe6a0e31109022bc0a7f817954",
+   "rebind_reason": "Independent review of the explicit GNSS geodetic-frame guard and exporter binding found the prior claim and tolerance preserved.",
    "verdict": "SUPPORTED"
   },
   "RCP-gnss_lps-gnss-L": {
@@ -248,63 +269,75 @@
    "verdict": "SUPPORTED"
   },
   "RCP-gnss_lps-gnss-M": {
-   "bound_digest": "1bce76f1a4e8a500692a3a980951c9238498f1a0588942de8acc8fd4de841957",
+   "bound_digest": "294d6c17e9c5c6c9b26f23c665a391d3ccffa2322d859e2fb5b8ba61722a3350",
    "evidence_head": "2b1aeced0cdf8613fd09b23737f711bda88a53b1",
    "fix": "",
    "prior_fix": "Round-trip through io.write/read, assert a non-None data_sha256 equal to the file hash, and assert that the digest changes on mutation.",
    "prior_reason": "test_track_results_record_acquisition_hashes asserts 'data_sha256 == meta sha OR None'. A probe shows both are None for gnss, so the result is not hash-bound. There is no file round-trip and no input-change detection.",
    "prior_verdict": "UNSUPPORTED",
    "reason": "File-backed GNSS processing records the verified synthetic observation hash and deterministically replays the seeded export, declaration and processing result. Exact outcomes: independent seed-700 regeneration gives identical Parquet, sidecar and processing report bytes. The acquisition digest equals the independently hashed Parquet, changes after a 0.005 m sample mutation, and tampering results in an input integrity refusal.",
+   "rebind_evidence_head": "178183e2fd2f56fe6a0e31109022bc0a7f817954",
+   "rebind_reason": "Independent review of the explicit GNSS geodetic-frame guard and exporter binding found the prior claim and tolerance preserved.",
    "verdict": "SUPPORTED"
   },
   "RCP-gnss_lps-gnss-O": {
-   "bound_digest": "f402e6398c82ceec02fe01236d093ef495197a3fe6b1fd6b14047b05dea1546e",
+   "bound_digest": "320a1f03ff663d6d82943812239c407386bb65eec976984751e0dd0e8993634c",
    "evidence_head": "409ae841edda356ee932a44a8324324029f5fb0e",
    "fix": "",
    "prior_fix": "Bind the limitations to sourced records.",
    "prior_reason": "The heuristic limitation test [gnss] checks no sourcing, for a single configuration.",
    "prior_verdict": "PARTIAL",
    "reason": "Every successful GNSS result carries the declared native-position and processing limitations, and the CLI preserves them. Exact five-statement tuple and identical JSON list: tracked antenna/tag point; producer-solved LPS positions without range residuals, covariance or survey validation; conditional affine-clock and latency assumptions; whole sampled intervals and differentiation dependence; and offline stride-two sensitivity without independent lower-rate data. The direct 25 Hz controls cover three position filters, both differentiation methods and native GNSS with/without Doppler or LPS without Doppler. Provenance for the limits is the acquisition and processing specification, independent rigid-body offset motion, and existing registry claims DEV-005 (Linke et al.) for both modalities and CX-003 (Malone et al.) for GPS context.",
+   "rebind_evidence_head": "178183e2fd2f56fe6a0e31109022bc0a7f817954",
+   "rebind_reason": "Independent review of the explicit GNSS geodetic-frame guard and exporter binding found the prior claim and tolerance preserved.",
    "verdict": "SUPPORTED"
   },
   "RCP-gnss_lps-lps-A": {
-   "bound_digest": "8422e3613f1ae2e5cd00e2903d733fd13356c91c537164ca3d782fe61eec2f0b",
+   "bound_digest": "30bcd840d016d3c1aee1a204282e87637b447e8c0537c46a5ac998d9bc481364",
    "evidence_head": "2b1aeced0cdf8613fd09b23737f711bda88a53b1",
    "fix": "",
    "prior_fix": "Parametrize the contradictory and resampling tests over lps.",
    "prior_reason": "The contradictory-declaration and resampled-provenance refusals are GNSS-only. LPS refusals cover only missing or duplicate time and the truth input. No stage or vendor refusal is tested on LPS.",
    "prior_verdict": "PARTIAL",
    "reason": "LPS admission accepts the intact native observation and verifies stage, geometry declarations, units and native data integrity. Exact outcomes: refuse processed and resampled stages, noncanonical centimetres, contradictory rate/uncertainty/latency/drift/identity, missing or duplicate timestamps, and analytical truth supplied as an observation.",
+   "rebind_evidence_head": "178183e2fd2f56fe6a0e31109022bc0a7f817954",
+   "rebind_reason": "Independent review of the explicit GNSS geodetic-frame guard and exporter binding found the prior claim and tolerance preserved.",
    "verdict": "SUPPORTED"
   },
   "RCP-gnss_lps-lps-B": {
-   "bound_digest": "6f3babba45e90bba709069ef7abb5f75d0baaebf07b04032119d3b2cfaf8d9b1",
+   "bound_digest": "f1a1e74ebb2ca2db3b426c6b4795e14ed5e3c18e5b781fd2927a0c6f7597f7da",
    "evidence_head": "fbf4665885047e52c6cdd2829b6d2c01937fee9b",
    "fix": "",
    "prior_fix": "Cite test_admit_native_times_clock_latency_and_positions[lps] (anchors and positions at 4e-9).",
    "prior_reason": "The anchor geometry and Z-up frame refusals are good. But no cited test shows the anchor geometry or frame being applied exactly (positional exactness is in an uncited test). Recorded categorical.",
    "prior_verdict": "PARTIAL",
    "reason": "The native LPS control returns the closed-form Z-up XYZ and its surveyed anchors. Explicit frame and anchor checks refuse unknown, duplicate or collinear declarations and missing or occluded anchors.",
+   "rebind_evidence_head": "178183e2fd2f56fe6a0e31109022bc0a7f817954",
+   "rebind_reason": "Independent review of the explicit GNSS geodetic-frame guard and exporter binding found the prior claim and tolerance preserved.",
    "verdict": "SUPPORTED"
   },
   "RCP-gnss_lps-lps-C": {
-   "bound_digest": "b79007151ed20cc5dbb87d9f8a1ee308b747bc1301acdb43466f93fdb84039a6",
+   "bound_digest": "b348df290902c955b2aaf076add1f871bfdf8435ef41670123fc6f49656ea719",
    "evidence_head": "2b1aeced0cdf8613fd09b23737f711bda88a53b1",
    "fix": "",
    "prior_fix": "Parametrize the sync-pulse refusal over lps.",
    "prior_reason": "LPS latency and +120 ppm drift are exact at 1e-12, and duplicate time and jitter are refused. But the bracketing sync-pulse drift refusal (test_drift_needs_bracketing_sync_pulses) runs GNSS only.",
    "prior_verdict": "PARTIAL",
    "reason": "LPS maps declared time using a bracketing affine clock and latency model, retains timing uncertainty and refuses unresolved drift. Measurement time is (1\u2212160e\u22126)k/25 seconds and reference receipt time adds 0.038 s. Both arrays use absolute 1e-12 s with zero relative tolerance, allowing round-off only. Alignment and latency uncertainties are 1e-12 and 0.001 s. Unbracketed drift and unsupported jitter are refused.",
+   "rebind_evidence_head": "178183e2fd2f56fe6a0e31109022bc0a7f817954",
+   "rebind_reason": "Independent review of the explicit GNSS geodetic-frame guard and exporter binding found the prior claim and tolerance preserved.",
    "verdict": "SUPPORTED"
   },
   "RCP-gnss_lps-lps-D": {
-   "bound_digest": "fa40b2211e53233f69c893f941bfa6c41305d226ea1808d373d4e2380e21fadd",
+   "bound_digest": "67e889cfd09bccaafdc9ba32932b9b59867f8d9bed35053bb1fcd397b87da72e",
    "evidence_head": "fbf4665885047e52c6cdd2829b6d2c01937fee9b",
    "fix": "",
    "prior_fix": "Cite a clean LPS admission control.",
    "prior_reason": "On LPS, dropout, jump, interpolation, occlusion and degenerate anchors are refused. Neither cited test includes a clean-control pass.",
    "prior_verdict": "PARTIAL",
    "reason": "The LPS clean control and position-mutation cases execute against the named subfamily. The remaining cited controls verify refusal for occlusion, missing visibility declaration and duplicate, collinear or unknown anchors.",
+   "rebind_evidence_head": "178183e2fd2f56fe6a0e31109022bc0a7f817954",
+   "rebind_reason": "Independent review of the explicit GNSS geodetic-frame guard and exporter binding found the prior claim and tolerance preserved.",
    "verdict": "SUPPORTED"
   },
   "RCP-gnss_lps-lps-E": {
@@ -354,6 +387,13 @@
    "reason": "Independent GPT-6.2 Astra review verified conditional propagation by the reverse triangle inequality and attainment with opposite endpoint errors along the motion; no physical metrology claim.",
    "verdict": "SUPPORTED"
   },
+  "RCP-gnss_lps-lps-I-native-bounds": {
+   "bound_digest": "5eaee99f4f1b2bf39b9a6195b2e102d4bc98a5567b39b491f352b1f876965419",
+   "evidence_head": "20c439e8fc7fec7f5d899e59ae73f3ed9293f627",
+   "fix": "",
+   "reason": "Independent GPT-6.2 Astra review supported affine-clock bounds, deterministic radii, and dense independent verification of component SD and magnitude RMS bounds for supported stencils and filters. All 39 focused controls passed.",
+   "verdict": "SUPPORTED"
+  },
   "RCP-gnss_lps-lps-J": {
    "bound_digest": "00b3e06dc4c69f1a1228a8a2e91732a39749f8ee5e8467a76b86bcd78332c4e3",
    "evidence_head": "2b1aeced0cdf8613fd09b23737f711bda88a53b1",
@@ -365,9 +405,11 @@
    "verdict": "SUPPORTED"
   },
   "RCP-gnss_lps-lps-K": {
-   "bound_digest": "758605b17e392a90f0c387df3c22ff812c45300a2aea222bbbbb9b8a8101284b",
+   "bound_digest": "091768cf686effc5ed94337ed3c49416370dba7fec1fe9dea0bf1ade0bee29f4",
    "fix": "",
    "reason": "Position faults on LPS are verified exactly against independent formulas and are deterministic. test_res669[lps] asserts refusal verdicts per class.",
+   "rebind_evidence_head": "178183e2fd2f56fe6a0e31109022bc0a7f817954",
+   "rebind_reason": "Independent review of the explicit GNSS geodetic-frame guard and exporter binding found the prior claim and tolerance preserved.",
    "verdict": "SUPPORTED"
   },
   "RCP-gnss_lps-lps-L": {
@@ -378,23 +420,27 @@
    "verdict": "SUPPORTED"
   },
   "RCP-gnss_lps-lps-M": {
-   "bound_digest": "e62d3d01b03ea979e885f5301486ad229534710ba3d1a822af85d4cca64a5981",
+   "bound_digest": "5e97363a4f099153f06efdde5ec6761d8a3c9777c81df97115a9e454f00f4639",
    "evidence_head": "2b1aeced0cdf8613fd09b23737f711bda88a53b1",
    "fix": "",
    "prior_fix": "Use the same fix as gnss-M, parametrized for lps.",
    "prior_reason": "For lps, data_sha256 is also None (probe), so the hash assertion passes vacuously. The frozen-bytes test covers only the GNSS reference export, not LPS processing.",
    "prior_verdict": "UNSUPPORTED",
    "reason": "File-backed LPS processing records the verified synthetic observation hash and deterministically replays the seeded export, declaration and processing result. Exact outcomes: independent seed-700 regeneration gives identical Parquet, sidecar and processing report bytes. The acquisition digest equals the independently hashed Parquet, changes after a 0.005 m sample mutation, and tampering results in an input integrity refusal.",
+   "rebind_evidence_head": "178183e2fd2f56fe6a0e31109022bc0a7f817954",
+   "rebind_reason": "Independent review of the explicit GNSS geodetic-frame guard and exporter binding found the prior claim and tolerance preserved.",
    "verdict": "SUPPORTED"
   },
   "RCP-gnss_lps-lps-O": {
-   "bound_digest": "a2ea7419fac85a9dc6ce689b38e03ae7c0f338c2eea8c7e6699e813a9de6e9ad",
+   "bound_digest": "776df5d4552c6ddf372941e3fef990f0a4c11f90d26cf1cda7e3dc21baf3a380",
    "evidence_head": "409ae841edda356ee932a44a8324324029f5fb0e",
    "fix": "",
    "prior_fix": "Bind the limitations to sourced records.",
    "prior_reason": "The heuristic limitation test [lps] checks no sourcing.",
    "prior_verdict": "PARTIAL",
    "reason": "Every successful LPS result carries the declared native-position and processing limitations, and the CLI preserves them. Exact five-statement tuple and identical JSON list: tracked antenna/tag point; producer-solved LPS positions without range residuals, covariance or survey validation; conditional affine-clock and latency assumptions; whole sampled intervals and differentiation dependence; and offline stride-two sensitivity without independent lower-rate data. The direct 25 Hz controls cover three position filters, both differentiation methods and native GNSS with/without Doppler or LPS without Doppler. Provenance for the limits is the acquisition and processing specification, independent rigid-body offset motion, and existing registry claims DEV-005 (Linke et al.) for both modalities and CX-003 (Malone et al.) for GPS context.",
+   "rebind_evidence_head": "178183e2fd2f56fe6a0e31109022bc0a7f817954",
+   "rebind_reason": "Independent review of the explicit GNSS geodetic-frame guard and exporter binding found the prior claim and tolerance preserved.",
    "verdict": "SUPPORTED"
   },
   "RCP-imu-inertial-A": {
@@ -670,13 +716,15 @@
    "verdict": "PARTIAL"
   },
   "RCP-lpt_encoder-encoder-M": {
-   "bound_digest": "1a81677986978fb0f867612fa0f04ccb1b79a25babfa4000885c0920dad6e5d8",
+   "bound_digest": "ddffce409076a4ffa3395fa8e27019e4285d279ce96d58478d913947336907a2",
    "evidence_head": "9c86485832c6d54f2906817516946bed16d46b3a",
    "fix": "",
    "prior_fix": "",
    "prior_reason": "",
    "prior_verdict": "NO_DRAFT",
    "reason": "File-backed encoder processing reproduces independently exported observations, retains the verified input hash and declared settings, and refuses a tampered or aliased artifact. Exact outcomes. Two independently exported 100 Hz count fixtures reproduce Parquet, sidecar and report bytes. Declared finite differences, 350 ppm rate scale, 0.1 s trim, gap factor 4 and cable geometry are retained. The current Parquet SHA-256 matches an independent hash and changes after a one-count alteration. A tampered file reports SHA-256 mismatch and preserves the existing output. Hard-linked output aliases of Parquet, sidecar or configuration are refused and preserve input bytes.",
+   "rebind_evidence_head": "178183e2fd2f56fe6a0e31109022bc0a7f817954",
+   "rebind_reason": "Independent review of the explicit GNSS geodetic-frame guard and exporter binding found the prior claim and tolerance preserved.",
    "verdict": "SUPPORTED"
   },
   "RCP-lpt_encoder-lpt-A": {
@@ -1186,13 +1234,15 @@
    "verdict": "SUPPORTED"
   },
   "RCP-timing_contact-contact-M": {
-   "bound_digest": "40cd646bee2485282bafabd1a02c91ce6a1c105760836c5824ae8997a86f54f7",
+   "bound_digest": "a29850b9af47615eae9f2e17335f8d2e2e48ab38077b210e71389b67393422e8",
    "evidence_head": "1dca44448b6a43e92a5d5fce90ac6933c471fe68",
    "fix": "",
    "prior_fix": "",
    "prior_reason": "",
    "prior_verdict": "NO_DRAFT",
    "reason": "Successful contact CLI processing binds verified event samples, canonical validated metadata and the exact nominal and sensitivity policy bytes. Exact deterministic replay of two independent observation exports and the complete report. Compare each SHA-256 with a direct file hash on canonical fixtures. A 2 ms event change changes Parquet and metadata hashes and metrics. A metadata-only identifier change changes canonical metadata and retains the Parquet hash. A policy whitespace change changes only the byte-level policy identity. Malformed metadata and tampered Parquet refuse.",
+   "rebind_evidence_head": "178183e2fd2f56fe6a0e31109022bc0a7f817954",
+   "rebind_reason": "Independent review of the explicit GNSS geodetic-frame guard and exporter binding found the prior claim and tolerance preserved.",
    "verdict": "SUPPORTED"
   },
   "RCP-timing_contact-gates-A": {
@@ -1275,13 +1325,15 @@
    "verdict": "SUPPORTED"
   },
   "RCP-timing_contact-gates-M": {
-   "bound_digest": "2f1946bca1ace6f97313914411d7d0b329d7ae309618f9b5c559657f86c1d12a",
+   "bound_digest": "6dae93b0554b9f39becc40f5c251acac745cd9bf7e60faf7b12dae00c271f735",
    "evidence_head": "1dca44448b6a43e92a5d5fce90ac6933c471fe68",
    "fix": "",
    "prior_fix": "",
    "prior_reason": "",
    "prior_verdict": "NO_DRAFT",
    "reason": "Successful gates CLI processing binds verified event samples, canonical validated metadata and the exact nominal and sensitivity policy bytes. Exact deterministic replay of two independent observation exports and the complete report. Compare each SHA-256 with a direct file hash on canonical fixtures. A 2 ms event change changes Parquet and metadata hashes and metrics. A metadata-only identifier change changes canonical metadata and retains the Parquet hash. A policy whitespace change changes only the byte-level policy identity. Malformed metadata and tampered Parquet refuse.",
+   "rebind_evidence_head": "178183e2fd2f56fe6a0e31109022bc0a7f817954",
+   "rebind_reason": "Independent review of the explicit GNSS geodetic-frame guard and exporter binding found the prior claim and tolerance preserved.",
    "verdict": "SUPPORTED"
   }
  }

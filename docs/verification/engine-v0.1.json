@@ -1671,14 +1671,6 @@
         "K: synthetic fault fixtures cover the declared fault classes with expected verdicts (owner RES-669; rated partial)",
         "O: limitation statements are sourced and emitted with every result (owner RES-670; rated partial)"
       ],
-      "gnss_lps.gnss": [
-        "B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-700; rated specified)",
-        "E: every processing method variant is compared with an independent reference with stated sensitivity bounds (owner RES-700; rated partial)",
-        "I: declared uncertainty propagation is checked against an independent analytical result (owner RES-700; rated partial)"
-      ],
-      "gnss_lps.lps": [
-        "I: declared uncertainty propagation is checked against an independent analytical result (owner RES-700; rated partial)"
-      ],
       "imu.inertial": [
         "A: executable admission contract: native/vendor stage, units and integrity refusals tested (owner RES-693; rated specified)",
         "C: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused (owner RES-693; rated specified)",
@@ -1790,7 +1782,8 @@
       ]
     },
     "by_state": {
-      "SPECIFIED": 15
+      "ENGINEERING_VERIFIED": 2,
+      "SPECIFIED": 13
     },
     "empirical_problems": {},
     "empirical_requirements": {
@@ -2035,7 +2028,7 @@
         "O": "limitation statement reviewed by a domain expert"
       }
     },
-    "engineering_verified": 0,
+    "engineering_verified": 2,
     "passed": false,
     "receipt_problems": {},
     "structural_problems": [],
@@ -2305,22 +2298,21 @@
     {
       "analytical_only_dimensions": [
         "A",
+        "B",
         "C",
         "D",
+        "E",
         "F",
         "G",
         "H",
+        "I",
         "J",
         "K",
         "L",
         "M",
         "O"
       ],
-      "blockers": [
-        "B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-700; rated specified)",
-        "E: every processing method variant is compared with an independent reference with stated sensitivity bounds (owner RES-700; rated partial)",
-        "I: declared uncertainty propagation is checked against an independent analytical result (owner RES-700; rated partial)"
-      ],
+      "blockers": [],
       "empirical_dimensions_covered": [],
       "empirical_gaps": [
         "Engine verified on analytical tracks (RES-700); audited native GNSS data and empirical latency, HDOP and multipath evidence remain open (RES-694)",
@@ -2366,14 +2358,14 @@
       },
       "ratings": {
         "A": "verified",
-        "B": "specified",
+        "B": "verified",
         "C": "verified",
         "D": "verified",
-        "E": "partial",
+        "E": "verified",
         "F": "verified",
         "G": "verified",
         "H": "verified",
-        "I": "partial",
+        "I": "verified",
         "J": "verified",
         "K": "verified",
         "L": "verified",
@@ -2385,11 +2377,17 @@
         "A": [
           "RCP-gnss_lps-gnss-A"
         ],
+        "B": [
+          "RCP-gnss_lps-gnss-B"
+        ],
         "C": [
           "RCP-gnss_lps-gnss-C"
         ],
         "D": [
           "RCP-gnss_lps-gnss-D"
+        ],
+        "E": [
+          "RCP-gnss_lps-gnss-E"
         ],
         "F": [
           "RCP-gnss_lps-gnss-F"
@@ -2399,6 +2397,9 @@
         ],
         "H": [
           "RCP-gnss_lps-gnss-H-native-assessment"
+        ],
+        "I": [
+          "RCP-gnss_lps-gnss-I-native-bounds"
         ],
         "J": [
           "RCP-gnss_lps-gnss-J"
@@ -2416,25 +2417,20 @@
           "RCP-gnss_lps-gnss-O"
         ]
       },
-      "required_computational": {
-        "B": "declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused",
-        "E": "every processing method variant is compared with an independent reference with stated sensitivity bounds",
-        "I": "declared uncertainty propagation is checked against an independent analytical result"
-      },
-      "state": "SPECIFIED",
+      "required_computational": {},
+      "state": "ENGINEERING_VERIFIED",
       "subfamily": "gnss_lps.gnss",
-      "unverified_m3": [
-        "B",
-        "E",
-        "I"
-      ],
+      "unverified_m3": [],
       "verified_m3": [
         "A",
+        "B",
         "C",
         "D",
+        "E",
         "F",
         "G",
         "H",
+        "I",
         "J",
         "K",
         "L",
@@ -2452,15 +2448,14 @@
         "F",
         "G",
         "H",
+        "I",
         "J",
         "K",
         "L",
         "M",
         "O"
       ],
-      "blockers": [
-        "I: declared uncertainty propagation is checked against an independent analytical result (owner RES-700; rated partial)"
-      ],
+      "blockers": [],
       "empirical_dimensions_covered": [],
       "empirical_gaps": [
         "Engine verified on analytical tracks (RES-700); audited native LPS data, anchor survey and latency evidence remain open (RES-694)",
@@ -2513,7 +2508,7 @@
         "F": "verified",
         "G": "verified",
         "H": "verified",
-        "I": "partial",
+        "I": "verified",
         "J": "verified",
         "K": "verified",
         "L": "verified",
@@ -2548,7 +2543,8 @@
           "RCP-gnss_lps-lps-H-native-assessment"
         ],
         "I": [
-          "RCP-gnss_lps-lps-I"
+          "RCP-gnss_lps-lps-I",
+          "RCP-gnss_lps-lps-I-native-bounds"
         ],
         "J": [
           "RCP-gnss_lps-lps-J"
@@ -2566,14 +2562,10 @@
           "RCP-gnss_lps-lps-O"
         ]
       },
-      "required_computational": {
-        "I": "declared uncertainty propagation is checked against an independent analytical result"
-      },
-      "state": "SPECIFIED",
+      "required_computational": {},
+      "state": "ENGINEERING_VERIFIED",
       "subfamily": "gnss_lps.lps",
-      "unverified_m3": [
-        "I"
-      ],
+      "unverified_m3": [],
       "verified_m3": [
         "A",
         "B",
@@ -2583,6 +2575,7 @@
         "F",
         "G",
         "H",
+        "I",
         "J",
         "K",
         "L",
