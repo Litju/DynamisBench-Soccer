@@ -105,7 +105,7 @@ paradigm = "discrete_event"
 issue = "RES-698"
 engine_id = "gates"
 methods = ["debounce", "multi_beam_voting", "trigger_latency_correction"]
-ratings = { A = "verified", B = "specified", C = "specified", D = "verified", E = "verified", F = "verified", G = "partial", H = "verified", I = "verified", J = "partial", K = "verified", L = "verified", M = "verified", N = "absent", O = "partial" }
+ratings = { A = "verified", B = "specified", C = "verified", D = "verified", E = "verified", F = "verified", G = "partial", H = "verified", I = "verified", J = "partial", K = "verified", L = "verified", M = "verified", N = "absent", O = "partial" }
 empirical_gaps = ["Gate geometry, trigger validity and timing-error bounds need empirical metrology (RES-694)", "Sprint assessment variants and cross-device agreement remain open (RES-673/703)"]
 blockers = []
 
@@ -117,7 +117,7 @@ paradigm = "discrete_event"
 issue = "RES-698"
 engine_id = "contact"
 methods = ["debounce", "pair_events", "trigger_latency_correction"]
-ratings = { A = "verified", B = "specified", C = "specified", D = "verified", E = "verified", F = "verified", G = "partial", H = "verified", I = "verified", J = "verified", K = "verified", L = "verified", M = "verified", N = "absent", O = "partial" }
+ratings = { A = "verified", B = "specified", C = "verified", D = "verified", E = "verified", F = "verified", G = "partial", H = "verified", I = "verified", J = "verified", K = "verified", L = "verified", M = "verified", N = "absent", O = "partial" }
 empirical_gaps = ["Contact-system switching thresholds and latency bounds need empirical metrology (RES-694)", "Assessment-specific validity and force-platform/IMU agreement remain open (RES-671/703)"]
 blockers = []
 
@@ -153,7 +153,7 @@ paradigm = "position_track"
 issue = "RES-700"
 engine_id = "gnss"
 methods = ["resample", "smooth"]
-ratings = { A = "verified", B = "specified", C = "verified", D = "verified", E = "partial", F = "verified", G = "verified", H = "partial", I = "partial", J = "verified", K = "verified", L = "verified", M = "verified", N = "absent", O = "verified" }
+ratings = { A = "verified", B = "verified", C = "verified", D = "verified", E = "verified", F = "verified", G = "verified", H = "verified", I = "verified", J = "verified", K = "verified", L = "verified", M = "verified", N = "absent", O = "verified" }
 empirical_gaps = ["Engine verified on analytical tracks (RES-700); audited native GNSS data and empirical latency, HDOP and multipath evidence remain open (RES-694)", "Positional versus Doppler/radar agreement is analytical only (RES-703)"]
 blockers = []
 
@@ -165,7 +165,7 @@ paradigm = "position_track"
 issue = "RES-700"
 engine_id = "lps"
 methods = ["resample", "smooth"]
-ratings = { A = "verified", B = "verified", C = "verified", D = "verified", E = "verified", F = "verified", G = "verified", H = "partial", I = "partial", J = "verified", K = "verified", L = "partial", M = "verified", N = "absent", O = "verified" }
+ratings = { A = "verified", B = "verified", C = "verified", D = "verified", E = "verified", F = "verified", G = "verified", H = "verified", I = "verified", J = "verified", K = "verified", L = "verified", M = "verified", N = "absent", O = "verified" }
 empirical_gaps = ["Engine verified on analytical tracks (RES-700); audited native LPS data, anchor survey and latency evidence remain open (RES-694)", "Positional versus radar agreement is analytical only (RES-703)"]
 blockers = []
 
@@ -360,7 +360,7 @@ right = "gnss_lps.lps"
 quantity = "running_speed"
 verdict = "unknown"
 evidence_level = "analytical"
-refs = ["repo:docs/verification/cross-device-agreement.json"]
+refs = ["repo:docs/verification/cross-device-agreement.json", "repo:tests/test_lps_agreement.py"]
 reviewer_status = "pending"
 
 [[comparison]]
@@ -4779,3 +4779,75 @@ kind = "independent_test"
 issue = "RES-669"
 ref = "repo:tests/test_radar_laser_processing.py"
 rationale = "Native laser processing exercises all six declared continuous fault classes, including expected transfer of small biases and noise and refusal of clipping, dropout and explicit resampling."
+
+[[evidence]]
+subfamily = "gnss_lps.lps"
+dimension = "L"
+kind = "independent_test"
+issue = "RES-703"
+ref = "repo:tests/test_lps_agreement.py"
+rationale = "Independently reviewed native synthetic LPS and radar projection agree on matched constant planar motion. Radial-only speed is a distinct estimand and invalid input is refused."
+
+[[evidence]]
+subfamily = "gnss_lps.gnss"
+dimension = "H"
+kind = "independent_test"
+issue = "RES-673"
+ref = "repo:tests/test_position_estimands_policy_a.py"
+rationale = "Independent straight and curved analytical controls verify sourced native position and speed definitions and the source-labelled assessment handoff."
+
+[[evidence]]
+subfamily = "gnss_lps.lps"
+dimension = "H"
+kind = "independent_test"
+issue = "RES-673"
+ref = "repo:tests/test_position_estimands_policy_a.py"
+rationale = "Independent straight and curved analytical controls verify sourced native position and speed definitions and the source-labelled assessment handoff."
+
+[[evidence]]
+subfamily = "gnss_lps.gnss"
+dimension = "B"
+kind = "independent_test"
+issue = "RES-700"
+ref = "repo:tests/test_gnss_geometry_policy_a.py"
+rationale = "Independent engineering verification of the documented native positioning computation under declared conditions. Empirical performance remains separate."
+
+[[evidence]]
+subfamily = "gnss_lps.gnss"
+dimension = "E"
+kind = "independent_test"
+issue = "RES-700"
+ref = "repo:tests/test_gnss_processing_policy_a.py"
+rationale = "Independent engineering verification of the documented native positioning computation under declared conditions. Empirical performance remains separate."
+
+[[evidence]]
+subfamily = "gnss_lps.gnss"
+dimension = "I"
+kind = "independent_test"
+issue = "RES-700"
+ref = "repo:tests/test_position_clock_bounds.py"
+rationale = "Independent engineering verification of the documented native positioning computation under declared conditions. Empirical performance remains separate."
+
+[[evidence]]
+subfamily = "gnss_lps.lps"
+dimension = "I"
+kind = "independent_test"
+issue = "RES-700"
+ref = "repo:tests/test_position_clock_bounds.py"
+rationale = "Independent engineering verification of the documented native positioning computation under declared conditions. Empirical performance remains separate."
+
+[[evidence]]
+subfamily = "timing_contact.contact"
+dimension = "C"
+kind = "independent_test"
+issue = "RES-693"
+ref = "repo:tests/test_timing_clock_policy_a.py"
+rationale = "Closed-form native affine mappings separate reference time, link correction and edge latency and refuse contradictory acquisition authority."
+
+[[evidence]]
+subfamily = "timing_contact.gates"
+dimension = "C"
+kind = "independent_test"
+issue = "RES-693"
+ref = "repo:tests/test_timing_clock_policy_a.py"
+rationale = "Closed-form native affine mappings separate reference time, link correction and edge latency and refuse contradictory acquisition authority."
