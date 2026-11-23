@@ -366,3 +366,45 @@ def test_multi_beam_quorum_and_beam_height_sensitivity_on_clean_events():
     sensitivity = sprint(sources, gate_policy(gates=gates)).splits[1].split_s
     assert sensitivity.value == all_beams.split_s.value
     assert sensitivity.high == pytest.approx(all_beams.split_s.high + 0.002)
+
+
+@pytest.mark.parametrize("sync_error_s", [0, 0.0015])
+def test_wireless_split_uncertainty_matches_independent_endpoint_budget(sync_error_s):
+    case = export_case("timing_contact.gates", clock=DeviceClock(0.32, 800), latency_s=0.018)
+    latency = EdgeTiming(latency_s=0.008, latency_error_s=0.0007, definition_error_s=0.0002)
+    timing = Timing(
+        clock_model="wireless",
+        authority="synthetic pulse and beam calibration",
+        clocks={
+            "device": ClockTiming(
+                resolution_s=0.0005, sync_latency_s=0.01, sync_latency_error_s=sync_error_s
+            )
+        },
+    )
+    result = sprint([case.observation], gate_policy(latency, timing=timing))
+    # An 800 ppm affine map scales one half-count to 0.2502 ms.
+    # Endpoint errors can have opposite signs, so the two radii add.
+    radius = 2 * (0.0002502 + 1e-12 + sync_error_s + 0.0007 + 0.0002)
+    assert not result.discarded
+    for i, split in enumerate(result.splits[1:], 1):
+        elapsed = case.truth["time"][i] - case.truth["time"][i - 1]
+        distance = DISTANCES[i] - DISTANCES[i - 1]
+        assert (split.split_s.value, split.split_s.low, split.split_s.high) == pytest.approx(
+            (elapsed, elapsed - radius, elapsed + radius), rel=0, abs=1e-12
+        )
+        expected_speed = (
+            distance / elapsed,
+            distance / (elapsed + radius),
+            distance / (elapsed - radius),
+        )
+        speed = split.segment_average_velocity_m_s
+        assert (speed.value, speed.low, speed.high) == pytest.approx(
+            expected_speed, rel=0, abs=1e-11
+        )
+
+
+def test_gate_timing_uncertainty_refuses_unresolved_beam_order():
+    case = export_case("timing_contact.gates")
+    assert len(sprint([case.observation], gate_policy()).splits) == 4
+    with pytest.raises(EventRefusal, match="out of order or unresolved"):
+        sprint([case.observation], gate_policy(EdgeTiming(latency_s=0, latency_error_s=0.5)))
