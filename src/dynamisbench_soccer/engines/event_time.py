@@ -10,7 +10,7 @@ from typing import Annotated, Literal
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from dynamisbench_soccer.data.manifest import DataCategory
-from dynamisbench_soccer.signals.schema import BundleKind, DeviceClass, SignalBundle
+from dynamisbench_soccer.signals.schema import Alignment, BundleKind, DeviceClass, SignalBundle
 
 Positive = Annotated[float, Field(gt=0)]
 Nonnegative = Annotated[float, Field(ge=0)]
@@ -127,6 +127,17 @@ class EventStream:
         if any(b < a for a, b in pairwise(self.times)):
             raise EventRefusal(f"{meta.bundle_id}: out-of-order native timestamps")
         if self.alignment is not None:
+            try:
+                self.alignment = Alignment.model_validate(self.alignment.model_dump())
+            except ValueError as exc:
+                raise EventRefusal("synchronization pulses contradict the affine clock") from exc
+            if self.alignment.reference_clock != self.reference.id or (
+                self.clock.drift_ppm is not None
+                and not math.isclose(
+                    self.clock.drift_ppm, self.alignment.drift_ppm, rel_tol=0, abs_tol=1e-6
+                )
+            ):
+                raise EventRefusal("synchronization alignment conflicts with clock declarations")
             anchors = self.alignment.sync_events
             if (
                 len(anchors) < 2
