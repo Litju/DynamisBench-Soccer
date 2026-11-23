@@ -1794,7 +1794,6 @@
         "B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-698; rated specified)",
         "C: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused (owner RES-693; rated specified)",
         "G: protocol events are recovered against analytically known event times, with eligibility refusals (owner RES-671; rated partial)",
-        "K: synthetic fault fixtures cover the declared fault classes with expected verdicts (owner RES-669; rated partial)",
         "M: seeded, hash-bound provenance chain for every processing stage, reproduced exactly (owner RES-698; rated partial)",
         "O: limitation statements are sourced and emitted with every result (owner RES-698; rated partial)"
       ],
@@ -1805,7 +1804,6 @@
         "F: reconstructed quantities agree with an independent analytical truth within tolerance (owner RES-698; rated partial)",
         "G: protocol events are recovered against analytically known event times, with eligibility refusals (owner RES-671; rated partial)",
         "J: an independent reference implementation or closed form that shares no code with the engine (owner RES-669; rated partial)",
-        "K: synthetic fault fixtures cover the declared fault classes with expected verdicts (owner RES-669; rated partial)",
         "M: seeded, hash-bound provenance chain for every processing stage, reproduced exactly (owner RES-698; rated partial)",
         "O: limitation statements are sourced and emitted with every result (owner RES-698; rated partial)"
       ]
@@ -3744,13 +3742,13 @@
         "H",
         "I",
         "J",
+        "K",
         "L"
       ],
       "blockers": [
         "B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-698; rated specified)",
         "C: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused (owner RES-693; rated specified)",
         "G: protocol events are recovered against analytically known event times, with eligibility refusals (owner RES-671; rated partial)",
-        "K: synthetic fault fixtures cover the declared fault classes with expected verdicts (owner RES-669; rated partial)",
         "M: seeded, hash-bound provenance chain for every processing stage, reproduced exactly (owner RES-698; rated partial)",
         "O: limitation statements are sourced and emitted with every result (owner RES-698; rated partial)"
       ],
@@ -3808,7 +3806,7 @@
         "H": "verified",
         "I": "verified",
         "J": "verified",
-        "K": "partial",
+        "K": "verified",
         "L": "verified",
         "M": "partial",
         "N": "absent",
@@ -3836,6 +3834,9 @@
         "J": [
           "RCP-timing_contact-contact-J"
         ],
+        "K": [
+          "RCP-timing_contact-contact-K"
+        ],
         "L": [
           "RCP-timing_contact-contact-L"
         ]
@@ -3844,7 +3845,6 @@
         "B": "declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused",
         "C": "clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused",
         "G": "protocol events are recovered against analytically known event times, with eligibility refusals",
-        "K": "synthetic fault fixtures cover the declared fault classes with expected verdicts",
         "M": "seeded, hash-bound provenance chain for every processing stage, reproduced exactly",
         "O": "limitation statements are sourced and emitted with every result"
       },
@@ -3854,7 +3854,6 @@
         "B",
         "C",
         "G",
-        "K",
         "M",
         "O"
       ],
@@ -3866,6 +3865,7 @@
         "H",
         "I",
         "J",
+        "K",
         "L"
       ]
     },
@@ -3875,6 +3875,7 @@
         "D",
         "H",
         "I",
+        "K",
         "L"
       ],
       "blockers": [
@@ -3884,7 +3885,6 @@
         "F: reconstructed quantities agree with an independent analytical truth within tolerance (owner RES-698; rated partial)",
         "G: protocol events are recovered against analytically known event times, with eligibility refusals (owner RES-671; rated partial)",
         "J: an independent reference implementation or closed form that shares no code with the engine (owner RES-669; rated partial)",
-        "K: synthetic fault fixtures cover the declared fault classes with expected verdicts (owner RES-669; rated partial)",
         "M: seeded, hash-bound provenance chain for every processing stage, reproduced exactly (owner RES-698; rated partial)",
         "O: limitation statements are sourced and emitted with every result (owner RES-698; rated partial)"
       ],
@@ -3942,7 +3942,7 @@
         "H": "verified",
         "I": "verified",
         "J": "partial",
-        "K": "partial",
+        "K": "verified",
         "L": "verified",
         "M": "partial",
         "N": "absent",
@@ -3961,6 +3961,9 @@
         "I": [
           "RCP-timing_contact-gates-I"
         ],
+        "K": [
+          "RCP-timing_contact-gates-K"
+        ],
         "L": [
           "RCP-timing_contact-gates-L"
         ]
@@ -3972,7 +3975,6 @@
         "F": "reconstructed quantities agree with an independent analytical truth within tolerance",
         "G": "protocol events are recovered against analytically known event times, with eligibility refusals",
         "J": "an independent reference implementation or closed form that shares no code with the engine",
-        "K": "synthetic fault fixtures cover the declared fault classes with expected verdicts",
         "M": "seeded, hash-bound provenance chain for every processing stage, reproduced exactly",
         "O": "limitation statements are sourced and emitted with every result"
       },
@@ -3985,7 +3987,6 @@
         "F",
         "G",
         "J",
-        "K",
         "M",
         "O"
       ],
@@ -3994,6 +3995,7 @@
         "D",
         "H",
         "I",
+        "K",
         "L"
       ]
     }

@@ -1947,3 +1947,55 @@ issue = "RES-698"
 "src/dynamisbench_soccer/reference/kinematics.py::Trajectory" = "6c5d2b8879d0384ef30a4044c4ff13b6fe3f69f0ed33232c74da454f9da7d9a7"
 "src/dynamisbench_soccer/reference/spatial_observations.py::contact_events" = "226173ea25f5ef36da8d4c510519743351e1cb70235f071d37999eef5b1df52d"
 "tests/test_timing_contact.py::test_contact_uncertainty_matches_asymmetric_endpoint_extrema" = "b2fcd2a8e9fcfb37fbaa65ff48361e85be032adc3bcbdc8241e261e429c10f58"
+
+[[receipt]]
+id = "RCP-timing_contact-gates-K"
+dimension = "K"
+subfamilies = ["timing_contact.gates"]
+implementation = ["src/dynamisbench_soccer/engines/timing_gates.py::sprint", "src/dynamisbench_soccer/engines/event_time.py::EventStream"]
+reference = ["src/dynamisbench_soccer/reference/faults.py::inject", "src/dynamisbench_soccer/reference/motion_models.py::MonoExponentialSprint", "src/dynamisbench_soccer/reference/observations.py::spherical_gate_trigger_s"]
+tests = ["tests/test_timing_gates.py::test_adversarial_reference_faults_are_refused", "tests/test_timing_gates.py::test_injected_gate_latency_biases_adjacent_splits_or_refuses_native_order", "tests/test_timing_gates.py::test_splits_use_beam_times_and_segment_average_after_wheel_compatible_round_trip"]
+reference_kind = "independent_implementation"
+independence = "The fault injector and analytical comparator construct native observations without calling either timing engine."
+check_kind = "numeric"
+claim = "Native gates exercise missing, duplicate, reordered and latency faults. Moderate unlabelled latency changes the neighboring split estimates, while latency that reorders events is refused."
+tolerance_basis = "Clean controls complete a four-gate route. Missing gate 2, ambiguous duplicate and reordered native rows refuse. A 20 ms late second crossing biases neighboring splits by +0.02, −0.02 and 0 s, giving 0.7524799388172911, 1.2270407645364005 and 1.1571471988932043 s. Segment speeds are 6.644695415878781, 8.149688493664831 and 8.641942882949435 m/s. Use absolute 1e-12 s and 1e-11 m/s with zero relative allowance for arithmetic roundoff. A 2 s injected delay refuses native order."
+tolerance = 1e-11
+tolerance_unit = "m/s (absolute); separate elapsed-time bound"
+issue = "RES-669"
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/event_time.py::EventStream" = "305ab1a1d39cfffee2c1d8606d31e0cad49bf48afea802a4a9d88e019a366f94"
+"src/dynamisbench_soccer/engines/timing_gates.py::sprint" = "0f0ee5d59d56329cfd6011e471c2107e25c210a8a22f578d4109d13ab85a8cac"
+"src/dynamisbench_soccer/reference/faults.py::inject" = "bc803ce121a3bf35662d04ca34370d2f1525a44ac1503ab51c6678a39905bc7e"
+"src/dynamisbench_soccer/reference/motion_models.py::MonoExponentialSprint" = "6f5cf86ba81df676877c7e99492f9df0400e35228a59a0f34a1d65bba5e3d493"
+"src/dynamisbench_soccer/reference/observations.py::spherical_gate_trigger_s" = "a3beced3dd0b05c5e5653e5dce37c3a6d8fdd83d71ef99ecf4a130e9baccbff5"
+"tests/test_timing_gates.py::test_adversarial_reference_faults_are_refused" = "f7e2b14a2110119eecd617be5cd0bf8015ca35a81f88d863b5a163cd954c6964"
+"tests/test_timing_gates.py::test_injected_gate_latency_biases_adjacent_splits_or_refuses_native_order" = "c5189f611e9fdbfc09c39ee2892f3074ce6ce68dbe3eaabe875d55cf40cc4fcc"
+"tests/test_timing_gates.py::test_splits_use_beam_times_and_segment_average_after_wheel_compatible_round_trip" = "d43f47c5a3021449375abf38143d53aeff160766f7671ff729f6fcaefc3d6cd8"
+
+[[receipt]]
+id = "RCP-timing_contact-contact-K"
+dimension = "K"
+subfamilies = ["timing_contact.contact"]
+implementation = ["src/dynamisbench_soccer/engines/contact.py::contact", "src/dynamisbench_soccer/engines/event_time.py::EventStream"]
+reference = ["src/dynamisbench_soccer/reference/faults.py::inject", "src/dynamisbench_soccer/reference/kinematics.py::cmj", "src/dynamisbench_soccer/reference/spatial_observations.py::contact_events"]
+tests = ["tests/test_timing_contact.py::test_refuses_independent_contact_event_faults", "tests/test_timing_contact.py::test_contact_refuses_injected_protocol_and_reordering_faults", "tests/test_timing_contact.py::test_injected_contact_latency_inside_protocol_shifts_flight_and_height"]
+reference_kind = "independent_implementation"
+independence = "The fault injector and analytical comparator construct native observations without calling either timing engine."
+check_kind = "numeric"
+claim = "Contact switching exercises missing, duplicate, reordered, latency, double-contact and step-off faults under a single-flight CMJ protocol."
+tolerance_basis = "Clean switching yields one flight. Missing takeoff or touchdown, duplicate/reordered rows, double contact and step-off have explicit engine refusal outcomes. A 1 s delayed takeoff refuses native order. A 20 ms delayed landing refuses a wired alignment whose pulse span ends before the delayed row. With a declared shared clock the same delay yields 0.5706467550080814 s flight and 0.39917689213045504 m height from gT²/8. Absolute 1e-12 s and m with zero relative tolerance allow arithmetic roundoff."
+tolerance = 1e-12
+tolerance_unit = "s and m (absolute)"
+issue = "RES-669"
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/contact.py::contact" = "fe638e0b5fc9e1974c99c48164e4c703aa43187a512d62ee5019cc4078f6d0fd"
+"src/dynamisbench_soccer/engines/event_time.py::EventStream" = "305ab1a1d39cfffee2c1d8606d31e0cad49bf48afea802a4a9d88e019a366f94"
+"src/dynamisbench_soccer/reference/faults.py::inject" = "bc803ce121a3bf35662d04ca34370d2f1525a44ac1503ab51c6678a39905bc7e"
+"src/dynamisbench_soccer/reference/kinematics.py::cmj" = "c37e0d387e173c0b92a8e7a8f277195382a981a228bd6784f6b306b1be3f0821"
+"src/dynamisbench_soccer/reference/spatial_observations.py::contact_events" = "226173ea25f5ef36da8d4c510519743351e1cb70235f071d37999eef5b1df52d"
+"tests/test_timing_contact.py::test_contact_refuses_injected_protocol_and_reordering_faults" = "48c37a490086ebe8c191258a4e1945ba63acd9854a7ce80a135d44e7224d5a49"
+"tests/test_timing_contact.py::test_injected_contact_latency_inside_protocol_shifts_flight_and_height" = "814cae2265f3f94aa720536cdc7b02b177425fda6e9ae5c7c8e4f9a80237698c"
+"tests/test_timing_contact.py::test_refuses_independent_contact_event_faults" = "34ddef8b5814c9a77b120cc8b630ef8843b1f7805287c4c845e3799c87b1bb0d"

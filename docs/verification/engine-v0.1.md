@@ -32,8 +32,8 @@ Engineering calculations only; no scientific qualification of any device or metr
 | nordic_hip.nordic | SPECIFIED | yes | 9 of 14 |
 | radar_laser.laser | SPECIFIED | yes | 11 of 14 |
 | radar_laser.radar | SPECIFIED | yes | 7 of 14 |
-| timing_contact.contact | SPECIFIED | yes | 6 of 14 |
-| timing_contact.gates | SPECIFIED | yes | 9 of 14 |
+| timing_contact.contact | SPECIFIED | yes | 5 of 14 |
+| timing_contact.gates | SPECIFIED | yes | 8 of 14 |
 
 ### Blockers and the experiment that would clear them
 
@@ -293,10 +293,8 @@ Engineering calculations only; no scientific qualification of any device or metr
 * computational blocker: B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-698; rated specified)
 * computational blocker: C: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused (owner RES-693; rated specified)
 * computational blocker: G: protocol events are recovered against analytically known event times, with eligibility refusals (owner RES-671; rated partial)
-* computational blocker: K: synthetic fault fixtures cover the declared fault classes with expected verdicts (owner RES-669; rated partial)
 * computational blocker: M: seeded, hash-bound provenance chain for every processing stage, reproduced exactly (owner RES-698; rated partial)
 * computational blocker: O: limitation statements are sourced and emitted with every result (owner RES-698; rated partial)
-* K - owner RES-669: synthetic fault fixtures cover the declared fault classes with expected verdicts
 * G - owner RES-671: protocol events are recovered against analytically known event times, with eligibility refusals
 * C - owner RES-693: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused
 * B - owner RES-698: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused
@@ -310,11 +308,9 @@ Engineering calculations only; no scientific qualification of any device or metr
 * computational blocker: F: reconstructed quantities agree with an independent analytical truth within tolerance (owner RES-698; rated partial)
 * computational blocker: G: protocol events are recovered against analytically known event times, with eligibility refusals (owner RES-671; rated partial)
 * computational blocker: J: an independent reference implementation or closed form that shares no code with the engine (owner RES-669; rated partial)
-* computational blocker: K: synthetic fault fixtures cover the declared fault classes with expected verdicts (owner RES-669; rated partial)
 * computational blocker: M: seeded, hash-bound provenance chain for every processing stage, reproduced exactly (owner RES-698; rated partial)
 * computational blocker: O: limitation statements are sourced and emitted with every result (owner RES-698; rated partial)
 * J - owner RES-669: an independent reference implementation or closed form that shares no code with the engine
-* K - owner RES-669: synthetic fault fixtures cover the declared fault classes with expected verdicts
 * G - owner RES-671: protocol events are recovered against analytically known event times, with eligibility refusals
 * C - owner RES-693: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused
 * B - owner RES-698: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused
@@ -437,8 +433,8 @@ Open empirical requirements (what only physical measurement can close):
 | nordic_hip.nordic | s | s | s | p | p | V | V | V | p | V | p | V | p | - | p |
 | radar_laser.laser | s | s | V | p | p | V | p | p | p | p | p | V | p | - | p |
 | radar_laser.radar | V | s | V | V | p | V | V | V | p | V | p | p | p | - | p |
-| timing_contact.contact | V | s | s | V | V | V | p | V | V | V | p | V | p | - | p |
-| timing_contact.gates | V | s | s | V | p | p | p | V | V | p | p | V | p | - | p |
+| timing_contact.contact | V | s | s | V | V | V | p | V | V | V | V | V | p | - | p |
+| timing_contact.gates | V | s | s | V | p | p | p | V | V | p | V | V | p | - | p |
 
 `-` absent, `p` partial (implemented, checked against analytical references), `s` specified, `V` verified.
 

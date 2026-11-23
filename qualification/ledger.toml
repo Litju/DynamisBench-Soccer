@@ -105,7 +105,7 @@ paradigm = "discrete_event"
 issue = "RES-698"
 engine_id = "gates"
 methods = ["debounce", "multi_beam_voting", "trigger_latency_correction"]
-ratings = { A = "verified", B = "specified", C = "specified", D = "verified", E = "partial", F = "partial", G = "partial", H = "verified", I = "verified", J = "partial", K = "partial", L = "verified", M = "partial", N = "absent", O = "partial" }
+ratings = { A = "verified", B = "specified", C = "specified", D = "verified", E = "partial", F = "partial", G = "partial", H = "verified", I = "verified", J = "partial", K = "verified", L = "verified", M = "partial", N = "absent", O = "partial" }
 empirical_gaps = ["Gate geometry, trigger validity and timing-error bounds need empirical metrology (RES-694)", "Sprint assessment variants and cross-device agreement remain open (RES-673/703)"]
 blockers = []
 
@@ -117,7 +117,7 @@ paradigm = "discrete_event"
 issue = "RES-698"
 engine_id = "contact"
 methods = ["debounce", "pair_events", "trigger_latency_correction"]
-ratings = { A = "verified", B = "specified", C = "specified", D = "verified", E = "verified", F = "verified", G = "partial", H = "verified", I = "verified", J = "verified", K = "partial", L = "verified", M = "partial", N = "absent", O = "partial" }
+ratings = { A = "verified", B = "specified", C = "specified", D = "verified", E = "verified", F = "verified", G = "partial", H = "verified", I = "verified", J = "verified", K = "verified", L = "verified", M = "partial", N = "absent", O = "partial" }
 empirical_gaps = ["Contact-system switching thresholds and latency bounds need empirical metrology (RES-694)", "Assessment-specific validity and force-platform/IMU agreement remain open (RES-671/703)"]
 blockers = []
 
@@ -4635,3 +4635,19 @@ kind = "independent_test"
 issue = "RES-698"
 ref = "repo:tests/test_timing_contact.py"
 rationale = "Contact-system flight, stance, flight-time height and height/contact RSI propagate asymmetric declared switch errors as conservative timing intervals."
+
+[[evidence]]
+subfamily = "timing_contact.gates"
+dimension = "K"
+kind = "independent_test"
+issue = "RES-669"
+ref = "repo:tests/test_timing_gates.py"
+rationale = "Native gates exercise missing, duplicate, reordered and latency faults. Moderate unlabelled latency changes the neighboring split estimates, while latency that reorders events is refused."
+
+[[evidence]]
+subfamily = "timing_contact.contact"
+dimension = "K"
+kind = "independent_test"
+issue = "RES-669"
+ref = "repo:tests/test_timing_contact.py"
+rationale = "Contact switching exercises missing, duplicate, reordered, latency, double-contact and step-off faults under a single-flight CMJ protocol."
