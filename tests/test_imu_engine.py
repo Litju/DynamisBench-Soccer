@@ -378,7 +378,7 @@ def test_imu_retains_sourced_physical_and_numerical_limits(
     expected_topics = (
         "Specific force is not free acceleration",
         "cannot observe heading",
-        "complementary variant bounds roll/pitch only",
+        "sustained acceleration can bias roll/pitch even within that tolerance",
         "position error b*t^2/2",
         "Sensor-to-segment placement is a declared rotation",
         "Flight events from the specific-force magnitude",
@@ -392,3 +392,23 @@ def test_imu_retains_sourced_physical_and_numerical_limits(
     assert report["limitations"] == list(result.limitations)
     assert report["diagnostic_only"] is (range_m_s2 == 5)
     assert result.summary["yaw_observable"] is False
+
+
+def test_imu_complementary_gravity_gate_admits_biased_tilt_under_acceleration() -> None:
+    trajectory = PlanarTrajectory((PlanarPhase(2, (2, 0)),))
+    bundle = export_case("imu.inertial", RigidBody(trajectory), hz=100).observation
+    result = process(
+        bundle, ImuSpec(initial_orientation=imu.IDENTITY), MethodSpec(orientation="complementary")
+    )
+    assert math.hypot(2, 9.80665) - 9.80665 < 0.5
+
+    # In this one-axis case the scalar cross product gives a signed sine of the
+    # difference between the acceleration-implied tilt and the current tilt.
+    assumed_tilt = math.atan2(2, 9.80665)
+    angle = 0.0
+    for _ in range(bundle.meta.n_rows - 1):
+        angle += 0.01 * math.sin(assumed_tilt - angle)
+    assert result.rotation_field_from_sensor is not None
+    estimated = math.acos(float(result.rotation_field_from_sensor[-1, 2, 2]))
+    assert angle > 0.1  # The true orientation is fixed, so this is a false tilt.
+    assert estimated == pytest.approx(angle, rel=0, abs=1e-12)

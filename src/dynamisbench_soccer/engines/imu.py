@@ -45,18 +45,17 @@ LIMITATIONS: tuple[str, ...] = (
     "Accelerometer and gyroscope alone cannot observe heading (yaw). Field-frame horizontal "
     "axes are only meaningful relative to the declared initial yaw, and yaw drifts with the "
     "uncorrected gyroscope bias. No magnetometer is admitted.",
-    "Gyroscope integration drifts with bias; the complementary variant bounds roll/pitch only "
-    "while the sensed magnitude stays within the declared gravity tolerance, which sustained "
-    "acceleration violates.",
-    "Velocity and position integrate free acceleration: an uncorrected accelerometer bias b "
-    "gives a velocity error b*t and a position error b*t^2/2. Declared initial conditions and "
-    "zero-velocity windows are required; nothing is assumed.",
+    "Gyroscope integration drifts with bias. Complementary gravity correction is gated by "
+    "sensed magnitude, but sustained acceleration can bias roll/pitch even within that tolerance.",
+    "For fixed initial conditions, a constant field-frame acceleration bias b gives a velocity "
+    "error b*t and a position error b*t^2/2. Integration needs declared initial conditions; "
+    "the ZUPT variant also needs declared zero-velocity windows.",
     "Sensor-to-segment placement is a declared rotation. Soft-tissue artefact, strap slip and "
     "mounting-frame error are not modelled; slip is only flagged when static gravity direction "
     "changes inconsistently with the integrated rotation.",
     "Flight events from the specific-force magnitude assume free flight with the sensor "
     "rigidly attached; arm swing, soft-tissue motion and threshold choice shift take-off and "
-    "landing, so variants and a one-sample resolution bound are reported.",
+    "landing. The report gives threshold variants and the larger edge-bracket width.",
     "Gyroscope rate and accelerometer range are declared rails; clipping cannot be undone and "
     "saturated intervals invalidate orientation and integrated quantities.",
     "Time-synchronisation uncertainty is a declaration, not a measurement.",

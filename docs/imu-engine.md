@@ -25,7 +25,9 @@ rotation needs a declared placement description. The field frame is ENU with +z 
 * `gyro_integration`: exact per-sample Rodrigues propagation of the declared (or static-tilt)
   initial orientation. Drift equals the uncorrected gyroscope bias times time.
 * `complementary`: adds a gravity correction `kp (f̂ × R^T ẑ)` when the sensed magnitude is within
-  a declared tolerance of g. Steady-state tilt error under constant bias b is `b / kp`.
+  a declared tolerance of g. This gate can also pass during sustained acceleration and
+  produce a biased tilt estimate. For small angles under gravity-only conditions, the
+  constant gyroscope bias response is approximately `b / kp`.
 
 Initial orientation comes from a declared rotation or a static window (roll and pitch from
 gravity, yaw as declared). Neither declared means orientation is **refused**. Heading is never
@@ -53,7 +55,7 @@ and position bound `b·T²/2` for an assumed accelerometer bias, and the tilt le
   g·sin θ horizontally and g·(1−cos θ) vertically.
 - The orientation and integration definitions above give the yaw
   observability limit, bias growth, the conditional gravity correction, and
-  the need for initial conditions and declared zero-velocity windows.
+  the need for initial conditions. Only ZUPT requires declared zero-velocity windows.
 - Registry claim DEV-002 (Nielsen et al.) distinguishes sensor displacement
   from center-of-mass displacement and limits agreement to the tested device,
   placement, and methods. Sensor mounting is an input declaration.
