@@ -67,6 +67,21 @@ class ExpectedMethod(Schema):
     operands: tuple[Operand, ...]
     corrects: Name | None = None
 
+    @model_validator(mode="after")
+    def consistent_reference(self) -> ExpectedMethod:
+        compute = self.decision == "compute"
+        if any((reason == "eligible") != compute for reason in self.reasons):
+            raise ValueError("reference decision conflicts with eligibility")
+        if compute != (self.quantity is not None and bool(self.operands)):
+            raise ValueError("reference computation requires quantity and derivation")
+        if not compute and (self.quantity is not None or self.operands):
+            raise ValueError("reference refusal contains a computed result")
+        if not set(self.required_citations) <= set(self.allowed_citations):
+            raise ValueError("required citations must be allowed")
+        if not set(self.required_claims) <= set(self.allowed_claims):
+            raise ValueError("required claims must be allowed")
+        return self
+
 
 class Outcome(Schema):
     version: Literal["m4.grade.v1"] = "m4.grade.v1"
