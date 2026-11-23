@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import math
 
+import numpy as np
+
 from dynamisbench_soccer.agreement.studies import Study, _native_evidence, _study
 from dynamisbench_soccer.data.manifest import DataCategory
 from dynamisbench_soccer.engines.gnss_lps import ProcessingOptions, process
@@ -45,7 +47,9 @@ def compare_lps_radar(
     speed = result.kinematics.horizontal_positional_speed_m_s[4:-4]
     if len(speed) < 3:
         raise ValueError("at least three interior comparisons required")
-    if not all(math.isclose(float(value), horizontal, abs_tol=1e-10, rel_tol=0) for value in speed):
+    if not np.allclose(
+        result.kinematics.positional_velocity_m_s[4:-4, :2], (vx, vy), atol=1e-10, rtol=0
+    ):
         raise ValueError("track does not match the declared constant-speed reference")
     pairs = [(radar, float(value)) for value in speed]
     evidence = _native_evidence(

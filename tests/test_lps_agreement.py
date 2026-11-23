@@ -9,6 +9,7 @@ from test_gnss_lps_acquisition import track_case
 from dynamisbench_soccer.agreement.lps import compare_lps_radar
 from dynamisbench_soccer.engines.gnss_lps import ProcessingOptions
 from dynamisbench_soccer.engines.gnss_lps_acquisition import AcquisitionRefusal
+from dynamisbench_soccer.reference.lps_speed import linear_tag_speed
 
 
 def _motion(hz):
@@ -46,9 +47,11 @@ def test_matched_lps_radar_control(hz, derivative, position_filter):
     assert result.classification == "analytical_model_agreement"
     assert result.interchangeable == "unknown"
     assert result.source_evidence[0]["source_sha256"]
+    expected = linear_tag_speed(3, 4)
+    assert expected == 5
     for radar, lps in result.pairs:
         assert radar == pytest.approx(5, rel=0, abs=1e-10)
-        assert lps == pytest.approx(5, rel=0, abs=1e-10)
+        assert lps == pytest.approx(expected, rel=0, abs=1e-10)
 
 
 def test_radial_component_is_a_mismatch_and_faults_refuse():
@@ -86,13 +89,14 @@ def test_radial_component_is_a_mismatch_and_faults_refuse():
         )
 
 
-def test_unmatched_speed_cannot_report_agreement():
+@pytest.mark.parametrize("incorrect", [(3, 5), (-3, 4), (4, 3)])
+def test_unmatched_speed_cannot_report_agreement(incorrect):
     bundle, declaration = _motion(25)
     with pytest.raises(ValueError, match="does not match"):
         compare_lps_radar(
             bundle,
             declaration,
-            (3, 5),
+            incorrect,
             0,
             correct_projection=True,
             options=ProcessingOptions(thresholds=()),
