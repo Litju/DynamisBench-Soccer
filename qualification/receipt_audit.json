@@ -1175,13 +1175,13 @@
    "verdict": "SUPPORTED"
   },
   "RCP-timing_contact-gates-E": {
-   "bound_digest": "fc6a3db633cd8f4e2963e009f00efb172ef817111509369eac33080488bc450d",
+   "bound_digest": "43df7bd3c213bbe26e0dc783fa723210a8b7edfeaecf80b7c7ed83883f7adb47",
    "evidence_head": "1dca44448b6a43e92a5d5fce90ac6933c471fe68",
    "fix": "",
    "prior_fix": "Record the numeric tolerance and add trigger and fixed_offset start variants against the truth time.",
    "prior_reason": "Dual- and multi-beam variants are compared with the spherical_gate_trigger_s reference, but the check is labelled categorical while it uses pytest.approx's default rel 1e-6. The start-mode variants (trigger, fixed_offset) are not compared with the reference in E.",
    "prior_verdict": "PARTIAL",
-   "reason": "Gate start definitions, beam voting and refractory handling preserve their independently expected event and speed results. With the 5, 10, 20 and 30 m beam route, first-gate start subtracts the independently known first crossing. Fixed-offset, pressure-pad and sound-cue modes recover absolute elapsed times. All later segment speeds are distance over elapsed time. The 10 m earliest/latest multi-beam events are 2.089668101741136 and 2.0950545483728 s, the discarded early arm occurred at 2.0218908916394556 s, and the added definition error widens only the high endpoint by 0.002 s. Refractory removal preserves the clean split exactly and competing crossings refuse. Compare with absolute 1e-12 s and 1e-11 m/s, zero relative allowance for arithmetic roundoff.",
+   "reason": "Gate start definitions, beam voting and refractory handling preserve their independently expected event and speed results. With the 5, 10, 20 and 30 m beam route, first-gate start subtracts the independently known first crossing. Fixed-offset, pressure-pad and sound-cue modes recover absolute elapsed times. All later segment speeds are distance over elapsed time. The 10 m earliest/latest multi-beam events are 2.089668101741136 and 2.0950545483728 s, the discarded early arm occurred at 2.0218908916394556 s, and the added definition error raises the high endpoint by 0.002 s while preserving the nominal estimate. Refractory removal preserves the clean split exactly and competing crossings refuse. Compare with absolute 1e-12 s and 1e-11 m/s, zero relative allowance for arithmetic roundoff.",
    "verdict": "SUPPORTED"
   },
   "RCP-timing_contact-gates-F": {
