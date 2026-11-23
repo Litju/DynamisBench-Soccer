@@ -2517,3 +2517,74 @@ issue = "RES-700"
 "tests/test_position_clock_bounds.py::test_clock_bounds_refuse_unqualified_scale_and_support_jittered_three_point" = "ecec025c534bc4fe09a2321691069e6cd99dbb4b40403d40c8827607aa3e1f51"
 "tests/test_position_clock_bounds.py::test_clock_bounds_with_native_processing_variants" = "40dfb83a6c2be2aacbefb93d9c6a2fcbf2e75543d9727eb57a4572e9ee2c5d36"
 "tests/test_position_clock_bounds.py::test_unfiltered_boundary_position_and_doppler_bound_is_attained" = "97912c4f3a544ecd914f18eed57aed6a3ddf171c0bf0ad54a1514799c8015947"
+
+[[receipt]]
+id = "RCP-gnss_lps-lps-L"
+dimension = "L"
+subfamilies = ["gnss_lps.lps"]
+implementation = ["src/dynamisbench_soccer/agreement/lps.py::compare_lps_radar", "src/dynamisbench_soccer/engines/gnss_lps.py::process"]
+reference = ["src/dynamisbench_soccer/reference/lps_speed.py::linear_tag_speed"]
+tests = ["tests/test_lps_agreement.py::test_matched_lps_radar_control", "tests/test_lps_agreement.py::test_radial_component_is_a_mismatch_and_faults_refuse", "tests/test_lps_agreement.py::test_unmatched_speed_cannot_report_agreement"]
+reference_kind = "closed_form"
+independence = "The analytical radar arm projects prescribed east and north velocities onto its declared beam. The independent reference norm of 3 and 4 m/s is 5 m/s, and the due-east radial projection is 3 m/s. Neither value depends on LPS samples or engine derivatives."
+claim = "Native synthetic LPS and a projection-corrected ideal radar agree for matched constant planar tag speed. Radial-only velocity is classified as a definition mismatch, and invalid or geometrically unresolvable observations are refused."
+tolerance_basis = "Compare 5 m/s horizontal speed, 3 m/s radial velocity and the resulting 2 m/s bias at 1e-10 m/s absolute, zero relative tolerance. LPS controls cover three- and five-point derivatives, three position filters, 18 and 25 Hz and a declared clock/latency alignment. Paired rows from one track only illustrate analytical agreement."
+tolerance = 1e-10
+tolerance_unit = "m/s (absolute)"
+issue = "RES-703"
+
+[receipt.digests]
+"src/dynamisbench_soccer/agreement/lps.py::compare_lps_radar" = "1a32995a0b6cab2ea8d018138e9adb7e370eb24456a7ed378ee39db8aa69bc01"
+"src/dynamisbench_soccer/engines/gnss_lps.py::process" = "47dad0be73c8de9a93699c8954df13d3b313b97a249e7ff27f8bfae4ee58edf9"
+"src/dynamisbench_soccer/reference/lps_speed.py::linear_tag_speed" = "fab9535c8a663330b3f21e2f69ea17cf7e3e8379eac3391f1f9e919a39f4eb95"
+"tests/test_lps_agreement.py::test_matched_lps_radar_control" = "3d1d18f33b286b9f7596697105cfd7e7c3762e59cf9935aad127fe65327d91bc"
+"tests/test_lps_agreement.py::test_radial_component_is_a_mismatch_and_faults_refuse" = "b95089e15ca04e124248e4bb5eb9c1e9c74f26c307ef4f1419d6b920992e3a86"
+"tests/test_lps_agreement.py::test_unmatched_speed_cannot_report_agreement" = "37ca4723be08f6e07f96126874d7a80a428a20a1446c1a82c9d00d2c158053d2"
+
+[[receipt]]
+id = "RCP-gnss_lps-lps-H-native-assessment"
+dimension = "H"
+subfamilies = ["gnss_lps.lps"]
+implementation = ["src/dynamisbench_soccer/engines/gnss_lps.py::process", "src/dynamisbench_soccer/assessment/handoff.py::load_speed_report", "src/dynamisbench_soccer/assessment/sprint.py::milestones"]
+reference = ["tests/test_position_estimands_policy_a.py::_planar_metrics", "tests/test_position_estimands_policy_a.py::_circle_stencil_gain"]
+tests = ["tests/test_position_estimands_policy_a.py::test_native_metric_definitions_and_assessment_handoff", "tests/test_position_estimands_policy_a.py::test_turn_acceleration_and_chord_are_distinct_from_speed_change"]
+reference_kind = "closed_form"
+independence = "A prescribed quadratic planar trajectory has exact speed 5+t, acceleration 1, path 5t+t²/2 and an independently invertible integrated milestone. GNSS fixes use independent inverse geodetic conversion; tagged Doppler follows a different analytic line."
+claim = "Native LPS positional speed, acceleration, chord distance and threshold-qualified distance have explicit units and whole-interval semantics. Source-labelled assessment preserves the positional trace and separates it from any Doppler estimand under DEV-005."
+tolerance_basis = "Absolute bounds on horizontal speed and path are 1e-7 m/s and m, acceleration 1e-5 m/s², and milestone 1e-7 s, with zero relative tolerance for array checks. Whole-interval selection and source or basis refusals are categorical."
+tolerance = 1e-5
+tolerance_unit = "m/s² (absolute); quantity-specific bounds in cited tests"
+issue = "RES-673"
+
+[receipt.digests]
+"src/dynamisbench_soccer/assessment/handoff.py::load_speed_report" = "49e0d26ed0eeca0f0a94dda0821c7581e59cbfc2903ddd42945b3bfac879d1ef"
+"src/dynamisbench_soccer/assessment/sprint.py::milestones" = "13d728b0eb0ea039b61834bac4b1054cf6df96ebcc3e2079655eb0a185d3fb84"
+"src/dynamisbench_soccer/engines/gnss_lps.py::process" = "47dad0be73c8de9a93699c8954df13d3b313b97a249e7ff27f8bfae4ee58edf9"
+"tests/test_position_estimands_policy_a.py::_circle_stencil_gain" = "823e7e8552059c7c4b7c96a3923ef9afdca2a0f974fa11449a2baaa2038c3ef3"
+"tests/test_position_estimands_policy_a.py::_planar_metrics" = "f89cdd84be758f304f70084775ec4383fe25b16dba0e91f88f79017956aec5f6"
+"tests/test_position_estimands_policy_a.py::test_native_metric_definitions_and_assessment_handoff" = "68c434c804488dced2a75f5525fedcfd4f8ef027e75da37289213a40fae247eb"
+"tests/test_position_estimands_policy_a.py::test_turn_acceleration_and_chord_are_distinct_from_speed_change" = "797919301cbf7f606a51b002e79b44d0c728c6eb77245b9eefc58b55f459cfc1"
+
+[[receipt]]
+id = "RCP-gnss_lps-gnss-H-native-assessment"
+dimension = "H"
+subfamilies = ["gnss_lps.gnss"]
+implementation = ["src/dynamisbench_soccer/engines/gnss_lps.py::process", "src/dynamisbench_soccer/assessment/handoff.py::load_speed_report", "src/dynamisbench_soccer/assessment/sprint.py::milestones"]
+reference = ["tests/test_position_estimands_policy_a.py::_planar_metrics", "tests/test_position_estimands_policy_a.py::_circle_stencil_gain"]
+tests = ["tests/test_position_estimands_policy_a.py::test_native_metric_definitions_and_assessment_handoff", "tests/test_position_estimands_policy_a.py::test_turn_acceleration_and_chord_are_distinct_from_speed_change"]
+reference_kind = "closed_form"
+independence = "A prescribed quadratic planar trajectory has exact speed 5+t, acceleration 1, path 5t+t²/2 and an independently invertible integrated milestone. GNSS fixes use independent inverse geodetic conversion; tagged Doppler follows a different analytic line."
+claim = "Native GNSS positional speed, acceleration, chord distance and threshold-qualified distance have explicit units and whole-interval semantics. Source-labelled assessment preserves the positional trace and separates it from any Doppler estimand under DEV-005."
+tolerance_basis = "Absolute bounds on horizontal speed and path are 1e-7 m/s and m, acceleration 1e-5 m/s², and milestone 1e-7 s, with zero relative tolerance for array checks. Whole-interval selection and source or basis refusals are categorical."
+tolerance = 1e-5
+tolerance_unit = "m/s² (absolute); quantity-specific bounds in cited tests"
+issue = "RES-673"
+
+[receipt.digests]
+"src/dynamisbench_soccer/assessment/handoff.py::load_speed_report" = "49e0d26ed0eeca0f0a94dda0821c7581e59cbfc2903ddd42945b3bfac879d1ef"
+"src/dynamisbench_soccer/assessment/sprint.py::milestones" = "13d728b0eb0ea039b61834bac4b1054cf6df96ebcc3e2079655eb0a185d3fb84"
+"src/dynamisbench_soccer/engines/gnss_lps.py::process" = "47dad0be73c8de9a93699c8954df13d3b313b97a249e7ff27f8bfae4ee58edf9"
+"tests/test_position_estimands_policy_a.py::_circle_stencil_gain" = "823e7e8552059c7c4b7c96a3923ef9afdca2a0f974fa11449a2baaa2038c3ef3"
+"tests/test_position_estimands_policy_a.py::_planar_metrics" = "f89cdd84be758f304f70084775ec4383fe25b16dba0e91f88f79017956aec5f6"
+"tests/test_position_estimands_policy_a.py::test_native_metric_definitions_and_assessment_handoff" = "68c434c804488dced2a75f5525fedcfd4f8ef027e75da37289213a40fae247eb"
+"tests/test_position_estimands_policy_a.py::test_turn_acceleration_and_chord_are_distinct_from_speed_change" = "797919301cbf7f606a51b002e79b44d0c728c6eb77245b9eefc58b55f459cfc1"

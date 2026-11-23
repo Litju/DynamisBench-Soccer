@@ -173,3 +173,19 @@ record-wide offset or declared error balls, as applicable. Receiver covariance,
 variable latency, joint perturbations and threshold/dwell eligibility uncertainty
 are outside the calculations. The alternative-filter and half-rate sensitivity
 in the nominal report remains a comparison of processing conditions.
+
+### Estimand definitions used by the assessment handoff
+
+| Output | Meaning and units |
+| --- | --- |
+| Horizontal positional speed | Euclidean norm of the east and north velocity components, in m/s. The vertical component is excluded. |
+| Horizontal positional acceleration | Euclidean norm of the horizontal acceleration vector, in m/s². It can be nonzero in a turn at constant speed. |
+| Accumulated horizontal path length | Sum of consecutive horizontal position chords, in m. |
+| Native Doppler speed and speed change | Supplied GNSS speed in its declared basis, in m/s, and its signed derivative, in m/s². A horizontal assessment requires the horizontal basis. |
+| Threshold-qualified distance | Horizontal chord distance for the positional method, in m. The Doppler method integrates its speed over the qualifying whole sample intervals. |
+
+The position and Doppler distinctions are based on registry claim DEV-005 and
+[Linke et al. (2018)](https://doi.org/10.1371/journal.pone.0199519).
+The stencils, units and whole-interval conventions above are executable
+definitions of this engine. The study does not validate these implementation
+choices or their use as a measure of whole-athlete motion.
