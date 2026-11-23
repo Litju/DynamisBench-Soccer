@@ -7,7 +7,8 @@ from dataclasses import dataclass
 
 import numpy as np
 
-from dynamisbench_soccer.engines.gnss_lps import TrackResult
+from dynamisbench_soccer.engines.filtering import smooth_samples
+from dynamisbench_soccer.engines.gnss_lps import TrackResult, _differentiate
 from dynamisbench_soccer.engines.gnss_lps_acquisition import AcquisitionRefusal
 from dynamisbench_soccer.signals.schema import FloatArray
 
@@ -123,3 +124,36 @@ def input_error_radii(
         doppler_speed_m_s=doppler_m_s if has_doppler else None,
         doppler_speed_change_m_s2=doppler_change if has_doppler else None,
     )
+
+
+@dataclass(frozen=True)
+class DerivativeNoise:
+    horizontal_velocity_component_sd_m_s: FloatArray
+    horizontal_acceleration_component_sd_m_s2: FloatArray
+    horizontal_speed_rms_upper_m_s: FloatArray
+    horizontal_acceleration_rms_upper_m_s2: FloatArray
+
+
+def iid_position_noise(result: TrackResult, position_component_sd_m: float) -> DerivativeNoise:
+    """Propagate independent zero-mean Cartesian coordinate noise on the fixed admitted grid."""
+    if not math.isfinite(position_component_sd_m) or position_component_sd_m < 0:
+        raise AcquisitionRefusal("position standard deviation must be finite and nonnegative")
+    time = result.acquisition.clock.elapsed_s
+    # A row can see at most 13 contiguous input rows after a five-point
+    # smoother and two five-point derivatives. Each row's support has unique
+    # residues modulo 13, so these impulses recover its weights in O(n) space.
+    impulses = np.eye(13)[np.arange(len(time)) % 13]
+    filtered = np.column_stack(
+        [smooth_samples(column, result.options.position_filter) for column in impulses.T]
+    )
+    velocity = _differentiate(filtered, time, result.options.derivative)
+    acceleration = _differentiate(velocity, time, result.options.derivative)
+    sd_velocity = np.linalg.norm(velocity, axis=1) * position_component_sd_m
+    sd_acceleration = np.linalg.norm(acceleration, axis=1) * position_component_sd_m
+    rms_velocity = math.sqrt(2) * sd_velocity
+    rms_acceleration = math.sqrt(2) * sd_acceleration
+    if not np.all(np.isfinite(rms_velocity) & np.isfinite(rms_acceleration)):
+        raise AcquisitionRefusal("noise propagation exceeds numerical precision")
+    # The reverse triangle inequality bounds each magnitude error by its
+    # two-component vector error. RMS of the latter is sqrt(2) times the SD.
+    return DerivativeNoise(sd_velocity, sd_acceleration, rms_velocity, rms_acceleration)

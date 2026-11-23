@@ -3,11 +3,13 @@
 import numpy as np
 import pytest
 from test_gnss_lps_acquisition import track_case
+from test_gnss_processing_policy_a import _filter, _polynomial_slope
 
 from dynamisbench_soccer.engines.gnss_lps import ProcessingOptions, process
 from dynamisbench_soccer.engines.gnss_lps_acquisition import AcquisitionRefusal, EnuOrigin
 from dynamisbench_soccer.engines.position_clock_bounds import (
     clock_kinematic_bounds,
+    iid_position_noise,
     input_error_radii,
 )
 
@@ -178,3 +180,49 @@ def test_unfiltered_boundary_position_and_doppler_bound_is_attained():
         after.kinematics.doppler_speed_change_m_s2[0]
         - before.kinematics.doppler_speed_change_m_s2[0]
     ) == pytest.approx(radius.doppler_speed_change_m_s2, abs=1e-9, rel=0)
+
+
+@pytest.mark.parametrize("kind", ["gnss", "lps"])
+@pytest.mark.parametrize("filter_name", ["none", "boxcar5", "binomial5"])
+@pytest.mark.parametrize(("method", "jitter"), [("three_point", True), ("five_point", False)])
+def test_native_position_noise_variance_matches_independent_dense_operator(
+    kind, filter_name, method, jitter
+):
+    observation, declaration, truth = _quadratic_track(kind, 25)
+    t = truth.copy()
+    if jitter:
+        observation["time"][1:-1:2] += 0.001
+        t[1:-1:2] += 0.001 * (1 + 320e-6)
+    track = process(
+        observation,
+        declaration,
+        ProcessingOptions(
+            derivative=method,
+            position_filter=filter_name,
+            thresholds=(),
+        ),
+    )
+    sigma = 0.013
+    expected = []
+    n = len(t)
+    for impulse in np.eye(n):
+        filtered = _filter(impulse, filter_name, linear=True)
+        first = _polynomial_slope(filtered, t, method)
+        second = _polynomial_slope(first, t, method)
+        expected.append((first, second))
+    velocity, acceleration = sigma * np.sqrt(np.sum(np.square(expected), axis=0))
+    noise = iid_position_noise(track, sigma)
+    np.testing.assert_allclose(
+        noise.horizontal_velocity_component_sd_m_s, velocity, atol=1e-10, rtol=0
+    )
+    np.testing.assert_allclose(
+        noise.horizontal_acceleration_component_sd_m_s2, acceleration, atol=1e-8, rtol=0
+    )
+    np.testing.assert_allclose(
+        noise.horizontal_speed_rms_upper_m_s, np.sqrt(2) * velocity, atol=1e-10, rtol=0
+    )
+    np.testing.assert_allclose(
+        noise.horizontal_acceleration_rms_upper_m_s2, np.sqrt(2) * acceleration, atol=1e-8, rtol=0
+    )
+    with pytest.raises(AcquisitionRefusal, match="standard deviation"):
+        iid_position_noise(track, -1)
