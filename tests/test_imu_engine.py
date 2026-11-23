@@ -32,6 +32,7 @@ from dynamisbench_soccer.reference.faults import (
 )
 from dynamisbench_soccer.reference.kinematics import cmj
 from dynamisbench_soccer.reference.spatial import PlanarPhase, PlanarTrajectory, RigidBody
+from dynamisbench_soccer.registry.models import load as load_registry
 from dynamisbench_soccer.signals import io
 from dynamisbench_soccer.signals.schema import SignalBundle
 
@@ -66,10 +67,10 @@ def test_orientation_and_free_acceleration_match_rigid_body_truth() -> None:
     for k in range(0, len(result.time_s), 40):
         t = float(result.time_s[k])
         np.testing.assert_allclose(
-            result.rotation_field_from_sensor[k], body.rotation(t), atol=1e-9
+            result.rotation_field_from_sensor[k], body.rotation(t), rtol=0, atol=1e-9
         )
         np.testing.assert_allclose(
-            result.free_acceleration_m_s2[k], body.sensor_state(t)[2], atol=1e-8
+            result.free_acceleration_m_s2[k], body.sensor_state(t)[2], rtol=0, atol=1e-8
         )
     assert result.summary["yaw_observable"] is False
     assert result.verdict in {"accept", "accept_with_flags"}
@@ -106,8 +107,8 @@ def test_integration_recovers_velocity_and_position_given_declared_initial_condi
     last = len(result.time_s) - 1
     t_end = float(result.time_s[last])
     p_end, v_end, _ = body.sensor_state(t_end)
-    np.testing.assert_allclose(result.velocity_m_s[last], v_end, atol=velocity_bound)
-    np.testing.assert_allclose(result.position_m[last], p_end, atol=position_bound)
+    np.testing.assert_allclose(result.velocity_m_s[last], v_end, rtol=0, atol=velocity_bound)
+    np.testing.assert_allclose(result.position_m[last], p_end, rtol=0, atol=position_bound)
 
 
 def test_integration_is_refused_without_declared_initial_conditions() -> None:
@@ -137,8 +138,13 @@ def test_uncorrected_bias_growth_matches_closed_form_and_zupt_removes_linear_dri
     result = process(biased, spec, MethodSpec(integration="declared_initial_velocity"))
     assert result.velocity_m_s is not None
     t = float(result.time_s[-1])
-    assert result.velocity_m_s[-1, 0] == pytest.approx(bias * t, rel=1e-9)  # v error = b*t
-    assert result.uncertainty["velocity_error_bound_m_s"] == pytest.approx(0.05 * t)
+    assert result.velocity_m_s[-1, 0] == pytest.approx(bias * t, rel=1e-9, abs=0)  # v error = b*t
+    assert result.uncertainty["velocity_error_bound_m_s"] == pytest.approx(
+        bias * t, rel=0, abs=1e-12
+    )
+    assert result.uncertainty["position_error_bound_m"] == pytest.approx(
+        0.5 * bias * t**2, rel=0, abs=1e-12
+    )
     zupt = ImuSpec(
         initial_orientation=spec.initial_orientation,
         initial_velocity_m_s=(0, 0, 0),
@@ -168,7 +174,9 @@ def test_static_tilt_initialises_roll_pitch_but_not_yaw() -> None:
     bundle = export_case("imu.inertial", body, hz=100).observation
     result = process(bundle, ImuSpec(static_window_s=(0.5, 1.5)))
     assert result.rotation_field_from_sensor is not None
-    np.testing.assert_allclose(result.rotation_field_from_sensor[0], np.array(r0), atol=1e-9)
+    np.testing.assert_allclose(
+        result.rotation_field_from_sensor[0], np.array(r0), rtol=0, atol=1e-9
+    )
     assert result.free_acceleration_m_s2 is not None
     assert float(np.abs(result.free_acceleration_m_s2).max()) < 1e-9
     assert "static tilt" in str(result.summary["orientation_source"])
@@ -176,7 +184,7 @@ def test_static_tilt_initialises_roll_pitch_but_not_yaw() -> None:
     assert yawed.rotation_field_from_sensor is not None
     up = np.array([0, 0, 1.0])
     np.testing.assert_allclose(
-        yawed.rotation_field_from_sensor[0] @ (np.array(r0).T @ up), up, atol=1e-9
+        yawed.rotation_field_from_sensor[0] @ (np.array(r0).T @ up), up, rtol=0, atol=1e-9
     )
     assert not np.allclose(yawed.rotation_field_from_sensor[0], np.array(r0))
 
@@ -209,10 +217,8 @@ def test_gyro_bias_drift_versus_complementary_bound_matches_closed_form() -> Non
 
 
 def test_declared_calibration_inverts_a_known_forward_model() -> None:
-    body, bundle = _rigid()
-    truth = process(
-        bundle, ImuSpec(initial_orientation=tuple(map(tuple, body.rotation(0))))
-    ).specific_force_m_s2  # type: ignore[arg-type]
+    _, bundle = _rigid()
+    truth = np.column_stack([bundle[f"specific_force_{axis}"] for axis in "xyz"])
     angle = math.radians(2)
     m = np.array(
         [[math.cos(angle), -math.sin(angle), 0], [math.sin(angle), math.cos(angle), 0], [0, 0, 1]]
@@ -229,7 +235,9 @@ def test_declared_calibration_inverts_a_known_forward_model() -> None:
         accel_misalignment=tuple(map(tuple, m)),  # type: ignore[arg-type]
         calibration_declared=True,
     )
-    np.testing.assert_allclose(process(corrupted, spec).specific_force_m_s2, truth, atol=1e-9)
+    np.testing.assert_allclose(
+        process(corrupted, spec).specific_force_m_s2, truth, rtol=0, atol=1e-9
+    )
     wrong = process(corrupted, ImuSpec()).specific_force_m_s2
     assert float(np.abs(wrong - truth).max()) > 0.1
     with pytest.raises(ValidationError, match="invertible"):
@@ -244,9 +252,12 @@ def test_sensor_to_segment_placement_is_declared_and_applied() -> None:
     with pytest.raises(ValueError, match="placement"):
         process(bundle, ImuSpec(mounting_rotation=rotation))
     placed = process(bundle, ImuSpec(mounting_rotation=rotation, placement="tibia, lateral shank"))
-    plain = process(bundle)
-    np.testing.assert_allclose(placed.specific_force_m_s2[:, 0], -plain.specific_force_m_s2[:, 1])
-    np.testing.assert_allclose(placed.specific_force_m_s2[:, 1], plain.specific_force_m_s2[:, 0])
+    np.testing.assert_allclose(
+        placed.specific_force_m_s2[:, 0], -bundle["specific_force_y"], rtol=0, atol=1e-9
+    )
+    np.testing.assert_allclose(
+        placed.specific_force_m_s2[:, 1], bundle["specific_force_x"], rtol=0, atol=1e-9
+    )
     assert placed.declarations["placement"] == "tibia, lateral shank"
 
 
@@ -315,7 +326,7 @@ def test_static_gyro_bias_and_slip_are_flagged() -> None:
     slipped = process(SignalBundle(clean.meta, data), spec)
     check = _check(slipped, "IMU-SLIP")
     assert check.status is Status.FAIL  # type: ignore[attr-defined]
-    assert check.values["inconsistency_rad"] == pytest.approx(angle, abs=1e-6)  # type: ignore[attr-defined]
+    assert check.values["inconsistency_rad"] == pytest.approx(angle, rel=0, abs=1e-6)  # type: ignore[attr-defined]
 
 
 def test_wrong_device_and_missing_channels_are_refused() -> None:
@@ -354,3 +365,60 @@ def test_cli_round_trip(tmp_path: Path) -> None:
     bad.write_text(json.dumps({"spec": {"mounting_rotation": [[0, -1, 0], [1, 0, 0], [0, 0, 1]]}}))
     assert main(["imu", "process", str(stem), "--config", str(bad), "--out", str(out)]) == 2
     assert "placement" in json.loads(out.read_text())["error"]
+
+
+@pytest.mark.parametrize("orientation", ["gyro_integration", "complementary"])
+@pytest.mark.parametrize("range_m_s2", [5.0, 30.0])
+def test_imu_retains_sourced_physical_and_numerical_limits(
+    orientation: str, range_m_s2: float
+) -> None:
+    root = Path(__file__).resolve().parents[1]
+    registry = load_registry(root / "registry")
+    claim = next(claim for claim in registry.claims if claim.id == "DEV-002")
+    assert claim.sources == ["nielsen2019"] and "nielsen2019" in registry.sources
+    assert "sensor position displacement and COM displacement" in claim.statement
+    assert "Registry claim DEV-002 (Nielsen et al.)" in (root / "docs/imu-engine.md").read_text()
+
+    _, bundle = _rigid()
+    result = process(
+        bundle,
+        ImuSpec(initial_orientation=imu.IDENTITY, accel_range_m_s2=range_m_s2),
+        MethodSpec(orientation=orientation),
+    )
+    expected_topics = (
+        "Specific force is not free acceleration",
+        "cannot observe heading",
+        "sustained acceleration can bias roll/pitch even within that tolerance",
+        "position error b*t^2/2",
+        "Sensor-to-segment placement is a declared rotation",
+        "Flight events from the specific-force magnitude",
+        "clipping cannot be undone",
+        "Time-synchronisation uncertainty is a declaration",
+        "no device, placement or physiological qualification",
+    )
+    assert len(result.limitations) == len(expected_topics)
+    assert all(topic in row for topic, row in zip(expected_topics, result.limitations, strict=True))
+    report = json.loads(result.report_json())
+    assert report["limitations"] == list(result.limitations)
+    assert report["diagnostic_only"] is (range_m_s2 == 5)
+    assert result.summary["yaw_observable"] is False
+
+
+def test_imu_complementary_gravity_gate_admits_biased_tilt_under_acceleration() -> None:
+    trajectory = PlanarTrajectory((PlanarPhase(2, (2, 0)),))
+    bundle = export_case("imu.inertial", RigidBody(trajectory), hz=100).observation
+    result = process(
+        bundle, ImuSpec(initial_orientation=imu.IDENTITY), MethodSpec(orientation="complementary")
+    )
+    assert math.hypot(2, 9.80665) - 9.80665 < 0.5
+
+    # In this one-axis case the scalar cross product gives a signed sine of the
+    # difference between the acceleration-implied tilt and the current tilt.
+    assumed_tilt = math.atan2(2, 9.80665)
+    angle = 0.0
+    for _ in range(bundle.meta.n_rows - 1):
+        angle += 0.01 * math.sin(assumed_tilt - angle)
+    assert result.rotation_field_from_sensor is not None
+    estimated = math.acos(float(result.rotation_field_from_sensor[-1, 2, 2]))
+    assert angle > 0.1  # The true orientation is fixed, so this is a false tilt.
+    assert estimated == pytest.approx(angle, rel=0, abs=1e-12)

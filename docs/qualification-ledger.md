@@ -61,7 +61,7 @@ Specified is NOT verified. Analytical agreement is NOT empirical equivalence.
 - gnss_lps.lps (RES-700): A:verified (RES-693), B:verified (RES-700), C:verified (RES-693), D:verified (RES-700), E:verified (RES-700), F:verified (RES-700), G:verified (RES-673), H:partial (RES-673), I:partial (RES-700), J:verified (RES-669), K:verified (RES-669), L:partial (RES-703), M:verified (RES-700), N:absent (RES-704), O:verified (RES-700)
   - empirical gap: Engine verified on analytical tracks (RES-700); audited native LPS data, anchor survey and latency evidence remain open (RES-694)
   - empirical gap: Positional versus radar agreement is analytical only (RES-703)
-- imu.inertial (RES-701): A:specified (RES-693), B:verified (RES-701), C:specified (RES-693), D:verified (RES-701), E:verified (RES-701), F:verified (RES-701), G:partial (RES-671), H:partial (RES-671), I:verified (RES-701), J:verified (RES-669), K:partial (RES-669), L:partial (RES-703), M:partial (RES-701), N:absent (RES-704), O:partial (RES-701)
+- imu.inertial (RES-701): A:specified (RES-693), B:verified (RES-701), C:specified (RES-693), D:verified (RES-701), E:verified (RES-701), F:verified (RES-701), G:partial (RES-671), H:partial (RES-671), I:verified (RES-701), J:verified (RES-669), K:partial (RES-669), L:partial (RES-703), M:partial (RES-701), N:absent (RES-704), O:verified (RES-701)
   - empirical gap: Engine verified on analytical rigid-body and trajectory controls (RES-701); sensor placement, soft-tissue artefact, calibration and flight-time agreement with force plates remain unqualified (RES-694/703)
   - empirical gap: G/H assessment qualification remains RES-671
 

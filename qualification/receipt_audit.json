@@ -383,27 +383,43 @@
    "verdict": "PARTIAL"
   },
   "RCP-imu-inertial-B": {
-   "bound_digest": "5d1d01296f5ec743345a86530503eb312175abb5994af6fe99f446bbdcbf7a5c",
+   "bound_digest": "ae9effb2b6be1899f3b8bd995a15e0ee02003de44af05cc9cdc1ebbda762546a",
+   "evidence_head": "b5e360921f0264d7eea5444e5f3516d059e9061c",
    "fix": "",
-   "reason": "An independent forward model (scale, bias, misalignment) is inverted at 1e-9. Undeclared placement and non-invertible or improper matrices are refused. Static tilt recovers roll and pitch at 1e-9.",
+   "prior_fix": "",
+   "prior_reason": "An independent forward model (scale, bias, misalignment) is inverted at 1e-9. Undeclared placement and non-invertible or improper matrices are refused. Static tilt recovers roll and pitch at 1e-9.",
+   "prior_verdict": "SUPPORTED",
+   "reason": "Declared IMU scale, bias, misalignment and mounting transform independent sensor observations and refuse invalid calibration or undeclared placement. At 200 Hz invert an independent 2\u00b0 misalignment, gains (1.02, 0.99, 1.01) and biases (0.1, \u22120.2, 0.05) m/s\u00b2 to recover the native specific-force channels. A declared 90\u00b0 placement transforms X/Y signs and axes. A 100 Hz, 30\u00b0 static roll recovers gravity orientation but yaw remains declared. Absolute 1e-9 in acceleration and dimensionless rotation components with zero relative tolerance covers arithmetic. Singular calibration, improper rotation and missing placement refuse.",
    "verdict": "SUPPORTED"
   },
   "RCP-imu-inertial-D": {
-   "bound_digest": "446c477c237480f05b141c955cf7de8749b5bb3afcb08556bc30b07c2824bcd5",
+   "bound_digest": "71bc929a3cad0f1761ab9b460c6cf7f4c0c49da3940aee9bd23aab77456dbed4",
+   "evidence_head": "b5e360921f0264d7eea5444e5f3516d059e9061c",
    "fix": "",
-   "reason": "Gaps, saturation, spike, sync, rate, gyro-bias and slip each give FAIL or reject. Clean controls give PASS or NOT_APPLICABLE, and the slip magnitude matches at 1e-6.",
+   "prior_fix": "",
+   "prior_reason": "Gaps, saturation, spike, sync, rate, gyro-bias and slip each give FAIL or reject. Clean controls give PASS or NOT_APPLICABLE, and the slip magnitude matches at 1e-6.",
+   "prior_verdict": "SUPPORTED",
+   "reason": "IMU integrity controls detect declared rail failures, gaps, rate, synchronization, spikes, gyro bias and inconsistent static gravity. Exact verdicts: drop gaps and 5 m/s\u00b2 accelerometer rail reject, absent rail is not applicable, synchronization, spike, rate, gyro bias and inconsistent static gravity have their named FAIL outcomes, and bad device or missing channel refuses. The supplementary slip angle is 20\u00b0 with absolute 1e-6 rad and zero relative tolerance.",
    "verdict": "SUPPORTED"
   },
   "RCP-imu-inertial-E": {
-   "bound_digest": "3175d574462fd2ad4f2af551c9ee5528748a6e5271bf25c13694c383e22846b3",
+   "bound_digest": "0fa4925bd98bd6e0e0b225bc0d56911d840ed5be8ad4af57a514aad21933ffef",
+   "evidence_head": "b5e360921f0264d7eea5444e5f3516d059e9061c",
    "fix": "",
-   "reason": "All declared variants are covered: gyro_integration (bias\u00b7t), complementary (bias/gain), declared_initial_velocity, zupt_linear_drift, plus the unobservable refusal. Each has a closed form. Tolerance 0.01 matches the complementary bound.",
+   "prior_fix": "",
+   "prior_reason": "All declared variants are covered: gyro_integration (bias\u00b7t), complementary (bias/gain), declared_initial_velocity, zupt_linear_drift, plus the unobservable refusal. Each has a closed form. Tolerance 0.01 matches the complementary bound.",
+   "prior_verdict": "SUPPORTED",
+   "reason": "IMU named orientation and integration variants meet independent under-bias controls for stationary gravity-only observations with declared initial conditions. A 100 Hz stationary gyro bias of 0.05 rad/s for 9.99 s yields 0.4995 rad at 0.001 rad absolute. The gravity-only complementary small-angle response approaches 0.05 rad within 0.01 rad absolute. Constant 0.05 m/s\u00b2 horizontal acceleration bias yields 0.4995 m/s at 1e-9 relative, zero absolute tolerance. Terminal and downsampled ZUPT residuals stay strictly below 0.06 m/s. No initial tilt or insufficient ZUPT declarations refuse the corresponding quantities.",
    "verdict": "SUPPORTED"
   },
   "RCP-imu-inertial-F": {
-   "bound_digest": "a2a6b200c33394052cab99f799c8aa558da3b2cf0e4ee3430943143fe1783202",
+   "bound_digest": "4bed235a0d0e6b75c928edfd64d3774cd397b4ab599bc9e2daee13b28505f1c7",
+   "evidence_head": "b5e360921f0264d7eea5444e5f3516d059e9061c",
    "fix": "",
-   "reason": "Rotation at 1e-9 and free acceleration at 1e-8 against RigidBody truth. Trapezoid velocity and position are within the derived error bound. Specific force is kept distinct.",
+   "prior_fix": "",
+   "prior_reason": "Rotation at 1e-9 and free acceleration at 1e-8 against RigidBody truth. Trapezoid velocity and position are within the derived error bound. Specific force is kept distinct.",
+   "prior_verdict": "SUPPORTED",
+   "reason": "IMU attitude, free acceleration, velocity and position reconstruct independent rotating and translating rigid-body quantities under declared initial conditions. At checked rows every 40 samples of a 200 Hz fixture, rigid-body rotation and free acceleration are within absolute 1e-9 dimensionless and 1e-8 m/s\u00b2. The 1000 Hz trapezoid endpoint bounds are absolute 0.00308 m/s and 0.01232 m from acceleration step size, half the interval and duration. All relative allowances are zero. Specific force and free acceleration remain distinct.",
    "verdict": "SUPPORTED"
   },
   "RCP-imu-inertial-G": {
@@ -417,15 +433,23 @@
    "verdict": "PARTIAL"
   },
   "RCP-imu-inertial-I": {
-   "bound_digest": "7c2329ebfb9e8670337311cf4231f9d22123c22a05e9bebacd265ddeb36bb4fe",
+   "bound_digest": "7d369f11189e01f90d10b5019d31cac8a7faf2cd08badd84ae3f77cd145fd127",
+   "evidence_head": "b5e360921f0264d7eea5444e5f3516d059e9061c",
    "fix": "",
-   "reason": "velocity_error_bound equals the bias\u00b7t closed form, and the complementary tilt bound equals bias/gain within 0.01. Both compare reported uncertainty with an analytical result.",
+   "prior_fix": "",
+   "prior_reason": "velocity_error_bound equals the bias\u00b7t closed form, and the complementary tilt bound equals bias/gain within 0.01. Both compare reported uncertainty with an analytical result.",
+   "prior_verdict": "SUPPORTED",
+   "reason": "IMU reports the analytically verified conditional velocity and position bounds for a declared constant field-frame acceleration bias. At 100 Hz, 0.05 m/s\u00b2 for 9.99 s produces reported velocity and position bounds of 0.4995 m/s and 2.4950025 m from b\u00b7t and b\u00b7t\u00b2/2. Absolute 1e-12 in each unit with zero relative allowance covers calculation rounding. The supplementary gravity-only test measures gyro drift and complementary tilt; it does not assert a reported tilt uncertainty field.",
    "verdict": "SUPPORTED"
   },
   "RCP-imu-inertial-J": {
-   "bound_digest": "4e6d801989555d576fd591e9261f19110e3a0f1bf864a5f5bfd22b2162ccef91",
+   "bound_digest": "539e9c52b8382b520a90ad53fba936572459400ec445deb4cb8c575a418c7ee4",
+   "evidence_head": "b5e360921f0264d7eea5444e5f3516d059e9061c",
    "fix": "",
-   "reason": "The engine matches the RigidBody closed form at 1e-8. An AST test confirms imu.py imports no reference code. The reference itself is validated by finite differences and the inversion identity.",
+   "prior_fix": "",
+   "prior_reason": "The engine matches the RigidBody closed form at 1e-8. An AST test confirms imu.py imports no reference code. The reference itself is validated by finite differences and the inversion identity.",
+   "prior_verdict": "SUPPORTED",
+   "reason": "IMU rigid-body attitude and free acceleration match an independent analytical reference with no shared production reconstruction code. At 200 Hz, every 40th checked rotation and free acceleration sample agrees with independent rigid-body truth at absolute 1e-9 dimensionless and 1e-8 m/s\u00b2, zero relative allowance. The source import boundary is verified. Supplemental substrate derivative checks use their own NumPy absolute and relative bounds.",
    "verdict": "SUPPORTED"
   },
   "RCP-imu-inertial-K": {
@@ -439,9 +463,14 @@
    "verdict": "PARTIAL"
   },
   "RCP-imu-inertial-O": {
-   "fix": "Bind the limitations to sourced records.",
-   "reason": "The heuristic limitation test [imu] checks no sourcing.",
-   "verdict": "PARTIAL"
+   "bound_digest": "11391257d852b07f01770ed1616d54b10206245a555172916dad041ed4e2f662",
+   "evidence_head": "b5e360921f0264d7eea5444e5f3516d059e9061c",
+   "fix": "",
+   "prior_fix": "Bind the limitations to sourced records.",
+   "prior_reason": "The heuristic limitation test [imu] checks no sourcing.",
+   "prior_verdict": "PARTIAL",
+   "reason": "Complete IMU reports emit sourced frame, orientation, integration, sampling and instrumentation limitations for both successful and diagnostic-reject cases. Exact ordered limitation topics and serialized list for gyro and complementary variants under declared 30 m/s\u00b2 and 5 m/s\u00b2 accelerometer ranges. Registry DEV-002 identifies sensor versus COM displacement and tested placement scope. An independent 100 Hz constant 2 m/s\u00b2 horizontal-acceleration fixture satisfies the gravity magnitude gate but induces about 0.1741 rad of false tilt. The scalar recurrence driven toward atan2(2,g) from zero matches this diagnostic within absolute 1e-12 rad with zero relative allowance. ZUPT alone requires zero-velocity windows, and flight reports the larger edge bracket rather than a total duration error bound.",
+   "verdict": "SUPPORTED"
   },
   "RCP-load_cell_isometric-isometric_rig-A": {
    "bound_digest": "c9d46afcdcc292915d4613f141562d06e1693a65e811846df97c3ea36c214659",
