@@ -161,9 +161,9 @@ def test_dual_beam_vote_rejects_early_arm_and_changes_event_definition():
         beams=(Beam(id=1, height_m=1, timing=EDGE), Beam(id=2, height_m=1.08, timing=EDGE)),
     )
     result = sprint([single, dual], gate_policy(gates=gates))
-    assert result.splits[1].crossing.time_s.value == pytest.approx(second)
+    assert result.splits[1].crossing.time_s.value == pytest.approx(second, rel=0, abs=1e-12)
     assert result.discarded[0].reason == "incomplete beam quorum"
-    assert result.discarded[0].native[0].native_s == pytest.approx(arm)
+    assert result.discarded[0].native[0].native_s == pytest.approx(arm, rel=0, abs=1e-12)
     assert abs(result.splits[1].crossing.time_s.value - arm) > 0.05
     gates[1] = gates[1].model_copy(update={"quorum": 1})
     with pytest.raises(EventRefusal, match="found 2"):
@@ -348,12 +348,12 @@ def test_multi_beam_quorum_and_beam_height_sensitivity_on_clean_events():
         ),
     ]
     first = sprint(sources, gate_policy(gates=gates)).splits[1]
-    assert first.crossing.time_s.value == pytest.approx(events[0][0])
+    assert first.crossing.time_s.value == pytest.approx(events[0][0], rel=0, abs=1e-12)
     gates[1] = gates[1].model_copy(update={"quorum": 3})
     all_beams = sprint(sources, gate_policy(gates=gates)).splits[1]
-    assert all_beams.crossing.time_s.value == pytest.approx(events[-1][0])
+    assert all_beams.crossing.time_s.value == pytest.approx(events[-1][0], rel=0, abs=1e-12)
     assert all_beams.split_s.value - first.split_s.value == pytest.approx(
-        events[-1][0] - events[0][0]
+        events[-1][0] - events[0][0], rel=0, abs=1e-12
     )
     uncertain = (
         gates[1]
@@ -365,7 +365,7 @@ def test_multi_beam_quorum_and_beam_height_sensitivity_on_clean_events():
     gates[1] = gates[1].model_copy(update={"beams": (*gates[1].beams[:-1], uncertain)})
     sensitivity = sprint(sources, gate_policy(gates=gates)).splits[1].split_s
     assert sensitivity.value == all_beams.split_s.value
-    assert sensitivity.high == pytest.approx(all_beams.split_s.high + 0.002)
+    assert sensitivity.high == pytest.approx(all_beams.split_s.high + 0.002, rel=0, abs=1e-12)
 
 
 @pytest.mark.parametrize("sync_error_s", [0, 0.0015])
