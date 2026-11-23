@@ -66,3 +66,13 @@ def test_external_ephemeral_key_is_host_only(tmp_path: Path) -> None:
     linked.symlink_to(path)
     with pytest.raises(OSError):
         load_private(tmp_path, ROOT, AnswerLocation(id="linked", sha256=digest(raw)), task_hash)
+
+
+def test_malformed_custody_error_omits_private_values(tmp_path: Path) -> None:
+    raw = b'{"checkpoints":{"initial":{"value":"PRIVATE_VALUE"}}}'
+    path = tmp_path / "key.json"
+    path.write_bytes(raw)
+    path.chmod(0o600)
+    with pytest.raises(ValueError, match=r"^invalid private answer envelope$") as error:
+        load_private(tmp_path, ROOT, AnswerLocation(id="key", sha256=digest(raw)), "0" * 64)
+    assert error.value.__suppress_context__

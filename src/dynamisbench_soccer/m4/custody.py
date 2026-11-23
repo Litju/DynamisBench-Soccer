@@ -7,7 +7,7 @@ import stat
 from pathlib import Path
 from typing import Literal
 
-from pydantic import Field, JsonValue
+from pydantic import Field, JsonValue, ValidationError
 
 from dynamisbench_soccer.m4.key_store import digest
 from dynamisbench_soccer.m4.task_registry import Name, Schema, Sha256
@@ -56,7 +56,10 @@ def load_private(
         os.close(directory)
     if len(raw) > MAX_KEY_BYTES or digest(raw) != location.sha256:
         raise ValueError("private answer exceeds size limit or has a stale digest")
-    answer = AnswerEnvelope.model_validate_json(raw)
+    try:
+        answer = AnswerEnvelope.model_validate_json(raw)
+    except ValidationError:
+        raise ValueError("invalid private answer envelope") from None
     if answer.task_sha256 != task_sha256:
         raise ValueError("private answer belongs to another task")
     return answer

@@ -32,6 +32,7 @@ class Artifact(Schema):
     sha256: Sha256
     category: Literal["analytical", "synthetic", "empirical", "expert_adjudicated"]
     rights: Text
+    usage: Literal["reference", "diagnostic"] = "reference"
 
     @model_validator(mode="after")
     def relative_path(self) -> Self:
