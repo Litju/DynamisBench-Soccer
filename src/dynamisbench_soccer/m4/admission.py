@@ -26,8 +26,16 @@ from dynamisbench_soccer.qualification import receipts
 
 Status = Literal["DEVELOPMENT_ONLY_NOT_QUALIFIED", "ENGINEERING_ADMITTED", "REFUSED"]
 # These roles describe evidence needed by this reference, not a subfamily gate.
-REQUIRED = {"D", "E", "F", "H", "I", "J", "M", "O"}
-RAW = {"A", "B", "C", "G", "K"}
+Kind = Literal["analytical", "native_signal", "protocol_assessment", "cross_device"]
+COMPUTATION = frozenset({"D", "E", "F", "H", "I", "J", "M", "O"})
+NATIVE = COMPUTATION | {"A", "B", "C", "K"}
+REQUIRED: dict[Kind, frozenset[str]] = {
+    "analytical": COMPUTATION,
+    "native_signal": NATIVE,
+    "protocol_assessment": NATIVE | {"G"},
+    "cross_device": NATIVE | {"L"},
+}
+DIMENSIONS = frozenset(receipts.DIMENSIONS_M3)
 PACKAGE = "dynamisbench_soccer"
 SOURCE = f"src/{PACKAGE}/"
 
@@ -40,8 +48,9 @@ class ReceiptBinding(Schema):
 class ReviewedSlice(Schema):
     task_sha256: Sha256
     source: Name
-    kind: Literal["specified_events", "native_signal"]
+    kind: Kind
     evidence: dict[str, ReceiptBinding]
+    inapplicable: dict[str, Text]
     implementations: tuple[Text, ...] = Field(min_length=1)
     oracle: tuple[Text, ...] = Field(min_length=1)
     shared_infrastructure: tuple[Text, ...] = ()
@@ -152,9 +161,11 @@ def evaluate(
             return decision("DEVELOPMENT_ONLY_NOT_QUALIFIED", "reference slice lacks review")
         if review.task_sha256 != task_hash or review.source != task.task.source:
             return decision("REFUSED", "task conditions or source differ from reviewed slice")
-        required = REQUIRED | (RAW if review.kind == "native_signal" else set())
-        if not required <= review.evidence.keys():
-            return decision("REFUSED", "missing required evidence dimensions")
+        roles = set(review.evidence)
+        if not REQUIRED[review.kind] <= roles <= DIMENSIONS:
+            return decision("REFUSED", "missing or invalid required evidence dimensions")
+        if set(review.inapplicable) != DIMENSIONS - roles:
+            return decision("REFUSED", "every omitted dimension needs reviewed inapplicability")
 
         rows = receipts.load(root / "qualification/receipts.toml")
         counts = Counter(row.id for row in rows)

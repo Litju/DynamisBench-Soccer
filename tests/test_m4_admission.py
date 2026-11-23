@@ -4,6 +4,7 @@ from pathlib import Path
 import pytest
 
 from dynamisbench_soccer.m4.admission import (
+    DIMENSIONS,
     REQUIRED,
     Catalog,
     ReceiptBinding,
@@ -26,8 +27,11 @@ def _profile(task: RegistryTask) -> ReviewedSlice:
     return ReviewedSlice(
         task_sha256=fingerprint(task),
         source=task.task.source,
-        kind="specified_events",
-        evidence={role: ReceiptBinding(id="missing", sha256="0" * 64) for role in REQUIRED},
+        kind="analytical",
+        evidence={
+            role: ReceiptBinding(id="missing", sha256="0" * 64) for role in REQUIRED["analytical"]
+        },
+        inapplicable={role: "test-only omission" for role in DIMENSIONS - REQUIRED["analytical"]},
         implementations=("implementation",),
         oracle=("oracle",),
         files={},
@@ -78,7 +82,7 @@ def test_qc_required_and_wrong_subfamily_rejected() -> None:
     task = _task()
     profile = _profile(task)
     profile.evidence.pop("D")
-    assert _check(task, profile)[1] == ("missing required evidence dimensions",)
+    assert _check(task, profile)[1] == ("missing or invalid required evidence dimensions",)
     profile.evidence["D"] = ReceiptBinding(id="RCP-timing_contact-gates-D", sha256="0" * 64)
     status, reasons = _check(task, profile)
     assert status == "REFUSED"
@@ -90,3 +94,17 @@ def test_closure_tracks_imported_helpers() -> None:
     assert "src/dynamisbench_soccer/engines/event_time.py" in closure
     assert "src/dynamisbench_soccer/signals/schema.py" in closure
     assert "src/dynamisbench_soccer/data/manifest.py" in closure
+
+
+@pytest.mark.parametrize(
+    "kind", ["analytical", "native_signal", "protocol_assessment", "cross_device"]
+)
+def test_task_class_requires_explicit_omissions(kind) -> None:
+    task = _task()
+    profile = _profile(task).model_copy(update={"kind": kind})
+    for role in REQUIRED[kind]:
+        profile.evidence.setdefault(role, ReceiptBinding(id="missing", sha256="0" * 64))
+    profile.inapplicable.clear()
+    for role in sorted(DIMENSIONS - set(profile.evidence))[1:]:
+        profile.inapplicable[role] = "independently reviewed inapplicability"
+    assert _check(task, profile)[1] == ("every omitted dimension needs reviewed inapplicability",)
