@@ -129,7 +129,7 @@ paradigm = "continuous_signal"
 issue = "RES-699"
 engine_id = "radar"
 methods = ["filter", "start_detection"]
-ratings = { A = "verified", B = "specified", C = "verified", D = "verified", E = "partial", F = "verified", G = "verified", H = "verified", I = "partial", J = "verified", K = "partial", L = "partial", M = "partial", N = "absent", O = "partial" }
+ratings = { A = "verified", B = "specified", C = "verified", D = "verified", E = "partial", F = "verified", G = "verified", H = "verified", I = "verified", J = "verified", K = "partial", L = "partial", M = "partial", N = "absent", O = "partial" }
 empirical_gaps = ["Engine verified on analytical sprint controls (RES-699); no raw radar validity or latency study (RES-694)", "Doppler versus positional/gate agreement is analytical only (RES-703)"]
 blockers = []
 
@@ -4667,3 +4667,11 @@ kind = "independent_test"
 issue = "RES-670"
 ref = "repo:tests/test_force_platform_policy_a.py"
 rationale = "Dual-plate raw fixed-grid processing propagates the declared aggregate force, body-weight and initial-velocity error bounds under trapezoid and Simpson integration."
+
+[[evidence]]
+subfamily = "radar_laser.radar"
+dimension = "I"
+kind = "independent_test"
+issue = "RES-699"
+ref = "repo:tests/test_radar_laser_processing.py"
+rationale = "Native radar reports analytically verified sensitivity to a declared cosine interval, on-grid start shifts and alternate smoothing, withholds ill-conditioned or unsupported diagnostics, and retains the valid nominal trace."

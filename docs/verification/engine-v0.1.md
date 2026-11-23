@@ -31,7 +31,7 @@ Engineering calculations only; no scientific qualification of any device or metr
 | nordic_hip.hip | SPECIFIED | yes | 12 of 14 |
 | nordic_hip.nordic | SPECIFIED | yes | 9 of 14 |
 | radar_laser.laser | SPECIFIED | yes | 11 of 14 |
-| radar_laser.radar | SPECIFIED | yes | 7 of 14 |
+| radar_laser.radar | SPECIFIED | yes | 6 of 14 |
 | timing_contact.contact | SPECIFIED | yes | 5 of 14 |
 | timing_contact.gates | SPECIFIED | yes | 8 of 14 |
 
@@ -272,14 +272,12 @@ Engineering calculations only; no scientific qualification of any device or metr
 **radar_laser.radar** (SPECIFIED)
 * computational blocker: B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-699; rated specified)
 * computational blocker: E: every processing method variant is compared with an independent reference with stated sensitivity bounds (owner RES-699; rated partial)
-* computational blocker: I: declared uncertainty propagation is checked against an independent analytical result (owner RES-699; rated partial)
 * computational blocker: K: synthetic fault fixtures cover the declared fault classes with expected verdicts (owner RES-669; rated partial)
 * computational blocker: L: analytical cross-device studies are executed and classified, never read as interchangeability (owner RES-703; rated partial)
 * computational blocker: M: seeded, hash-bound provenance chain for every processing stage, reproduced exactly (owner RES-699; rated partial)
 * computational blocker: O: limitation statements are sourced and emitted with every result (owner RES-699; rated partial)
 * K - owner RES-669: synthetic fault fixtures cover the declared fault classes with expected verdicts
 * B - owner RES-699: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused
-* I - owner RES-699: declared uncertainty propagation is checked against an independent analytical result
 * E - owner RES-699: every processing method variant is compared with an independent reference with stated sensitivity bounds
 * O - owner RES-699: limitation statements are sourced and emitted with every result
 * M - owner RES-699: seeded, hash-bound provenance chain for every processing stage, reproduced exactly
@@ -428,7 +426,7 @@ Open empirical requirements (what only physical measurement can close):
 | nordic_hip.hip | s | V | s | p | p | p | p | p | p | V | p | p | p | - | p |
 | nordic_hip.nordic | s | s | s | p | p | V | V | V | p | V | p | V | p | - | p |
 | radar_laser.laser | s | s | V | p | p | V | p | p | p | p | p | V | p | - | p |
-| radar_laser.radar | V | s | V | V | p | V | V | V | p | V | p | p | p | - | p |
+| radar_laser.radar | V | s | V | V | p | V | V | V | V | V | p | p | p | - | p |
 | timing_contact.contact | V | s | s | V | V | V | p | V | V | V | V | V | p | - | p |
 | timing_contact.gates | V | s | s | V | p | p | p | V | V | p | V | V | p | - | p |
 

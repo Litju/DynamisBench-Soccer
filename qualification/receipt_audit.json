@@ -853,9 +853,13 @@
    "verdict": "PARTIAL"
   },
   "RCP-radar_laser-laser-C": {
-   "bound_digest": "acffe01cdbc3a8312c135f89cca764544597b77fd1de6ed3e1172ea4951dce5f",
+   "bound_digest": "1af5f429b64d15c0410509474dee2df2838276a64723b07b1ddd2af81bcc7877",
+   "evidence_head": "3b8c6e2309cb9283aac4a8dc63b0d8443628748d",
    "fix": "",
-   "reason": "On laser: the affine clock maps to truth time at atol 1e-12, a non-monotonic timestamp and DROP-fault gaps are refused, and range_change start is exercised. The tolerance matches.",
+   "prior_fix": "",
+   "prior_reason": "On laser: the affine clock maps to truth time at atol 1e-12, a non-monotonic timestamp and DROP-fault gaps are refused, and range_change start is exercised. The tolerance matches.",
+   "prior_verdict": "SUPPORTED",
+   "reason": "At 256 Hz and 90 ppm, the 14 ms synthetic acquisition delay remains on receipt timestamps and disappears under the explicit paired measurement-clock alignment. Expected elapsed reference samples follow the independent affine clock. Compare timestamps with absolute 1e-12 s, zero relative tolerance, and native rate with relative 1e-10. Refuse duplicates, dropout and uncertainty beyond one sample.",
    "verdict": "SUPPORTED"
   },
   "RCP-radar_laser-laser-D": {
@@ -869,12 +873,12 @@
    "verdict": "PARTIAL"
   },
   "RCP-radar_laser-laser-F": {
-   "bound_digest": "490b7c127094b027e9584bbbba32189c6cfb51874f8ec35a4dae2cf17f26e7c1",
-   "evidence_head": "fbf4665885047e52c6cdd2829b6d2c01937fee9b",
+   "bound_digest": "d1c389abd76348866472c6d7c309fa6f0685e56f9cb44e6c1b1266f2bb84fabb",
+   "evidence_head": "3b8c6e2309cb9283aac4a8dc63b0d8443628748d",
    "fix": "",
-   "prior_fix": "Record check_kind numeric, tolerance 0.004 m/s.",
-   "prior_reason": "Real closed-form check: central and five_point at 47/100/256 Hz against MonoExponentialSprint, error<0.004. But the receipt is recorded categorical with tolerance 0.0, contradicting the asserted numeric bound.",
-   "prior_verdict": "PARTIAL",
+   "prior_fix": "",
+   "prior_reason": "Both native laser derivative implementations meet the explicit absolute 0.004 m/s ceiling at all three rates against the independent monoexponential velocity.",
+   "prior_verdict": "SUPPORTED",
    "reason": "Both native laser derivative implementations meet the explicit absolute 0.004 m/s ceiling at all three rates against the independent monoexponential velocity.",
    "verdict": "SUPPORTED"
   },
@@ -915,7 +919,7 @@
    "verdict": "PARTIAL"
   },
   "RCP-radar_laser-radar-A": {
-   "bound_digest": "f9c4a3bafb157e3c9a43fe28b5cd07f7cbd516be6ce4d86f67e06d30cb46cba2",
+   "bound_digest": "e64dc940cea8f9925952a1d9972aaaefdcad3f8b620b5f55d4f4e95dbb6dcf12",
    "fix": "",
    "reason": "The tests admit native radar with an affine clock and refuse truth data, a string stage, GNSS data, a mislabelled processed stage and ambiguous calibration, all through admit().",
    "verdict": "SUPPORTED"
@@ -926,15 +930,23 @@
    "verdict": "PARTIAL"
   },
   "RCP-radar_laser-radar-C": {
-   "bound_digest": "dbe4d6cc526f18669eb81235a269cb9e724e5ed2b5aa7c99995ee8cd0ecdfce9",
+   "bound_digest": "4b537ffadc60e601222e8c6288bc8faece316d1e36f09680d988e43ac590617f",
+   "evidence_head": "3b8c6e2309cb9283aac4a8dc63b0d8443628748d",
    "fix": "",
-   "reason": "The affine DeviceClock maps to reference time within 1e-12, non-monotonic timestamps and gaps are refused, and the start modes refuse missing triggers.",
+   "prior_fix": "",
+   "prior_reason": "The affine DeviceClock maps to reference time within 1e-12, non-monotonic timestamps and gaps are refused, and the start modes refuse missing triggers.",
+   "prior_verdict": "SUPPORTED",
+   "reason": "At 47 Hz and 90 ppm, the 14 ms synthetic acquisition delay remains on receipt timestamps and disappears under the explicit paired measurement-clock alignment. Expected elapsed reference samples follow the independent affine clock. Compare timestamps with absolute 1e-12 s, zero relative tolerance, and native rate with relative 1e-10. Refuse duplicates, dropout and uncertainty beyond one sample.",
    "verdict": "SUPPORTED"
   },
   "RCP-radar_laser-radar-D": {
-   "bound_digest": "a40b7ab6e09cd967a5d44b7e2651820feab5a52e5af2fa532d2ab50cdc17f1f7",
+   "bound_digest": "6627a23588c693725914e58b5a984009eb94efb415bf6d52640f6a7ebb702e0d",
+   "evidence_head": "3b8c6e2309cb9283aac4a8dc63b0d8443628748d",
    "fix": "",
-   "reason": "Timestamp faults, dropouts, reflection or target switch and clipped plateaus are refused, and stationary pre-start zeros are not falsely flagged, which serves as the clean control.",
+   "prior_fix": "",
+   "prior_reason": "Timestamp faults, dropouts, reflection or target switch and clipped plateaus are refused, and stationary pre-start zeros are not falsely flagged, which serves as the clean control.",
+   "prior_verdict": "SUPPORTED",
+   "reason": "Exact failure outcomes for radar nonmonotonic timestamps, dropout, synchronization uncertainty, reflection/target switch and a clipped rail. Clean stationary prestart and smooth acceleration complete admission and processing.",
    "verdict": "SUPPORTED"
   },
   "RCP-radar_laser-radar-E": {
@@ -943,15 +955,23 @@
    "verdict": "PARTIAL"
   },
   "RCP-radar_laser-radar-F": {
-   "bound_digest": "dfad71b754c5cdee221c6a820e69286cb43ff075e37eeb3b5fe87eed6ed7035b",
+   "bound_digest": "8a685eceb9a5da388f77ec38ac800bc04b707a3fa5b8e30dc848752d58d8ba7a",
+   "evidence_head": "3b8c6e2309cb9283aac4a8dc63b0d8443628748d",
    "fix": "",
-   "reason": "Radar velocity and time match the MonoExponentialSprint truth at atol 2e-12 at 47, 100 and 256 Hz, and the aiming-drift test shows no improper correction.",
+   "prior_fix": "",
+   "prior_reason": "Radar velocity and time match the MonoExponentialSprint truth at atol 2e-12 at 47, 100 and 256 Hz, and the aiming-drift test shows no improper correction.",
+   "prior_verdict": "SUPPORTED",
+   "reason": "A declared 0.2 rad cosine projection of the monoexponential trace projects back to 9(1\u2212exp(\u2212t/1.2)) m/s at 47, 100 and 256 Hz. The affine fixture with offset 0.12 s and drift 60 ppm matches its reference timestamps. Both compare with absolute 2e-12 in the stated units and zero relative allowance for floating-point arithmetic.",
    "verdict": "SUPPORTED"
   },
   "RCP-radar_laser-radar-G": {
-   "bound_digest": "e148f8f63c0bdf3a9c9d56997b25361c618475481ddc33e91eeec829a77e7986",
+   "bound_digest": "8610ca9e59fd516062af74e189f7e8b815010ff1b744df5c989ecf47961027b9",
+   "evidence_head": "3b8c6e2309cb9283aac4a8dc63b0d8443628748d",
    "fix": "",
-   "reason": "Milestones match the exact position inverse (abs 2e-3 and 1e-12) and COD trace metrics match the piecewise closed form. Start-definition refusals and the native radar pipeline are included.",
+   "prior_fix": "",
+   "prior_reason": "Milestones match the exact position inverse (abs 2e-3 and 1e-12) and COD trace metrics match the piecewise closed form. Start-definition refusals and the native radar pipeline are included.",
+   "prior_verdict": "SUPPORTED",
+   "reason": "Expected arrivals are the inverse of the monoexponential distance: 2.1031246565401025, 3.3485505747362385 and 4.505234882806160 s. The 1e-4 s absolute tolerance, without a relative allowance, covers integrated piecewise-linear interpolation at 100 Hz (distance error bounded by T\u00b7h\u00b2\u00b7max|v''|/12 and arrival speed above 5 m/s). 1000 m is unobserved and returns no arrival.",
    "verdict": "SUPPORTED"
   },
   "RCP-radar_laser-radar-H": {
@@ -961,14 +981,23 @@
    "verdict": "SUPPORTED"
   },
   "RCP-radar_laser-radar-I": {
-   "fix": "Compare the start \u00b1 sensitivity values with MonoExponentialSprint velocity at the shifted times, and use radar for the filter sensitivity.",
-   "reason": "The start-offset sensitivity checks only ordering and baseline equals interp(engine output), which is self-referential. The filter-sensitivity test uses laser. Only the noisy fit is within 3 SE of the truth.",
-   "verdict": "PARTIAL"
+   "bound_digest": "d17785d2a139fa92fbbf005ca5313019bd9e9e2c7e88fa830b5826af432fef68",
+   "evidence_head": "3b8c6e2309cb9283aac4a8dc63b0d8443628748d",
+   "fix": "",
+   "prior_fix": "Compare the start \u00b1 sensitivity values with MonoExponentialSprint velocity at the shifted times, and use radar for the filter sensitivity.",
+   "prior_reason": "The start-offset sensitivity checks only ordering and baseline equals interp(engine output), which is self-referential. The filter-sensitivity test uses laser. Only the noisy fit is within 3 SE of the truth.",
+   "prior_verdict": "PARTIAL",
+   "reason": "Native radar reports analytically verified sensitivity to a declared cosine interval, on-grid start shifts and alternate smoothing, withholds ill-conditioned or unsupported diagnostics, and retains the valid nominal trace. At 100 Hz, angles \u22120.5\u00b0, 0\u00b0, +0.5\u00b0 and 10\u00b0 have hypothetical \u00b11\u00b0 projection budgets. Evaluate secant extrema including zero when inside the interval; for a zero nominal angle the lower/upper peaks are 8.860465317608917/8.861815014958859 m/s. A nominal 74.8\u00b0 passes, but its +1\u00b0 variant exceeds the minimum cosine of 0.25 and withholds bounds. At reference times 0.96, 1.00 and 1.04 s the independent radial speeds are 4.857248498885337, 4.987182590043976 and 5.1128569350141095 m/s. The native, boxcar and binomial analytic endpoint spread is 1.9152562344970647e-6 m/s. All numerical comparisons use absolute 1e-12 m/s and zero relative allowance for floating-point arithmetic. The out-of-window external trigger case retains the trace and withholds the unsupported interpolation.",
+   "verdict": "SUPPORTED"
   },
   "RCP-radar_laser-radar-J": {
-   "bound_digest": "e507f1dc8b1334aa2be8cef05dd1fcae9340023f644c0e5302ce2ef248d2402a",
+   "bound_digest": "86920458c96eb8e69a6b168bb1f23886e53b47a26b50ae666289defb8ed5252b",
+   "evidence_head": "3b8c6e2309cb9283aac4a8dc63b0d8443628748d",
    "fix": "",
-   "reason": "The radar engine matches the independent truth at 2e-12, and both engine files are AST-checked for no imports from the reference package.",
+   "prior_fix": "",
+   "prior_reason": "The radar engine matches the independent truth at 2e-12, and both engine files are AST-checked for no imports from the reference package.",
+   "prior_verdict": "SUPPORTED",
+   "reason": "A declared 0.2 rad cosine projection of the monoexponential trace projects back to 9(1\u2212exp(\u2212t/1.2)) m/s at 47, 100 and 256 Hz. The affine fixture with offset 0.12 s and drift 60 ppm matches its reference timestamps. Both compare with absolute 2e-12 in the stated units and zero relative allowance for floating-point arithmetic.",
    "verdict": "SUPPORTED"
   },
   "RCP-radar_laser-radar-K": {
