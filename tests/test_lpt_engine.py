@@ -124,3 +124,65 @@ def test_cli_processes_verified_bundle_and_keeps_reference_separate(tmp_path, ca
     assert report["summary"]["velocity_m_s"]["max"] == pytest.approx(2.4)
     assert main(["lpt-encoder", "process", str(reference), "--config", str(config)]) == 2
     assert "excluding analytical" in capsys.readouterr().err
+
+
+def test_native_lpt_sensitivity_matches_angle_and_clock_scaling() -> None:
+    observation = export_case("lpt_encoder.lpt", MOTION, test_id="cmj", hz=128).observation
+    t = np.arange(observation.meta.n_rows) / 128
+    displacement, velocity = 0.4 * t + t**2, 0.4 + 2 * t
+    angle, delta = 0.45, 0.1
+    meta = observation.meta.model_dump()
+    source_geometry = meta["acquisition"]["sources"][0]["geometry"]
+    source_geometry["cable_angle_rad"] = angle
+    source_geometry["unknown"].remove("cable_angle_rad")
+    bundle = _modify(
+        observation,
+        meta=meta,
+        data={"time": t, "cable_length": 1 + displacement * np.cos(angle)},
+    )
+    geometry = GeometrySpec(attachment_point="COM")
+    method = MethodSpec(summary_trim_s=0.25)
+    options = SensitivitySpec(angle_delta_rad=delta, clock_delta_ppm=100_000)
+    report = process(bundle, (LPT,), geometry, method, POWER, options)
+    assert report["verdict"] == "processed"
+    assert report["geometry_method"] == "constant_cable_angle_vertical_motion"
+    keep = (t >= 0.25) & (t <= 0.75)
+    a = np.full_like(t, 2)
+    expected = {
+        "displacement_m": displacement,
+        "velocity_m_s": velocity,
+        "acceleration_m_s2": a,
+        "vertical_mass_model_power_w": 40 * (9.80665 + a) * velocity,
+    }
+    for mode, nominal in expected.items():
+        np.testing.assert_allclose(report["motion"][mode], nominal, rtol=0, atol=1e-8)
+
+    for sign, label in ((-1, "lower"), (1, "upper")):
+        ratio = np.cos(angle) / np.cos(angle + sign * delta)
+        clock = 1 + sign * 0.1
+        for mode, d, v, acceleration in (
+            ("cable_angle", displacement * ratio, velocity * ratio, a * ratio),
+            ("timebase_scale", displacement, velocity / clock, a / clock**2),
+        ):
+            changed = (d, v, acceleration, 40 * (9.80665 + acceleration) * v)
+            differences = report["sensitivity"][f"{mode}_{label}"]["differences"]
+            for (name, nominal), variant in zip(expected.items(), changed, strict=True):
+                change = variant[keep] - nominal[keep]
+                assert differences[name]["rmse"] == pytest.approx(
+                    float(np.sqrt(np.mean(change**2))), rel=0, abs=1e-8
+                )
+                assert differences[name]["peak_delta"] == pytest.approx(
+                    float(np.max(variant[keep]) - np.max(nominal[keep])), rel=0, abs=1e-8
+                )
+
+    invalid = process(
+        bundle,
+        (LPT,),
+        geometry,
+        method,
+        POWER,
+        SensitivitySpec(angle_delta_rad=1.2, clock_delta_ppm=1_000_000),
+    )
+    assert invalid["verdict"] == "processed"
+    assert "singular" in invalid["sensitivity"]["cable_angle_upper"]["error"]
+    assert "timebase_scale_ppm" in invalid["sensitivity"]["timebase_scale_lower"]["error"]
