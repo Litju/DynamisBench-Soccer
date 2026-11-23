@@ -1030,7 +1030,7 @@ reference = ["src/dynamisbench_soccer/reference/spatial.py::GeodeticTrack"]
 tests = ["tests/test_gnss_lps_acquisition.py::test_contradictory_acquisition_declarations_refuse", "tests/test_gnss_lps_acquisition.py::test_resampling_provenance_refuses_even_when_rates_agree", "tests/test_gnss_lps_acquisition.py::test_implicit_and_duplicate_timestamps_and_analytical_truth_refuse", "tests/test_gnss_lps_acquisition.py::test_admit_native_times_clock_latency_and_positions"]
 
 [receipt.digests]
-"src/dynamisbench_soccer/engines/gnss_lps_acquisition.py::admit" = "9debfad0fb7859e175ed2ce9f125e59c7ed7f18719af7fdef075a99b79ee1a3b"
+"src/dynamisbench_soccer/engines/gnss_lps_acquisition.py::admit" = "bee619b0ffc01424733c754d6dca956eb19caed2733ae3ce6450b85116301e10"
 "src/dynamisbench_soccer/reference/spatial.py::GeodeticTrack" = "b4bf5e008c8bdd5c4f1ecaa5a628c9981c414a9a3a7a285ffdd85994be1b31c2"
 "tests/test_gnss_lps_acquisition.py::test_admit_native_times_clock_latency_and_positions" = "88876c7df6e0fade7e0e6caf3cb0cf79f3aef5250557b748140b16c610f3a106"
 "tests/test_gnss_lps_acquisition.py::test_contradictory_acquisition_declarations_refuse" = "12aa06ea47c8a18eb294d4d41410d5ddc254d578f35bcff947abce7393229dba"
@@ -1055,7 +1055,7 @@ tests = ["tests/test_gnss_lps_acquisition.py::test_drift_needs_bracketing_sync_p
 
 [receipt.digests]
 "src/dynamisbench_soccer/engines/gnss_lps.py::process" = "47dad0be73c8de9a93699c8954df13d3b313b97a249e7ff27f8bfae4ee58edf9"
-"src/dynamisbench_soccer/engines/gnss_lps_acquisition.py::admit" = "9debfad0fb7859e175ed2ce9f125e59c7ed7f18719af7fdef075a99b79ee1a3b"
+"src/dynamisbench_soccer/engines/gnss_lps_acquisition.py::admit" = "bee619b0ffc01424733c754d6dca956eb19caed2733ae3ce6450b85116301e10"
 "src/dynamisbench_soccer/reference/spatial.py::GeodeticTrack" = "b4bf5e008c8bdd5c4f1ecaa5a628c9981c414a9a3a7a285ffdd85994be1b31c2"
 "tests/test_gnss_lps_acquisition.py::test_admit_native_times_clock_latency_and_positions" = "88876c7df6e0fade7e0e6caf3cb0cf79f3aef5250557b748140b16c610f3a106"
 "tests/test_gnss_lps_acquisition.py::test_drift_needs_bracketing_sync_pulses" = "1eebb89d07b4e592fea7281ddefb6063329a1e95cb8d630065d736fc2e3918ae"
@@ -1124,7 +1124,7 @@ tests = ["tests/test_gnss_lps_processing.py::test_closed_form_acceleration_speed
 
 [receipt.digests]
 "src/dynamisbench_soccer/engines/gnss_lps.py::process" = "47dad0be73c8de9a93699c8954df13d3b313b97a249e7ff27f8bfae4ee58edf9"
-"src/dynamisbench_soccer/engines/gnss_lps_acquisition.py::admit" = "9debfad0fb7859e175ed2ce9f125e59c7ed7f18719af7fdef075a99b79ee1a3b"
+"src/dynamisbench_soccer/engines/gnss_lps_acquisition.py::admit" = "bee619b0ffc01424733c754d6dca956eb19caed2733ae3ce6450b85116301e10"
 "src/dynamisbench_soccer/reference/coordinates.py::geodetic_ecef" = "aad5e82a97e6539ee3d210363480ddaacc621559883006bb7dfb29a955aa61c9"
 "src/dynamisbench_soccer/reference/spatial.py::GeodeticTrack" = "b4bf5e008c8bdd5c4f1ecaa5a628c9981c414a9a3a7a285ffdd85994be1b31c2"
 "tests/test_gnss_lps_acquisition.py::test_enu_longitude_wrap_and_height_with_closed_form_equator" = "f63ed834c1fcf2307cbad5d5f72cc02aa518d4def11fa05786f2231f6707c88f"
@@ -1149,7 +1149,7 @@ tests = ["tests/test_reference_faults.py::test_faults_cover_all_subfamilies_with
 
 [receipt.digests]
 "src/dynamisbench_soccer/engines/gnss_lps.py::process" = "47dad0be73c8de9a93699c8954df13d3b313b97a249e7ff27f8bfae4ee58edf9"
-"src/dynamisbench_soccer/engines/gnss_lps_acquisition.py::admit" = "9debfad0fb7859e175ed2ce9f125e59c7ed7f18719af7fdef075a99b79ee1a3b"
+"src/dynamisbench_soccer/engines/gnss_lps_acquisition.py::admit" = "bee619b0ffc01424733c754d6dca956eb19caed2733ae3ce6450b85116301e10"
 "src/dynamisbench_soccer/reference/faults.py::inject" = "bc803ce121a3bf35662d04ca34370d2f1525a44ac1503ab51c6678a39905bc7e"
 "tests/test_gnss_lps_acquisition.py::test_res669_adversarial_observations" = "957512dd141397318bbaaacd1730bec24a1bd758233ef85a77aeae6d4f3b7b9e"
 "tests/test_reference_faults.py::test_faults_cover_all_subfamilies_with_isolated_lineage_and_deterministic_bytes" = "02408de0fac0618db8014d21c500a9e2b3981a80f8b1afa1045698eac00455ae"
@@ -1219,7 +1219,7 @@ tests = ["tests/test_reference_faults.py::test_faults_cover_all_subfamilies_with
 
 [receipt.digests]
 "src/dynamisbench_soccer/engines/gnss_lps.py::process" = "47dad0be73c8de9a93699c8954df13d3b313b97a249e7ff27f8bfae4ee58edf9"
-"src/dynamisbench_soccer/engines/gnss_lps_acquisition.py::admit" = "9debfad0fb7859e175ed2ce9f125e59c7ed7f18719af7fdef075a99b79ee1a3b"
+"src/dynamisbench_soccer/engines/gnss_lps_acquisition.py::admit" = "bee619b0ffc01424733c754d6dca956eb19caed2733ae3ce6450b85116301e10"
 "src/dynamisbench_soccer/reference/faults.py::inject" = "bc803ce121a3bf35662d04ca34370d2f1525a44ac1503ab51c6678a39905bc7e"
 "tests/test_gnss_lps_acquisition.py::test_res669_adversarial_observations" = "957512dd141397318bbaaacd1730bec24a1bd758233ef85a77aeae6d4f3b7b9e"
 "tests/test_reference_faults.py::test_faults_cover_all_subfamilies_with_isolated_lineage_and_deterministic_bytes" = "02408de0fac0618db8014d21c500a9e2b3981a80f8b1afa1045698eac00455ae"
@@ -1383,7 +1383,7 @@ tests = ["tests/test_policy_a_provenance.py::test_force_platform_results_record_
 "src/dynamisbench_soccer/engines/force_platform.py::process" = "ca3b9be95416aa1c48dbeeaadea7ccbe8ca9dbd7aaf341eec2572db5d0ec6e13"
 "src/dynamisbench_soccer/reference/kinematics.py::Trajectory" = "6c5d2b8879d0384ef30a4044c4ff13b6fe3f69f0ed33232c74da454f9da7d9a7"
 "tests/test_policy_a_provenance.py::test_force_platform_results_record_source_hashes_and_reproduce_exactly" = "4de371f8fe862eea85c6aae965a216183ff4961975be4461376de669d81770b1"
-"tests/test_reference_acceptance.py::test_frozen_seeded_v2_artifact_bytes" = "a1a41ec70d219d496acb0ef110c38e4bce62f533928ac42b1ea8554b43453a1f"
+"tests/test_reference_acceptance.py::test_frozen_seeded_v2_artifact_bytes" = "7d722e6c6cabcc36767a6d014e6733e70e2c02a7e90040841f829eb75e216ae7"
 "tests/test_reference_exporters.py::test_every_export_is_v2_deterministic_separate_and_hash_linked" = "dd5083a390846e2a8e59502d253a571f08ffc5bfab0a6b4d0220e225103805ad"
 "tests/test_signals_schema_io.py::test_golden_hashes" = "87421b61e933b9890fba334b2d99618aed3702ad22e0c8f925489ad43cde02f7"
 "tests/test_signals_schema_io.py::test_tampered_parquet_is_rejected" = "8a29c36fd63d8686b7a8cdd26b5d295bb67cef0f2c0b80a70234c2a1c7baa4b6"
@@ -1408,7 +1408,7 @@ tests = ["tests/test_policy_a_provenance.py::test_force_platform_results_record_
 "src/dynamisbench_soccer/engines/force_platform.py::process" = "ca3b9be95416aa1c48dbeeaadea7ccbe8ca9dbd7aaf341eec2572db5d0ec6e13"
 "src/dynamisbench_soccer/reference/kinematics.py::Trajectory" = "6c5d2b8879d0384ef30a4044c4ff13b6fe3f69f0ed33232c74da454f9da7d9a7"
 "tests/test_policy_a_provenance.py::test_force_platform_results_record_source_hashes_and_reproduce_exactly" = "4de371f8fe862eea85c6aae965a216183ff4961975be4461376de669d81770b1"
-"tests/test_reference_acceptance.py::test_frozen_seeded_v2_artifact_bytes" = "a1a41ec70d219d496acb0ef110c38e4bce62f533928ac42b1ea8554b43453a1f"
+"tests/test_reference_acceptance.py::test_frozen_seeded_v2_artifact_bytes" = "7d722e6c6cabcc36767a6d014e6733e70e2c02a7e90040841f829eb75e216ae7"
 "tests/test_reference_exporters.py::test_every_export_is_v2_deterministic_separate_and_hash_linked" = "dd5083a390846e2a8e59502d253a571f08ffc5bfab0a6b4d0220e225103805ad"
 "tests/test_signals_schema_io.py::test_golden_hashes" = "87421b61e933b9890fba334b2d99618aed3702ad22e0c8f925489ad43cde02f7"
 "tests/test_signals_schema_io.py::test_tampered_parquet_is_rejected" = "8a29c36fd63d8686b7a8cdd26b5d295bb67cef0f2c0b80a70234c2a1c7baa4b6"
@@ -1433,7 +1433,7 @@ tests = ["tests/test_policy_a_provenance.py::test_load_cell_results_record_input
 "src/dynamisbench_soccer/engines/load_cell.py::process" = "3cb80c8f086411ed67fa53ad995b452f12562fa5e3bc73f69c0a4e3a4b83b579"
 "src/dynamisbench_soccer/reference/motion_models.py::IsometricRamp" = "fb30c889a909acd458dae981957a34ea33ce883f396d88610ac5ec87d75cb710"
 "tests/test_policy_a_provenance.py::test_load_cell_results_record_input_digest_and_reproduce_exactly" = "5dd400013ba5297d185d77e3c10d3757a94cfddcd7609b79e18eec439c1df35d"
-"tests/test_reference_acceptance.py::test_frozen_seeded_v2_artifact_bytes" = "a1a41ec70d219d496acb0ef110c38e4bce62f533928ac42b1ea8554b43453a1f"
+"tests/test_reference_acceptance.py::test_frozen_seeded_v2_artifact_bytes" = "7d722e6c6cabcc36767a6d014e6733e70e2c02a7e90040841f829eb75e216ae7"
 "tests/test_reference_exporters.py::test_every_export_is_v2_deterministic_separate_and_hash_linked" = "dd5083a390846e2a8e59502d253a571f08ffc5bfab0a6b4d0220e225103805ad"
 "tests/test_signals_schema_io.py::test_golden_hashes" = "87421b61e933b9890fba334b2d99618aed3702ad22e0c8f925489ad43cde02f7"
 "tests/test_signals_schema_io.py::test_tampered_parquet_is_rejected" = "8a29c36fd63d8686b7a8cdd26b5d295bb67cef0f2c0b80a70234c2a1c7baa4b6"
@@ -1458,7 +1458,7 @@ tests = ["tests/test_policy_a_provenance.py::test_load_cell_results_record_input
 "src/dynamisbench_soccer/engines/load_cell.py::process" = "3cb80c8f086411ed67fa53ad995b452f12562fa5e3bc73f69c0a4e3a4b83b579"
 "src/dynamisbench_soccer/reference/motion_models.py::IsometricRamp" = "fb30c889a909acd458dae981957a34ea33ce883f396d88610ac5ec87d75cb710"
 "tests/test_policy_a_provenance.py::test_load_cell_results_record_input_digest_and_reproduce_exactly" = "5dd400013ba5297d185d77e3c10d3757a94cfddcd7609b79e18eec439c1df35d"
-"tests/test_reference_acceptance.py::test_frozen_seeded_v2_artifact_bytes" = "a1a41ec70d219d496acb0ef110c38e4bce62f533928ac42b1ea8554b43453a1f"
+"tests/test_reference_acceptance.py::test_frozen_seeded_v2_artifact_bytes" = "7d722e6c6cabcc36767a6d014e6733e70e2c02a7e90040841f829eb75e216ae7"
 "tests/test_reference_exporters.py::test_every_export_is_v2_deterministic_separate_and_hash_linked" = "dd5083a390846e2a8e59502d253a571f08ffc5bfab0a6b4d0220e225103805ad"
 "tests/test_signals_schema_io.py::test_golden_hashes" = "87421b61e933b9890fba334b2d99618aed3702ad22e0c8f925489ad43cde02f7"
 "tests/test_signals_schema_io.py::test_tampered_parquet_is_rejected" = "8a29c36fd63d8686b7a8cdd26b5d295bb67cef0f2c0b80a70234c2a1c7baa4b6"
@@ -1483,7 +1483,7 @@ tests = ["tests/test_policy_a_provenance.py::test_lpt_results_record_bundle_iden
 "src/dynamisbench_soccer/engines/lpt.py::process" = "5b197309b2e6212f55f1e21e3a614ccc3400fc0404bfcb58d6e0371f1d4396fd"
 "src/dynamisbench_soccer/reference/spatial.py::RigidBody" = "3f6ce7c7d3d600665ad4e580bff84c581243abbb2cad1dc11c92c8e51ab42fe7"
 "tests/test_policy_a_provenance.py::test_lpt_results_record_bundle_identity_and_hash_and_reproduce_exactly" = "496068522c719230c9d880bc6f86dcd90fe2b42c1ce6ffe18f470938f458caf7"
-"tests/test_reference_acceptance.py::test_frozen_seeded_v2_artifact_bytes" = "a1a41ec70d219d496acb0ef110c38e4bce62f533928ac42b1ea8554b43453a1f"
+"tests/test_reference_acceptance.py::test_frozen_seeded_v2_artifact_bytes" = "7d722e6c6cabcc36767a6d014e6733e70e2c02a7e90040841f829eb75e216ae7"
 "tests/test_reference_exporters.py::test_every_export_is_v2_deterministic_separate_and_hash_linked" = "dd5083a390846e2a8e59502d253a571f08ffc5bfab0a6b4d0220e225103805ad"
 "tests/test_signals_schema_io.py::test_golden_hashes" = "87421b61e933b9890fba334b2d99618aed3702ad22e0c8f925489ad43cde02f7"
 "tests/test_signals_schema_io.py::test_tampered_parquet_is_rejected" = "8a29c36fd63d8686b7a8cdd26b5d295bb67cef0f2c0b80a70234c2a1c7baa4b6"
@@ -1607,7 +1607,7 @@ reference = ["src/dynamisbench_soccer/reference/faults.py::inject", "src/dynamis
 tests = ["tests/test_gnss_lps_acquisition.py::test_admit_native_times_clock_latency_and_positions", "tests/test_gnss_lps_acquisition.py::test_res669_adversarial_observations", "tests/test_gnss_lps_acquisition.py::test_single_bad_gnss_sample_refuses"]
 
 [receipt.digests]
-"src/dynamisbench_soccer/engines/gnss_lps_acquisition.py::admit" = "9debfad0fb7859e175ed2ce9f125e59c7ed7f18719af7fdef075a99b79ee1a3b"
+"src/dynamisbench_soccer/engines/gnss_lps_acquisition.py::admit" = "bee619b0ffc01424733c754d6dca956eb19caed2733ae3ce6450b85116301e10"
 "src/dynamisbench_soccer/reference/faults.py::inject" = "bc803ce121a3bf35662d04ca34370d2f1525a44ac1503ab51c6678a39905bc7e"
 "src/dynamisbench_soccer/reference/spatial.py::RigidBody" = "3f6ce7c7d3d600665ad4e580bff84c581243abbb2cad1dc11c92c8e51ab42fe7"
 "tests/test_gnss_lps_acquisition.py::test_admit_native_times_clock_latency_and_positions" = "88876c7df6e0fade7e0e6caf3cb0cf79f3aef5250557b748140b16c610f3a106"
@@ -1631,7 +1631,7 @@ reference = ["src/dynamisbench_soccer/reference/faults.py::inject", "src/dynamis
 tests = ["tests/test_gnss_lps_acquisition.py::test_admit_native_times_clock_latency_and_positions", "tests/test_gnss_lps_acquisition.py::test_res669_adversarial_observations", "tests/test_gnss_lps_acquisition.py::test_lps_geometry_and_visibility"]
 
 [receipt.digests]
-"src/dynamisbench_soccer/engines/gnss_lps_acquisition.py::admit" = "9debfad0fb7859e175ed2ce9f125e59c7ed7f18719af7fdef075a99b79ee1a3b"
+"src/dynamisbench_soccer/engines/gnss_lps_acquisition.py::admit" = "bee619b0ffc01424733c754d6dca956eb19caed2733ae3ce6450b85116301e10"
 "src/dynamisbench_soccer/reference/faults.py::inject" = "bc803ce121a3bf35662d04ca34370d2f1525a44ac1503ab51c6678a39905bc7e"
 "src/dynamisbench_soccer/reference/spatial.py::RigidBody" = "3f6ce7c7d3d600665ad4e580bff84c581243abbb2cad1dc11c92c8e51ab42fe7"
 "tests/test_gnss_lps_acquisition.py::test_admit_native_times_clock_latency_and_positions" = "88876c7df6e0fade7e0e6caf3cb0cf79f3aef5250557b748140b16c610f3a106"
@@ -1655,7 +1655,7 @@ reference = ["src/dynamisbench_soccer/reference/spatial.py::RigidBody"]
 tests = ["tests/test_gnss_lps_acquisition.py::test_admit_native_times_clock_latency_and_positions", "tests/test_gnss_lps_acquisition.py::test_lps_geometry_and_visibility", "tests/test_gnss_lps_acquisition.py::test_lps_field_axes_require_an_explicit_z_up_frame"]
 
 [receipt.digests]
-"src/dynamisbench_soccer/engines/gnss_lps_acquisition.py::admit" = "9debfad0fb7859e175ed2ce9f125e59c7ed7f18719af7fdef075a99b79ee1a3b"
+"src/dynamisbench_soccer/engines/gnss_lps_acquisition.py::admit" = "bee619b0ffc01424733c754d6dca956eb19caed2733ae3ce6450b85116301e10"
 "src/dynamisbench_soccer/reference/spatial.py::RigidBody" = "3f6ce7c7d3d600665ad4e580bff84c581243abbb2cad1dc11c92c8e51ab42fe7"
 "tests/test_gnss_lps_acquisition.py::test_admit_native_times_clock_latency_and_positions" = "88876c7df6e0fade7e0e6caf3cb0cf79f3aef5250557b748140b16c610f3a106"
 "tests/test_gnss_lps_acquisition.py::test_lps_field_axes_require_an_explicit_z_up_frame" = "d4a00edda57809bfacf6dd2b65a07fa58ed441475520759a05b48628ee1ac3ff"
@@ -1746,7 +1746,7 @@ tolerance = 0
 tolerance_unit = ""
 
 [receipt.digests]
-"src/dynamisbench_soccer/engines/gnss_lps_acquisition.py::admit" = "9debfad0fb7859e175ed2ce9f125e59c7ed7f18719af7fdef075a99b79ee1a3b"
+"src/dynamisbench_soccer/engines/gnss_lps_acquisition.py::admit" = "bee619b0ffc01424733c754d6dca956eb19caed2733ae3ce6450b85116301e10"
 "src/dynamisbench_soccer/reference/spatial.py::RigidBody" = "3f6ce7c7d3d600665ad4e580bff84c581243abbb2cad1dc11c92c8e51ab42fe7"
 "tests/test_gnss_lps_acquisition.py::test_admit_native_times_clock_latency_and_positions" = "88876c7df6e0fade7e0e6caf3cb0cf79f3aef5250557b748140b16c610f3a106"
 "tests/test_gnss_lps_acquisition.py::test_implicit_and_duplicate_timestamps_and_analytical_truth_refuse" = "5fb460abd7ee78b65f50dc0f0eded4ea2f2e6ec9f126945514cb28b09cb32003"
@@ -1770,7 +1770,7 @@ tolerance = 1e-12
 tolerance_unit = "s (absolute)"
 
 [receipt.digests]
-"src/dynamisbench_soccer/engines/gnss_lps_acquisition.py::admit" = "9debfad0fb7859e175ed2ce9f125e59c7ed7f18719af7fdef075a99b79ee1a3b"
+"src/dynamisbench_soccer/engines/gnss_lps_acquisition.py::admit" = "bee619b0ffc01424733c754d6dca956eb19caed2733ae3ce6450b85116301e10"
 "src/dynamisbench_soccer/reference/clocks.py::DeviceClock" = "a538e7ae80f47d9b0880988f85c6705c2e5bdfe3344e5900158ed90fea72c043"
 "tests/test_gnss_lps_acquisition.py::test_lps_declared_clock_and_latency_against_affine_reference" = "5d84c0f76013005dc2eb1d866a832bb5618856589aa4119021ac5094c89978a3"
 "tests/test_gnss_lps_processing.py::test_three_point_uses_measured_time_and_five_point_refuses_jitter" = "14a919528034e37d2dfa1742944b95486f06b7a05964f691c680013b1f5b0512"
@@ -1862,8 +1862,8 @@ tolerance_unit = ""
 
 [receipt.digests]
 "src/dynamisbench_soccer/engines/gnss_lps.py::process" = "47dad0be73c8de9a93699c8954df13d3b313b97a249e7ff27f8bfae4ee58edf9"
-"src/dynamisbench_soccer/engines/gnss_lps_acquisition.py::admit" = "9debfad0fb7859e175ed2ce9f125e59c7ed7f18719af7fdef075a99b79ee1a3b"
-"src/dynamisbench_soccer/reference/exporters.py::export_case" = "3cf942e1d9c8bfce28253a1aacf6b4ff60afd78e6a37aa92ae88be042b289c09"
+"src/dynamisbench_soccer/engines/gnss_lps_acquisition.py::admit" = "bee619b0ffc01424733c754d6dca956eb19caed2733ae3ce6450b85116301e10"
+"src/dynamisbench_soccer/reference/exporters.py::export_case" = "dc2d9d2b5e50dcb4255b6fe0a0069e8b7d76676281fab3f501f54d153ae1ad65"
 "src/dynamisbench_soccer/reference/faults.py::inject" = "bc803ce121a3bf35662d04ca34370d2f1525a44ac1503ab51c6678a39905bc7e"
 "tests/test_gnss_lps_processing.py::test_position_engines_reproduce_seeded_inputs_and_bind_the_source_hash" = "60fdc0f47add24285adb0d99473ef974a34980e117ec1474483e876a3fe75fc2"
 "tests/test_reference_exporters.py::test_every_export_is_v2_deterministic_separate_and_hash_linked" = "dd5083a390846e2a8e59502d253a571f08ffc5bfab0a6b4d0220e225103805ad"
@@ -1887,8 +1887,8 @@ tolerance_unit = ""
 
 [receipt.digests]
 "src/dynamisbench_soccer/engines/gnss_lps.py::process" = "47dad0be73c8de9a93699c8954df13d3b313b97a249e7ff27f8bfae4ee58edf9"
-"src/dynamisbench_soccer/engines/gnss_lps_acquisition.py::admit" = "9debfad0fb7859e175ed2ce9f125e59c7ed7f18719af7fdef075a99b79ee1a3b"
-"src/dynamisbench_soccer/reference/exporters.py::export_case" = "3cf942e1d9c8bfce28253a1aacf6b4ff60afd78e6a37aa92ae88be042b289c09"
+"src/dynamisbench_soccer/engines/gnss_lps_acquisition.py::admit" = "bee619b0ffc01424733c754d6dca956eb19caed2733ae3ce6450b85116301e10"
+"src/dynamisbench_soccer/reference/exporters.py::export_case" = "dc2d9d2b5e50dcb4255b6fe0a0069e8b7d76676281fab3f501f54d153ae1ad65"
 "src/dynamisbench_soccer/reference/faults.py::inject" = "bc803ce121a3bf35662d04ca34370d2f1525a44ac1503ab51c6678a39905bc7e"
 "tests/test_gnss_lps_processing.py::test_position_engines_reproduce_seeded_inputs_and_bind_the_source_hash" = "60fdc0f47add24285adb0d99473ef974a34980e117ec1474483e876a3fe75fc2"
 "tests/test_reference_exporters.py::test_every_export_is_v2_deterministic_separate_and_hash_linked" = "dd5083a390846e2a8e59502d253a571f08ffc5bfab0a6b4d0220e225103805ad"
@@ -2084,7 +2084,7 @@ issue = "RES-700"
 
 [receipt.digests]
 "src/dynamisbench_soccer/engines/gnss_lps.py::process" = "47dad0be73c8de9a93699c8954df13d3b313b97a249e7ff27f8bfae4ee58edf9"
-"src/dynamisbench_soccer/engines/gnss_lps_acquisition.py::admit" = "9debfad0fb7859e175ed2ce9f125e59c7ed7f18719af7fdef075a99b79ee1a3b"
+"src/dynamisbench_soccer/engines/gnss_lps_acquisition.py::admit" = "bee619b0ffc01424733c754d6dca956eb19caed2733ae3ce6450b85116301e10"
 "src/dynamisbench_soccer/engines/gnss_lps_cli.py::_process" = "76187160dfe3f6ad1cc0627549854624f15e934723823293d4b90b082f40fd06"
 "src/dynamisbench_soccer/reference/spatial.py::RigidBody" = "3f6ce7c7d3d600665ad4e580bff84c581243abbb2cad1dc11c92c8e51ab42fe7"
 "tests/test_gnss_lps_processing.py::test_position_cli_preserves_the_operating_limitations" = "f66fc2cea8634f74e971b9b4ea398cb9b85387aab93f0c1b99e443b23a25e63d"
@@ -2108,7 +2108,7 @@ issue = "RES-700"
 
 [receipt.digests]
 "src/dynamisbench_soccer/engines/gnss_lps.py::process" = "47dad0be73c8de9a93699c8954df13d3b313b97a249e7ff27f8bfae4ee58edf9"
-"src/dynamisbench_soccer/engines/gnss_lps_acquisition.py::admit" = "9debfad0fb7859e175ed2ce9f125e59c7ed7f18719af7fdef075a99b79ee1a3b"
+"src/dynamisbench_soccer/engines/gnss_lps_acquisition.py::admit" = "bee619b0ffc01424733c754d6dca956eb19caed2733ae3ce6450b85116301e10"
 "src/dynamisbench_soccer/engines/gnss_lps_cli.py::_process" = "76187160dfe3f6ad1cc0627549854624f15e934723823293d4b90b082f40fd06"
 "src/dynamisbench_soccer/reference/spatial.py::RigidBody" = "3f6ce7c7d3d600665ad4e580bff84c581243abbb2cad1dc11c92c8e51ab42fe7"
 "tests/test_gnss_lps_processing.py::test_position_cli_preserves_the_operating_limitations" = "f66fc2cea8634f74e971b9b4ea398cb9b85387aab93f0c1b99e443b23a25e63d"
@@ -2156,7 +2156,7 @@ issue = "RES-695"
 "src/dynamisbench_soccer/engines/lpt.py::process" = "5b197309b2e6212f55f1e21e3a614ccc3400fc0404bfcb58d6e0371f1d4396fd"
 "src/dynamisbench_soccer/engines/lpt_acquisition.py::acquire" = "9980148ba8cdc54b945261a11e8747425e1209f700bfb319727c8139976f3358"
 "src/dynamisbench_soccer/engines/lpt_cli.py::_process" = "5d0c85bc06d06917955085427fa4de40425bf545a421badd5a29593ee1edf8eb"
-"src/dynamisbench_soccer/reference/exporters.py::export_case" = "3cf942e1d9c8bfce28253a1aacf6b4ff60afd78e6a37aa92ae88be042b289c09"
+"src/dynamisbench_soccer/reference/exporters.py::export_case" = "dc2d9d2b5e50dcb4255b6fe0a0069e8b7d76676281fab3f501f54d153ae1ad65"
 "src/dynamisbench_soccer/reference/kinematics.py::Trajectory" = "6c5d2b8879d0384ef30a4044c4ff13b6fe3f69f0ed33232c74da454f9da7d9a7"
 "tests/test_encoder_policy_a.py::test_encoder_cli_refuses_output_hard_link_to_input" = "f640d789094a6336990d7e13d8b0e6351745c27a65cb6f4363d757b07598795c"
 "tests/test_encoder_policy_a.py::test_encoder_cli_replays_verified_artifacts_and_detects_mutation" = "4c2e62f28ee455f7abec7a6bc9abc704bdd1dbbba8b2f9d39990bc500e2012f1"
@@ -2230,7 +2230,7 @@ issue = "RES-698"
 "src/dynamisbench_soccer/engines/event_time.py::EventStream" = "305ab1a1d39cfffee2c1d8606d31e0cad49bf48afea802a4a9d88e019a366f94"
 "src/dynamisbench_soccer/engines/timing_cli.py::_run" = "f823f5ac9a71f649e394dd731d81b8af14c9870d98c9ffd3ea474f889eff3b1c"
 "src/dynamisbench_soccer/engines/timing_gates.py::sprint" = "0f0ee5d59d56329cfd6011e471c2107e25c210a8a22f578d4109d13ab85a8cac"
-"src/dynamisbench_soccer/reference/exporters.py::export_case" = "3cf942e1d9c8bfce28253a1aacf6b4ff60afd78e6a37aa92ae88be042b289c09"
+"src/dynamisbench_soccer/reference/exporters.py::export_case" = "dc2d9d2b5e50dcb4255b6fe0a0069e8b7d76676281fab3f501f54d153ae1ad65"
 "tests/test_reference_exporters.py::test_every_export_is_v2_deterministic_separate_and_hash_linked" = "dd5083a390846e2a8e59502d253a571f08ffc5bfab0a6b4d0220e225103805ad"
 "tests/test_timing_provenance.py::test_event_cli_replays_source_and_refuses_mutation" = "d8736d6f1cc39ce7c8bf4679ed5108d812ee1e1c72c7d7969a28c9c72508eedb"
 
@@ -2254,7 +2254,7 @@ issue = "RES-698"
 "src/dynamisbench_soccer/engines/contact.py::contact" = "fe638e0b5fc9e1974c99c48164e4c703aa43187a512d62ee5019cc4078f6d0fd"
 "src/dynamisbench_soccer/engines/event_time.py::EventStream" = "305ab1a1d39cfffee2c1d8606d31e0cad49bf48afea802a4a9d88e019a366f94"
 "src/dynamisbench_soccer/engines/timing_cli.py::_run" = "f823f5ac9a71f649e394dd731d81b8af14c9870d98c9ffd3ea474f889eff3b1c"
-"src/dynamisbench_soccer/reference/exporters.py::export_case" = "3cf942e1d9c8bfce28253a1aacf6b4ff60afd78e6a37aa92ae88be042b289c09"
+"src/dynamisbench_soccer/reference/exporters.py::export_case" = "dc2d9d2b5e50dcb4255b6fe0a0069e8b7d76676281fab3f501f54d153ae1ad65"
 "tests/test_reference_exporters.py::test_every_export_is_v2_deterministic_separate_and_hash_linked" = "dd5083a390846e2a8e59502d253a571f08ffc5bfab0a6b4d0220e225103805ad"
 "tests/test_timing_provenance.py::test_event_cli_replays_source_and_refuses_mutation" = "d8736d6f1cc39ce7c8bf4679ed5108d812ee1e1c72c7d7969a28c9c72508eedb"
 
@@ -2421,6 +2421,110 @@ issue = "RES-700"
 "src/dynamisbench_soccer/reference/lps_speed.py::exact_grid_extreme_speed" = "35ca59411bad9aa71dc02b65c13c2a33245986ce998ee152c7faf09d9f27ca7f"
 "tests/test_lps_speed_slice.py::test_lps_speed_refuses_unverified_clock_and_signal" = "9304fad18d72cea14cfd29c3df475274f2508f93bbbab9f6ffe1dc9d6e746d80"
 "tests/test_lps_speed_slice.py::test_position_only_radius_contains_and_attains_analytical_extreme" = "504cd18b6b3579ef19442ffb842a27bf469e2626053fee6aa8a4fb1d498fc615"
+
+[[receipt]]
+id = "RCP-gnss_lps-gnss-B"
+dimension = "B"
+subfamilies = ["gnss_lps.gnss"]
+implementation = ["src/dynamisbench_soccer/engines/gnss_lps_acquisition.py::admit"]
+reference = ["tests/test_gnss_geometry_policy_a.py::_equator_circle"]
+tests = ["tests/test_gnss_geometry_policy_a.py::test_ellipsoid_normal_becomes_local_up", "tests/test_gnss_geometry_policy_a.py::test_equator_direction_and_invalid_geometry", "tests/test_gnss_geometry_policy_a.py::test_meridian_displacement_and_missing_fix_frame", "tests/test_gnss_lps_acquisition.py::test_enu_longitude_wrap_and_height_with_closed_form_equator", "tests/test_gnss_lps_acquisition.py::test_contradictory_acquisition_declarations_refuse"]
+reference_kind = "closed_form"
+independence = "WGS-84 equator geometry reduces to a circle and the reference computes east and up from the chord, without geodetic-to-ECEF engine code; ellipsoid normal height increments are exactly local up."
+claim = "Native GNSS WGS-84 fixes in declared local ENU recover axis direction, height offsets and date-line wrap, and refuse missing origin, out-of-domain position or contradictory acquisition declarations."
+tolerance_basis = "WGS-84 local east, north and up agree at 5e-9 m absolute with zero relative tolerance in the analytic circle and height controls. The datum, source and rate refusals are exact."
+tolerance = 5e-9
+tolerance_unit = "m (absolute)"
+issue = "RES-700"
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/gnss_lps_acquisition.py::admit" = "bee619b0ffc01424733c754d6dca956eb19caed2733ae3ce6450b85116301e10"
+"tests/test_gnss_geometry_policy_a.py::_equator_circle" = "202f7cf9a44b998978144990d425eee5d2d8ddd7dabe0021b6dd241e20c1c33d"
+"tests/test_gnss_geometry_policy_a.py::test_ellipsoid_normal_becomes_local_up" = "e647e5d6e3a9a21640ee8b9b5033e026eee262c45f8af1f25246a3fe4ce7536f"
+"tests/test_gnss_geometry_policy_a.py::test_equator_direction_and_invalid_geometry" = "5117688e56c1e80b4756dfbc3b7cf28b01c526aef658bc4898954207c599b539"
+"tests/test_gnss_geometry_policy_a.py::test_meridian_displacement_and_missing_fix_frame" = "3bebefe2be3b4dc9fd0c454468379487987b0907ef9d2419134f845f868b3371"
+"tests/test_gnss_lps_acquisition.py::test_contradictory_acquisition_declarations_refuse" = "12aa06ea47c8a18eb294d4d41410d5ddc254d578f35bcff947abce7393229dba"
+"tests/test_gnss_lps_acquisition.py::test_enu_longitude_wrap_and_height_with_closed_form_equator" = "f63ed834c1fcf2307cbad5d5f72cc02aa518d4def11fa05786f2231f6707c88f"
+
+[[receipt]]
+id = "RCP-gnss_lps-gnss-E"
+dimension = "E"
+subfamilies = ["gnss_lps.gnss"]
+implementation = ["src/dynamisbench_soccer/engines/gnss_lps.py::process", "src/dynamisbench_soccer/engines/filtering.py::smooth_samples"]
+reference = ["tests/test_gnss_processing_policy_a.py::_expected"]
+tests = ["tests/test_gnss_processing_policy_a.py::test_gnss_variants_and_peaks_match_independent_polynomials", "tests/test_gnss_processing_policy_a.py::test_gnss_jitter_and_missing_doppler_processing_refuse"]
+reference_kind = "closed_form"
+independence = "The oracle evaluates filter weights and boundary extrapolation directly and obtains derivatives by solving a local polynomial interpolation system, without numpy.gradient, convolutions or any production engine."
+claim = "All native GNSS position and Doppler filter combinations and both derivative stencils agree on a nonlinear affine-clock control. Native, alternate-filter and half-rate results use a common interval, and unavailable methods refuse."
+tolerance_basis = "Position 1e-8 m, positional speed 1e-7 m/s, acceleration 1e-6 m/s², Doppler speed 1e-12 m/s, Doppler change 1e-10 m/s², peak rates 1e-9 Hz. All absolute with zero relative tolerance."
+tolerance = 1e-6
+tolerance_unit = "m/s² (absolute); quantity-specific limits in the cited tests"
+issue = "RES-700"
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/filtering.py::smooth_samples" = "b2ffd93eb709412659ad6937412b30f488b61d8b6bb4632f1dff11d112ccf6b5"
+"src/dynamisbench_soccer/engines/gnss_lps.py::process" = "47dad0be73c8de9a93699c8954df13d3b313b97a249e7ff27f8bfae4ee58edf9"
+"tests/test_gnss_processing_policy_a.py::_expected" = "f1e72223ebc999dae39b3bc4fbc3b52e8f41edfb989192e9e65cd03314f90520"
+"tests/test_gnss_processing_policy_a.py::test_gnss_jitter_and_missing_doppler_processing_refuse" = "72710151abe0d34423afeea1af79331425b17bf591925e3b0b824656a349107a"
+"tests/test_gnss_processing_policy_a.py::test_gnss_variants_and_peaks_match_independent_polynomials" = "7eb5a0626845902742321ec324937ecd3729fc3fdb5324ddd309283920b1af00"
+
+[[receipt]]
+id = "RCP-gnss_lps-lps-I-native-bounds"
+dimension = "I"
+subfamilies = ["gnss_lps.lps"]
+implementation = ["src/dynamisbench_soccer/engines/gnss_lps.py::process", "src/dynamisbench_soccer/engines/position_clock_bounds.py::clock_kinematic_bounds", "src/dynamisbench_soccer/engines/position_clock_bounds.py::input_error_radii", "src/dynamisbench_soccer/engines/position_clock_bounds.py::iid_position_noise"]
+reference = ["tests/test_position_clock_bounds.py::_closed_rates", "tests/test_gnss_processing_policy_a.py::_filter", "tests/test_gnss_processing_policy_a.py::_polynomial_slope"]
+tests = ["tests/test_position_clock_bounds.py::test_clock_bounds_with_native_processing_variants", "tests/test_position_clock_bounds.py::test_clock_bounds_refuse_unqualified_scale_and_support_jittered_three_point", "tests/test_position_clock_bounds.py::test_bounded_position_perturbation_includes_filter_edges", "tests/test_position_clock_bounds.py::test_unfiltered_boundary_position_and_doppler_bound_is_attained", "tests/test_position_clock_bounds.py::test_native_position_noise_variance_matches_independent_dense_operator"]
+reference_kind = "closed_form"
+independence = "A prescribed quadratic trajectory and scalar Doppler line have analytical derivatives scaled by the inverse first or second power of clock stretch. Alternating coordinate errors attain the independent three-point forward bound; the remaining injection controls use declared bounded perturbations. An independent dense operator of explicit filter weights and fitted local polynomial slopes verifies iid coordinate variance at every row."
+claim = "Native LPS filtered kinematics propagate declared common affine timing and deterministic fixed-grid input errors, propagate iid coordinate variance through filtered velocity and acceleration, distinguish unavailable channels, and refuse inadmissible bounds."
+tolerance_basis = "Analytical affine speed and acceleration bounds agree within absolute 1e-7 in their respective SI units, signed Doppler speed change within 1e-10 m/s², timestamps within 1e-12 s. Perturbed reconstructed values are checked against the conservative bounds. Dense independent variance agrees for component SD and magnitude RMS upper bounds within 1e-10 m/s and 1e-8 m/s²."
+tolerance = 1e-7
+tolerance_unit = "m/s or m/s² (absolute); source-specific bounds in cited tests"
+issue = "RES-700"
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/gnss_lps.py::process" = "47dad0be73c8de9a93699c8954df13d3b313b97a249e7ff27f8bfae4ee58edf9"
+"src/dynamisbench_soccer/engines/position_clock_bounds.py::clock_kinematic_bounds" = "992ff4b95a1ff4be7c82ecb6efb38f34e5014b89c8a457953aaa27b65fbdef5d"
+"src/dynamisbench_soccer/engines/position_clock_bounds.py::iid_position_noise" = "ad4f58fd36ed8aedd76b3ec6cfc9b8a3bca4dd7a742c084e20981f463afef889"
+"src/dynamisbench_soccer/engines/position_clock_bounds.py::input_error_radii" = "68bc7c08450966b90236e6ac7197fed888dc4220f01a036cac802ca6b4e44b5e"
+"tests/test_gnss_processing_policy_a.py::_filter" = "2dcac2088d6bc6634fbeee6603e88f24d3da8f437a64e3fb3f0c900a2264be94"
+"tests/test_gnss_processing_policy_a.py::_polynomial_slope" = "b84ed08afd29c684248373c76a595425d20e06c7b1c520c60aef4857f96931e0"
+"tests/test_position_clock_bounds.py::_closed_rates" = "b39e33a0e18ab4f0cb5ebd9d73b01a9bfa12b37589449316d8e4f7ec9c5f242d"
+"tests/test_position_clock_bounds.py::test_bounded_position_perturbation_includes_filter_edges" = "535eb3fa3f6d9c24d75599056c3a52e94b5935651e44904d9c4aa2bbc3c4534f"
+"tests/test_position_clock_bounds.py::test_clock_bounds_refuse_unqualified_scale_and_support_jittered_three_point" = "ecec025c534bc4fe09a2321691069e6cd99dbb4b40403d40c8827607aa3e1f51"
+"tests/test_position_clock_bounds.py::test_clock_bounds_with_native_processing_variants" = "40dfb83a6c2be2aacbefb93d9c6a2fcbf2e75543d9727eb57a4572e9ee2c5d36"
+"tests/test_position_clock_bounds.py::test_native_position_noise_variance_matches_independent_dense_operator" = "df00232f9b83fce74ff1df3b9ebf94e956ccb595e29bce9b006dbc8ed23e96ab"
+"tests/test_position_clock_bounds.py::test_unfiltered_boundary_position_and_doppler_bound_is_attained" = "97912c4f3a544ecd914f18eed57aed6a3ddf171c0bf0ad54a1514799c8015947"
+
+[[receipt]]
+id = "RCP-gnss_lps-gnss-I-native-bounds"
+dimension = "I"
+subfamilies = ["gnss_lps.gnss"]
+implementation = ["src/dynamisbench_soccer/engines/gnss_lps.py::process", "src/dynamisbench_soccer/engines/position_clock_bounds.py::clock_kinematic_bounds", "src/dynamisbench_soccer/engines/position_clock_bounds.py::input_error_radii", "src/dynamisbench_soccer/engines/position_clock_bounds.py::iid_position_noise"]
+reference = ["tests/test_position_clock_bounds.py::_closed_rates", "tests/test_gnss_processing_policy_a.py::_filter", "tests/test_gnss_processing_policy_a.py::_polynomial_slope"]
+tests = ["tests/test_position_clock_bounds.py::test_clock_bounds_with_native_processing_variants", "tests/test_position_clock_bounds.py::test_clock_bounds_refuse_unqualified_scale_and_support_jittered_three_point", "tests/test_position_clock_bounds.py::test_bounded_position_perturbation_includes_filter_edges", "tests/test_position_clock_bounds.py::test_unfiltered_boundary_position_and_doppler_bound_is_attained", "tests/test_position_clock_bounds.py::test_native_position_noise_variance_matches_independent_dense_operator"]
+reference_kind = "closed_form"
+independence = "A prescribed quadratic trajectory and scalar Doppler line have analytical derivatives scaled by the inverse first or second power of clock stretch. Alternating coordinate errors attain the independent three-point forward bound; the remaining injection controls use declared bounded perturbations. An independent dense operator of explicit filter weights and fitted local polynomial slopes verifies iid coordinate variance at every row."
+claim = "Native GNSS filtered kinematics propagate declared common affine timing and deterministic fixed-grid input errors, propagate iid coordinate variance through filtered velocity and acceleration, distinguish unavailable channels, and refuse inadmissible bounds."
+tolerance_basis = "Analytical affine speed and acceleration bounds agree within absolute 1e-7 in their respective SI units, signed Doppler speed change within 1e-10 m/s², timestamps within 1e-12 s. Perturbed reconstructed values are checked against the conservative bounds. Dense independent variance agrees for component SD and magnitude RMS upper bounds within 1e-10 m/s and 1e-8 m/s²."
+tolerance = 1e-7
+tolerance_unit = "m/s or m/s² (absolute); source-specific bounds in cited tests"
+issue = "RES-700"
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/gnss_lps.py::process" = "47dad0be73c8de9a93699c8954df13d3b313b97a249e7ff27f8bfae4ee58edf9"
+"src/dynamisbench_soccer/engines/position_clock_bounds.py::clock_kinematic_bounds" = "992ff4b95a1ff4be7c82ecb6efb38f34e5014b89c8a457953aaa27b65fbdef5d"
+"src/dynamisbench_soccer/engines/position_clock_bounds.py::iid_position_noise" = "ad4f58fd36ed8aedd76b3ec6cfc9b8a3bca4dd7a742c084e20981f463afef889"
+"src/dynamisbench_soccer/engines/position_clock_bounds.py::input_error_radii" = "68bc7c08450966b90236e6ac7197fed888dc4220f01a036cac802ca6b4e44b5e"
+"tests/test_gnss_processing_policy_a.py::_filter" = "2dcac2088d6bc6634fbeee6603e88f24d3da8f437a64e3fb3f0c900a2264be94"
+"tests/test_gnss_processing_policy_a.py::_polynomial_slope" = "b84ed08afd29c684248373c76a595425d20e06c7b1c520c60aef4857f96931e0"
+"tests/test_position_clock_bounds.py::_closed_rates" = "b39e33a0e18ab4f0cb5ebd9d73b01a9bfa12b37589449316d8e4f7ec9c5f242d"
+"tests/test_position_clock_bounds.py::test_bounded_position_perturbation_includes_filter_edges" = "535eb3fa3f6d9c24d75599056c3a52e94b5935651e44904d9c4aa2bbc3c4534f"
+"tests/test_position_clock_bounds.py::test_clock_bounds_refuse_unqualified_scale_and_support_jittered_three_point" = "ecec025c534bc4fe09a2321691069e6cd99dbb4b40403d40c8827607aa3e1f51"
+"tests/test_position_clock_bounds.py::test_clock_bounds_with_native_processing_variants" = "40dfb83a6c2be2aacbefb93d9c6a2fcbf2e75543d9727eb57a4572e9ee2c5d36"
+"tests/test_position_clock_bounds.py::test_native_position_noise_variance_matches_independent_dense_operator" = "df00232f9b83fce74ff1df3b9ebf94e956ccb595e29bce9b006dbc8ed23e96ab"
+"tests/test_position_clock_bounds.py::test_unfiltered_boundary_position_and_doppler_bound_is_attained" = "97912c4f3a544ecd914f18eed57aed6a3ddf171c0bf0ad54a1514799c8015947"
 
 [[receipt]]
 id = "RCP-gnss_lps-lps-L"

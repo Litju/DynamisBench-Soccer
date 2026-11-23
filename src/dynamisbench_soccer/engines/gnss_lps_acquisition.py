@@ -301,8 +301,8 @@ def admit(bundle: SignalBundle, declaration: AcquisitionDeclaration) -> Admitted
         fix_frames = {
             meta.channel(c).frame for c in ("latitude", "longitude", "height") if c in bundle.data
         }
-        if len(fix_frames) != 1 or any(
-            f.id in fix_frames and f.kind != "geodetic" for f in acquisition.frames
+        if len(fix_frames) != 1 or not any(
+            f.id in fix_frames and f.kind == "geodetic" for f in acquisition.frames
         ):
             raise AcquisitionRefusal("latitude, longitude and height must share a geodetic frame")
         hdop = _channel(bundle, "hdop", Quantity.DIMENSIONLESS)

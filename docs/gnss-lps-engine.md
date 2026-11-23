@@ -25,6 +25,7 @@ time interval. These limits are engineering options.
   within 10 km per axis. The WGS84 constants and topocentric axes follow the
   published definitions. [NGA WGS84](https://earth-info.nga.mil/?action=wgs84&dir=wgs84)
   [PROJ topocentric conversion](https://proj.org/en/stable/operations/conversions/topocentric.html)
+  Latitude, longitude and height must reference the same declared geodetic frame.
 - **GNSS diagnostics.** The producer supplies `hdop` (dimensionless),
   `satellites` and `fix_quality` (integer counts), and `multipath` (binary).
   Admission requires positive HDOP up to 3 by default, at least four satellites
@@ -149,12 +150,34 @@ speed, acceleration and distance, WGS84 longitude wrap, clock recovery,
 measured-time dwell, Doppler separation, and refusal of corrupted observations.
 Both modalities run through the installed wheel.
 
-The GNSS and LPS ledger remains `IN_PROGRESS`. Open requirements include
-accepted independent engineering and instrument evidence, audited raw
-observations and metrology, sprint assessment profiling in RES-673, and
-empirical agreement in RES-703. GNSS Doppler, differentiated GNSS/LPS
-position, radar, laser, and timing-gate splits have distinct measurement models.
-RES-721 data rights and any empirical validity claims remain outside RES-700.
+The [computed disposition](verification/m3-disposition.md) tracks Policy A
+engineering status. Audited native field observations, instrument metrology,
+and empirical agreement remain open. GNSS Doppler, differentiated GNSS/LPS
+position, radar, laser, and timing gates have distinct measurement models.
+RES-721 data rights and empirical validity remain outside this verification.
+
+### Conditional uncertainty on admitted tracks
+
+The Python functions `clock_kinematic_bounds` and `input_error_radii` in
+`dynamisbench_soccer.engines.position_clock_bounds` consume an admitted
+`TrackResult`. The clock calculation bounds absolute timestamps and the
+derivatives under a record-wide phase offset and a declared fractional affine
+stretch. It refuses stretch endpoints outside the declared drift, native
+interval or position-jump limits. The input calculation holds time and row
+membership fixed and propagates supplied horizontal position and Doppler-speed
+error radii through smoothing, derivative operators and accumulated chord length.
+
+The `iid_position_noise` calculation accepts a Cartesian standard deviation
+on the fixed grid. It propagates zero-mean independent noise through the actual
+filter and derivative support, including boundary rows and the nested
+acceleration derivative. It gives exact per-axis standard deviations for that
+linear model and conservative RMS error bounds for horizontal magnitudes.
+
+The clock and error-radius calculations are separate deterministic conditional calculations. They assume a
+record-wide offset or declared error balls, as applicable. Receiver covariance,
+variable latency, joint perturbations and threshold/dwell eligibility uncertainty
+are outside the calculations. The alternative-filter and half-rate sensitivity
+in the nominal report remains a comparison of processing conditions.
 
 ### Estimand definitions used by the assessment handoff
 

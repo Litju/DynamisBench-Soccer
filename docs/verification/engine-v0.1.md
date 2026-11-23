@@ -7,7 +7,7 @@ Engineering calculations only; no scientific qualification of any device or metr
 
 ## 1. M3 gate (computed)
 
-* **M3 gate passed: False.** 0/15 subfamilies are ENGINEERING_VERIFIED. State counts: {"SPECIFIED": 15}.
+* **M3 gate passed: False.** 2/15 subfamilies are ENGINEERING_VERIFIED. State counts: {"ENGINEERING_VERIFIED": 2, "SPECIFIED": 13}.
 * Ledger structural problems: 0.
 * Policy A: ENGINEERING_VERIFIED means computational-reference readiness. It requires A-M
   and O verified by substantive independent receipts, an independent reference and no
@@ -21,8 +21,8 @@ Engineering calculations only; no scientific qualification of any device or metr
 | -- | -- | -- | -- |
 | force_platform.dual | SPECIFIED | yes | 8 of 14 |
 | force_platform.single | SPECIFIED | yes | 8 of 14 |
-| gnss_lps.gnss | SPECIFIED | yes | 3 of 14 |
-| gnss_lps.lps | SPECIFIED | yes | 1 of 14 |
+| gnss_lps.gnss | ENGINEERING_VERIFIED | yes | 0 of 14 |
+| gnss_lps.lps | ENGINEERING_VERIFIED | yes | 0 of 14 |
 | imu.inertial | SPECIFIED | yes | 6 of 14 |
 | load_cell_isometric.isometric_rig | SPECIFIED | yes | 11 of 14 |
 | load_cell_isometric.load_cell | SPECIFIED | yes | 5 of 14 |
@@ -73,17 +73,9 @@ Engineering calculations only; no scientific qualification of any device or metr
 * H - owner RES-671: metric definitions are bound to sourced registry claims and executable exactly
 * C - owner RES-693: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused
 
-**gnss_lps.gnss** (SPECIFIED)
-* computational blocker: B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-700; rated specified)
-* computational blocker: E: every processing method variant is compared with an independent reference with stated sensitivity bounds (owner RES-700; rated partial)
-* computational blocker: I: declared uncertainty propagation is checked against an independent analytical result (owner RES-700; rated partial)
-* B - owner RES-700: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused
-* I - owner RES-700: declared uncertainty propagation is checked against an independent analytical result
-* E - owner RES-700: every processing method variant is compared with an independent reference with stated sensitivity bounds
+**gnss_lps.gnss** (ENGINEERING_VERIFIED)
 
-**gnss_lps.lps** (SPECIFIED)
-* computational blocker: I: declared uncertainty propagation is checked against an independent analytical result (owner RES-700; rated partial)
-* I - owner RES-700: declared uncertainty propagation is checked against an independent analytical result
+**gnss_lps.lps** (ENGINEERING_VERIFIED)
 
 **imu.inertial** (SPECIFIED)
 * computational blocker: A: executable admission contract: native/vendor stage, units and integrity refusals tested (owner RES-693; rated specified)
@@ -384,8 +376,8 @@ Open empirical requirements (what only physical measurement can close):
 | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- |
 | force_platform.dual | s | s | V | V | p | V | p | p | V | V | p | p | V | - | p |
 | force_platform.single | s | s | s | p | p | V | V | p | V | V | p | V | V | - | p |
-| gnss_lps.gnss | V | s | V | V | p | V | V | V | p | V | V | V | V | - | V |
-| gnss_lps.lps | V | V | V | V | V | V | V | V | p | V | V | V | V | - | V |
+| gnss_lps.gnss | V | V | V | V | V | V | V | V | V | V | V | V | V | - | V |
+| gnss_lps.lps | V | V | V | V | V | V | V | V | V | V | V | V | V | - | V |
 | imu.inertial | s | V | s | V | V | V | p | p | V | V | V | p | p | - | V |
 | load_cell_isometric.isometric_rig | V | s | s | p | p | p | p | p | p | p | p | p | V | - | V |
 | load_cell_isometric.load_cell | V | V | s | V | p | V | V | p | p | V | p | V | V | - | V |
