@@ -77,6 +77,11 @@ jobs:
           "$wheel_bin/dbs" timing gates --help
           "$wheel_bin/dbs" timing contact --help
           "$wheel_bin/python" -m pytest "$GITHUB_WORKSPACE/tests/test_timing_gates.py" "$GITHUB_WORKSPACE/tests/test_timing_contact.py" "$GITHUB_WORKSPACE/tests/test_timing_provenance.py"
+      - name: RES-676 installed-wheel registry, admission and private custody
+        run: |
+          wheel_bin="$RUNNER_TEMP/wheel-venv/bin"
+          cd "$RUNNER_TEMP"
+          "$wheel_bin/python" -m pytest "$GITHUB_WORKSPACE/tests/test_m4_task_registry.py" "$GITHUB_WORKSPACE/tests/test_m4_admission.py"
       - name: RES-737 offline development-only installed-wheel smoke
         run: |
           wheel_bin="$RUNNER_TEMP/wheel-venv/bin"
