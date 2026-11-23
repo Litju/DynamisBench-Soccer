@@ -10,7 +10,13 @@ from dynamisbench_soccer.engines.contact import ContactPolicy, DurationRange, co
 from dynamisbench_soccer.engines.event_time import ClockTiming, EdgeTiming, EventRefusal, Timing
 from dynamisbench_soccer.reference.clocks import DeviceClock
 from dynamisbench_soccer.reference.exporters import export_case
-from dynamisbench_soccer.reference.faults import EventFault, EventKind, inject
+from dynamisbench_soccer.reference.faults import (
+    EventFault,
+    EventKind,
+    ProtocolFault,
+    ProtocolKind,
+    inject,
+)
 from dynamisbench_soccer.reference.kinematics import cmj, dj, hops, sj
 from dynamisbench_soccer.reference.spatial_observations import contact_events
 from dynamisbench_soccer.signals import io
@@ -267,3 +273,36 @@ def test_contact_uncertainty_matches_asymmetric_endpoint_extrema(off_error_s):
     )
     with pytest.raises(EventRefusal, match="out of order or unresolved"):
         contact(source, unresolved)
+
+
+@pytest.mark.parametrize(
+    ("fault", "message"),
+    [
+        (ProtocolFault(ProtocolKind.DOUBLE_CONTACT, index=1, window_s=0.05), "found 2"),
+        (ProtocolFault(ProtocolKind.STEP_OFF, index=2), "repeated contact state"),
+        (EventFault(EventKind.LATENCY, index=1, latency_s=1), "out-of-order native"),
+    ],
+)
+def test_contact_refuses_injected_protocol_and_reordering_faults(fault, message):
+    clean = export_case("timing_contact.contact").observation
+    assert len(contact(clean, policy()).flights) == 1
+    with pytest.raises(EventRefusal, match=message):
+        contact(inject(clean, fault), policy())
+
+
+def test_injected_contact_latency_inside_protocol_shifts_flight_and_height():
+    case = export_case("timing_contact.contact")
+    shifted = inject(case.observation, EventFault(EventKind.LATENCY, index=2, latency_s=0.02))
+    with pytest.raises(EventRefusal, match="bracketing events"):
+        contact(shifted, policy())
+
+    rows = list(zip(shifted["t_s"], shifted["contact"], strict=True))
+    shared = policy(
+        timing=Timing(clock_model="shared", clocks={"reference": CLOCK}, authority="shared counter")
+    )
+    [flight] = contact(stream(shifted, rows, shared=True), shared).flights
+    seconds = case.truth["time"][-1] - case.truth["time"][-2] + 0.02
+    assert flight.flight_s.value == pytest.approx(seconds, rel=0, abs=1e-12)
+    assert flight.flight_time_height_m.value == pytest.approx(
+        9.80665 * seconds**2 / 8, rel=0, abs=1e-12
+    )
