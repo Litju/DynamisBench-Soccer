@@ -309,12 +309,12 @@ def main() -> int:
     parser.add_argument("--check", action="store_true")
     args = parser.parse_args()
     payload, text = build()
+    if args.check and (failed := payload["case_totals"]["failed"]):
+        print(f"FAIL verification matrix: {', '.join(failed)}", file=sys.stderr)
+        return 1
     disposition_text = disposition(payload)
     rendered = json.dumps(payload, indent=2, sort_keys=True, allow_nan=False) + "\n"
     if args.check:
-        if failed := payload["case_totals"]["failed"]:
-            print(f"FAIL verification matrix: {', '.join(failed)}", file=sys.stderr)
-            return 1
         committed = json.loads(JSON_PATH.read_text()) if JSON_PATH.exists() else None
         if committed != json.loads(rendered) or not MD_PATH.exists() or MD_PATH.read_text() != text:
             print("FAIL stale verification report", file=sys.stderr)
