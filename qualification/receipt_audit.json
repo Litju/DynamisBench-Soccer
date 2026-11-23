@@ -876,9 +876,9 @@
    "bound_digest": "d1c389abd76348866472c6d7c309fa6f0685e56f9cb44e6c1b1266f2bb84fabb",
    "evidence_head": "3b8c6e2309cb9283aac4a8dc63b0d8443628748d",
    "fix": "",
-   "prior_fix": "",
-   "prior_reason": "Both native laser derivative implementations meet the explicit absolute 0.004 m/s ceiling at all three rates against the independent monoexponential velocity.",
-   "prior_verdict": "SUPPORTED",
+   "prior_fix": "Record check_kind numeric, tolerance 0.004 m/s.",
+   "prior_reason": "Real closed-form check: central and five_point at 47/100/256 Hz against MonoExponentialSprint, error<0.004. But the receipt is recorded categorical with tolerance 0.0, contradicting the asserted numeric bound.",
+   "prior_verdict": "PARTIAL",
    "reason": "Both native laser derivative implementations meet the explicit absolute 0.004 m/s ceiling at all three rates against the independent monoexponential velocity.",
    "verdict": "SUPPORTED"
   },
@@ -920,6 +920,7 @@
   },
   "RCP-radar_laser-radar-A": {
    "bound_digest": "e64dc940cea8f9925952a1d9972aaaefdcad3f8b620b5f55d4f4e95dbb6dcf12",
+   "evidence_head": "3b8c6e2309cb9283aac4a8dc63b0d8443628748d",
    "fix": "",
    "reason": "The tests admit native radar with an affine clock and refuse truth data, a string stage, GNSS data, a mislabelled processed stage and ambiguous calibration, all through admit().",
    "verdict": "SUPPORTED"
@@ -981,13 +982,13 @@
    "verdict": "SUPPORTED"
   },
   "RCP-radar_laser-radar-I": {
-   "bound_digest": "d17785d2a139fa92fbbf005ca5313019bd9e9e2c7e88fa830b5826af432fef68",
+   "bound_digest": "90225bdf490cd6c4ea7307dcf034a6639477b6bd2290a0eef6599da430e0b9ef",
    "evidence_head": "3b8c6e2309cb9283aac4a8dc63b0d8443628748d",
    "fix": "",
    "prior_fix": "Compare the start \u00b1 sensitivity values with MonoExponentialSprint velocity at the shifted times, and use radar for the filter sensitivity.",
    "prior_reason": "The start-offset sensitivity checks only ordering and baseline equals interp(engine output), which is self-referential. The filter-sensitivity test uses laser. Only the noisy fit is within 3 SE of the truth.",
    "prior_verdict": "PARTIAL",
-   "reason": "Native radar reports analytically verified sensitivity to a declared cosine interval, on-grid start shifts and alternate smoothing, withholds ill-conditioned or unsupported diagnostics, and retains the valid nominal trace. At 100 Hz, angles \u22120.5\u00b0, 0\u00b0, +0.5\u00b0 and 10\u00b0 have hypothetical \u00b11\u00b0 projection budgets. Evaluate secant extrema including zero when inside the interval; for a zero nominal angle the lower/upper peaks are 8.860465317608917/8.861815014958859 m/s. A nominal 74.8\u00b0 passes, but its +1\u00b0 variant exceeds the minimum cosine of 0.25 and withholds bounds. At reference times 0.96, 1.00 and 1.04 s the independent radial speeds are 4.857248498885337, 4.987182590043976 and 5.1128569350141095 m/s. The native, boxcar and binomial analytic endpoint spread is 1.9152562344970647e-6 m/s. All numerical comparisons use absolute 1e-12 m/s and zero relative allowance for floating-point arithmetic. The out-of-window external trigger case retains the trace and withholds the unsupported interpolation.",
+   "reason": "Native radar reports analytically verified sensitivity to a declared cosine interval, on-grid start shifts and alternate smoothing, withholds ill-conditioned or unsupported diagnostics, and retains the valid nominal trace. At 100 Hz, angles \u22120.5\u00b0, 0\u00b0, +0.5\u00b0 and 10\u00b0 have hypothetical \u00b11\u00b0 projection budgets. Evaluate secant extrema including zero when inside the interval; for a zero nominal angle the lower/upper peaks are 8.860465317608917/8.861815014958859 m/s. A nominal 74.8\u00b0 passes, but the perturbed cosine falls below the 0.25 minimum and withholds bounds. At reference times 0.96, 1.00 and 1.04 s the independent radial speeds are 4.857248498885337, 4.987182590043976 and 5.1128569350141095 m/s. The native, boxcar and binomial analytic endpoint spread is 1.9152562344970647e-6 m/s. All numerical comparisons use absolute 1e-12 m/s and zero relative allowance for floating-point arithmetic. The out-of-window external trigger case retains the trace and withholds the unsupported interpolation.",
    "verdict": "SUPPORTED"
   },
   "RCP-radar_laser-radar-J": {
