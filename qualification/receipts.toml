@@ -2112,3 +2112,51 @@ issue = "RES-700"
 "src/dynamisbench_soccer/reference/spatial.py::RigidBody" = "3f6ce7c7d3d600665ad4e580bff84c581243abbb2cad1dc11c92c8e51ab42fe7"
 "tests/test_gnss_lps_processing.py::test_position_cli_preserves_the_operating_limitations" = "f66fc2cea8634f74e971b9b4ea398cb9b85387aab93f0c1b99e443b23a25e63d"
 "tests/test_gnss_lps_processing.py::test_position_reports_retain_sourced_limits_across_native_methods" = "6115e469060f0796137eb19b75caeaad029462065e63169dd8801ac93d7d4c75"
+
+[[receipt]]
+id = "RCP-lpt_encoder-lpt-I"
+dimension = "I"
+subfamilies = ["lpt_encoder.lpt"]
+implementation = ["src/dynamisbench_soccer/engines/lpt.py::process", "src/dynamisbench_soccer/engines/lpt_acquisition.py::vertical"]
+reference = ["src/dynamisbench_soccer/reference/kinematics.py::Trajectory"]
+tests = ["tests/test_lpt_engine.py::test_native_lpt_sensitivity_matches_angle_and_clock_scaling"]
+reference_kind = "closed_form"
+independence = "The reference provides independent kinematics and deterministic count artifacts. Expected sensitivity and SHA-256 values use direct analytical calculation and file hashing."
+claim = "Native LPT finite-difference motion propagates declared constant-angle and clock-scale perturbations and records inadmissible variants."
+tolerance_basis = "The 128 Hz polynomial fixture uses z=0.4t+t² m, v=0.4+2t m/s, a=2 m/s² and P=40(g+a)v W. A ±0.1 rad angle variant scales motion by cos(0.45)/cos(0.45±0.1), while ±100000 ppm leaves displacement fixed and rescales v by 1/s and a by 1/s². Check the nominal series and RMSE/peak deltas on the 65 rows with 0.25≤t≤0.75 within absolute 1e-8 in m, m/s, m/s² and W, zero relative allowance for finite difference roundoff. A singular angle and zero clock scale leave explicit errors in their variant records."
+check_kind = "numeric"
+tolerance = 1e-08
+tolerance_unit = "m, m/s, m/s² and W (absolute per asserted metric)"
+issue = "RES-695"
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/lpt.py::process" = "5b197309b2e6212f55f1e21e3a614ccc3400fc0404bfcb58d6e0371f1d4396fd"
+"src/dynamisbench_soccer/engines/lpt_acquisition.py::vertical" = "f227f82bb1341a002130be3b266bf023999a66673902f99758b2d591f27f436e"
+"src/dynamisbench_soccer/reference/kinematics.py::Trajectory" = "6c5d2b8879d0384ef30a4044c4ff13b6fe3f69f0ed33232c74da454f9da7d9a7"
+"tests/test_lpt_engine.py::test_native_lpt_sensitivity_matches_angle_and_clock_scaling" = "11753f26e98d26229349a08d5e5c177dd03b78c7bf949a90b533af8fdbb88903"
+
+[[receipt]]
+id = "RCP-lpt_encoder-encoder-M"
+dimension = "M"
+subfamilies = ["lpt_encoder.encoder"]
+implementation = ["src/dynamisbench_soccer/engines/lpt.py::process", "src/dynamisbench_soccer/engines/lpt_cli.py::_process", "src/dynamisbench_soccer/engines/lpt_acquisition.py::acquire"]
+reference = ["src/dynamisbench_soccer/reference/exporters.py::export_case", "src/dynamisbench_soccer/reference/kinematics.py::Trajectory"]
+tests = ["tests/test_encoder_policy_a.py::test_encoder_cli_replays_verified_artifacts_and_detects_mutation", "tests/test_encoder_policy_a.py::test_encoder_cli_refuses_output_hard_link_to_input", "tests/test_reference_exporters.py::test_every_export_is_v2_deterministic_separate_and_hash_linked"]
+reference_kind = "independent_implementation"
+independence = "The reference provides independent kinematics and deterministic count artifacts. Expected sensitivity and SHA-256 values use direct analytical calculation and file hashing."
+claim = "File-backed encoder processing reproduces independently exported observations, retains the verified input hash and declared settings, and refuses a tampered or aliased artifact."
+tolerance_basis = "Exact outcomes. Two independently exported 100 Hz count fixtures reproduce Parquet, sidecar and report bytes. Declared finite differences, 350 ppm rate scale, 0.1 s trim, gap factor 4 and cable geometry are retained. The current Parquet SHA-256 matches an independent hash and changes after a one-count alteration. A tampered file reports SHA-256 mismatch and preserves the existing output. Hard-linked output aliases of Parquet, sidecar or configuration are refused and preserve input bytes."
+check_kind = "categorical"
+tolerance = 0
+tolerance_unit = ""
+issue = "RES-695"
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/lpt.py::process" = "5b197309b2e6212f55f1e21e3a614ccc3400fc0404bfcb58d6e0371f1d4396fd"
+"src/dynamisbench_soccer/engines/lpt_acquisition.py::acquire" = "9980148ba8cdc54b945261a11e8747425e1209f700bfb319727c8139976f3358"
+"src/dynamisbench_soccer/engines/lpt_cli.py::_process" = "5d0c85bc06d06917955085427fa4de40425bf545a421badd5a29593ee1edf8eb"
+"src/dynamisbench_soccer/reference/exporters.py::export_case" = "3cf942e1d9c8bfce28253a1aacf6b4ff60afd78e6a37aa92ae88be042b289c09"
+"src/dynamisbench_soccer/reference/kinematics.py::Trajectory" = "6c5d2b8879d0384ef30a4044c4ff13b6fe3f69f0ed33232c74da454f9da7d9a7"
+"tests/test_encoder_policy_a.py::test_encoder_cli_refuses_output_hard_link_to_input" = "f640d789094a6336990d7e13d8b0e6351745c27a65cb6f4363d757b07598795c"
+"tests/test_encoder_policy_a.py::test_encoder_cli_replays_verified_artifacts_and_detects_mutation" = "4c2e62f28ee455f7abec7a6bc9abc704bdd1dbbba8b2f9d39990bc500e2012f1"
+"tests/test_reference_exporters.py::test_every_export_is_v2_deterministic_separate_and_hash_linked" = "dd5083a390846e2a8e59502d253a571f08ffc5bfab0a6b4d0220e225103805ad"

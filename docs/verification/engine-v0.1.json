@@ -1724,7 +1724,6 @@
         "J: an independent reference implementation or closed form that shares no code with the engine (owner RES-669; rated partial)",
         "K: synthetic fault fixtures cover the declared fault classes with expected verdicts (owner RES-669; rated partial)",
         "L: analytical cross-device studies are executed and classified, never read as interchangeability (owner RES-703; rated partial)",
-        "M: seeded, hash-bound provenance chain for every processing stage, reproduced exactly (owner RES-695; rated partial)",
         "O: limitation statements are sourced and emitted with every result (owner RES-695; rated partial)"
       ],
       "lpt_encoder.lpt": [
@@ -1734,7 +1733,6 @@
         "E: every processing method variant is compared with an independent reference with stated sensitivity bounds (owner RES-695; rated partial)",
         "G: protocol events are recovered against analytically known event times, with eligibility refusals (owner RES-671; rated partial)",
         "H: metric definitions are bound to sourced registry claims and executable exactly (owner RES-671; rated partial)",
-        "I: declared uncertainty propagation is checked against an independent analytical result (owner RES-695; rated partial)",
         "K: synthetic fault fixtures cover the declared fault classes with expected verdicts (owner RES-669; rated partial)",
         "L: analytical cross-device studies are executed and classified, never read as interchangeability (owner RES-703; rated partial)",
         "O: limitation statements are sourced and emitted with every result (owner RES-695; rated partial)"
@@ -2986,7 +2984,8 @@
     },
     {
       "analytical_only_dimensions": [
-        "B"
+        "B",
+        "M"
       ],
       "blockers": [
         "A: executable admission contract: native/vendor stage, units and integrity refusals tested (owner RES-693; rated specified)",
@@ -3000,7 +2999,6 @@
         "J: an independent reference implementation or closed form that shares no code with the engine (owner RES-669; rated partial)",
         "K: synthetic fault fixtures cover the declared fault classes with expected verdicts (owner RES-669; rated partial)",
         "L: analytical cross-device studies are executed and classified, never read as interchangeability (owner RES-703; rated partial)",
-        "M: seeded, hash-bound provenance chain for every processing stage, reproduced exactly (owner RES-695; rated partial)",
         "O: limitation statements are sourced and emitted with every result (owner RES-695; rated partial)"
       ],
       "empirical_dimensions_covered": [],
@@ -3059,13 +3057,16 @@
         "J": "partial",
         "K": "partial",
         "L": "partial",
-        "M": "partial",
+        "M": "verified",
         "N": "absent",
         "O": "partial"
       },
       "receipts": {
         "B": [
           "RCP-lpt_encoder-encoder-B"
+        ],
+        "M": [
+          "RCP-lpt_encoder-encoder-M"
         ]
       },
       "required_computational": {
@@ -3080,7 +3081,6 @@
         "J": "an independent reference implementation or closed form that shares no code with the engine",
         "K": "synthetic fault fixtures cover the declared fault classes with expected verdicts",
         "L": "analytical cross-device studies are executed and classified, never read as interchangeability",
-        "M": "seeded, hash-bound provenance chain for every processing stage, reproduced exactly",
         "O": "limitation statements are sourced and emitted with every result"
       },
       "state": "SPECIFIED",
@@ -3097,17 +3097,18 @@
         "J",
         "K",
         "L",
-        "M",
         "O"
       ],
       "verified_m3": [
-        "B"
+        "B",
+        "M"
       ]
     },
     {
       "analytical_only_dimensions": [
         "C",
         "F",
+        "I",
         "J",
         "M"
       ],
@@ -3118,7 +3119,6 @@
         "E: every processing method variant is compared with an independent reference with stated sensitivity bounds (owner RES-695; rated partial)",
         "G: protocol events are recovered against analytically known event times, with eligibility refusals (owner RES-671; rated partial)",
         "H: metric definitions are bound to sourced registry claims and executable exactly (owner RES-671; rated partial)",
-        "I: declared uncertainty propagation is checked against an independent analytical result (owner RES-695; rated partial)",
         "K: synthetic fault fixtures cover the declared fault classes with expected verdicts (owner RES-669; rated partial)",
         "L: analytical cross-device studies are executed and classified, never read as interchangeability (owner RES-703; rated partial)",
         "O: limitation statements are sourced and emitted with every result (owner RES-695; rated partial)"
@@ -3175,7 +3175,7 @@
         "F": "verified",
         "G": "partial",
         "H": "partial",
-        "I": "partial",
+        "I": "verified",
         "J": "verified",
         "K": "partial",
         "L": "partial",
@@ -3189,6 +3189,9 @@
         ],
         "F": [
           "RCP-lpt_encoder-lpt-F"
+        ],
+        "I": [
+          "RCP-lpt_encoder-lpt-I"
         ],
         "J": [
           "RCP-lpt_encoder-lpt-J"
@@ -3204,7 +3207,6 @@
         "E": "every processing method variant is compared with an independent reference with stated sensitivity bounds",
         "G": "protocol events are recovered against analytically known event times, with eligibility refusals",
         "H": "metric definitions are bound to sourced registry claims and executable exactly",
-        "I": "declared uncertainty propagation is checked against an independent analytical result",
         "K": "synthetic fault fixtures cover the declared fault classes with expected verdicts",
         "L": "analytical cross-device studies are executed and classified, never read as interchangeability",
         "O": "limitation statements are sourced and emitted with every result"
@@ -3218,7 +3220,6 @@
         "E",
         "G",
         "H",
-        "I",
         "K",
         "L",
         "O"
@@ -3226,6 +3227,7 @@
       "verified_m3": [
         "C",
         "F",
+        "I",
         "J",
         "M"
       ]
