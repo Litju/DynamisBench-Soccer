@@ -111,7 +111,8 @@ def admit(
     source_format = source.raw_format.lower().replace("-", "_")
     declared_processed = any(token in source_format for token in processed_markers)
     transforms = [
-        "".join(c for c in step.casefold() if c.isalnum()) for step in meta.provenance.transforms
+        "".join(c for c in step.casefold() if c.isalnum())
+        for step in (source.raw_format, *meta.provenance.transforms)
     ]
     resampled = any(
         marker in step

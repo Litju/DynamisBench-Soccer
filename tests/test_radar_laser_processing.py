@@ -290,7 +290,7 @@ def test_native_radar_laser_refuse_resampling_dropouts_and_clipping(
     clipped = inject(
         observation, ContinuousFault(ContinuousKind.CLIPPING, (channel,), magnitude=rail)
     )
-    reason = "flat rail" if kind == "radar" else r"negative reconstructed|discontinuity|flat rail"
+    reason = "flat rail" if kind == "radar" else "negative reconstructed"
     with pytest.raises(AcquisitionRefusal, match=reason):
         process(clipped, _native())
     dropped = inject(observation, ContinuousFault(ContinuousKind.DROP, (channel,), stride=5))
@@ -300,6 +300,21 @@ def test_native_radar_laser_refuse_resampling_dropouts_and_clipping(
     assert decimated.meta.sampling is not None and decimated.meta.sampling.nominal_hz == 50
     with pytest.raises(AcquisitionRefusal, match="processed/resampled"):
         process(decimated, _native())
+
+    # An explicitly decimated source format must suffice even if the original
+    # transform list was not retained. Local decimation is not vendor authority.
+    metadata = decimated.meta.model_dump()
+    metadata["provenance"]["transforms"] = []
+    metadata["acquisition"]["sources"][0]["raw_format"] = "Decimated source export"
+    tagged = SignalBundle(BundleMeta.model_validate(metadata), decimated.data)
+    with pytest.raises(AcquisitionRefusal, match="processed/resampled"):
+        process(tagged, _native())
+    processed = ProcessingOptions(channel_stage=ChannelStage.MANUFACTURER_PROCESSED)
+    with pytest.raises(AcquisitionRefusal, match="matching source processing provenance"):
+        process(tagged, processed)
+    metadata["acquisition"]["sources"][0]["raw_format"] = "manufacturer_processed"
+    labeled = SignalBundle(BundleMeta.model_validate(metadata), decimated.data)
+    assert process(labeled, processed).source_stage == "manufacturer_processed"
 
 
 @pytest.mark.parametrize(("kind", "channel"), [("radar", "velocity"), ("laser", "distance")])
