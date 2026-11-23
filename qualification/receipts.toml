@@ -1911,7 +1911,7 @@ tolerance_unit = "m/s (absolute); separate time bounds in the test basis"
 issue = "RES-698"
 
 [receipt.digests]
-"src/dynamisbench_soccer/engines/event_time.py::EventStream" = "9472376a26de67fd62d055d6c8928bf37a2129c42966e7a8dc0f09753436075f"
+"src/dynamisbench_soccer/engines/event_time.py::EventStream" = "669395a6a88eeea41f518bb3ad4b153603c0cd3824d37d6044f6652f8a53e528"
 "src/dynamisbench_soccer/engines/timing_gates.py::sprint" = "0f0ee5d59d56329cfd6011e471c2107e25c210a8a22f578d4109d13ab85a8cac"
 "src/dynamisbench_soccer/reference/clocks.py::DeviceClock" = "a538e7ae80f47d9b0880988f85c6705c2e5bdfe3344e5900158ed90fea72c043"
 "src/dynamisbench_soccer/reference/motion_models.py::MonoExponentialSprint" = "6f5cf86ba81df676877c7e99492f9df0400e35228a59a0f34a1d65bba5e3d493"
@@ -1937,7 +1937,7 @@ issue = "RES-698"
 
 [receipt.digests]
 "src/dynamisbench_soccer/engines/contact.py::contact" = "fe638e0b5fc9e1974c99c48164e4c703aa43187a512d62ee5019cc4078f6d0fd"
-"src/dynamisbench_soccer/engines/event_time.py::EventStream" = "9472376a26de67fd62d055d6c8928bf37a2129c42966e7a8dc0f09753436075f"
+"src/dynamisbench_soccer/engines/event_time.py::EventStream" = "669395a6a88eeea41f518bb3ad4b153603c0cd3824d37d6044f6652f8a53e528"
 "src/dynamisbench_soccer/reference/kinematics.py::Trajectory" = "6c5d2b8879d0384ef30a4044c4ff13b6fe3f69f0ed33232c74da454f9da7d9a7"
 "src/dynamisbench_soccer/reference/spatial_observations.py::contact_events" = "226173ea25f5ef36da8d4c510519743351e1cb70235f071d37999eef5b1df52d"
 "tests/test_timing_contact.py::test_contact_uncertainty_matches_asymmetric_endpoint_extrema" = "b2fcd2a8e9fcfb37fbaa65ff48361e85be032adc3bcbdc8241e261e429c10f58"
@@ -1959,7 +1959,7 @@ tolerance_unit = "m/s (absolute); separate elapsed-time bound"
 issue = "RES-669"
 
 [receipt.digests]
-"src/dynamisbench_soccer/engines/event_time.py::EventStream" = "9472376a26de67fd62d055d6c8928bf37a2129c42966e7a8dc0f09753436075f"
+"src/dynamisbench_soccer/engines/event_time.py::EventStream" = "669395a6a88eeea41f518bb3ad4b153603c0cd3824d37d6044f6652f8a53e528"
 "src/dynamisbench_soccer/engines/timing_gates.py::sprint" = "0f0ee5d59d56329cfd6011e471c2107e25c210a8a22f578d4109d13ab85a8cac"
 "src/dynamisbench_soccer/reference/faults.py::inject" = "bc803ce121a3bf35662d04ca34370d2f1525a44ac1503ab51c6678a39905bc7e"
 "src/dynamisbench_soccer/reference/motion_models.py::MonoExponentialSprint" = "6f5cf86ba81df676877c7e99492f9df0400e35228a59a0f34a1d65bba5e3d493"
@@ -1986,7 +1986,7 @@ issue = "RES-669"
 
 [receipt.digests]
 "src/dynamisbench_soccer/engines/contact.py::contact" = "fe638e0b5fc9e1974c99c48164e4c703aa43187a512d62ee5019cc4078f6d0fd"
-"src/dynamisbench_soccer/engines/event_time.py::EventStream" = "9472376a26de67fd62d055d6c8928bf37a2129c42966e7a8dc0f09753436075f"
+"src/dynamisbench_soccer/engines/event_time.py::EventStream" = "669395a6a88eeea41f518bb3ad4b153603c0cd3824d37d6044f6652f8a53e528"
 "src/dynamisbench_soccer/reference/faults.py::inject" = "bc803ce121a3bf35662d04ca34370d2f1525a44ac1503ab51c6678a39905bc7e"
 "src/dynamisbench_soccer/reference/kinematics.py::cmj" = "c37e0d387e173c0b92a8e7a8f277195382a981a228bd6784f6b306b1be3f0821"
 "src/dynamisbench_soccer/reference/spatial_observations.py::contact_events" = "226173ea25f5ef36da8d4c510519743351e1cb70235f071d37999eef5b1df52d"
@@ -2227,7 +2227,7 @@ check_kind = "categorical"
 issue = "RES-698"
 
 [receipt.digests]
-"src/dynamisbench_soccer/engines/event_time.py::EventStream" = "9472376a26de67fd62d055d6c8928bf37a2129c42966e7a8dc0f09753436075f"
+"src/dynamisbench_soccer/engines/event_time.py::EventStream" = "669395a6a88eeea41f518bb3ad4b153603c0cd3824d37d6044f6652f8a53e528"
 "src/dynamisbench_soccer/engines/timing_cli.py::_run" = "f823f5ac9a71f649e394dd731d81b8af14c9870d98c9ffd3ea474f889eff3b1c"
 "src/dynamisbench_soccer/engines/timing_gates.py::sprint" = "0f0ee5d59d56329cfd6011e471c2107e25c210a8a22f578d4109d13ab85a8cac"
 "src/dynamisbench_soccer/reference/exporters.py::export_case" = "3cf942e1d9c8bfce28253a1aacf6b4ff60afd78e6a37aa92ae88be042b289c09"
@@ -2252,7 +2252,7 @@ issue = "RES-698"
 
 [receipt.digests]
 "src/dynamisbench_soccer/engines/contact.py::contact" = "fe638e0b5fc9e1974c99c48164e4c703aa43187a512d62ee5019cc4078f6d0fd"
-"src/dynamisbench_soccer/engines/event_time.py::EventStream" = "9472376a26de67fd62d055d6c8928bf37a2129c42966e7a8dc0f09753436075f"
+"src/dynamisbench_soccer/engines/event_time.py::EventStream" = "669395a6a88eeea41f518bb3ad4b153603c0cd3824d37d6044f6652f8a53e528"
 "src/dynamisbench_soccer/engines/timing_cli.py::_run" = "f823f5ac9a71f649e394dd731d81b8af14c9870d98c9ffd3ea474f889eff3b1c"
 "src/dynamisbench_soccer/reference/exporters.py::export_case" = "3cf942e1d9c8bfce28253a1aacf6b4ff60afd78e6a37aa92ae88be042b289c09"
 "tests/test_reference_exporters.py::test_every_export_is_v2_deterministic_separate_and_hash_linked" = "dd5083a390846e2a8e59502d253a571f08ffc5bfab0a6b4d0220e225103805ad"
@@ -2275,7 +2275,7 @@ check_kind = "numeric"
 issue = "RES-698"
 
 [receipt.digests]
-"src/dynamisbench_soccer/engines/event_time.py::EventStream" = "9472376a26de67fd62d055d6c8928bf37a2129c42966e7a8dc0f09753436075f"
+"src/dynamisbench_soccer/engines/event_time.py::EventStream" = "669395a6a88eeea41f518bb3ad4b153603c0cd3824d37d6044f6652f8a53e528"
 "src/dynamisbench_soccer/engines/timing_gates.py::sprint" = "0f0ee5d59d56329cfd6011e471c2107e25c210a8a22f578d4109d13ab85a8cac"
 "src/dynamisbench_soccer/reference/clocks.py::DeviceClock" = "a538e7ae80f47d9b0880988f85c6705c2e5bdfe3344e5900158ed90fea72c043"
 "src/dynamisbench_soccer/reference/motion_models.py::MonoExponentialSprint" = "6f5cf86ba81df676877c7e99492f9df0400e35228a59a0f34a1d65bba5e3d493"
@@ -2302,7 +2302,7 @@ check_kind = "numeric"
 issue = "RES-698"
 
 [receipt.digests]
-"src/dynamisbench_soccer/engines/event_time.py::EventStream" = "9472376a26de67fd62d055d6c8928bf37a2129c42966e7a8dc0f09753436075f"
+"src/dynamisbench_soccer/engines/event_time.py::EventStream" = "669395a6a88eeea41f518bb3ad4b153603c0cd3824d37d6044f6652f8a53e528"
 "src/dynamisbench_soccer/engines/timing_gates.py::sprint" = "0f0ee5d59d56329cfd6011e471c2107e25c210a8a22f578d4109d13ab85a8cac"
 "src/dynamisbench_soccer/reference/clocks.py::DeviceClock" = "a538e7ae80f47d9b0880988f85c6705c2e5bdfe3344e5900158ed90fea72c043"
 "src/dynamisbench_soccer/reference/motion_models.py::MonoExponentialSprint" = "6f5cf86ba81df676877c7e99492f9df0400e35228a59a0f34a1d65bba5e3d493"
@@ -2438,10 +2438,10 @@ tolerance_unit = "s (absolute)"
 issue = "RES-693"
 
 [receipt.digests]
-"src/dynamisbench_soccer/engines/event_time.py::EventStream" = "9472376a26de67fd62d055d6c8928bf37a2129c42966e7a8dc0f09753436075f"
+"src/dynamisbench_soccer/engines/event_time.py::EventStream" = "669395a6a88eeea41f518bb3ad4b153603c0cd3824d37d6044f6652f8a53e528"
 "src/dynamisbench_soccer/engines/timing_gates.py::sprint" = "0f0ee5d59d56329cfd6011e471c2107e25c210a8a22f578d4109d13ab85a8cac"
 "src/dynamisbench_soccer/reference/clocks.py::DeviceClock" = "a538e7ae80f47d9b0880988f85c6705c2e5bdfe3344e5900158ed90fea72c043"
-"tests/test_timing_clock_policy_a.py::test_native_timing_entrypoints_enforce_clock_authority" = "a365cd124df562d13505b62aa1f15682d68267e4ba21c4bc077bf9c185bb9b4c"
+"tests/test_timing_clock_policy_a.py::test_native_timing_entrypoints_enforce_clock_authority" = "b7818e46d827be8136c8afe12c53784daf2dce2656eb0e046e1c2489afc3e8f1"
 "tests/test_timing_clock_policy_a.py::test_wireless_offset_resolution_and_edge_latency_have_distinct_units" = "e7360573fbd6ce470799ea4a0c82ba82f18116095db7aa4fb3a72d11e6438a4b"
 
 [[receipt]]
@@ -2461,7 +2461,7 @@ issue = "RES-693"
 
 [receipt.digests]
 "src/dynamisbench_soccer/engines/contact.py::contact" = "fe638e0b5fc9e1974c99c48164e4c703aa43187a512d62ee5019cc4078f6d0fd"
-"src/dynamisbench_soccer/engines/event_time.py::EventStream" = "9472376a26de67fd62d055d6c8928bf37a2129c42966e7a8dc0f09753436075f"
+"src/dynamisbench_soccer/engines/event_time.py::EventStream" = "669395a6a88eeea41f518bb3ad4b153603c0cd3824d37d6044f6652f8a53e528"
 "src/dynamisbench_soccer/reference/clocks.py::DeviceClock" = "a538e7ae80f47d9b0880988f85c6705c2e5bdfe3344e5900158ed90fea72c043"
-"tests/test_timing_clock_policy_a.py::test_native_timing_entrypoints_enforce_clock_authority" = "a365cd124df562d13505b62aa1f15682d68267e4ba21c4bc077bf9c185bb9b4c"
+"tests/test_timing_clock_policy_a.py::test_native_timing_entrypoints_enforce_clock_authority" = "b7818e46d827be8136c8afe12c53784daf2dce2656eb0e046e1c2489afc3e8f1"
 "tests/test_timing_clock_policy_a.py::test_wireless_offset_resolution_and_edge_latency_have_distinct_units" = "e7360573fbd6ce470799ea4a0c82ba82f18116095db7aa4fb3a72d11e6438a4b"

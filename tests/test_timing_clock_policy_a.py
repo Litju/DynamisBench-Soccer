@@ -41,12 +41,19 @@ def test_native_timing_entrypoints_enforce_clock_authority(kind, offset, drift):
     assert evaluate() == pytest.approx(expected, abs=1e-12, rel=0)
     alignment = case.observation.meta.acquisition.alignments[0]
     alignment.offset_s += 0.041
-    with pytest.raises(EventRefusal, match="pulses contradict"):
+    with pytest.raises(EventRefusal, match="sync event disagrees"):
         evaluate()
     alignment.offset_s -= 0.041
     source_clock = case.observation.meta.acquisition.clocks[1]
     source_clock.drift_ppm += 3
     with pytest.raises(EventRefusal, match="conflicts with clock declarations"):
+        evaluate()
+
+    source_clock.drift_ppm -= 3
+    acquisition = case.observation.meta.acquisition
+    acquisition.reference_clock = alignment.clock
+    alignment.reference_clock = alignment.clock
+    with pytest.raises(EventRefusal, match="directly to reference_clock"):
         evaluate()
 
 
