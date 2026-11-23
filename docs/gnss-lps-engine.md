@@ -168,7 +168,13 @@ interval or position-jump limits. The input calculation holds time and row
 membership fixed and propagates supplied horizontal position and Doppler-speed
 error radii through smoothing, derivative operators and accumulated chord length.
 
-These are separate deterministic conditional calculations. They assume a
+The `iid_position_noise` calculation accepts a Cartesian standard deviation
+on the fixed grid. It propagates zero-mean independent noise through the actual
+filter and derivative support, including boundary rows and the nested
+acceleration derivative. It gives exact per-axis standard deviations for that
+linear model and conservative RMS error bounds for horizontal magnitudes.
+
+The clock and error-radius calculations are separate deterministic conditional calculations. They assume a
 record-wide offset or declared error balls, as applicable. Receiver covariance,
 variable latency, joint perturbations and threshold/dwell eligibility uncertainty
 are outside the calculations. The alternative-filter and half-rate sensitivity
