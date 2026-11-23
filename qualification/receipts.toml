@@ -1971,7 +1971,7 @@ issue = "RES-669"
 "src/dynamisbench_soccer/reference/motion_models.py::MonoExponentialSprint" = "6f5cf86ba81df676877c7e99492f9df0400e35228a59a0f34a1d65bba5e3d493"
 "src/dynamisbench_soccer/reference/observations.py::spherical_gate_trigger_s" = "a3beced3dd0b05c5e5653e5dce37c3a6d8fdd83d71ef99ecf4a130e9baccbff5"
 "tests/test_timing_gates.py::test_adversarial_reference_faults_are_refused" = "f7e2b14a2110119eecd617be5cd0bf8015ca35a81f88d863b5a163cd954c6964"
-"tests/test_timing_gates.py::test_injected_gate_latency_biases_adjacent_splits_or_refuses_native_order" = "c5189f611e9fdbfc09c39ee2892f3074ce6ce68dbe3eaabe875d55cf40cc4fcc"
+"tests/test_timing_gates.py::test_injected_gate_latency_biases_adjacent_splits_or_refuses_native_order" = "7b2638fd12bf01af670ed4980f3624760f5f70e64838f65184a365136507829a"
 "tests/test_timing_gates.py::test_splits_use_beam_times_and_segment_average_after_wheel_compatible_round_trip" = "d43f47c5a3021449375abf38143d53aeff160766f7671ff729f6fcaefc3d6cd8"
 
 [[receipt]]

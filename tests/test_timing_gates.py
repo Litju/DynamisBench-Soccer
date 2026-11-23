@@ -414,7 +414,7 @@ def test_injected_gate_latency_biases_adjacent_splits_or_refuses_native_order():
     case = export_case("timing_contact.gates")
     shifted = inject(case.observation, EventFault(EventKind.LATENCY, index=1, latency_s=0.02))
     result = sprint([shifted], gate_policy())
-    expected_times = np.diff(case.truth["time"]) + [0.02, -0.02, 0]
+    expected_times = np.add(np.diff(case.truth["time"]), (0.02, -0.02, 0))
     assert [row.split_s.value for row in result.splits[1:]] == pytest.approx(
         expected_times, rel=0, abs=1e-12
     )

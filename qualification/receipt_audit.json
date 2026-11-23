@@ -1102,7 +1102,7 @@
    "verdict": "PARTIAL"
   },
   "RCP-timing_contact-gates-K": {
-   "bound_digest": "d21ecaa4d3148c9368c7a68e61fa250cc615c2167e56b4d28d9dffd1ab0995a7",
+   "bound_digest": "746b57c98e17ab004e7f09dc2a25a136cb39e6d158fb7d5171563c4a2727c6de",
    "evidence_head": "86e1b58e86bc800327e3400698c64060a745db66",
    "fix": "",
    "prior_fix": "Add a LATENCY fault case to test_adversarial_reference_faults_are_refused, or an expected detection or bias verdict for it.",
