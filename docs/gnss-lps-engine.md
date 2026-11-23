@@ -98,6 +98,27 @@ accuracy, and sensor-to-body offsets remain unresolved by this calculation.
   limit. Acceleration peaks include one-sided boundary
   estimates and can move materially with filtering, sampling, or noise.
 
+## Limits carried by every position report
+
+- Position is the tracked antenna or tag point. The independent rigid-body
+  turning control shows that an offset point moves when the translation is
+  stationary. There is no sensor-to-body correction.
+- LPS starts from producer-solved coordinates. The LPS acquisition contract
+  requires surveyed anchors and visibility flags, which establish input
+  geometry and recorded visibility only. Ranges, ranging residuals and
+  per-sample covariance are outside the observation schema.
+- The acquisition contract applies the declared affine clock and fixed
+  latency. Absent a variable latency model, the reported timing bounds are
+  conditional on those declarations. Metadata and native sample checks
+  establish only the documented input stage.
+- Registry claims DEV-005 (Linke et al.) and CX-003 cover differences in
+  position-derived and Doppler speed and dependence on device, processing,
+  rate and thresholds. The engine's threshold distance uses whole sampled
+  intervals and its position derivatives depend on boundary support.
+- The processing specification above compares offline filters and a
+  stride-two subset of the same record. The decimated result supplies
+  a sensitivity control within that record.
+
 For example, an acquisition declaration for a GNSS observation with a receipt
 clock and horizontal Doppler could be
 

@@ -153,7 +153,7 @@ paradigm = "position_track"
 issue = "RES-700"
 engine_id = "gnss"
 methods = ["resample", "smooth"]
-ratings = { A = "verified", B = "specified", C = "verified", D = "verified", E = "partial", F = "verified", G = "verified", H = "partial", I = "partial", J = "verified", K = "verified", L = "verified", M = "verified", N = "absent", O = "partial" }
+ratings = { A = "verified", B = "specified", C = "verified", D = "verified", E = "partial", F = "verified", G = "verified", H = "partial", I = "partial", J = "verified", K = "verified", L = "verified", M = "verified", N = "absent", O = "verified" }
 empirical_gaps = ["Engine verified on analytical tracks (RES-700); audited native GNSS data and empirical latency, HDOP and multipath evidence remain open (RES-694)", "Positional versus Doppler/radar agreement is analytical only (RES-703)"]
 blockers = []
 
@@ -165,7 +165,7 @@ paradigm = "position_track"
 issue = "RES-700"
 engine_id = "lps"
 methods = ["resample", "smooth"]
-ratings = { A = "verified", B = "verified", C = "verified", D = "verified", E = "verified", F = "verified", G = "verified", H = "partial", I = "partial", J = "verified", K = "verified", L = "partial", M = "verified", N = "absent", O = "partial" }
+ratings = { A = "verified", B = "verified", C = "verified", D = "verified", E = "verified", F = "verified", G = "verified", H = "partial", I = "partial", J = "verified", K = "verified", L = "partial", M = "verified", N = "absent", O = "verified" }
 empirical_gaps = ["Engine verified on analytical tracks (RES-700); audited native LPS data, anchor survey and latency evidence remain open (RES-694)", "Positional versus radar agreement is analytical only (RES-703)"]
 blockers = []
 
@@ -4675,3 +4675,19 @@ kind = "independent_test"
 issue = "RES-699"
 ref = "repo:tests/test_radar_laser_processing.py"
 rationale = "Native radar reports analytically verified sensitivity to a declared cosine interval, on-grid start shifts and alternate smoothing, withholds ill-conditioned or unsupported diagnostics, and retains the valid nominal trace."
+
+[[evidence]]
+subfamily = "gnss_lps.gnss"
+dimension = "O"
+kind = "independent_test"
+issue = "RES-700"
+ref = "repo:tests/test_gnss_lps_processing.py"
+rationale = "Every successful GNSS result carries the declared native-position and processing limitations, and the CLI preserves them."
+
+[[evidence]]
+subfamily = "gnss_lps.lps"
+dimension = "O"
+kind = "independent_test"
+issue = "RES-700"
+ref = "repo:tests/test_gnss_lps_processing.py"
+rationale = "Every successful LPS result carries the declared native-position and processing limitations, and the CLI preserves them."

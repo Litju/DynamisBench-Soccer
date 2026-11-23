@@ -19,6 +19,7 @@ from dynamisbench_soccer.reference.clocks import DeviceClock
 from dynamisbench_soccer.reference.exporters import export_case
 from dynamisbench_soccer.reference.faults import PositionFault, PositionKind, inject
 from dynamisbench_soccer.reference.spatial import PlanarPhase, PlanarTrajectory, RigidBody
+from dynamisbench_soccer.registry.models import load as load_registry
 from dynamisbench_soccer.signals import io
 
 
@@ -389,3 +390,71 @@ def test_position_engines_reproduce_seeded_inputs_and_bind_the_source_hash(
     assert changed["acquisition"]["data_sha256"] == hashlib.sha256(parquet.read_bytes()).hexdigest()
     parquet.write_bytes(parquet.read_bytes() + b"altered")
     assert main(args) == 2
+
+
+@pytest.mark.parametrize(("kind", "doppler"), [("gnss", True), ("gnss", False), ("lps", False)])
+@pytest.mark.parametrize("derivative", ["three_point", "five_point"])
+@pytest.mark.parametrize("position_filter", ["none", "boxcar5", "binomial5"])
+def test_position_reports_retain_sourced_limits_across_native_methods(
+    kind: str, doppler: bool, derivative: str, position_filter: str
+) -> None:
+    root = Path(__file__).resolve().parents[1]
+    registry = load_registry(root / "registry")
+    by_id = {claim.id: claim for claim in registry.claims}
+    validation = by_id["DEV-005"]
+    load = by_id["CX-003"]
+    assert validation.sources == ["linke2018"]
+    assert "linke2018" in registry.sources
+    assert "positional differentiation and GPS Doppler speed" in validation.statement
+    assert "sampling rate, processing and threshold definitions" in load.statement
+    assert all(source in registry.sources for source in load.sources)
+    notes = (root / "docs/gnss-lps-engine.md").read_text()
+    assert "Registry claims DEV-005 (Linke et al.) and CX-003" in notes
+
+    case, declaration = track_case(kind, hz=25, doppler=doppler)
+    result = process(
+        case.observation,
+        declaration,
+        ProcessingOptions(position_filter=position_filter, derivative=derivative),
+    )
+    assert result.limitations == (
+        "Receiver position describes the antenna or tag point.",
+        "LPS positions are supplied position solutions. Anchor visibility checks provide "
+        "no ranging residuals, per-sample covariance, or validation of the anchor survey.",
+        "Declared clock and latency bounds exclude variable latency and undocumented "
+        "processing. Native status depends on producer metadata and sampled timestamps.",
+        "Threshold distance uses whole sampled intervals. Acceleration and distance "
+        "depend on sampling, noise, filter choice and boundary support.",
+        "Sensitivity uses alternate offline smoothing and unfiltered stride-two "
+        "decimation of the supplied record, with no independent lower-rate measurement.",
+    )
+    assert (result.kinematics.doppler_speed_m_s is not None) is doppler
+
+
+@pytest.mark.parametrize("kind", ["gnss", "lps"])
+def test_position_cli_preserves_the_operating_limitations(kind: str, tmp_path: Path) -> None:
+    case, declaration = track_case(kind, hz=25)
+    case.write(tmp_path)
+    declared = tmp_path / "declaration.json"
+    declared.write_text(declaration.model_dump_json())
+    path = tmp_path / "result.json"
+    assert (
+        main(
+            [
+                "gnss-lps",
+                "process",
+                str(tmp_path / "observation"),
+                "--declaration",
+                str(declared),
+                "--derivative",
+                "five_point",
+                "--out",
+                str(path),
+            ]
+        )
+        == 0
+    )
+    result = process(
+        io.read(tmp_path / "observation"), declaration, ProcessingOptions(derivative="five_point")
+    )
+    assert json.loads(path.read_text())["limitations"] == list(result.limitations)
