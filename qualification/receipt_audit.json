@@ -1017,9 +1017,14 @@
    "verdict": "SUPPORTED"
   },
   "RCP-timing_contact-contact-I": {
-   "fix": "Assert the RSI and flight interval bounds equal the closed-form propagation of the declared on and off latency errors.",
-   "reason": "Propagated intervals are only checked to bracket the truth (low < rsi < high), and the CLI checks only a mean shift. The interval width is never compared with the analytic propagation of latency_error_s.",
-   "verdict": "PARTIAL"
+   "bound_digest": "6ba6d4cc2e80465352d03e60c05b9ad2921c0cbbee5aabb4681d85c8833c0f95",
+   "evidence_head": "ac49f71f51e3d289488d706388e3d1a7da154b3a",
+   "fix": "",
+   "prior_fix": "Assert the RSI and flight interval bounds equal the closed-form propagation of the declared on and off latency errors.",
+   "prior_reason": "Propagated intervals are only checked to bracket the truth (low < rsi < high), and the CLI checks only a mean shift. The interval width is never compared with the analytic propagation of latency_error_s.",
+   "prior_verdict": "PARTIAL",
+   "reason": "Contact-system flight, stance, flight-time height and height/contact RSI propagate asymmetric declared switch errors as conservative timing intervals. With a 1 ms shared clock and ideal transitions at 0, 0.25 and 0.75 s, stance and flight centers are 0.25 and 0.5 s and their half-widths are 0.0027 and 0.0042 s in the two trials. Height is 9.80665 times squared flight time divided by eight, with nominal 0.3064578125 m. Nominal RSI is 1.22583125 m/s. RSI endpoint pairs are 1.199671564838989/1.2526344245241106 and 1.1854089099655785/1.267810933332994 m/s. Use absolute 1e-12 s and m and 1e-11 m/s with zero relative tolerance for arithmetic roundoff. Refuse unresolved transitions.",
+   "verdict": "SUPPORTED"
   },
   "RCP-timing_contact-contact-J": {
    "bound_digest": "77ad6ecade3a808d1ef94b77fbf153a9c3a1d82de14f22fb722e0edc9c3e92d5",
@@ -1077,9 +1082,14 @@
    "verdict": "SUPPORTED"
   },
   "RCP-timing_contact-gates-I": {
-   "fix": "Assert the split interval half-width equals the root-sum or linear combination of the declared errors.",
-   "reason": "Only the fixed-offset shift (+0.2) and one definition_error widening (+0.002) are checked. The width from latency_error_s and sync_latency_error_s propagation is never compared with an analytic value, and the receipt is labelled categorical despite numeric assertions.",
-   "verdict": "PARTIAL"
+   "bound_digest": "cddbbe568b3e69576a96ef47b4d0ddd2f8f53585e6532bdcff71d7b3f9642f01",
+   "evidence_head": "ac49f71f51e3d289488d706388e3d1a7da154b3a",
+   "fix": "",
+   "prior_fix": "Assert the split interval half-width equals the root-sum or linear combination of the declared errors.",
+   "prior_reason": "Only the fixed-offset shift (+0.2) and one definition_error widening (+0.002) are checked. The width from latency_error_s and sync_latency_error_s propagation is never compared with an analytic value, and the receipt is labelled categorical despite numeric assertions.",
+   "prior_verdict": "PARTIAL",
+   "reason": "Wireless gate splits and segment-average speeds propagate declared clock, trigger and event-definition error as conservative elapsed-time endpoint intervals. At 800 ppm and 0.5 ms native resolution, each timing radius includes 0.0002502 s from the clock, 1e-12 s alignment uncertainty, 0 or 0.0015 s synchronization error, 0.0007 s trigger error and 0.0002 s definition error. The two endpoint radii sum to 0.002300400002 or 0.005300400002 s. Split centers are 0.7324799388172911, 1.2470407645364006 and 1.1571471988932043 s, for 5, 10 and 10 m. Speed endpoints are distance divided by the opposite time endpoints. Use absolute 1e-12 s and 1e-11 m/s with zero relative allowance for floating-point arithmetic. Refuse unresolved ordering.",
+   "verdict": "SUPPORTED"
   },
   "RCP-timing_contact-gates-J": {
    "fix": "Correct the tolerance to the engine's asserted bound.",

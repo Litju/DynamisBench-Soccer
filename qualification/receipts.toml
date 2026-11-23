@@ -1899,3 +1899,51 @@ tolerance_unit = ""
 "tests/test_gnss_lps_processing.py::test_position_engines_reproduce_seeded_inputs_and_bind_the_source_hash" = "60fdc0f47add24285adb0d99473ef974a34980e117ec1474483e876a3fe75fc2"
 "tests/test_reference_exporters.py::test_every_export_is_v2_deterministic_separate_and_hash_linked" = "dd5083a390846e2a8e59502d253a571f08ffc5bfab0a6b4d0220e225103805ad"
 "tests/test_reference_faults.py::test_faults_cover_all_subfamilies_with_isolated_lineage_and_deterministic_bytes" = "02408de0fac0618db8014d21c500a9e2b3981a80f8b1afa1045698eac00455ae"
+
+[[receipt]]
+id = "RCP-timing_contact-gates-I"
+dimension = "I"
+subfamilies = ["timing_contact.gates"]
+implementation = ["src/dynamisbench_soccer/engines/timing_gates.py::sprint", "src/dynamisbench_soccer/engines/event_time.py::EventStream"]
+reference = ["src/dynamisbench_soccer/reference/clocks.py::DeviceClock", "src/dynamisbench_soccer/reference/motion_models.py::MonoExponentialSprint", "src/dynamisbench_soccer/reference/observations.py::spherical_gate_trigger_s"]
+tests = ["tests/test_timing_gates.py::test_wireless_split_uncertainty_matches_independent_endpoint_budget", "tests/test_timing_gates.py::test_gate_timing_uncertainty_refuses_unresolved_beam_order"]
+reference_kind = "closed_form"
+independence = "The reference fixture and hand-derived timing and reciprocal bounds use independent physical and numerical expressions without calling the timing engine."
+claim = "Wireless gate splits and segment-average speeds propagate declared clock, trigger and event-definition error as conservative elapsed-time endpoint intervals."
+check_kind = "numeric"
+tolerance_basis = "At 800 ppm and 0.5 ms native resolution, each timing radius includes 0.0002502 s from the clock, 1e-12 s alignment uncertainty, 0 or 0.0015 s synchronization error, 0.0007 s trigger error and 0.0002 s definition error. The two endpoint radii sum to 0.002300400002 or 0.005300400002 s. Split centers are 0.7324799388172911, 1.2470407645364006 and 1.1571471988932043 s, for 5, 10 and 10 m. Speed endpoints are distance divided by the opposite time endpoints. Use absolute 1e-12 s and 1e-11 m/s with zero relative allowance for floating-point arithmetic. Refuse unresolved ordering."
+tolerance = 1e-11
+tolerance_unit = "m/s (absolute); separate time and height bounds in the test basis"
+issue = "RES-698"
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/event_time.py::EventStream" = "305ab1a1d39cfffee2c1d8606d31e0cad49bf48afea802a4a9d88e019a366f94"
+"src/dynamisbench_soccer/engines/timing_gates.py::sprint" = "0f0ee5d59d56329cfd6011e471c2107e25c210a8a22f578d4109d13ab85a8cac"
+"src/dynamisbench_soccer/reference/clocks.py::DeviceClock" = "a538e7ae80f47d9b0880988f85c6705c2e5bdfe3344e5900158ed90fea72c043"
+"src/dynamisbench_soccer/reference/motion_models.py::MonoExponentialSprint" = "6f5cf86ba81df676877c7e99492f9df0400e35228a59a0f34a1d65bba5e3d493"
+"src/dynamisbench_soccer/reference/observations.py::spherical_gate_trigger_s" = "a3beced3dd0b05c5e5653e5dce37c3a6d8fdd83d71ef99ecf4a130e9baccbff5"
+"tests/test_timing_gates.py::test_gate_timing_uncertainty_refuses_unresolved_beam_order" = "aca52e4f5894d95199750e8deac9e0e3a3759c656ffce2556ee891e8f9e5b160"
+"tests/test_timing_gates.py::test_wireless_split_uncertainty_matches_independent_endpoint_budget" = "971cc4c6b9e35d6d8cac3307a90b2ef322d2456da8bf8108d4bdac2a891d0103"
+
+[[receipt]]
+id = "RCP-timing_contact-contact-I"
+dimension = "I"
+subfamilies = ["timing_contact.contact"]
+implementation = ["src/dynamisbench_soccer/engines/contact.py::contact", "src/dynamisbench_soccer/engines/event_time.py::EventStream"]
+reference = ["src/dynamisbench_soccer/reference/kinematics.py::Trajectory", "src/dynamisbench_soccer/reference/spatial_observations.py::contact_events"]
+tests = ["tests/test_timing_contact.py::test_contact_uncertainty_matches_asymmetric_endpoint_extrema"]
+reference_kind = "closed_form"
+independence = "The reference fixture and hand-derived timing and reciprocal bounds use independent physical and numerical expressions without calling the timing engine."
+claim = "Contact-system flight, stance, flight-time height and height/contact RSI propagate asymmetric declared switch errors as conservative timing intervals."
+check_kind = "numeric"
+tolerance_basis = "With a 1 ms shared clock and ideal transitions at 0, 0.25 and 0.75 s, stance and flight centers are 0.25 and 0.5 s and their half-widths are 0.0027 and 0.0042 s in the two trials. Height is 9.80665 times squared flight time divided by eight, with nominal 0.3064578125 m. Nominal RSI is 1.22583125 m/s. RSI endpoint pairs are 1.199671564838989/1.2526344245241106 and 1.1854089099655785/1.267810933332994 m/s. Use absolute 1e-12 s and m and 1e-11 m/s with zero relative tolerance for arithmetic roundoff. Refuse unresolved transitions."
+tolerance = 1e-11
+tolerance_unit = "m/s (absolute); separate time and height bounds in the test basis"
+issue = "RES-698"
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/contact.py::contact" = "fe638e0b5fc9e1974c99c48164e4c703aa43187a512d62ee5019cc4078f6d0fd"
+"src/dynamisbench_soccer/engines/event_time.py::EventStream" = "305ab1a1d39cfffee2c1d8606d31e0cad49bf48afea802a4a9d88e019a366f94"
+"src/dynamisbench_soccer/reference/kinematics.py::Trajectory" = "6c5d2b8879d0384ef30a4044c4ff13b6fe3f69f0ed33232c74da454f9da7d9a7"
+"src/dynamisbench_soccer/reference/spatial_observations.py::contact_events" = "226173ea25f5ef36da8d4c510519743351e1cb70235f071d37999eef5b1df52d"
+"tests/test_timing_contact.py::test_contact_uncertainty_matches_asymmetric_endpoint_extrema" = "b2fcd2a8e9fcfb37fbaa65ff48361e85be032adc3bcbdc8241e261e429c10f58"
