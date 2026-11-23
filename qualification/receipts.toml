@@ -1228,13 +1228,13 @@ tests = ["tests/test_reference_faults.py::test_faults_cover_all_subfamilies_with
 [[receipt]]
 id = "RCP-imu-inertial-B"
 dimension = "B"
-claim = "IMU. Calibration and geometry records are applied exactly and missing or contradictory records are refused."
+claim = "Declared IMU scale, bias, misalignment and mounting transform independent sensor observations and refuse invalid calibration or undeclared placement."
 issue = "RES-701"
 reference_kind = "closed_form"
 independence = "The rigid-body kinematics are closed forms in the reference substrate; that module imports no engine or assessment code."
 check_kind = "numeric"
-tolerance_unit = "as asserted in the cited tests (absolute)"
-tolerance_basis = "largest absolute bound asserted in the cited tests: 1e-09"
+tolerance_unit = "m/s² and rotation components (absolute)"
+tolerance_basis = "At 200 Hz invert an independent 2° misalignment, gains (1.02, 0.99, 1.01) and biases (0.1, −0.2, 0.05) m/s² to recover the native specific-force channels. A declared 90° placement transforms X/Y signs and axes. A 100 Hz, 30° static roll recovers gravity orientation but yaw remains declared. Absolute 1e-9 in acceleration and dimensionless rotation components with zero relative tolerance covers arithmetic. Singular calibration, improper rotation and missing placement refuse."
 tolerance = 1e-09
 subfamilies = ["imu.inertial"]
 implementation = ["src/dynamisbench_soccer/engines/imu.py::process"]
@@ -1242,45 +1242,45 @@ reference = ["src/dynamisbench_soccer/reference/spatial.py::RigidBody"]
 tests = ["tests/test_imu_engine.py::test_declared_calibration_inverts_a_known_forward_model", "tests/test_imu_engine.py::test_sensor_to_segment_placement_is_declared_and_applied", "tests/test_imu_engine.py::test_static_tilt_initialises_roll_pitch_but_not_yaw"]
 
 [receipt.digests]
-"src/dynamisbench_soccer/engines/imu.py::process" = "b7cada97e3dc45f5f4c77cf8f8965228dba324431fc5452c0e9d99ef1ac58ddc"
+"src/dynamisbench_soccer/engines/imu.py::process" = "79e817e8da6ed0dc308187c5f346f798d9089e3e70ccb514ac601bfccb1dd4a8"
 "src/dynamisbench_soccer/reference/spatial.py::RigidBody" = "3f6ce7c7d3d600665ad4e580bff84c581243abbb2cad1dc11c92c8e51ab42fe7"
-"tests/test_imu_engine.py::test_declared_calibration_inverts_a_known_forward_model" = "12accf863512d198267fe69de18990988c21533fe0e390119df22f6c1a30d35e"
-"tests/test_imu_engine.py::test_sensor_to_segment_placement_is_declared_and_applied" = "53891f8a363846b2715682e964991629b403eaf6ae005f58f03e6970066bf445"
-"tests/test_imu_engine.py::test_static_tilt_initialises_roll_pitch_but_not_yaw" = "ab6d78646c474eec61096120813def363eab3073d13fa13bdcb3650f192fe286"
+"tests/test_imu_engine.py::test_declared_calibration_inverts_a_known_forward_model" = "4a5dfb507940cab8a144615830b79c22051a8809cfc3ce071e142aac24ed6824"
+"tests/test_imu_engine.py::test_sensor_to_segment_placement_is_declared_and_applied" = "e1498c305822dd88da103c16b89a1ef495e5a1b6cd8e9bae48adc322ee781c05"
+"tests/test_imu_engine.py::test_static_tilt_initialises_roll_pitch_but_not_yaw" = "2f51b24005cf62f7f6820bfade140c471503cd58fffd2f44ec50e64df921ea9c"
 
 [[receipt]]
 id = "RCP-imu-inertial-D"
 dimension = "D"
-claim = "IMU. Injected integrity faults are detected and clean controls are not rejected, with the expected QC verdicts."
+claim = "IMU integrity controls detect declared rail failures, gaps, rate, synchronization, spikes, gyro bias and inconsistent static gravity."
 issue = "RES-701"
 reference_kind = "closed_form"
 independence = "The rigid-body kinematics are closed forms in the reference substrate; that module imports no engine or assessment code."
 check_kind = "categorical"
 tolerance_unit = ""
-tolerance_basis = "Exact outcomes asserted by the cited tests: expected refusals, verdicts, classifications and counts, with no numeric tolerance."
-tolerance = 0.0
+tolerance_basis = "Exact verdicts: drop gaps and 5 m/s² accelerometer rail reject, absent rail is not applicable, synchronization, spike, rate, gyro bias and inconsistent static gravity have their named FAIL outcomes, and bad device or missing channel refuses. The supplementary slip angle is 20° with absolute 1e-6 rad and zero relative tolerance."
+tolerance = 0
 subfamilies = ["imu.inertial"]
 implementation = ["src/dynamisbench_soccer/engines/imu.py::process"]
 reference = ["src/dynamisbench_soccer/reference/spatial.py::RigidBody"]
 tests = ["tests/test_imu_engine.py::test_integrity_faults_are_detected", "tests/test_imu_engine.py::test_static_gyro_bias_and_slip_are_flagged", "tests/test_imu_engine.py::test_wrong_device_and_missing_channels_are_refused"]
 
 [receipt.digests]
-"src/dynamisbench_soccer/engines/imu.py::process" = "b7cada97e3dc45f5f4c77cf8f8965228dba324431fc5452c0e9d99ef1ac58ddc"
+"src/dynamisbench_soccer/engines/imu.py::process" = "79e817e8da6ed0dc308187c5f346f798d9089e3e70ccb514ac601bfccb1dd4a8"
 "src/dynamisbench_soccer/reference/spatial.py::RigidBody" = "3f6ce7c7d3d600665ad4e580bff84c581243abbb2cad1dc11c92c8e51ab42fe7"
 "tests/test_imu_engine.py::test_integrity_faults_are_detected" = "9bc9206509e824833530a7da64400a6c1eccd3c75235c11cb101218f5c1a5733"
-"tests/test_imu_engine.py::test_static_gyro_bias_and_slip_are_flagged" = "e044eac4aaf11ed2d6f7ab7d94023c1fd524e4c4e1f386cf00a87223d24ed43b"
+"tests/test_imu_engine.py::test_static_gyro_bias_and_slip_are_flagged" = "427d0fe8326ddd314bee2e9c6fa316f7395bee45ce585f81a22711d4b7fb6ffb"
 "tests/test_imu_engine.py::test_wrong_device_and_missing_channels_are_refused" = "2cc354f3555d66f6ab970fbf756fae1fe933a091dec21faec9a9c0a2b71f209f"
 
 [[receipt]]
 id = "RCP-imu-inertial-E"
 dimension = "E"
-claim = "IMU. Each named processing variant reproduces the independent truth within the asserted tolerance and reports its sensitivity."
+claim = "IMU named orientation and integration variants meet independent under-bias controls for stationary gravity-only observations with declared initial conditions."
 issue = "RES-701"
 reference_kind = "closed_form"
 independence = "The rigid-body kinematics are closed forms in the reference substrate; that module imports no engine or assessment code."
 check_kind = "numeric"
-tolerance_unit = "as asserted in the cited tests (absolute)"
-tolerance_basis = "largest absolute bound asserted in the cited tests: 0.01; largest relative bound 1e-09"
+tolerance_unit = "rad (absolute); separate velocity conditions"
+tolerance_basis = "A 100 Hz stationary gyro bias of 0.05 rad/s for 9.99 s yields 0.4995 rad at 0.001 rad absolute. The gravity-only complementary small-angle response approaches 0.05 rad within 0.01 rad absolute. Constant 0.05 m/s² horizontal acceleration bias yields 0.4995 m/s at 1e-9 relative, zero absolute tolerance. Terminal and downsampled ZUPT residuals stay strictly below 0.06 m/s. No initial tilt or insufficient ZUPT declarations refuse the corresponding quantities."
 tolerance = 0.01
 subfamilies = ["imu.inertial"]
 implementation = ["src/dynamisbench_soccer/engines/imu.py::process"]
@@ -1288,67 +1288,67 @@ reference = ["src/dynamisbench_soccer/reference/spatial.py::RigidBody"]
 tests = ["tests/test_imu_engine.py::test_uncorrected_bias_growth_matches_closed_form_and_zupt_removes_linear_drift", "tests/test_imu_engine.py::test_gyro_bias_drift_versus_complementary_bound_matches_closed_form", "tests/test_imu_engine.py::test_orientation_is_refused_when_unobservable"]
 
 [receipt.digests]
-"src/dynamisbench_soccer/engines/imu.py::process" = "b7cada97e3dc45f5f4c77cf8f8965228dba324431fc5452c0e9d99ef1ac58ddc"
+"src/dynamisbench_soccer/engines/imu.py::process" = "79e817e8da6ed0dc308187c5f346f798d9089e3e70ccb514ac601bfccb1dd4a8"
 "src/dynamisbench_soccer/reference/spatial.py::RigidBody" = "3f6ce7c7d3d600665ad4e580bff84c581243abbb2cad1dc11c92c8e51ab42fe7"
 "tests/test_imu_engine.py::test_gyro_bias_drift_versus_complementary_bound_matches_closed_form" = "2a0dde7261480d2977354eca580f836ac40ffcbb739256a12ac0585b060bccb9"
 "tests/test_imu_engine.py::test_orientation_is_refused_when_unobservable" = "63a1bbc98cc84d7e43bfadb896e0a4833c7b618f26aea6dccf61b088f3f423be"
-"tests/test_imu_engine.py::test_uncorrected_bias_growth_matches_closed_form_and_zupt_removes_linear_drift" = "a6428ea705d9f0e97ffef58d00c077f1315e2ccfa151b38ae54a21aade43d5fe"
+"tests/test_imu_engine.py::test_uncorrected_bias_growth_matches_closed_form_and_zupt_removes_linear_drift" = "bcb16040129270c50f80ddc345e8859300c890f9fc3d66001679c833707ea117"
 
 [[receipt]]
 id = "RCP-imu-inertial-F"
 dimension = "F"
-claim = "IMU. Reconstructed quantities equal the independent analytical truth within the asserted tolerance."
+claim = "IMU attitude, free acceleration, velocity and position reconstruct independent rotating and translating rigid-body quantities under declared initial conditions."
 issue = "RES-701"
 reference_kind = "closed_form"
 independence = "The rigid-body kinematics are closed forms in the reference substrate; that module imports no engine or assessment code."
 check_kind = "numeric"
-tolerance_unit = "as asserted in the cited tests (absolute)"
-tolerance_basis = "largest absolute bound asserted in the cited tests: 1e-08"
-tolerance = 1e-08
+tolerance_unit = "m (position); separate m/s, m/s² and rotation bounds"
+tolerance_basis = "At checked rows every 40 samples of a 200 Hz fixture, rigid-body rotation and free acceleration are within absolute 1e-9 dimensionless and 1e-8 m/s². The 1000 Hz trapezoid endpoint bounds are absolute 0.00308 m/s and 0.01232 m from acceleration step size, half the interval and duration. All relative allowances are zero. Specific force and free acceleration remain distinct."
+tolerance = 0.01232
 subfamilies = ["imu.inertial"]
 implementation = ["src/dynamisbench_soccer/engines/imu.py::process"]
 reference = ["src/dynamisbench_soccer/reference/spatial.py::RigidBody"]
 tests = ["tests/test_imu_engine.py::test_orientation_and_free_acceleration_match_rigid_body_truth", "tests/test_imu_engine.py::test_specific_force_is_not_free_acceleration", "tests/test_imu_engine.py::test_integration_recovers_velocity_and_position_given_declared_initial_conditions"]
 
 [receipt.digests]
-"src/dynamisbench_soccer/engines/imu.py::process" = "b7cada97e3dc45f5f4c77cf8f8965228dba324431fc5452c0e9d99ef1ac58ddc"
+"src/dynamisbench_soccer/engines/imu.py::process" = "79e817e8da6ed0dc308187c5f346f798d9089e3e70ccb514ac601bfccb1dd4a8"
 "src/dynamisbench_soccer/reference/spatial.py::RigidBody" = "3f6ce7c7d3d600665ad4e580bff84c581243abbb2cad1dc11c92c8e51ab42fe7"
-"tests/test_imu_engine.py::test_integration_recovers_velocity_and_position_given_declared_initial_conditions" = "dffc261bf7294a9a39cb9bc5241d5e966f8bf2dcaff901af673130c7cd4811b4"
-"tests/test_imu_engine.py::test_orientation_and_free_acceleration_match_rigid_body_truth" = "a7e865bd220459b62b769892f33443f62885ee1a92280dbdc23f4265325e0181"
+"tests/test_imu_engine.py::test_integration_recovers_velocity_and_position_given_declared_initial_conditions" = "6e2c3362e1cc305000b41c2a3d4ae39ee05e497fb5c4a811315b60fb5cf3ccd8"
+"tests/test_imu_engine.py::test_orientation_and_free_acceleration_match_rigid_body_truth" = "7b4f3485bb60dc5064104ba5457bab52918cd34eff9118d6f0f8e248065974fa"
 "tests/test_imu_engine.py::test_specific_force_is_not_free_acceleration" = "5df87314714e1bf4d154d83fb2144b2c5608518905ef6813d8771b8d8101196f"
 
 [[receipt]]
 id = "RCP-imu-inertial-I"
 dimension = "I"
-claim = "IMU. Declared uncertainty and sensitivity are propagated and equal the independent analytical expectation."
+claim = "IMU reports the analytically verified conditional velocity and position bounds for a declared constant field-frame acceleration bias."
 issue = "RES-701"
 reference_kind = "closed_form"
 independence = "The rigid-body kinematics are closed forms in the reference substrate; that module imports no engine or assessment code."
 check_kind = "numeric"
-tolerance_unit = "as asserted in the cited tests (absolute)"
-tolerance_basis = "largest absolute bound asserted in the cited tests: 0.01; largest relative bound 1e-09"
-tolerance = 0.01
+tolerance_unit = "m/s and m (absolute)"
+tolerance_basis = "At 100 Hz, 0.05 m/s² for 9.99 s produces reported velocity and position bounds of 0.4995 m/s and 2.4950025 m from b·t and b·t²/2. Absolute 1e-12 in each unit with zero relative allowance covers calculation rounding. The supplementary gravity-only test measures gyro drift and complementary tilt; it does not assert a reported tilt uncertainty field."
+tolerance = 1e-12
 subfamilies = ["imu.inertial"]
 implementation = ["src/dynamisbench_soccer/engines/imu.py::process"]
 reference = ["src/dynamisbench_soccer/reference/spatial.py::RigidBody"]
 tests = ["tests/test_imu_engine.py::test_uncorrected_bias_growth_matches_closed_form_and_zupt_removes_linear_drift", "tests/test_imu_engine.py::test_gyro_bias_drift_versus_complementary_bound_matches_closed_form"]
 
 [receipt.digests]
-"src/dynamisbench_soccer/engines/imu.py::process" = "b7cada97e3dc45f5f4c77cf8f8965228dba324431fc5452c0e9d99ef1ac58ddc"
+"src/dynamisbench_soccer/engines/imu.py::process" = "79e817e8da6ed0dc308187c5f346f798d9089e3e70ccb514ac601bfccb1dd4a8"
 "src/dynamisbench_soccer/reference/spatial.py::RigidBody" = "3f6ce7c7d3d600665ad4e580bff84c581243abbb2cad1dc11c92c8e51ab42fe7"
 "tests/test_imu_engine.py::test_gyro_bias_drift_versus_complementary_bound_matches_closed_form" = "2a0dde7261480d2977354eca580f836ac40ffcbb739256a12ac0585b060bccb9"
-"tests/test_imu_engine.py::test_uncorrected_bias_growth_matches_closed_form_and_zupt_removes_linear_drift" = "a6428ea705d9f0e97ffef58d00c077f1315e2ccfa151b38ae54a21aade43d5fe"
+"tests/test_imu_engine.py::test_uncorrected_bias_growth_matches_closed_form_and_zupt_removes_linear_drift" = "bcb16040129270c50f80ddc345e8859300c890f9fc3d66001679c833707ea117"
 
 [[receipt]]
 id = "RCP-imu-inertial-J"
 dimension = "J"
-claim = "IMU. The engine agrees with a reference that shares no code with it; the reference substrate imports no engine code."
+claim = "IMU rigid-body attitude and free acceleration match an independent analytical reference with no shared production reconstruction code."
 issue = "RES-669"
 reference_kind = "closed_form"
 independence = "The rigid-body kinematics are closed forms in the reference substrate; that module imports no engine or assessment code."
 check_kind = "numeric"
-tolerance_unit = "as asserted in the cited tests (absolute)"
-tolerance_basis = "largest absolute bound asserted in the cited tests: 1e-08"
+tolerance_unit = "m/s² (absolute); separate dimensionless rotation bound"
+tolerance_basis = "At 200 Hz, every 40th checked rotation and free acceleration sample agrees with independent rigid-body truth at absolute 1e-9 dimensionless and 1e-8 m/s², zero relative allowance. The source import boundary is verified. Supplemental substrate derivative checks use their own NumPy absolute and relative bounds."
 tolerance = 1e-08
 subfamilies = ["imu.inertial"]
 implementation = ["src/dynamisbench_soccer/engines/imu.py::process"]
@@ -1356,10 +1356,10 @@ reference = ["src/dynamisbench_soccer/reference/spatial.py::RigidBody"]
 tests = ["tests/test_imu_engine.py::test_orientation_and_free_acceleration_match_rigid_body_truth", "tests/test_imu_engine.py::test_engine_never_imports_reference_substrate", "tests/test_reference_complete_scenarios.py::test_full_rigid_rotation_derivatives_and_imu_inversion"]
 
 [receipt.digests]
-"src/dynamisbench_soccer/engines/imu.py::process" = "b7cada97e3dc45f5f4c77cf8f8965228dba324431fc5452c0e9d99ef1ac58ddc"
+"src/dynamisbench_soccer/engines/imu.py::process" = "79e817e8da6ed0dc308187c5f346f798d9089e3e70ccb514ac601bfccb1dd4a8"
 "src/dynamisbench_soccer/reference/spatial.py::RigidBody" = "3f6ce7c7d3d600665ad4e580bff84c581243abbb2cad1dc11c92c8e51ab42fe7"
 "tests/test_imu_engine.py::test_engine_never_imports_reference_substrate" = "aae484712e279b023aa8f39ae301a95f5c92eab5562494c008b0191757856e3a"
-"tests/test_imu_engine.py::test_orientation_and_free_acceleration_match_rigid_body_truth" = "a7e865bd220459b62b769892f33443f62885ee1a92280dbdc23f4265325e0181"
+"tests/test_imu_engine.py::test_orientation_and_free_acceleration_match_rigid_body_truth" = "7b4f3485bb60dc5064104ba5457bab52918cd34eff9118d6f0f8e248065974fa"
 "tests/test_reference_complete_scenarios.py::test_full_rigid_rotation_derivatives_and_imu_inversion" = "5f8c56902513f3d274bdc61251d89341dab2ad442b88209359f98f5d3fda47ab"
 
 [[receipt]]
@@ -2160,3 +2160,27 @@ issue = "RES-695"
 "tests/test_encoder_policy_a.py::test_encoder_cli_refuses_output_hard_link_to_input" = "f640d789094a6336990d7e13d8b0e6351745c27a65cb6f4363d757b07598795c"
 "tests/test_encoder_policy_a.py::test_encoder_cli_replays_verified_artifacts_and_detects_mutation" = "4c2e62f28ee455f7abec7a6bc9abc704bdd1dbbba8b2f9d39990bc500e2012f1"
 "tests/test_reference_exporters.py::test_every_export_is_v2_deterministic_separate_and_hash_linked" = "dd5083a390846e2a8e59502d253a571f08ffc5bfab0a6b4d0220e225103805ad"
+
+[[receipt]]
+id = "RCP-imu-inertial-O"
+dimension = "O"
+subfamilies = ["imu.inertial"]
+implementation = ["src/dynamisbench_soccer/engines/imu.py::process", "src/dynamisbench_soccer/engines/imu.py::Processed"]
+reference = ["src/dynamisbench_soccer/reference/spatial.py::RigidBody", "src/dynamisbench_soccer/reference/spatial.py::PlanarTrajectory"]
+tests = ["tests/test_imu_engine.py::test_imu_retains_sourced_physical_and_numerical_limits", "tests/test_imu_engine.py::test_imu_complementary_gravity_gate_admits_biased_tilt_under_acceleration"]
+reference_kind = "closed_form"
+independence = "The independent trajectory specifies true motion and the scalar tilt recurrence derives the observed bias without calling production. Limitation topics and sourced placement scope are asserted in the output."
+claim = "Complete IMU reports emit sourced frame, orientation, integration, sampling and instrumentation limitations for both successful and diagnostic-reject cases."
+tolerance_basis = "Exact ordered limitation topics and serialized list for gyro and complementary variants under declared 30 m/s² and 5 m/s² accelerometer ranges. Registry DEV-002 identifies sensor versus COM displacement and tested placement scope. An independent 100 Hz constant 2 m/s² horizontal-acceleration fixture satisfies the gravity magnitude gate but induces about 0.1741 rad of false tilt. The scalar recurrence seeded by atan2(2,g) matches this diagnostic within absolute 1e-12 rad with zero relative allowance. ZUPT alone requires zero-velocity windows, and flight reports the larger edge bracket rather than a total duration error bound."
+check_kind = "numeric"
+tolerance_unit = "rad (absolute); exact categorical topic checks"
+tolerance = 1e-12
+issue = "RES-701"
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/imu.py::Processed" = "af7084285009f8094c194f41aeb0c2cacc580b170f56b55112fbb759319a74eb"
+"src/dynamisbench_soccer/engines/imu.py::process" = "79e817e8da6ed0dc308187c5f346f798d9089e3e70ccb514ac601bfccb1dd4a8"
+"src/dynamisbench_soccer/reference/spatial.py::PlanarTrajectory" = "67451605f53ffbc4699f23b3ececbe8d654c0ae85748498bf55d05151a111fc5"
+"src/dynamisbench_soccer/reference/spatial.py::RigidBody" = "3f6ce7c7d3d600665ad4e580bff84c581243abbb2cad1dc11c92c8e51ab42fe7"
+"tests/test_imu_engine.py::test_imu_complementary_gravity_gate_admits_biased_tilt_under_acceleration" = "4b63b1aa58a7e2a1e00f93b674706d585ba868d5a97b089efe573c7698755eef"
+"tests/test_imu_engine.py::test_imu_retains_sourced_physical_and_numerical_limits" = "a60f99c9a00ba9d3b4249f2c4fb6b406bba0c62563573af698a3e26fe54eff4a"

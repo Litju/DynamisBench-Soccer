@@ -177,7 +177,7 @@ paradigm = "inertial"
 issue = "RES-701"
 engine_id = "imu"
 methods = ["orientation_estimation", "gravity_removal"]
-ratings = { A = "specified", B = "verified", C = "specified", D = "verified", E = "verified", F = "verified", G = "partial", H = "partial", I = "verified", J = "verified", K = "partial", L = "partial", M = "partial", N = "absent", O = "partial" }
+ratings = { A = "specified", B = "verified", C = "specified", D = "verified", E = "verified", F = "verified", G = "partial", H = "partial", I = "verified", J = "verified", K = "partial", L = "partial", M = "partial", N = "absent", O = "verified" }
 empirical_gaps = ["Engine verified on analytical rigid-body and trajectory controls (RES-701); sensor placement, soft-tissue artefact, calibration and flight-time agreement with force plates remain unqualified (RES-694/703)", "G/H assessment qualification remains RES-671"]
 blockers = []
 
@@ -4707,3 +4707,11 @@ kind = "independent_test"
 issue = "RES-695"
 ref = "repo:tests/test_encoder_policy_a.py"
 rationale = "File-backed encoder processing reproduces independently exported observations, retains the verified input hash and declared settings, and refuses a tampered or aliased artifact."
+
+[[evidence]]
+subfamily = "imu.inertial"
+dimension = "O"
+kind = "independent_test"
+issue = "RES-701"
+ref = "repo:tests/test_imu_engine.py"
+rationale = "Complete IMU reports emit sourced frame, orientation, integration, sampling and instrumentation limitations for both successful and diagnostic-reject cases."

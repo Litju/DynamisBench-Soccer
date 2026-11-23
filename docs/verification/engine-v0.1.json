@@ -1689,8 +1689,7 @@
         "H: metric definitions are bound to sourced registry claims and executable exactly (owner RES-671; rated partial)",
         "K: synthetic fault fixtures cover the declared fault classes with expected verdicts (owner RES-669; rated partial)",
         "L: analytical cross-device studies are executed and classified, never read as interchangeability (owner RES-703; rated partial)",
-        "M: seeded, hash-bound provenance chain for every processing stage, reproduced exactly (owner RES-701; rated partial)",
-        "O: limitation statements are sourced and emitted with every result (owner RES-701; rated partial)"
+        "M: seeded, hash-bound provenance chain for every processing stage, reproduced exactly (owner RES-701; rated partial)"
       ],
       "load_cell_isometric.isometric_rig": [
         "B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-696; rated specified)",
@@ -2599,7 +2598,8 @@
         "E",
         "F",
         "I",
-        "J"
+        "J",
+        "O"
       ],
       "blockers": [
         "A: executable admission contract: native/vendor stage, units and integrity refusals tested (owner RES-693; rated specified)",
@@ -2608,8 +2608,7 @@
         "H: metric definitions are bound to sourced registry claims and executable exactly (owner RES-671; rated partial)",
         "K: synthetic fault fixtures cover the declared fault classes with expected verdicts (owner RES-669; rated partial)",
         "L: analytical cross-device studies are executed and classified, never read as interchangeability (owner RES-703; rated partial)",
-        "M: seeded, hash-bound provenance chain for every processing stage, reproduced exactly (owner RES-701; rated partial)",
-        "O: limitation statements are sourced and emitted with every result (owner RES-701; rated partial)"
+        "M: seeded, hash-bound provenance chain for every processing stage, reproduced exactly (owner RES-701; rated partial)"
       ],
       "empirical_dimensions_covered": [],
       "empirical_gaps": [
@@ -2669,7 +2668,7 @@
         "L": "partial",
         "M": "partial",
         "N": "absent",
-        "O": "partial"
+        "O": "verified"
       },
       "receipts": {
         "B": [
@@ -2689,6 +2688,9 @@
         ],
         "J": [
           "RCP-imu-inertial-J"
+        ],
+        "O": [
+          "RCP-imu-inertial-O"
         ]
       },
       "required_computational": {
@@ -2698,8 +2700,7 @@
         "H": "metric definitions are bound to sourced registry claims and executable exactly",
         "K": "synthetic fault fixtures cover the declared fault classes with expected verdicts",
         "L": "analytical cross-device studies are executed and classified, never read as interchangeability",
-        "M": "seeded, hash-bound provenance chain for every processing stage, reproduced exactly",
-        "O": "limitation statements are sourced and emitted with every result"
+        "M": "seeded, hash-bound provenance chain for every processing stage, reproduced exactly"
       },
       "state": "SPECIFIED",
       "subfamily": "imu.inertial",
@@ -2710,8 +2711,7 @@
         "H",
         "K",
         "L",
-        "M",
-        "O"
+        "M"
       ],
       "verified_m3": [
         "B",
@@ -2719,7 +2719,8 @@
         "E",
         "F",
         "I",
-        "J"
+        "J",
+        "O"
       ]
     },
     {
