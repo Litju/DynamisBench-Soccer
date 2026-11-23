@@ -22,7 +22,24 @@ The policies are Pydantic models with JSON schemas available through
 | -- | -- | -- |
 | Gates | `t_s`, `distance_m`, optional `gate_id` and `beam_id` | One raw beam break per row. IDs are integer count columns owned by the timestamp source. A single-beam stream can use the exact declared station position as its ID. Multi-beam stations require native beam IDs. |
 | External starts | Same gate-event columns plus `start_kind` | Record the start at its declared position using `gate_id=0`. Use `start_kind=1` for pressure-pad releases or `2` for sound cues. Other rows use `start_kind=0`. When present, `beam_id` is zero on a start row. |
-| Contact systems | `t_s`, `contact` | Binary switching events with 1 for contact on and 0 for contact off. The schema-v2 device class `contact_mat` carries all three contact-system types. The policy identifies the mat, pressure pad, or optical contact bar, and the source geometry records its switching definition. |
+| Contact systems | `t_s`, `contact` | Binary switching codes decoded with the declared polarity. The schema-v2 device class `contact_mat` carries all three contact-system types. The policy identifies the mat, pressure pad, or optical contact bar, and the source geometry records its switching definition. |
+
+Source geometry identifies contact switches as `<actuator>:<polarity>`,
+for example `contact_mat:active_high` or `optical_contact_bar:active_low`.
+The supported actuators are the three policy systems. Active high assigns 1 to
+contact; active low assigns 0. The actuator must match the policy and both
+edge latencies apply to the decoded transitions. The original exact RES-669
+ideal contact declaration remains supported on synthetic records as an
+active-high switch. No analog force or optical threshold is inferred.
+
+Gate rows carry canonical metre positions. Each source declares its beam type,
+trigger method and lowest beam height, matched against the surveyed policy
+stations. The policy identifies every beam separately for multi-beam sources
+and binds each row to its declared station. Positive segment lengths are
+differences between ordered coordinates, so the course origin may be zero or
+shifted. A first-gate start uses the first station itself. Event channels are
+already calibrated in seconds, metres or unitless codes. Nonidentity channel
+calibrations require preprocessing before admission.
 
 Legacy distance and cumulative-time exports require an acquisition contract
 establishing that the provided timestamps are native clock readings. Analytical
