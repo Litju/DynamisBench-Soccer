@@ -217,6 +217,13 @@
    "reason": "Doppler and positional estimands are kept separate and executed exactly. But no cited test binds the metrics to sourced registry claims, and the docs say GNSS registry claims are absent (RES-694).",
    "verdict": "PARTIAL"
   },
+  "RCP-gnss_lps-gnss-H-native-assessment": {
+   "bound_digest": "0dfecc127e666a8b10f9dbe7d84cbf22e04c9edc991986d4fff6eab1a5cad28c",
+   "evidence_head": "71c78bd40340542645841553e2cad5f9f586c945",
+   "fix": "",
+   "reason": "Independent GPT-6.2 Astra review verified the sourced observation distinction, exact straight and curved estimands, qualified intervals, basis refusal, and source-labelled milestone handoffs. All eight focused tests passed.",
+   "verdict": "SUPPORTED"
+  },
   "RCP-gnss_lps-gnss-I": {
    "fix": "Propagate a GNSS position \u03c3 to speed and acceleration and compare with the closed-form variance.",
    "reason": "Both cited tests are LPS-only. They check sensitivity inequalities or absence and make no analytical uncertainty comparison.",
@@ -333,6 +340,13 @@
    "reason": "Independent GPT-6.2 Astra review verified the native unfiltered fixed-grid interior horizontal norm and exclusion of vertical motion. DEV-005 supports the source distinction only.",
    "verdict": "SUPPORTED"
   },
+  "RCP-gnss_lps-lps-H-native-assessment": {
+   "bound_digest": "012ef9045a37c0be261301c5001dd5ccc45be9e228089157422b742fcd692a0a",
+   "evidence_head": "71c78bd40340542645841553e2cad5f9f586c945",
+   "fix": "",
+   "reason": "Independent GPT-6.2 Astra review verified the sourced observation distinction, exact straight and curved estimands, qualified intervals, basis refusal, and source-labelled milestone handoffs. All eight focused tests passed.",
+   "verdict": "SUPPORTED"
+  },
   "RCP-gnss_lps-lps-I": {
    "bound_digest": "f7c0e9da8a162acaf092b7d86cac6a13ef0ae62ba115512b1641a56cbed982e4",
    "evidence_head": "cf78f6aae0c47b12547ee6757e50b6d59193a2c2",
@@ -357,9 +371,11 @@
    "verdict": "SUPPORTED"
   },
   "RCP-gnss_lps-lps-L": {
-   "fix": "Assert radar_vs_lps_speed sensitivities against the latency closed form.",
-   "reason": "The radar_vs_lps_speed study exists, but no cited test checks it against a closed form. test_positional... checks the GNSS study, and the handoff test is GNSS-only. LPS is covered only by the generic counting test.",
-   "verdict": "PARTIAL"
+   "bound_digest": "a64c97abb916451066fddbc084d52e74769e6c0e99f78013d1cd1ecd43136f85",
+   "evidence_head": "86cf0b290a1d3a8eb0befac78d90c61bbe9a9b58",
+   "fix": "",
+   "reason": "Independent GPT-6.2 Astra review exercised all 16 focused tests and confirmed signed shared-motion components, projection mismatch and refusal cases. Synthetic constant planar comparison only.",
+   "verdict": "SUPPORTED"
   },
   "RCP-gnss_lps-lps-M": {
    "bound_digest": "e62d3d01b03ea979e885f5301486ad229534710ba3d1a822af85d4cca64a5981",

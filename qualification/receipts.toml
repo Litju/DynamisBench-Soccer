@@ -2423,6 +2423,29 @@ issue = "RES-700"
 "tests/test_lps_speed_slice.py::test_position_only_radius_contains_and_attains_analytical_extreme" = "504cd18b6b3579ef19442ffb842a27bf469e2626053fee6aa8a4fb1d498fc615"
 
 [[receipt]]
+id = "RCP-gnss_lps-lps-L"
+dimension = "L"
+subfamilies = ["gnss_lps.lps"]
+implementation = ["src/dynamisbench_soccer/agreement/lps.py::compare_lps_radar", "src/dynamisbench_soccer/engines/gnss_lps.py::process"]
+reference = ["src/dynamisbench_soccer/reference/lps_speed.py::linear_tag_speed"]
+tests = ["tests/test_lps_agreement.py::test_matched_lps_radar_control", "tests/test_lps_agreement.py::test_radial_component_is_a_mismatch_and_faults_refuse", "tests/test_lps_agreement.py::test_unmatched_speed_cannot_report_agreement"]
+reference_kind = "closed_form"
+independence = "The analytical radar arm projects prescribed east and north velocities onto its declared beam. The independent reference norm of 3 and 4 m/s is 5 m/s, and the due-east radial projection is 3 m/s. Neither value depends on LPS samples or engine derivatives."
+claim = "Native synthetic LPS and a projection-corrected ideal radar agree for matched constant planar tag speed. Radial-only velocity is classified as a definition mismatch, and invalid or geometrically unresolvable observations are refused."
+tolerance_basis = "Compare 5 m/s horizontal speed, 3 m/s radial velocity and the resulting 2 m/s bias at 1e-10 m/s absolute, zero relative tolerance. LPS controls cover three- and five-point derivatives, three position filters, 18 and 25 Hz and a declared clock/latency alignment. Paired rows from one track only illustrate analytical agreement."
+tolerance = 1e-10
+tolerance_unit = "m/s (absolute)"
+issue = "RES-703"
+
+[receipt.digests]
+"src/dynamisbench_soccer/agreement/lps.py::compare_lps_radar" = "1a32995a0b6cab2ea8d018138e9adb7e370eb24456a7ed378ee39db8aa69bc01"
+"src/dynamisbench_soccer/engines/gnss_lps.py::process" = "47dad0be73c8de9a93699c8954df13d3b313b97a249e7ff27f8bfae4ee58edf9"
+"src/dynamisbench_soccer/reference/lps_speed.py::linear_tag_speed" = "fab9535c8a663330b3f21e2f69ea17cf7e3e8379eac3391f1f9e919a39f4eb95"
+"tests/test_lps_agreement.py::test_matched_lps_radar_control" = "3d1d18f33b286b9f7596697105cfd7e7c3762e59cf9935aad127fe65327d91bc"
+"tests/test_lps_agreement.py::test_radial_component_is_a_mismatch_and_faults_refuse" = "b95089e15ca04e124248e4bb5eb9c1e9c74f26c307ef4f1419d6b920992e3a86"
+"tests/test_lps_agreement.py::test_unmatched_speed_cannot_report_agreement" = "37ca4723be08f6e07f96126874d7a80a428a20a1446c1a82c9d00d2c158053d2"
+
+[[receipt]]
 id = "RCP-gnss_lps-lps-H-native-assessment"
 dimension = "H"
 subfamilies = ["gnss_lps.lps"]
