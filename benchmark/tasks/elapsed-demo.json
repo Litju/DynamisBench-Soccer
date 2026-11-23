@@ -1,0 +1,80 @@
+{
+  "version": "m4.registry-task.v1",
+  "task": {
+    "version": "m4.public-task.v1",
+    "id": "elapsed-demo",
+    "revision": 1,
+    "family": "A",
+    "competencies": [
+      "C1"
+    ],
+    "coverage_cell": "C1 / elapsed time / specified events",
+    "domain": "timing",
+    "protocol": "specified endpoint subtraction",
+    "source": "analytical.events",
+    "convention": "fixed",
+    "allowed_tools": "offline_python_stdlib",
+    "answer_schema": "m4.formal-answer.v1"
+  },
+  "artifacts": [
+    {
+      "name": "elapsed-demo",
+      "path": "benchmark/fixtures/elapsed-demo.json",
+      "sha256": "4713be80cef31e40356d9a6a0d993c56652b83be18ac08fbda3c75931f6739cd",
+      "category": "analytical",
+      "rights": "repository-authored demonstration"
+    },
+    {
+      "name": "elapsed-correction",
+      "path": "benchmark/fixtures/elapsed-correction.json",
+      "sha256": "4e749d63118b85443acdcf11dd03e45c932db0c13b27c99a9915a514c5dd839d",
+      "category": "analytical",
+      "rights": "repository-authored demonstration"
+    }
+  ],
+  "checkpoints": [
+    {
+      "id": "initial",
+      "prompt": "Calculate elapsed seconds from the specified events.",
+      "artifacts": [
+        "elapsed-demo"
+      ],
+      "corrects": null
+    },
+    {
+      "id": "correction",
+      "prompt": "Revise using the corrected finish time.",
+      "artifacts": [
+        "elapsed-correction"
+      ],
+      "corrects": "initial"
+    }
+  ],
+  "reference_profile": "elapsed-unreviewed",
+  "methods": [
+    {
+      "id": "subtract",
+      "estimand": "elapsed time between the supplied events",
+      "dimension": "time",
+      "unit": "s",
+      "specification": {
+        "operation": "finish_minus_start"
+      },
+      "sampling": "timestamps supplied as exact decimal quantities",
+      "clock": "same ideal clock",
+      "geometry": "inapplicable to specified events",
+      "qc": "both finite and ordered",
+      "eligibility": "specified endpoints only",
+      "uncertainty": "no measurement uncertainty modeled",
+      "absolute_tolerance": 1e-9,
+      "limitations": [
+        "No physical-device claims"
+      ],
+      "source_claims": [
+        "elapsed time is the difference of ordered timestamps on one clock"
+      ]
+    }
+  ],
+  "engine": "elapsed-subtraction.v1",
+  "grader": "formal.v1"
+}
