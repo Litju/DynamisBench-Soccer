@@ -45,3 +45,11 @@ def test_failed_execution_cleans_workspace() -> None:
     attempt = execute_payload(b"", b"raise RuntimeError")
     assert attempt.outcome == "execution_error"
     assert attempt.workspace_removed
+
+
+def test_candidate_stdin_is_read_only() -> None:
+    attempt = execute_payload(
+        b"input",
+        b"import os\ntry: os.write(0, b'x')\nexcept OSError: print('read only')\n",
+    )
+    assert attempt.stdout == b"read only\n"

@@ -112,9 +112,9 @@ def execute_payload(public: bytes, source: bytes) -> Execution:
         workspace = Path(tmp)
         path = workspace / "candidate.py"
         path.write_bytes(source)
-        with tempfile.TemporaryFile() as payload, tempfile.TemporaryFile() as output:
-            payload.write(public)
-            payload.seek(0)
+        public_file = workspace / "input.json"
+        public_file.write_bytes(public)
+        with public_file.open("rb") as payload, tempfile.TemporaryFile() as output:
             timed_out = False
             with subprocess.Popen(
                 _command(path),
