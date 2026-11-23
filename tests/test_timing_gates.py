@@ -467,3 +467,26 @@ def test_gate_start_methods_match_independent_absolute_and_elapsed_times(mode):
         np.diff(DISTANCES) / elapsed, rel=0, abs=1e-11
     )
     assert result.splits[0].segment_average_velocity_m_s is None
+
+
+def test_roundtripped_gate_metrics_match_independent_affine_clock_fixture(tmp_path):
+    case = export_case("timing_contact.gates", clock=DeviceClock(0.32, 812), latency_s=0.018)
+    case.write(tmp_path)
+    observation = io.read(tmp_path / "observation")
+    result = sprint([observation], gate_policy(EdgeTiming(latency_s=0.018, latency_error_s=0.001)))
+    assert not result.discarded
+    truth = case.truth["time"]
+    elapsed = np.diff(truth)
+    assert [row.crossing.time_s.value for row in result.splits] == pytest.approx(
+        truth, rel=0, abs=1e-12
+    )
+    assert [row.cumulative_s.value for row in result.splits] == pytest.approx(
+        truth - truth[0], rel=0, abs=1e-12
+    )
+    assert [row.split_s.value for row in result.splits[1:]] == pytest.approx(
+        elapsed, rel=0, abs=1e-12
+    )
+    assert [row.segment_average_velocity_m_s.value for row in result.splits[1:]] == pytest.approx(
+        np.diff(DISTANCES) / elapsed, rel=0, abs=1e-11
+    )
+    assert result.splits[0].segment_average_velocity_m_s is None
