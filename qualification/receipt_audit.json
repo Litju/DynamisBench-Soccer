@@ -1203,14 +1203,18 @@
    "verdict": "SUPPORTED"
   },
   "RCP-timing_contact-contact-G": {
-   "fix": "Record a numeric tolerance (rel 1e-6).",
-   "reason": "Takeoff, touchdown and contact times are recovered, with RSI and equal-COM refusals, but the receipt is labelled categorical with tolerance 0 while it asserts pytest.approx times at the default rel 1e-6.",
-   "verdict": "PARTIAL"
+   "bound_digest": "c6f4374659c1c4e341758e657c065f0e08bc65d2de194c3aa75ad95d6d4ec3f8",
+   "evidence_head": "ff05bae3dd1f88f698eee9c25f8a911f200cf60b",
+   "fix": "",
+   "reason": "GPT-6.2 Astra independently verified four native-to-assessment cases covering actual ballistic and complete-route eligibility, analytical event math and refused cases.",
+   "verdict": "SUPPORTED"
   },
   "RCP-timing_contact-contact-H": {
-   "bound_digest": "c809f216be79453684a8bf8383ed59fb603735e0068e7e418194b86672a57e04",
+   "bound_digest": "acb6d85d738e0a7b17ec97839600ece9fc0196da8db5c2bb24862ee1f27cd520",
    "fix": "",
    "reason": "Flight-time height, RSI definition and protocol refusals are executed against the truth, and the latency bias is kept as a difference rather than a correction in jumps.contact_system_estimates.",
+   "rebind_evidence_head": "ff05bae3dd1f88f698eee9c25f8a911f200cf60b",
+   "rebind_reason": "Independent review confirmed preserving valid prior outputs and refusing absent contact ballistic estimates.",
    "verdict": "SUPPORTED"
   },
   "RCP-timing_contact-contact-I": {
@@ -1305,9 +1309,11 @@
    "verdict": "SUPPORTED"
   },
   "RCP-timing_contact-gates-G": {
-   "fix": "Record the numeric tolerance, and feed engine splits into assess_gates.",
-   "reason": "Event and split recovery and the eligibility refusals (start trigger, COD course) are covered, but the receipt is labelled categorical with tolerance 0 while it asserts pytest.approx times with the default rel 1e-6. The COD tests use hand lists, not gate engine output.",
-   "verdict": "PARTIAL"
+   "bound_digest": "85135d4da6a6cc9254842b800619ce5b4daf29dafda6826ab911762ed05aa1e4",
+   "evidence_head": "ff05bae3dd1f88f698eee9c25f8a911f200cf60b",
+   "fix": "",
+   "reason": "GPT-6.2 Astra independently verified four native-to-assessment cases covering actual ballistic and complete-route eligibility, analytical event math and refused cases.",
+   "verdict": "SUPPORTED"
   },
   "RCP-timing_contact-gates-H": {
    "bound_digest": "48a17ff9a4eb210e52b0963423f3e4c1be5468331b0f21d0ee605a1df1c9919c",

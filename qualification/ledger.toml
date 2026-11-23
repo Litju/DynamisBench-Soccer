@@ -105,7 +105,7 @@ paradigm = "discrete_event"
 issue = "RES-698"
 engine_id = "gates"
 methods = ["debounce", "multi_beam_voting", "trigger_latency_correction"]
-ratings = { A = "verified", B = "specified", C = "verified", D = "verified", E = "verified", F = "verified", G = "partial", H = "verified", I = "verified", J = "partial", K = "verified", L = "verified", M = "verified", N = "absent", O = "partial" }
+ratings = { A = "verified", B = "specified", C = "verified", D = "verified", E = "verified", F = "verified", G = "verified", H = "verified", I = "verified", J = "partial", K = "verified", L = "verified", M = "verified", N = "absent", O = "partial" }
 empirical_gaps = ["Gate geometry, trigger validity and timing-error bounds need empirical metrology (RES-694)", "Sprint assessment variants and cross-device agreement remain open (RES-673/703)"]
 blockers = []
 
@@ -117,7 +117,7 @@ paradigm = "discrete_event"
 issue = "RES-698"
 engine_id = "contact"
 methods = ["debounce", "pair_events", "trigger_latency_correction"]
-ratings = { A = "verified", B = "specified", C = "verified", D = "verified", E = "verified", F = "verified", G = "partial", H = "verified", I = "verified", J = "verified", K = "verified", L = "verified", M = "verified", N = "absent", O = "partial" }
+ratings = { A = "verified", B = "specified", C = "verified", D = "verified", E = "verified", F = "verified", G = "verified", H = "verified", I = "verified", J = "verified", K = "verified", L = "verified", M = "verified", N = "absent", O = "partial" }
 empirical_gaps = ["Contact-system switching thresholds and latency bounds need empirical metrology (RES-694)", "Assessment-specific validity and force-platform/IMU agreement remain open (RES-671/703)"]
 blockers = []
 
@@ -4851,3 +4851,19 @@ kind = "independent_test"
 issue = "RES-693"
 ref = "repo:tests/test_timing_clock_policy_a.py"
 rationale = "Closed-form native affine mappings separate reference time, link correction and edge latency and refuse contradictory acquisition authority."
+
+[[evidence]]
+subfamily = "timing_contact.contact"
+dimension = "G"
+kind = "independent_test"
+issue = "RES-671"
+ref = "repo:tests/test_timing_assessment_policy_a.py"
+rationale = "Independent native timing controls preserve protocol eligibility in the actual assessment handoff and refuse incomplete support."
+
+[[evidence]]
+subfamily = "timing_contact.gates"
+dimension = "G"
+kind = "independent_test"
+issue = "RES-671"
+ref = "repo:tests/test_timing_assessment_policy_a.py"
+rationale = "Independent native timing controls preserve protocol eligibility in the actual assessment handoff and refuse incomplete support."

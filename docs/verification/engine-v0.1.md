@@ -32,8 +32,8 @@ Engineering calculations only; no scientific qualification of any device or metr
 | nordic_hip.nordic | SPECIFIED | yes | 9 of 14 |
 | radar_laser.laser | SPECIFIED | yes | 10 of 14 |
 | radar_laser.radar | SPECIFIED | yes | 5 of 14 |
-| timing_contact.contact | SPECIFIED | yes | 3 of 14 |
-| timing_contact.gates | SPECIFIED | yes | 4 of 14 |
+| timing_contact.contact | SPECIFIED | yes | 2 of 14 |
+| timing_contact.gates | SPECIFIED | yes | 3 of 14 |
 
 ### Blockers and the experiment that would clear them
 
@@ -253,19 +253,15 @@ Engineering calculations only; no scientific qualification of any device or metr
 
 **timing_contact.contact** (SPECIFIED)
 * computational blocker: B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-698; rated specified)
-* computational blocker: G: protocol events are recovered against analytically known event times, with eligibility refusals (owner RES-671; rated partial)
 * computational blocker: O: limitation statements are sourced and emitted with every result (owner RES-698; rated partial)
-* G - owner RES-671: protocol events are recovered against analytically known event times, with eligibility refusals
 * B - owner RES-698: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused
 * O - owner RES-698: limitation statements are sourced and emitted with every result
 
 **timing_contact.gates** (SPECIFIED)
 * computational blocker: B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-698; rated specified)
-* computational blocker: G: protocol events are recovered against analytically known event times, with eligibility refusals (owner RES-671; rated partial)
 * computational blocker: J: an independent reference implementation or closed form that shares no code with the engine (owner RES-669; rated partial)
 * computational blocker: O: limitation statements are sourced and emitted with every result (owner RES-698; rated partial)
 * J - owner RES-669: an independent reference implementation or closed form that shares no code with the engine
-* G - owner RES-671: protocol events are recovered against analytically known event times, with eligibility refusals
 * B - owner RES-698: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused
 * O - owner RES-698: limitation statements are sourced and emitted with every result
 
@@ -383,8 +379,8 @@ Open empirical requirements (what only physical measurement can close):
 | nordic_hip.nordic | s | s | s | p | p | V | V | V | p | V | p | V | p | - | p |
 | radar_laser.laser | s | s | V | p | p | V | p | p | p | p | V | V | p | - | p |
 | radar_laser.radar | V | s | V | V | p | V | V | V | V | V | V | p | p | - | p |
-| timing_contact.contact | V | s | V | V | V | V | p | V | V | V | V | V | V | - | p |
-| timing_contact.gates | V | s | V | V | V | V | p | V | V | p | V | V | V | - | p |
+| timing_contact.contact | V | s | V | V | V | V | V | V | V | V | V | V | V | - | p |
+| timing_contact.gates | V | s | V | V | V | V | V | V | V | p | V | V | V | - | p |
 
 `-` absent, `p` partial (implemented, checked against analytical references), `s` specified, `V` verified.
 

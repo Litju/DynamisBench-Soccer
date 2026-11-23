@@ -1769,12 +1769,10 @@
       ],
       "timing_contact.contact": [
         "B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-698; rated specified)",
-        "G: protocol events are recovered against analytically known event times, with eligibility refusals (owner RES-671; rated partial)",
         "O: limitation statements are sourced and emitted with every result (owner RES-698; rated partial)"
       ],
       "timing_contact.gates": [
         "B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-698; rated specified)",
-        "G: protocol events are recovered against analytically known event times, with eligibility refusals (owner RES-671; rated partial)",
         "J: an independent reference implementation or closed form that shares no code with the engine (owner RES-669; rated partial)",
         "O: limitation statements are sourced and emitted with every result (owner RES-698; rated partial)"
       ]
@@ -3746,6 +3744,7 @@
         "D",
         "E",
         "F",
+        "G",
         "H",
         "I",
         "J",
@@ -3755,7 +3754,6 @@
       ],
       "blockers": [
         "B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-698; rated specified)",
-        "G: protocol events are recovered against analytically known event times, with eligibility refusals (owner RES-671; rated partial)",
         "O: limitation statements are sourced and emitted with every result (owner RES-698; rated partial)"
       ],
       "empirical_dimensions_covered": [],
@@ -3808,7 +3806,7 @@
         "D": "verified",
         "E": "verified",
         "F": "verified",
-        "G": "partial",
+        "G": "verified",
         "H": "verified",
         "I": "verified",
         "J": "verified",
@@ -3834,6 +3832,9 @@
         "F": [
           "RCP-timing_contact-contact-F"
         ],
+        "G": [
+          "RCP-timing_contact-contact-G"
+        ],
         "H": [
           "RCP-timing_contact-contact-H"
         ],
@@ -3855,14 +3856,12 @@
       },
       "required_computational": {
         "B": "declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused",
-        "G": "protocol events are recovered against analytically known event times, with eligibility refusals",
         "O": "limitation statements are sourced and emitted with every result"
       },
       "state": "SPECIFIED",
       "subfamily": "timing_contact.contact",
       "unverified_m3": [
         "B",
-        "G",
         "O"
       ],
       "verified_m3": [
@@ -3871,6 +3870,7 @@
         "D",
         "E",
         "F",
+        "G",
         "H",
         "I",
         "J",
@@ -3886,6 +3886,7 @@
         "D",
         "E",
         "F",
+        "G",
         "H",
         "I",
         "K",
@@ -3894,7 +3895,6 @@
       ],
       "blockers": [
         "B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-698; rated specified)",
-        "G: protocol events are recovered against analytically known event times, with eligibility refusals (owner RES-671; rated partial)",
         "J: an independent reference implementation or closed form that shares no code with the engine (owner RES-669; rated partial)",
         "O: limitation statements are sourced and emitted with every result (owner RES-698; rated partial)"
       ],
@@ -3948,7 +3948,7 @@
         "D": "verified",
         "E": "verified",
         "F": "verified",
-        "G": "partial",
+        "G": "verified",
         "H": "verified",
         "I": "verified",
         "J": "partial",
@@ -3974,6 +3974,9 @@
         "F": [
           "RCP-timing_contact-gates-F"
         ],
+        "G": [
+          "RCP-timing_contact-gates-G"
+        ],
         "H": [
           "RCP-timing_contact-gates-H"
         ],
@@ -3992,7 +3995,6 @@
       },
       "required_computational": {
         "B": "declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused",
-        "G": "protocol events are recovered against analytically known event times, with eligibility refusals",
         "J": "an independent reference implementation or closed form that shares no code with the engine",
         "O": "limitation statements are sourced and emitted with every result"
       },
@@ -4000,7 +4002,6 @@
       "subfamily": "timing_contact.gates",
       "unverified_m3": [
         "B",
-        "G",
         "J",
         "O"
       ],
@@ -4010,6 +4011,7 @@
         "D",
         "E",
         "F",
+        "G",
         "H",
         "I",
         "K",

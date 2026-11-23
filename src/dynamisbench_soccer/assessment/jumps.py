@@ -613,6 +613,8 @@ def contact_system_estimates(
     definition = getattr(result, "estimand", "contact_system_switch_flight_time")
     verdict = str(getattr(result, "verdict", "unreported"))
     diagnostic = _refuse_rejected(verdict, "contact-system result", allow_diagnostic)
+    if any(getattr(flight, "flight_time_height_m", None) is None for flight in flights):
+        raise ValueError("contact-system height requires an eligible ballistic flight estimate")
     return [
         _flight_estimate(
             f"contact_system:{getattr(result, 'system', 'unknown')}",
