@@ -38,6 +38,14 @@ Bilateral: summed peak force and one of two named asymmetry definitions.
 Onset variants: `first_exceedance` (no backdating) plus the load-cell `5sd`, `reverse_scan`,
 `first_derivative`, `absolute_N`.
 
+For unilateral hip squeeze, registry claim HG-004 (Light and Thorborg) binds the
+squeeze-force and torque estimands to declared position and lever geometry.
+Peak cuff force is the greatest force sample in the selected effort. Best mean
+force is a repository-defined metric using consecutive samples in the declared
+window. Mean peak force
+averages the detected per-effort maxima. The output withholds bilateral metrics
+when only a unilateral channel is available.
+
 ## Uncertainty
 
 Conditional sensitivity only: gain ±1 %, low-pass cutoffs, and torque uncertainty propagated

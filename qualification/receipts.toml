@@ -2307,3 +2307,26 @@ issue = "RES-698"
 "src/dynamisbench_soccer/reference/motion_models.py::MonoExponentialSprint" = "6f5cf86ba81df676877c7e99492f9df0400e35228a59a0f34a1d65bba5e3d493"
 "src/dynamisbench_soccer/reference/observations.py::spherical_gate_trigger_s" = "a3beced3dd0b05c5e5653e5dce37c3a6d8fdd83d71ef99ecf4a130e9baccbff5"
 "tests/test_timing_gates.py::test_roundtripped_gate_metrics_match_independent_affine_clock_fixture" = "a7c76e963731da52300593da8c0712998c12be3b0bf397d168f0ad0472ed796d"
+
+[[receipt]]
+id = "RCP-nordic_hip-hip-H"
+dimension = "H"
+subfamilies = ["nordic_hip.hip"]
+implementation = ["src/dynamisbench_soccer/engines/nordic_hip.py::process"]
+reference = ["src/dynamisbench_soccer/reference/motion_models.py::IsometricRamp"]
+tests = ["tests/test_hip_policy_a.py::test_hip_estimands_match_sourced_peak_torque_and_sample_window_definitions", "tests/test_hip_policy_a.py::test_unilateral_hip_mean_peak_is_not_peak_force_or_bilateral_mean", "tests/test_hip_policy_a.py::test_hip_max_mean_window_cannot_combine_separated_holds"]
+reference_kind = "closed_form"
+independence = "The isometric ramp and two hand-specified efforts generate independent expected values. Window and repeated-peak calculations do not call engine helpers, and the cited registry definition is validated independently."
+claim = "Unilateral hip squeeze distinguishes peak cuff force, unnormalized declared-lever torque, contiguous maximum mean force, and arithmetic mean of repetition peaks."
+tolerance_basis = "At 1000 Hz the ramp yields 2500 N peak, 1000 N·m from the 0.40 m lever, and 2339.2875 N maximum mean over 1000 consecutive samples. The 500-sample window over separated 200-sample holds gives 1000 N, whereas an invalid noncontiguous top-sample average would give 1800 N. Peaks of 2500, 1750 and 2250 N give arithmetic mean 6500/3 N. Numerics use absolute 1e-8 N or N·m and zero relative allowance for floating-point accumulation. Estimand labels and bilateral withholding are exact. Existing registry HG-004 sources the geometry and repetition context; the sampled-window average is the repository's own declared method."
+check_kind = "numeric"
+tolerance_unit = "N and N·m (absolute)"
+tolerance = 1e-08
+issue = "RES-672"
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/nordic_hip.py::process" = "a713634ed342d53c9a5974031401d5cd9ad08ea909707198303277d826b62837"
+"src/dynamisbench_soccer/reference/motion_models.py::IsometricRamp" = "fb30c889a909acd458dae981957a34ea33ce883f396d88610ac5ec87d75cb710"
+"tests/test_hip_policy_a.py::test_hip_estimands_match_sourced_peak_torque_and_sample_window_definitions" = "8b0c110516e7206bf4b5b6b8c96cf765cae623da6214262649485db5b5dd852f"
+"tests/test_hip_policy_a.py::test_hip_max_mean_window_cannot_combine_separated_holds" = "49e5c86e7e9cc19da2cb3eb9cf2217a835b3762cfbc75211b539b4d06644d8ab"
+"tests/test_hip_policy_a.py::test_unilateral_hip_mean_peak_is_not_peak_force_or_bilateral_mean" = "c68c1e62ebfa504c005d6df69a02f4273ca0151d992f01c270a0b3428f85616b"

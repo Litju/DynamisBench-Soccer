@@ -93,7 +93,7 @@ paradigm = "continuous_signal"
 issue = "RES-697"
 engine_id = "hip"
 methods = ["filter"]
-ratings = { A = "specified", B = "verified", C = "specified", D = "partial", E = "partial", F = "partial", G = "partial", H = "partial", I = "partial", J = "verified", K = "partial", L = "partial", M = "partial", N = "absent", O = "partial" }
+ratings = { A = "specified", B = "verified", C = "specified", D = "partial", E = "partial", F = "partial", G = "partial", H = "verified", I = "partial", J = "verified", K = "partial", L = "partial", M = "partial", N = "absent", O = "partial" }
 empirical_gaps = ["Engine verified on analytical isometric controls (RES-697); squeeze protocol geometry validity and device metrology remain unqualified (RES-694)", "G/H assessment qualification remains RES-672"]
 blockers = []
 
@@ -4755,3 +4755,11 @@ kind = "independent_test"
 issue = "RES-698"
 ref = "repo:tests/test_timing_gates.py"
 rationale = "Canonical single-beam gate events recover strict crossing, cumulative and split times and segment-average speed after a Parquet round trip."
+
+[[evidence]]
+subfamily = "nordic_hip.hip"
+dimension = "H"
+kind = "independent_test"
+issue = "RES-672"
+ref = "repo:tests/test_hip_policy_a.py"
+rationale = "Unilateral hip squeeze distinguishes peak cuff force, unnormalized declared-lever torque, contiguous maximum mean force, and arithmetic mean of repetition peaks."

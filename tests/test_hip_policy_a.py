@@ -4,6 +4,7 @@ import hashlib
 import json
 from pathlib import Path
 
+import numpy as np
 import pytest
 
 from dynamisbench_soccer.cli import main
@@ -13,6 +14,7 @@ from dynamisbench_soccer.qc.spec import Status
 from dynamisbench_soccer.reference.exporters import export_case
 from dynamisbench_soccer.reference.faults import ContinuousFault, ContinuousKind, inject
 from dynamisbench_soccer.reference.motion_models import IsometricRamp
+from dynamisbench_soccer.registry.models import load as load_registry
 from dynamisbench_soccer.signals import io
 from dynamisbench_soccer.signals.schema import BundleMeta, Calibration, Quantity, SignalBundle
 
@@ -224,3 +226,64 @@ def test_hip_refuses_conflicting_source_geometry(field: str, value: float) -> No
     mismatched = SignalBundle(BundleMeta.model_validate(meta), observation.data)
     with pytest.raises(ValueError, match=f"{field} contradicts trial geometry"):
         process(mismatched, _spec())
+
+
+def test_hip_estimands_match_sourced_peak_torque_and_sample_window_definitions() -> None:
+    root = Path(__file__).resolve().parents[1]
+    registry = load_registry(root / "registry")
+    definition = next(claim for claim in registry.claims if claim.id == "HG-004")
+    assert definition.metrics == ["squeeze_peak", "squeeze_torque"]
+    assert definition.sources == ["light2016"] and "light2016" in registry.sources
+    assert "variant (position, lever) must be recorded" in definition.statement
+    assert "HG-004 (Light and Thorborg)" in (root / "docs/nordic-hip-engine.md").read_text()
+
+    observation = export_case("nordic_hip.hip", scenario=RAMP, hz=HZ).observation
+    result = process(observation, _spec(), MethodSpec(max_mean_window_s=1.0))
+    metrics = result.sides["unilateral"].metrics
+    # A sampled unimodal ramp has a contiguous window of its largest 1000 points.
+    # Sorting the independently evaluated ramp avoids the engine's rolling sum.
+    expected_force = sorted(RAMP.force_n(float(seconds)) for seconds in observation["time"])
+    assert metrics["max_mean_force_n"] == pytest.approx(
+        sum(expected_force[-1000:]) / 1000, rel=0, abs=ABS
+    )
+    assert metrics["peak_force_n"] == pytest.approx(2500, rel=0, abs=ABS)
+    assert metrics["peak_torque_n_m"] == pytest.approx(1000, rel=0, abs=ABS)
+    assert metrics["max_mean_force_n"] < metrics["peak_force_n"]
+    assert result.report()["estimands"] == {
+        "force": "strap/cuff force at the device, N (not muscle force)",
+        "torque": "strap force x declared lever arm, N*m",
+    }
+    assert result.bilateral["available"] is False
+
+
+def test_unilateral_hip_mean_peak_is_not_peak_force_or_bilateral_mean() -> None:
+    observation = export_case("nordic_hip.hip", scenario=RAMP, hz=HZ).observation
+    force = observation["force"]
+    data = np.concatenate((force, force * 0.7, force * 0.9))
+    bundle = SignalBundle(
+        observation.meta.model_copy(update={"n_rows": len(data)}),
+        {"time": np.arange(len(data)) / HZ, "force": data},
+    )
+    result = process(bundle, _spec(), MethodSpec(repetition="detect"))
+    side = result.sides["unilateral"]
+    assert [row["peak_force_n"] for row in side.repetitions] == pytest.approx(
+        [2500, 1750, 2250], rel=0, abs=ABS
+    )
+    assert side.metrics["peak_force_n"] == pytest.approx(2500, rel=0, abs=ABS)
+    assert side.metrics["mean_peak_force_n"] == pytest.approx(6500 / 3, rel=0, abs=ABS)
+    assert result.bilateral["available"] is False
+
+
+def test_hip_max_mean_window_cannot_combine_separated_holds() -> None:
+    observation = export_case("nordic_hip.hip", scenario=RAMP, hz=HZ).observation
+    force = np.zeros_like(observation["force"])
+    force[600:800] = 2500
+    force[1250:1450] = 2000
+    bundle = SignalBundle(observation.meta, {**observation.data, "force": force})
+    result = process(bundle, _spec(), MethodSpec(max_mean_window_s=0.5))
+    assert result.verdict != "reject"
+    # Each hold is 200 samples and the 450-sample trough prevents any
+    # width-500 window spanning it from containing more than 50 loaded rows.
+    assert result.sides["unilateral"].metrics["max_mean_force_n"] == pytest.approx(
+        200 * 2500 / 500, rel=0, abs=ABS
+    )

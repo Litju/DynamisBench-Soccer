@@ -28,7 +28,7 @@ Engineering calculations only; no scientific qualification of any device or metr
 | load_cell_isometric.load_cell | SPECIFIED | yes | 5 of 14 |
 | lpt_encoder.encoder | SPECIFIED | yes | 12 of 14 |
 | lpt_encoder.lpt | SPECIFIED | yes | 9 of 14 |
-| nordic_hip.hip | SPECIFIED | yes | 12 of 14 |
+| nordic_hip.hip | SPECIFIED | yes | 11 of 14 |
 | nordic_hip.nordic | SPECIFIED | yes | 9 of 14 |
 | radar_laser.laser | SPECIFIED | yes | 11 of 14 |
 | radar_laser.radar | SPECIFIED | yes | 6 of 14 |
@@ -194,14 +194,12 @@ Engineering calculations only; no scientific qualification of any device or metr
 * computational blocker: E: every processing method variant is compared with an independent reference with stated sensitivity bounds (owner RES-697; rated partial)
 * computational blocker: F: reconstructed quantities agree with an independent analytical truth within tolerance (owner RES-697; rated partial)
 * computational blocker: G: protocol events are recovered against analytically known event times, with eligibility refusals (owner RES-672; rated partial)
-* computational blocker: H: metric definitions are bound to sourced registry claims and executable exactly (owner RES-672; rated partial)
 * computational blocker: I: declared uncertainty propagation is checked against an independent analytical result (owner RES-697; rated partial)
 * computational blocker: K: synthetic fault fixtures cover the declared fault classes with expected verdicts (owner RES-669; rated partial)
 * computational blocker: L: analytical cross-device studies are executed and classified, never read as interchangeability (owner RES-703; rated partial)
 * computational blocker: M: seeded, hash-bound provenance chain for every processing stage, reproduced exactly (owner RES-697; rated partial)
 * computational blocker: O: limitation statements are sourced and emitted with every result (owner RES-697; rated partial)
 * K - owner RES-669: synthetic fault fixtures cover the declared fault classes with expected verdicts
-* H - owner RES-672: metric definitions are bound to sourced registry claims and executable exactly
 * G - owner RES-672: protocol events are recovered against analytically known event times, with eligibility refusals
 * C - owner RES-693: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused
 * I - owner RES-697: declared uncertainty propagation is checked against an independent analytical result
@@ -403,7 +401,7 @@ Open empirical requirements (what only physical measurement can close):
 | load_cell_isometric.load_cell | V | V | s | V | p | V | V | p | p | V | p | V | V | - | V |
 | lpt_encoder.encoder | s | V | s | p | p | p | p | p | p | p | p | p | V | - | p |
 | lpt_encoder.lpt | s | s | V | p | p | V | p | p | V | V | p | p | V | - | p |
-| nordic_hip.hip | s | V | s | p | p | p | p | p | p | V | p | p | p | - | p |
+| nordic_hip.hip | s | V | s | p | p | p | p | V | p | V | p | p | p | - | p |
 | nordic_hip.nordic | s | s | s | p | p | V | V | V | p | V | p | V | p | - | p |
 | radar_laser.laser | s | s | V | p | p | V | p | p | p | p | p | V | p | - | p |
 | radar_laser.radar | V | s | V | V | p | V | V | V | V | V | p | p | p | - | p |

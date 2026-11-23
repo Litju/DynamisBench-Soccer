@@ -789,9 +789,14 @@
    "verdict": "PARTIAL"
   },
   "RCP-nordic_hip-hip-H": {
-   "fix": "Cite or add hip tests that execute max-mean window definitions and unilateral estimand naming on the hip export.",
-   "reason": "All four cited tests run nordic bilateral data. The hip metrics (unilateral peak, max_mean_force_n window, mean_peak) are not in the H list.",
-   "verdict": "UNSUPPORTED"
+   "bound_digest": "b25b961955be94dcb2c1f938f67418575c4c8c4a79a65e978f0156a3df4e1aed",
+   "evidence_head": "bfce8787be25914533841647b038ffc5fb8fa37e",
+   "fix": "",
+   "prior_fix": "Cite or add hip tests that execute max-mean window definitions and unilateral estimand naming on the hip export.",
+   "prior_reason": "All four cited tests run nordic bilateral data. The hip metrics (unilateral peak, max_mean_force_n window, mean_peak) are not in the H list.",
+   "prior_verdict": "UNSUPPORTED",
+   "reason": "Unilateral hip squeeze distinguishes peak cuff force, unnormalized declared-lever torque, contiguous maximum mean force, and arithmetic mean of repetition peaks. At 1000 Hz the ramp yields 2500 N peak, 1000 N\u00b7m from the 0.40 m lever, and 2339.2875 N maximum mean over 1000 consecutive samples. The 500-sample window over separated 200-sample holds gives 1000 N, whereas an invalid noncontiguous top-sample average would give 1800 N. Peaks of 2500, 1750 and 2250 N give arithmetic mean 6500/3 N. Numerics use absolute 1e-8 N or N\u00b7m and zero relative allowance for floating-point accumulation. Estimand labels and bilateral withholding are exact. Existing registry HG-004 sources the geometry and repetition context; the sampled-window average is the repository's own declared method.",
+   "verdict": "SUPPORTED"
   },
   "RCP-nordic_hip-hip-I": {
    "evidence_head": "f8ff6a845e022cd041f28c85640322d86433b82b",
