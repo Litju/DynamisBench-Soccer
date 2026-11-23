@@ -98,3 +98,19 @@ def test_excludes_development_tasks_without_reading_private_store(tmp_path) -> N
         json.dumps(ANSWER).encode(),
     )
     assert outcome.outcome == "EXCLUDED_FROM_SCORED_BENCHMARK"
+
+
+@pytest.mark.parametrize(
+    "update",
+    [
+        {"reasons": ["insufficient_evidence"]},
+        {"allowed_citations": []},
+        {"allowed_claims": []},
+        {"quantity": None},
+    ],
+)
+def test_inconsistent_private_reference_is_rejected(update) -> None:
+    from pydantic import ValidationError
+
+    with pytest.raises(ValidationError):
+        ExpectedMethod.model_validate_json(json.dumps(EXPECTED.model_dump(mode="json") | update))

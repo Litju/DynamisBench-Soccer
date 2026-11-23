@@ -12,7 +12,7 @@ from dynamisbench_soccer.m4.admission import Admission, _read, evaluate
 from dynamisbench_soccer.m4.custody import check_projection, load_private
 from dynamisbench_soccer.m4.grader import Outcome, score_checkpoint
 from dynamisbench_soccer.m4.key_store import digest
-from dynamisbench_soccer.m4.runner import BWRAP, PYTHON, Execution, execute_payload
+from dynamisbench_soccer.m4.runner import BWRAP, MAX_SOURCE, PYTHON, Execution, execute_payload
 from dynamisbench_soccer.m4.task_registry import RegistryTask
 
 
@@ -44,6 +44,7 @@ class TrialReport:
     seed: int
     environment: dict[str, str]
     attempts: tuple[Attempt, ...]
+    terminal_reason: str | None = None
     version: str = "m4.trial.v1"
 
 
@@ -61,13 +62,21 @@ def run_episode(
         "sandbox_binary_sha256": digest(BWRAP.read_bytes()),
         "lockfile_sha256": digest(_read(root, "uv.lock")),
     }
+    terminal_reason = None
     if state.status != "REFUSED":
         inputs = {artifact.name: _read(root, artifact.path) for artifact in task.artifacts}
         review = state.reviewed_slice
         private = None
         if state.status == "ENGINEERING_ADMITTED" and review is not None:
-            private = load_private(context.custody_root, root, review.answer, state.task_sha256)
+            try:
+                private = load_private(context.custody_root, root, review.answer, state.task_sha256)
+            except (OSError, ValueError):
+                terminal_reason = "invalid_private_reference"
+        if len(source) > MAX_SOURCE:
+            terminal_reason = "candidate_source_limit"
         for checkpoint in task.checkpoints:
+            if terminal_reason is not None:
+                break
             visible = json.loads(task.candidate_payload(checkpoint.id, inputs, seed))
             visible["previous"] = [
                 {
@@ -78,8 +87,15 @@ def run_episode(
                 for attempt in attempts
             ]
             payload = json.dumps(visible, sort_keys=True).encode()
+            if len(payload) > MAX_SOURCE:
+                terminal_reason = "checkpoint_payload_limit"
+                break
             if private is not None and review is not None:
-                check_projection(payload, private, review.answer)
+                try:
+                    check_projection(payload, private, review.answer)
+                except ValueError:
+                    terminal_reason = "projection_rejected"
+                    break
             execution = execute_payload(payload, source)
             scored = score_checkpoint(
                 root,
@@ -111,6 +127,7 @@ def run_episode(
         seed,
         environment,
         tuple(attempts),
+        terminal_reason,
     )
 
 

@@ -38,3 +38,14 @@ print('ok')
 """
     result = run_episode(context, task, "checkpoint-control", source, seed=17)
     assert [attempt.execution.stdout for attempt in result.attempts] == [b"ok\n", b"ok\n"]
+
+
+def test_large_checkpoint_history_preserves_completed_attempts(tmp_path: Path) -> None:
+    catalog = (ROOT / "benchmark/reviewed-slices.json").read_bytes()
+    context = TrialContext(ROOT, catalog, digest(catalog), tmp_path)
+    task = load_registry(ROOT / "benchmark/tasks")["elapsed-demo", 1]
+    result = run_episode(context, task, "large-output", b"print(chr(0)*15000)", seed=17)
+    assert result.terminal_reason == "checkpoint_payload_limit"
+    assert len(result.attempts) == 1
+    assert result.attempts[0].execution.workspace_removed
+    assert result.attempts[0].grade.outcome == "EXCLUDED_FROM_SCORED_BENCHMARK"
