@@ -208,10 +208,11 @@ def evaluate(
             or shared != set(review.shared_infrastructure)
         ):
             return decision("REFUSED", "reference and implementation are circular")
-        # Test helpers may be selected dynamically by pytest, so bind the whole test tree.
+        # Tests can select fixtures dynamically and import helpers anywhere under src/.
         bound_files = {
             path.relative_to(root).as_posix()
-            for path in (root / "tests").rglob("*")
+            for directory in ("tests", "src")
+            for path in (root / directory).rglob("*")
             if path.is_file() and "__pycache__" not in path.parts
         } | {"uv.lock", "pyproject.toml", *review.additional_files}
         bound_files.update(ref.split("::", 1)[0] for ref in oracles if not ref.startswith(SOURCE))
