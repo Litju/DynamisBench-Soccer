@@ -1766,19 +1766,11 @@
         "L: analytical cross-device studies are executed and classified, never read as interchangeability (owner RES-703; rated partial)",
         "M: seeded, hash-bound provenance chain for every processing stage, reproduced exactly (owner RES-699; rated partial)",
         "O: limitation statements are sourced and emitted with every result (owner RES-699; rated partial)"
-      ],
-      "timing_contact.contact": [
-        "B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-698; rated specified)",
-        "O: limitation statements are sourced and emitted with every result (owner RES-698; rated partial)"
-      ],
-      "timing_contact.gates": [
-        "B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-698; rated specified)",
-        "O: limitation statements are sourced and emitted with every result (owner RES-698; rated partial)"
       ]
     },
     "by_state": {
-      "ENGINEERING_VERIFIED": 2,
-      "SPECIFIED": 13
+      "ENGINEERING_VERIFIED": 4,
+      "SPECIFIED": 11
     },
     "empirical_problems": {},
     "empirical_requirements": {
@@ -2023,7 +2015,7 @@
         "O": "limitation statement reviewed by a domain expert"
       }
     },
-    "engineering_verified": 2,
+    "engineering_verified": 4,
     "passed": false,
     "receipt_problems": {},
     "structural_problems": [],
@@ -3739,6 +3731,7 @@
     {
       "analytical_only_dimensions": [
         "A",
+        "B",
         "C",
         "D",
         "E",
@@ -3749,12 +3742,10 @@
         "J",
         "K",
         "L",
-        "M"
+        "M",
+        "O"
       ],
-      "blockers": [
-        "B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-698; rated specified)",
-        "O: limitation statements are sourced and emitted with every result (owner RES-698; rated partial)"
-      ],
+      "blockers": [],
       "empirical_dimensions_covered": [],
       "empirical_gaps": [
         "Contact-system switching thresholds and latency bounds need empirical metrology (RES-694)",
@@ -3800,7 +3791,7 @@
       },
       "ratings": {
         "A": "verified",
-        "B": "specified",
+        "B": "verified",
         "C": "verified",
         "D": "verified",
         "E": "verified",
@@ -3813,11 +3804,14 @@
         "L": "verified",
         "M": "verified",
         "N": "absent",
-        "O": "partial"
+        "O": "verified"
       },
       "receipts": {
         "A": [
           "RCP-timing_contact-contact-A"
+        ],
+        "B": [
+          "RCP-timing_contact-contact-B"
         ],
         "C": [
           "RCP-timing_contact-contact-C"
@@ -3851,20 +3845,18 @@
         ],
         "M": [
           "RCP-timing_contact-contact-M"
+        ],
+        "O": [
+          "RCP-timing_contact-contact-O"
         ]
       },
-      "required_computational": {
-        "B": "declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused",
-        "O": "limitation statements are sourced and emitted with every result"
-      },
-      "state": "SPECIFIED",
+      "required_computational": {},
+      "state": "ENGINEERING_VERIFIED",
       "subfamily": "timing_contact.contact",
-      "unverified_m3": [
-        "B",
-        "O"
-      ],
+      "unverified_m3": [],
       "verified_m3": [
         "A",
+        "B",
         "C",
         "D",
         "E",
@@ -3875,12 +3867,14 @@
         "J",
         "K",
         "L",
-        "M"
+        "M",
+        "O"
       ]
     },
     {
       "analytical_only_dimensions": [
         "A",
+        "B",
         "C",
         "D",
         "E",
@@ -3891,12 +3885,10 @@
         "J",
         "K",
         "L",
-        "M"
+        "M",
+        "O"
       ],
-      "blockers": [
-        "B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-698; rated specified)",
-        "O: limitation statements are sourced and emitted with every result (owner RES-698; rated partial)"
-      ],
+      "blockers": [],
       "empirical_dimensions_covered": [],
       "empirical_gaps": [
         "Gate geometry, trigger validity and timing-error bounds need empirical metrology (RES-694)",
@@ -3942,7 +3934,7 @@
       },
       "ratings": {
         "A": "verified",
-        "B": "specified",
+        "B": "verified",
         "C": "verified",
         "D": "verified",
         "E": "verified",
@@ -3955,11 +3947,14 @@
         "L": "verified",
         "M": "verified",
         "N": "absent",
-        "O": "partial"
+        "O": "verified"
       },
       "receipts": {
         "A": [
           "RCP-timing_contact-gates-A"
+        ],
+        "B": [
+          "RCP-timing_contact-gates-B"
         ],
         "C": [
           "RCP-timing_contact-gates-C"
@@ -3993,20 +3988,18 @@
         ],
         "M": [
           "RCP-timing_contact-gates-M"
+        ],
+        "O": [
+          "RCP-timing_contact-gates-O"
         ]
       },
-      "required_computational": {
-        "B": "declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused",
-        "O": "limitation statements are sourced and emitted with every result"
-      },
-      "state": "SPECIFIED",
+      "required_computational": {},
+      "state": "ENGINEERING_VERIFIED",
       "subfamily": "timing_contact.gates",
-      "unverified_m3": [
-        "B",
-        "O"
-      ],
+      "unverified_m3": [],
       "verified_m3": [
         "A",
+        "B",
         "C",
         "D",
         "E",
@@ -4017,7 +4010,8 @@
         "J",
         "K",
         "L",
-        "M"
+        "M",
+        "O"
       ]
     }
   ]

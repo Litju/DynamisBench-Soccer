@@ -268,6 +268,12 @@ def disposition(payload: dict) -> str:
     states = payload["states"]
     verified = sum(len(s["verified_m3"]) for s in states)
     pending = sum(len(s["unverified_m3"]) for s in states)
+    families = sorted({state["family"] for state in states})
+    complete = [
+        family
+        for family in families
+        if all(s["state"] == "ENGINEERING_VERIFIED" for s in states if s["family"] == family)
+    ]
     lines = [
         "# M3 disposition under Policy A (RES-675)",
         "",
@@ -276,6 +282,9 @@ def disposition(payload: dict) -> str:
         f"**M3 {'PASS' if gate['passed'] else 'FAIL'}** with {gate['engineering_verified']} of "
         f"{gate['total_subfamilies']} subfamilies engineering verified.",
         f"{verified} of {verified + pending} A-M/O computational cells verified, with {pending} open.",
+        f"{len(complete)} of {len(families)} families complete"
+        + (f" ({', '.join(complete)})." if complete else "."),
+        "RES-675 remains In Progress while the full gate fails." if not gate["passed"] else "",
         "",
         "| Subfamily | State | Verified | Open | Empirical records |",
         "| -- | -- | -- | -- | -- |",
