@@ -277,3 +277,26 @@ def test_radar_start_and_filter_sensitivity_against_exponential_velocity() -> No
         "UNSUPPORTED: start perturbation outside observed clock"
     )
     assert "los_velocity_at_1s_baseline_m_s" not in no_window.sensitivity
+
+
+@pytest.mark.parametrize(
+    ("kind", "channel", "rail"), [("radar", "velocity", 3.0), ("laser", "distance", 8.0)]
+)
+def test_native_radar_laser_refuse_resampling_dropouts_and_clipping(
+    kind: str, channel: str, rail: float
+) -> None:
+    observation = export_case(f"radar_laser.{kind}", hz=100).observation
+    assert process(observation, _native()).peak_velocity_m_s > 8
+    clipped = inject(
+        observation, ContinuousFault(ContinuousKind.CLIPPING, (channel,), magnitude=rail)
+    )
+    reason = "flat rail" if kind == "radar" else r"negative reconstructed|discontinuity|flat rail"
+    with pytest.raises(AcquisitionRefusal, match=reason):
+        process(clipped, _native())
+    dropped = inject(observation, ContinuousFault(ContinuousKind.DROP, (channel,), stride=5))
+    with pytest.raises(AcquisitionRefusal, match="timestamp gap"):
+        process(dropped, _native())
+    decimated = inject(observation, ContinuousFault(ContinuousKind.RESAMPLE, (channel,), stride=2))
+    assert decimated.meta.sampling is not None and decimated.meta.sampling.nominal_hz == 50
+    with pytest.raises(AcquisitionRefusal, match="processed/resampled"):
+        process(decimated, _native())

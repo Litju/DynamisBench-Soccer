@@ -110,7 +110,15 @@ def admit(
     processed_markers = ("manufacturer_processed", "vendor_processed", "resampled", "smoothed")
     source_format = source.raw_format.lower().replace("-", "_")
     declared_processed = any(token in source_format for token in processed_markers)
-    if stage is ChannelStage.NATIVE and declared_processed:
+    transforms = [
+        "".join(c for c in step.casefold() if c.isalnum()) for step in meta.provenance.transforms
+    ]
+    resampled = any(
+        marker in step
+        for step in transforms
+        for marker in ("resampl", "decimat", "upsampl", "downsampl")
+    )
+    if stage is ChannelStage.NATIVE and (declared_processed or resampled):
         raise AcquisitionRefusal(
             "upstream processed/resampled acquisition cannot be labeled native"
         )
