@@ -30,8 +30,8 @@ def test_radar_recovers_independent_exact_velocity_at_native_rate(rate: int) -> 
     result = process(case.observation, _native(correction_method="declared_fixed_angle"))
     assert result.estimand == "radar_declared_axis_projection_velocity"
     assert result.native_quantity == "velocity"
-    np.testing.assert_allclose(result.velocity_m_s, case.truth["velocity"], atol=2e-12)
-    np.testing.assert_allclose(result.time_reference_s, case.truth["time"], atol=2e-12)
+    np.testing.assert_allclose(result.velocity_m_s, case.truth["velocity"], rtol=0, atol=2e-12)
+    np.testing.assert_allclose(result.time_reference_s, case.truth["time"], rtol=0, atol=2e-12)
     assert result.sensitivity["cosine_peak_high_m_s"] > result.peak_velocity_m_s
 
 

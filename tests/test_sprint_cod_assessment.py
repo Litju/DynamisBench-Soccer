@@ -444,3 +444,23 @@ def test_cod_ends_at_first_arrival_before_stationary_tail() -> None:
     )
     start = StartSpec(kind="external_trigger", trigger_s=0.05)
     assert cod.assess_trace(time, speed, spec, start)["total_time_s"] == pytest.approx(2.95)
+
+
+def test_native_radar_milestones_match_independent_sprint_arrivals() -> None:
+    model = MonoExponentialSprint()
+    observation = export_case("radar_laser.radar", model, hz=100).observation
+    trace = process(
+        observation,
+        ProcessingOptions(
+            channel_stage=ChannelStage.NATIVE, correction_method="declared_fixed_angle"
+        ),
+    )
+    distances = [10, 20, 30, 1000]
+    arrivals = sprint.milestones(
+        np.asarray(trace.time_from_start_s), np.asarray(trace.velocity_m_s), distances, StartSpec()
+    )
+    for distance in distances[:3]:
+        assert arrivals[f"{distance}_m"] == pytest.approx(
+            model.gate_time_s(distance), rel=0, abs=1e-4
+        )
+    assert arrivals["1000_m"] is None

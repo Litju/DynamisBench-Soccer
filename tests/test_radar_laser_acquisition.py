@@ -21,12 +21,28 @@ from dynamisbench_soccer.signals.schema import BundleMeta, SignalBundle
 
 @pytest.mark.parametrize("family,rate", [("radar", 47), ("laser", 256)])
 def test_admits_distinct_native_measurands_and_affine_clocks(family: str, rate: int) -> None:
-    case = export_case(f"radar_laser.{family}", hz=rate, clock=DeviceClock(0.13, 90))
+    case = export_case(
+        f"radar_laser.{family}", hz=rate, clock=DeviceClock(0.13, 90), latency_s=0.014
+    )
     trace = admit(case.observation, stage=ChannelStage.NATIVE)
     assert trace.channel == ("velocity" if family == "radar" else "distance")
     assert trace.measured_hz == pytest.approx(rate, rel=1e-10)
     assert trace.native_nominal_hz == rate
-    np.testing.assert_allclose(trace.reference_time_s, case.truth["time"], atol=1e-12)
+    np.testing.assert_allclose(
+        trace.reference_time_s, case.truth["time"] + 0.014, rtol=0, atol=1e-12
+    )
+    assert (
+        "Physical acquisition latency and absolute sprint start remain unverified" in trace.warnings
+    )
+
+    def measurement_clock(raw, data) -> None:  # type: ignore[no-untyped-def]
+        alignment = raw["acquisition"]["alignments"][0]
+        alignment["method"] = "paired reference timestamps include supplied fixed delay correction"
+        alignment["offset_s"] -= 0.014
+        alignment["sync_events"] = [[x, y - 0.014] for x, y in alignment["sync_events"]]
+
+    corrected = admit(_edit(case.observation, measurement_clock), stage=ChannelStage.NATIVE)
+    np.testing.assert_allclose(corrected.reference_time_s, case.truth["time"], rtol=0, atol=1e-12)
     assert trace.cosine_angle_rad == (pytest.approx(0.2) if family == "radar" else None)
     assert trace.aiming_point
     assert trace.n_samples == case.observation.meta.n_rows
@@ -77,17 +93,24 @@ def test_unmeasured_geometry_cannot_be_inferred() -> None:
         admit(_edit(radar, unknown), stage=ChannelStage.NATIVE)
 
 
-def test_native_timestamp_fault_and_dropouts_refuse() -> None:
-    laser = export_case("radar_laser.laser", hz=100).observation
+@pytest.mark.parametrize(("kind", "column"), [("radar", "velocity"), ("laser", "distance")])
+def test_native_timestamp_fault_and_dropouts_refuse(kind: str, column: str) -> None:
+    observation = export_case(f"radar_laser.{kind}", hz=100).observation
 
     def backstep(raw, data) -> None:  # type: ignore[no-untyped-def]
         data["time"][5] = data["time"][4]
 
     with pytest.raises(AcquisitionRefusal, match="non-monotonic"):
-        admit(_edit(laser, backstep), stage=ChannelStage.NATIVE)
-    missing = inject(laser, ContinuousFault(ContinuousKind.DROP, ("distance",), stride=5))
+        admit(_edit(observation, backstep), stage=ChannelStage.NATIVE)
+    missing = inject(observation, ContinuousFault(ContinuousKind.DROP, (column,), stride=5))
     with pytest.raises(AcquisitionRefusal, match="timestamp gap"):
         admit(missing, stage=ChannelStage.NATIVE)
+
+    def unresolvable(raw, data) -> None:  # type: ignore[no-untyped-def]
+        raw["acquisition"]["alignments"][0]["uncertainty_s"] = 0.02
+
+    with pytest.raises(AcquisitionRefusal, match="synchronization uncertainty exceeds"):
+        admit(_edit(observation, unresolvable), stage=ChannelStage.NATIVE)
 
 
 def test_source_calibration_ambiguity_refuses() -> None:
