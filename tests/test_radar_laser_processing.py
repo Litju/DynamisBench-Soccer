@@ -300,3 +300,40 @@ def test_native_radar_laser_refuse_resampling_dropouts_and_clipping(
     assert decimated.meta.sampling is not None and decimated.meta.sampling.nominal_hz == 50
     with pytest.raises(AcquisitionRefusal, match="processed/resampled"):
         process(decimated, _native())
+
+
+@pytest.mark.parametrize(("kind", "channel"), [("radar", "velocity"), ("laser", "distance")])
+@pytest.mark.parametrize(
+    "fault", [ContinuousKind.OFFSET, ContinuousKind.DRIFT, ContinuousKind.NOISE]
+)
+def test_small_native_radar_laser_faults_have_predicted_unflagged_effects(
+    kind: str, channel: str, fault: ContinuousKind
+) -> None:
+    hz = 100
+    observation = export_case(f"radar_laser.{kind}", hz=hz).observation
+    original = process(observation, _native())
+    t = np.arange(observation.meta.n_rows) / hz
+    if fault is ContinuousKind.OFFSET:
+        magnitude = 0.08
+        expected = np.full_like(t, magnitude if kind == "radar" else 0)
+    elif fault is ContinuousKind.DRIFT:
+        magnitude = 0.04
+        expected = magnitude * t if kind == "radar" else np.full_like(t, magnitude)
+    else:
+        magnitude = 0.002 if kind == "radar" else 1e-6
+        perturbation = np.random.default_rng(823).normal(0, magnitude, len(t))
+        if kind == "radar":
+            expected = perturbation
+        else:
+            expected = (
+                perturbation[:-4]
+                - 8 * perturbation[1:-3]
+                + 8 * perturbation[3:-1]
+                - perturbation[4:]
+            ) * (hz / 12)
+    altered = inject(observation, ContinuousFault(fault, (channel,), magnitude=magnitude, seed=823))
+    result = process(altered, _native())
+    measured = np.asarray(result.velocity_m_s) - original.velocity_m_s
+    if kind == "laser" and fault is ContinuousKind.NOISE:
+        measured = measured[2:-2]
+    np.testing.assert_allclose(measured, expected, rtol=0, atol=1e-11)
