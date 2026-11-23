@@ -4,11 +4,13 @@ from __future__ import annotations
 
 import argparse
 import json
+import tempfile
 from collections import Counter
 from dataclasses import asdict
 from pathlib import Path
 
 from check_m4_controls import Controls, evaluate_controls
+from pydantic import BaseModel
 
 from dynamisbench_soccer.m4.admission import Catalog, evaluate
 from dynamisbench_soccer.m4.grader import score_checkpoint
@@ -16,6 +18,14 @@ from dynamisbench_soccer.m4.key_store import digest
 from dynamisbench_soccer.m4.runner import execute_payload
 from dynamisbench_soccer.m4.task_registry import load_registry
 from dynamisbench_soccer.m4.trials import STUBS, TrialContext, run_episode, run_oracle_control
+
+
+def _json_value(value: object) -> object:
+    if isinstance(value, BaseModel):
+        return value.model_dump(mode="json")
+    if isinstance(value, bytes):
+        return value.decode("utf-8", errors="replace")
+    raise TypeError("unexpected private trial receipt value")
 
 
 def main() -> None:
@@ -42,11 +52,18 @@ def main() -> None:
     baselines = {"oracle": oracle}
     for name, stub in STUBS.items():
         baselines[name] = run_episode(context, task, name, stub, seed=17)
-    with (private / "trial-receipts.json").open("x", encoding="utf-8") as stream:
+    with tempfile.NamedTemporaryFile(
+        mode="w",
+        encoding="utf-8",
+        dir=private,
+        prefix="trial-receipts-",
+        suffix=".json",
+        delete=False,
+    ) as stream:
         json.dump(
             {name: asdict(report) for name, report in baselines.items()},
             stream,
-            default=lambda raw: raw.decode("utf-8", errors="replace"),
+            default=_json_value,
         )
 
     clean, invalid = (json.loads(attempt.execution.stdout) for attempt in oracle.attempts)
@@ -133,7 +150,10 @@ def main() -> None:
     ]
     false_admits = sum(x.status != "REFUSED" for x in rejections)
     private_path = private / f"{review.answer.id}.json"
-    probe = f"from pathlib import Path\nassert not Path({str(private_path)!r}).exists()\nprint('isolated')".encode()
+    probe = (
+        f"from pathlib import Path\nassert not Path({str(private_path)!r}).exists()\n"
+        "print('isolated')"
+    ).encode()
     projection = task.candidate_payload("clean", inputs, 17)
     isolation = execute_payload(projection, probe)
     keys_hidden = isolation.stdout == b"isolated\n" and isolation.workspace_removed
@@ -158,7 +178,6 @@ def main() -> None:
         "native_controls": counts,
         "diagnostic_controls": legacy,
     }
-    print(json.dumps(summary, indent=2, sort_keys=True))
     passed = (
         legacy["diagnostic_thresholds_met"]
         and not false_admits
@@ -180,6 +199,7 @@ def main() -> None:
             if name != "oracle"
         )
     )
+    print(json.dumps(summary | {"gate_passed": passed}, indent=2, sort_keys=True))
     if not passed:
         raise SystemExit(1)
 
