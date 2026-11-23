@@ -22,7 +22,24 @@ The policies are Pydantic models with JSON schemas available through
 | -- | -- | -- |
 | Gates | `t_s`, `distance_m`, optional `gate_id` and `beam_id` | One raw beam break per row. IDs are integer count columns owned by the timestamp source. A single-beam stream can use the exact declared station position as its ID. Multi-beam stations require native beam IDs. |
 | External starts | Same gate-event columns plus `start_kind` | Record the start at its declared position using `gate_id=0`. Use `start_kind=1` for pressure-pad releases or `2` for sound cues. Other rows use `start_kind=0`. When present, `beam_id` is zero on a start row. |
-| Contact systems | `t_s`, `contact` | Binary switching events with 1 for contact on and 0 for contact off. The schema-v2 device class `contact_mat` carries all three contact-system types. The policy identifies the mat, pressure pad, or optical contact bar, and the source geometry records its switching definition. |
+| Contact systems | `t_s`, `contact` | Binary switching codes decoded with the declared polarity. The schema-v2 device class `contact_mat` carries all three contact-system types. The policy identifies the mat, pressure pad, or optical contact bar, and the source geometry records its switching definition. |
+
+Source geometry identifies contact switches as `<actuator>:<polarity>`,
+for example `contact_mat:active_high` or `optical_contact_bar:active_low`.
+The supported actuators are the three policy systems. Active high assigns 1 to
+contact; active low assigns 0. The actuator must match the policy and both
+edge latencies apply to the decoded transitions. The original exact RES-669
+ideal contact declaration remains supported on synthetic records as an
+active-high switch. No analog force or optical threshold is inferred.
+
+Gate rows carry canonical metre positions. Each source declares its beam type,
+trigger method and lowest beam height, matched against the surveyed policy
+stations. The policy identifies every beam separately for multi-beam sources
+and binds each row to its declared station. Positive segment lengths are
+differences between ordered coordinates, so the course origin may be zero or
+shifted. A first-gate start uses the first station itself. Event channels are
+already calibrated in seconds, metres or unitless codes. Nonidentity channel
+calibrations require preprocessing before admission.
 
 Legacy distance and cumulative-time exports require an acquisition contract
 establishing that the provided timestamps are native clock readings. Analytical
@@ -153,7 +170,10 @@ kinematic detection. Both have distinct event definitions from contact switching
 
 Use repeatable `--sensitivity` policies to rerun the same native rows under a
 different start offset, switching latency, debounce window, or beam quorum. Each
-result includes its policy, metrics and discarded rows, or its refusal reason.
+successful result includes its policy, metrics, applicable limitations and discarded
+rows. A structured sensitivity refusal carries the reason and applicable limitations.
+Invalid policy files carry the general limitations for their engine because their
+method choices cannot be determined.
 For body-part and beam-height uncertainty, provide per-beam `definition_error_s`
 from calibration or observations. Compare beam votes when the underlying stream
 contains the corresponding beams. A physical change in setup requires observations
@@ -167,8 +187,15 @@ out-of-order native rows, a false arm break, asymmetric switching delays,
 a plausible biased wireless split, an extra plausible flight, and early drop
 censoring. Linux CI also runs the timing tests from the installed wheel.
 
-Timing and contact remain in progress in the qualification ledger. Empirical
-trigger geometry, switching thresholds, clock and latency calibration, assessment
-validation, and cross-device agreement remain open under RES-694, RES-671,
-RES-673 and RES-703. An isolated plausible false edge or a physically different
-landing posture can require another instrument or a protocol observation to detect.
+See the [computed M3 disposition](verification/m3-disposition.md) for engineering
+status. Trigger geometry, hardware switching thresholds and latency still require
+empirical calibration when interpreting measured device data. A plausible false edge
+or a different landing posture can require another instrument or protocol observation.
+
+The emitted DEV-003 statement comes from [Tenelsen et al. (2019)](https://doi.org/10.3390/sports7050114)
+and is limited to the tested drop-jump contact-time comparison. DEV-004 comes from
+[Haugen et al. (2014)](https://doi.org/10.1519/JSC.0000000000000415) and distinguishes
+the tested single- and dual-beam methods. Timing bounds, refractory rules, beam
+voting and the ballistic posture requirement describe the repository model.
+Segment averages and radar-derived speed follow separate measurement definitions
+in NE-007 in the [M3 architecture](m3-architecture.md).

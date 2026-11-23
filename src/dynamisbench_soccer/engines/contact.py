@@ -7,6 +7,7 @@ from typing import Annotated, Literal
 
 from pydantic import Field, StrictBool, model_validator
 
+from dynamisbench_soccer.data.manifest import DataCategory
 from dynamisbench_soccer.engines.event_time import (
     Discard,
     EdgeTiming,
@@ -18,8 +19,9 @@ from dynamisbench_soccer.engines.event_time import (
     Policy,
     Positive,
     Timing,
+    require_canonical_calibration,
 )
-from dynamisbench_soccer.signals.schema import DeviceClass, SignalBundle
+from dynamisbench_soccer.signals.schema import DeviceClass, Quantity, SignalBundle
 
 _CONTACT_TESTS = {"cmj", "sj", "slcmj", "dj", "rj_10_5"}
 _REBOUND_TESTS = {"dj", "rj_10_5"}
@@ -60,6 +62,47 @@ class ContactPolicy(Policy):
         return self
 
 
+_CONTACT_LIMITATIONS = (
+    "Switch edges depend on the declared actuator and its switching threshold. "
+    "They describe contact-system events rather than mechanical takeoff or touchdown.",
+    "Clock resolution assumes nearest-tick timestamps. Bounds depend on the declared affine clock, "
+    "link and ON/OFF delays, and the selected edge pairs.",
+    "A plausible false switch or missed transition can evade event-integrity checks. "
+    "Incomplete or unresolved phases are refused.",
+    "Flight-time height uses ballistic flight with equal centre-of-mass height at takeoff and "
+    "touchdown. The switch stream cannot establish that condition.",
+    "DEV-003: The tested mat's drop-jump contact times showed condition-dependent bias "
+    "against force plate measurements. This comparison does not establish accuracy "
+    "for other systems or metrics.",
+    "Analytical verification concerns the computation under declared conditions. Hardware accuracy "
+    "and empirical interchangeability need "
+    "measured evidence.",
+)
+
+
+def contact_limitations(policy: ContactPolicy | None) -> tuple[str, ...]:
+    if policy is None:
+        return _CONTACT_LIMITATIONS
+    actuator = {
+        "contact_mat": "Mat contact is defined by the configured switch response.",
+        "pressure_pad": "Pad contact is defined by the configured pressure switch response.",
+        "optical_contact_bar": (
+            "Optical contact is defined by interruption of the configured light path."
+        ),
+    }[policy.system]
+    refractory = (
+        "A positive refractory window can discard real transitions near bounce or repeat edges."
+        if policy.debounce_s
+        else "Zero refractory window retains no bounce suppression and refuses same-state repeats."
+    )
+    posture = (
+        "Equal centre-of-mass height is an explicit protocol assumption for the reported height."
+        if policy.ballistic_equal_com_height
+        else "Flight-time height and height-based RSI are withheld without the posture assumption."
+    )
+    return (*_CONTACT_LIMITATIONS, actuator, refractory, posture)
+
+
 @dataclass(frozen=True)
 class Flight:
     takeoff: Event
@@ -81,6 +124,7 @@ class ContactResult:
     initial_event: Event
     flights: tuple[Flight, ...]
     discarded: tuple[Discard, ...]
+    limitations: tuple[str, ...]
 
 
 def _stable_rows(
@@ -120,18 +164,49 @@ def _stable_rows(
     return stable, discarded
 
 
+def _switch_states(
+    bundle: SignalBundle, stream: EventStream, policy: ContactPolicy
+) -> tuple[bool, ...]:
+    geometry = stream.source.geometry
+    trigger = geometry.trigger_method or ""
+    if not trigger.strip() or "trigger_method" in geometry.unknown:
+        raise EventRefusal("missing contact switching definition and actuator")
+    actuator, _, polarity = trigger.partition(":")
+    if (
+        bundle.meta.data_category is DataCategory.SYNTHETIC
+        and trigger == "ideal contact on/off; receipt latency recorded in spec"
+    ):
+        polarity = "active_high"
+    elif actuator != policy.system or polarity not in {"active_high", "active_low"}:
+        raise EventRefusal("unsupported or contradictory contact actuator and switch polarity")
+    if "contact" not in stream.source.channels or (
+        bundle.meta.channel("contact").quantity is not Quantity.DIMENSIONLESS
+        or bundle.meta.channel("contact").unit != "1"
+    ):
+        raise EventRefusal("expected a source-native binary contact channel")
+    require_canonical_calibration(bundle, stream, {"contact": "1", "t_s": "s"})
+    digital = bundle["contact"]
+    if not all(value in (0, 1) for value in digital):
+        raise EventRefusal("contact state must be binary")
+    active = 1 if polarity == "active_high" else 0
+    return tuple(bool(value == active) for value in digital)
+
+
 def contact(bundle: SignalBundle, policy: ContactPolicy) -> ContactResult:
     """Pair measured transitions and bound each estimand using its actual endpoints."""
+    try:
+        policy = ContactPolicy.model_validate(policy.model_dump())
+    except ValueError as exc:
+        raise EventRefusal(f"invalid contact policy: {exc}") from exc
     stream = EventStream(bundle, DeviceClass.CONTACT_MAT, policy.timing)
+    states = _switch_states(bundle, stream, policy)
     trigger = stream.source.geometry.trigger_method
-    if not trigger or trigger.strip().lower() in {"", "unknown"}:
-        raise EventRefusal("missing contact switching definition")
+    assert trigger is not None
     test_id = bundle.meta.test_id
     if test_id not in _CONTACT_TESTS:
         raise EventRefusal("expected a contact jump or rebound protocol")
     if test_id != "rj_10_5" and policy.expected_flights != 1:
         raise EventRefusal("this jump protocol requires exactly one flight")
-    states = tuple(map(bool, bundle["contact"]))
     if states[0] != (policy.initial_event != "airborne_snapshot"):
         raise EventRefusal("initial contact state contradicts the declared capture")
     stable, discarded = _stable_rows(stream, states, policy)
@@ -213,4 +288,5 @@ def contact(bundle: SignalBundle, policy: ContactPolicy) -> ContactResult:
         initial,
         tuple(flights),
         tuple(discarded),
+        contact_limitations(policy),
     )

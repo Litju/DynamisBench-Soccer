@@ -10,7 +10,13 @@ from typing import Annotated, Literal
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from dynamisbench_soccer.data.manifest import DataCategory
-from dynamisbench_soccer.signals.schema import Acquisition, BundleKind, DeviceClass, SignalBundle
+from dynamisbench_soccer.signals.schema import (
+    Acquisition,
+    BundleKind,
+    DeviceClass,
+    Quantity,
+    SignalBundle,
+)
 
 Positive = Annotated[float, Field(gt=0)]
 Nonnegative = Annotated[float, Field(ge=0)]
@@ -88,6 +94,29 @@ class Event:
 class Discard:
     reason: str
     native: tuple[NativeEvent, ...]
+
+
+def require_canonical_calibration(
+    bundle: SignalBundle, stream: EventStream, units: dict[str, str]
+) -> None:
+    """The event engine consumes already calibrated clocks and canonical channels."""
+    timestamp = bundle.meta.channel("t_s")
+    if timestamp.quantity is not Quantity.TIME or timestamp.unit != "s":
+        raise EventRefusal("expected source-native timestamps in seconds")
+    for calibration in stream.source.calibration:
+        if calibration.channel not in units:
+            continue
+        unit = units[calibration.channel]
+        if (
+            calibration.input_unit not in {None, unit}
+            or calibration.output_unit not in {None, unit}
+            or calibration.gain not in {None, 1}
+            or calibration.offset not in {None, 0}
+            or calibration.bias is not None
+            or calibration.scale is not None
+            or calibration.cosine_angle_rad is not None
+        ):
+            raise EventRefusal(f"{calibration.channel}: expected already calibrated {unit} events")
 
 
 class EventStream:

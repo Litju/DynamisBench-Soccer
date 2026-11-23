@@ -20,6 +20,7 @@ from dynamisbench_soccer.engines.event_time import (
     Policy,
     Positive,
     Timing,
+    require_canonical_calibration,
 )
 from dynamisbench_soccer.signals.schema import DeviceClass, Quantity, SignalBundle
 
@@ -92,9 +93,54 @@ class GatePolicy(Policy):
             if isinstance(self.start, TriggerStart)
             else self.start.start_position_m
         )
+        if (
+            position is not None
+            and isinstance(self.start, FirstGate)
+            and (position != self.gates[0].position_m)
+        ):
+            raise ValueError("first-gate start position must equal the first gate")
         if position is not None and position > self.gates[0].position_m:
             raise ValueError("start position must be at or before the first gate")
         return self
+
+
+_GATE_LIMITATIONS = (
+    "A timestamp represents beam interruption by the triggering body part at the configured "
+    "height. A limb may interrupt the beam before the torso.",
+    "DEV-004: The studied single- and dual-beam methods give different timing observations. "
+    "Beam height, trigger and voting settings have no universal correction.",
+    "Declared link and trigger delays, clock alignment and nearest-tick resolution condition "
+    "the reported timing bounds.",
+    "Split speed is surveyed segment distance divided by elapsed beam time. "
+    "Instantaneous speed and radar-derived speed have different definitions.",
+    "Missing stations, ambiguous beam groups and unresolved event order cause refusal. "
+    "Timing bounds are conditional on the selected beam group.",
+    "Analytical verification concerns declared event geometry and computation. "
+    "Hardware accuracy, course calibration and empirical interchangeability need "
+    "measured evidence.",
+)
+
+
+def gate_limitations(policy: GatePolicy | None) -> tuple[str, ...]:
+    if policy is None:
+        return _GATE_LIMITATIONS
+    start = {
+        "first_gate": "The first gate defines elapsed time zero; motion before it is unobserved.",
+        "fixed_offset": "A declared offset estimates the start-to-first-gate time.",
+        "pressure_pad": "Elapsed time starts from the measured and corrected pressure-pad release.",
+        "sound_cue": "Elapsed time starts from the measured and corrected sound cue.",
+    }[policy.start.mode]
+    voting = (
+        "Multi-beam voting selects the quorum edge within a declared coincidence window."
+        if any(g.beam_type != "single" for g in policy.gates)
+        else "Single-beam stations accept one resolved interruption per station."
+    )
+    refractory = (
+        "The declared refractory window can suppress repeated interruptions on the same beam."
+        if policy.debounce_s
+        else "Zero refractory window applies no beam-repeat suppression."
+    )
+    return (*_GATE_LIMITATIONS, start, voting, refractory)
 
 
 @dataclass(frozen=True)
@@ -114,6 +160,7 @@ class Sprint:
     start_event: Event | None
     splits: tuple[Split, ...]
     discarded: tuple[Discard, ...]
+    limitations: tuple[str, ...]
 
 
 def _crossing(
@@ -165,6 +212,10 @@ def _crossing(
 
 def sprint(bundles: Sequence[SignalBundle], policy: GatePolicy) -> Sprint:
     """Reconstruct a straight sprint with a declared trigger and a complete gate route."""
+    try:
+        policy = GatePolicy.model_validate(policy.model_dump())
+    except ValueError as exc:
+        raise EventRefusal(f"invalid gate course: {exc}") from exc
     if not bundles or len({b.meta.bundle_id for b in bundles}) != len(bundles):
         raise EventRefusal("provide one or more distinct event bundles for one trial")
     meta = bundles[0].meta
@@ -191,12 +242,24 @@ def sprint(bundles: Sequence[SignalBundle], policy: GatePolicy) -> Sprint:
     discarded: list[Discard] = []
     start = policy.start
     for bundle, stream in zip(bundles, streams, strict=True):
+        if "distance_m" not in stream.source.channels or (
+            bundle.meta.channel("distance_m").quantity is not Quantity.DISTANCE
+            or bundle.meta.channel("distance_m").unit != "m"
+        ):
+            raise EventRefusal("expected source-native gate distances in metres")
+        require_canonical_calibration(
+            bundle,
+            stream,
+            {"distance_m": "m", "t_s": "s", "gate_id": "1", "beam_id": "1", "start_kind": "1"},
+        )
         explicit_gate = "gate_id" in bundle.data
         explicit_beam = "beam_id" in bundle.data
         for name in ("gate_id", "beam_id", "start_kind"):
             if name in bundle.data and (
                 name not in stream.source.channels
                 or bundle.meta.channel(name).quantity != Quantity.COUNT
+                or bundle.meta.channel(name).unit != "1"
+                or not all(float(value).is_integer() for value in bundle[name])
             ):
                 raise EventRefusal(f"{name}: expected source-native integer IDs")
         for row, position in enumerate(bundle["distance_m"]):
@@ -220,10 +283,17 @@ def sprint(bundles: Sequence[SignalBundle], policy: GatePolicy) -> Sprint:
             if beam is None:
                 raise EventRefusal(f"gate {gate.id}: unexpected beam {beam_id}")
             geometry = stream.source.geometry
-            if geometry.beam_type not in {None, "unknown", gate.beam_type} or (
-                gate.beam_type == "single"
-                and geometry.gate_height_m is not None
-                and geometry.gate_height_m != beam.height_m
+            required_geometry = {"beam_type", "gate_height_m", "trigger_method"}
+            if (
+                geometry.beam_type in {None, "unknown"}
+                or geometry.gate_height_m is None
+                or not (geometry.trigger_method or "").strip()
+                or (geometry.trigger_method or "").strip().lower() == "unknown"
+                or required_geometry.intersection(geometry.unknown)
+            ):
+                raise EventRefusal(f"gate {gate.id}: missing source beam geometry or trigger")
+            if geometry.beam_type != gate.beam_type or (
+                geometry.gate_height_m != min(b.height_m for b in gate.beams)
             ):
                 raise EventRefusal(
                     f"gate {gate.id}: beam declaration conflicts with source geometry"
@@ -277,4 +347,5 @@ def sprint(bundles: Sequence[SignalBundle], policy: GatePolicy) -> Sprint:
         origin,
         tuple(splits),
         tuple(discarded),
+        gate_limitations(policy),
     )

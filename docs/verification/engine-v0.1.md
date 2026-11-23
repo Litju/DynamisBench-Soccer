@@ -7,7 +7,7 @@ Engineering calculations only; no scientific qualification of any device or metr
 
 ## 1. M3 gate (computed)
 
-* **M3 gate passed: False.** 2/15 subfamilies are ENGINEERING_VERIFIED. State counts: {"ENGINEERING_VERIFIED": 2, "SPECIFIED": 13}.
+* **M3 gate passed: False.** 4/15 subfamilies are ENGINEERING_VERIFIED. State counts: {"ENGINEERING_VERIFIED": 4, "SPECIFIED": 11}.
 * Ledger structural problems: 0.
 * Policy A: ENGINEERING_VERIFIED means computational-reference readiness. It requires A-M
   and O verified by substantive independent receipts, an independent reference and no
@@ -32,8 +32,8 @@ Engineering calculations only; no scientific qualification of any device or metr
 | nordic_hip.nordic | SPECIFIED | yes | 9 of 14 |
 | radar_laser.laser | SPECIFIED | yes | 10 of 14 |
 | radar_laser.radar | SPECIFIED | yes | 5 of 14 |
-| timing_contact.contact | SPECIFIED | yes | 2 of 14 |
-| timing_contact.gates | SPECIFIED | yes | 2 of 14 |
+| timing_contact.contact | ENGINEERING_VERIFIED | yes | 0 of 14 |
+| timing_contact.gates | ENGINEERING_VERIFIED | yes | 0 of 14 |
 
 ### Blockers and the experiment that would clear them
 
@@ -251,17 +251,9 @@ Engineering calculations only; no scientific qualification of any device or metr
 * M - owner RES-699: seeded, hash-bound provenance chain for every processing stage, reproduced exactly
 * L - owner RES-703: analytical cross-device studies are executed and classified, never read as interchangeability
 
-**timing_contact.contact** (SPECIFIED)
-* computational blocker: B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-698; rated specified)
-* computational blocker: O: limitation statements are sourced and emitted with every result (owner RES-698; rated partial)
-* B - owner RES-698: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused
-* O - owner RES-698: limitation statements are sourced and emitted with every result
+**timing_contact.contact** (ENGINEERING_VERIFIED)
 
-**timing_contact.gates** (SPECIFIED)
-* computational blocker: B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-698; rated specified)
-* computational blocker: O: limitation statements are sourced and emitted with every result (owner RES-698; rated partial)
-* B - owner RES-698: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused
-* O - owner RES-698: limitation statements are sourced and emitted with every result
+**timing_contact.gates** (ENGINEERING_VERIFIED)
 
 ## 2b. Empirical device-validity evidence (separate from the computational gate)
 
@@ -377,8 +369,8 @@ Open empirical requirements (what only physical measurement can close):
 | nordic_hip.nordic | s | s | s | p | p | V | V | V | p | V | p | V | p | - | p |
 | radar_laser.laser | s | s | V | p | p | V | p | p | p | p | V | V | p | - | p |
 | radar_laser.radar | V | s | V | V | p | V | V | V | V | V | V | p | p | - | p |
-| timing_contact.contact | V | s | V | V | V | V | V | V | V | V | V | V | V | - | p |
-| timing_contact.gates | V | s | V | V | V | V | V | V | V | V | V | V | V | - | p |
+| timing_contact.contact | V | V | V | V | V | V | V | V | V | V | V | V | V | - | V |
+| timing_contact.gates | V | V | V | V | V | V | V | V | V | V | V | V | V | - | V |
 
 `-` absent, `p` partial (implemented, checked against analytical references), `s` specified, `V` verified.
 

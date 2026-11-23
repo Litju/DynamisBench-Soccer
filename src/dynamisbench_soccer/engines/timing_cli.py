@@ -9,8 +9,8 @@ import sys
 from dataclasses import asdict
 from pathlib import Path
 
-from dynamisbench_soccer.engines.contact import ContactPolicy, contact
-from dynamisbench_soccer.engines.timing_gates import GatePolicy, sprint
+from dynamisbench_soccer.engines.contact import ContactPolicy, contact, contact_limitations
+from dynamisbench_soccer.engines.timing_gates import GatePolicy, gate_limitations, sprint
 from dynamisbench_soccer.signals import io
 
 
@@ -18,31 +18,36 @@ def _run(args: argparse.Namespace) -> int:
     try:
         bundles = [io.read(path) for path in args.bundles]
 
-        def evaluate(path: Path) -> dict[str, object]:
-            raw = path.read_bytes()
-            policy_sha256 = hashlib.sha256(raw).hexdigest()
-            if args.timing_command == "gates":
-                policy = GatePolicy.model_validate_json(raw)
+        def evaluate(path: Path, *, report_refusal: bool = False) -> dict[str, object]:
+            gates = args.timing_command == "gates"
+            limitations = gate_limitations(None) if gates else contact_limitations(None)
+            try:
+                raw = path.read_bytes()
+                policy_sha256 = hashlib.sha256(raw).hexdigest()
+                if gates:
+                    policy = GatePolicy.model_validate_json(raw)
+                    limitations = gate_limitations(policy)
+                    return {
+                        "policy": policy.model_dump(mode="json"),
+                        "policy_sha256": policy_sha256,
+                        "metrics": asdict(sprint(bundles, policy)),
+                    }
+                contact_policy = ContactPolicy.model_validate_json(raw)
+                limitations = contact_limitations(contact_policy)
                 return {
-                    "policy": policy.model_dump(mode="json"),
+                    "policy": contact_policy.model_dump(mode="json"),
                     "policy_sha256": policy_sha256,
-                    "metrics": asdict(sprint(bundles, policy)),
+                    "metrics": asdict(contact(bundles[0], contact_policy)),
                 }
-            contact_policy = ContactPolicy.model_validate_json(raw)
-            return {
-                "policy": contact_policy.model_dump(mode="json"),
-                "policy_sha256": policy_sha256,
-                "metrics": asdict(contact(bundles[0], contact_policy)),
-            }
+            except (OSError, ValueError) as exc:
+                if not report_refusal:
+                    raise
+                return {"refusal": str(exc), "limitations": limitations}
 
         result = evaluate(args.policy)
-        sensitivity = []
-        for path in args.sensitivity:
-            try:
-                variant = evaluate(path)
-            except (OSError, ValueError) as exc:
-                variant = {"refusal": str(exc)}
-            sensitivity.append({"file": str(path), **variant})
+        sensitivity = [
+            {"file": str(path), **evaluate(path, report_refusal=True)} for path in args.sensitivity
+        ]
         print(
             json.dumps(
                 {

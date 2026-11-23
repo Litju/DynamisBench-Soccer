@@ -562,7 +562,7 @@ reference = ["src/dynamisbench_soccer/reference/motion_models.py::MonoExponentia
 tests = ["tests/test_timing_gates.py::test_adversarial_reference_faults_are_refused", "tests/test_timing_gates.py::test_external_start_requires_matching_native_trigger_without_first_velocity", "tests/test_timing_gates.py::test_impossible_route_even_with_monotonic_rows_and_plausible_total"]
 
 [receipt.digests]
-"src/dynamisbench_soccer/engines/timing_gates.py::sprint" = "0f0ee5d59d56329cfd6011e471c2107e25c210a8a22f578d4109d13ab85a8cac"
+"src/dynamisbench_soccer/engines/timing_gates.py::sprint" = "ecf6b065b9a4b5adb1d40da737b5121ddf3af3bbcea452f47eda8a9482bf2113"
 "src/dynamisbench_soccer/reference/motion_models.py::MonoExponentialSprint" = "6f5cf86ba81df676877c7e99492f9df0400e35228a59a0f34a1d65bba5e3d493"
 "tests/test_timing_gates.py::test_adversarial_reference_faults_are_refused" = "f7e2b14a2110119eecd617be5cd0bf8015ca35a81f88d863b5a163cd954c6964"
 "tests/test_timing_gates.py::test_external_start_requires_matching_native_trigger_without_first_velocity" = "a3dd698a73e39014187b6cbd0002f38447366a05528aafe93096d5cdd93908c2"
@@ -585,7 +585,7 @@ reference = ["src/dynamisbench_soccer/reference/motion_models.py::MonoExponentia
 tests = ["tests/test_timing_gates.py::test_adversarial_reference_faults_are_refused", "tests/test_timing_gates.py::test_impossible_route_even_with_monotonic_rows_and_plausible_total", "tests/test_timing_gates.py::test_declared_refractory_removes_duplicate_but_does_not_select_between_crossings"]
 
 [receipt.digests]
-"src/dynamisbench_soccer/engines/timing_gates.py::sprint" = "0f0ee5d59d56329cfd6011e471c2107e25c210a8a22f578d4109d13ab85a8cac"
+"src/dynamisbench_soccer/engines/timing_gates.py::sprint" = "ecf6b065b9a4b5adb1d40da737b5121ddf3af3bbcea452f47eda8a9482bf2113"
 "src/dynamisbench_soccer/reference/motion_models.py::MonoExponentialSprint" = "6f5cf86ba81df676877c7e99492f9df0400e35228a59a0f34a1d65bba5e3d493"
 "tests/test_timing_gates.py::test_adversarial_reference_faults_are_refused" = "f7e2b14a2110119eecd617be5cd0bf8015ca35a81f88d863b5a163cd954c6964"
 "tests/test_timing_gates.py::test_declared_refractory_removes_duplicate_but_does_not_select_between_crossings" = "0df261beae8550f7558a84b98337d7c7fd4bdca53cab6110c996a8f9f150df14"
@@ -609,7 +609,7 @@ tests = ["tests/test_sprint_cod_assessment.py::test_gates_never_yield_instantane
 
 [receipt.digests]
 "src/dynamisbench_soccer/assessment/sprint.py::fit_split_times" = "b6e2de8f8d5fc4cf04fc80f61a16010754a03ce501a3f4ff08bd2210ac032718"
-"src/dynamisbench_soccer/engines/timing_gates.py::sprint" = "0f0ee5d59d56329cfd6011e471c2107e25c210a8a22f578d4109d13ab85a8cac"
+"src/dynamisbench_soccer/engines/timing_gates.py::sprint" = "ecf6b065b9a4b5adb1d40da737b5121ddf3af3bbcea452f47eda8a9482bf2113"
 "src/dynamisbench_soccer/reference/motion_models.py::MonoExponentialSprint" = "6f5cf86ba81df676877c7e99492f9df0400e35228a59a0f34a1d65bba5e3d493"
 "tests/test_sprint_cod_assessment.py::test_distance_fit_from_gate_splits_and_refusal_with_too_few_points" = "66a0fca1fc56184b3360ef1e5cb635eb69adf7270d570724a262c3fe258040ce"
 "tests/test_sprint_cod_assessment.py::test_gates_never_yield_instantaneous_velocity_and_sources_stay_labelled" = "ea16607249703ed9b7d567907381ebb688fcf72f871602923ad7ef789e790a7a"
@@ -655,7 +655,7 @@ reference = ["src/dynamisbench_soccer/reference/spatial_observations.py::contact
 tests = ["tests/test_timing_contact.py::test_plausible_but_extra_flight_and_wrong_device_are_refused", "tests/test_timing_contact.py::test_refuses_independent_contact_event_faults", "tests/test_timing_contact.py::test_contact_cli_reports_sensitivity_and_refuses_tampered_parquet"]
 
 [receipt.digests]
-"src/dynamisbench_soccer/engines/contact.py::contact" = "fe638e0b5fc9e1974c99c48164e4c703aa43187a512d62ee5019cc4078f6d0fd"
+"src/dynamisbench_soccer/engines/contact.py::contact" = "b4e4b717166e311a0b700df1e6fc08c995af8d474dd207e8cd7189b48fd2fafe"
 "src/dynamisbench_soccer/reference/spatial_observations.py::contact_events" = "226173ea25f5ef36da8d4c510519743351e1cb70235f071d37999eef5b1df52d"
 "tests/test_timing_contact.py::test_contact_cli_reports_sensitivity_and_refuses_tampered_parquet" = "5b324645197658f59e6eb618c082d733a9a58183d721e48a928c8b97fdd9a446"
 "tests/test_timing_contact.py::test_plausible_but_extra_flight_and_wrong_device_are_refused" = "51265a1b317922bf6d7a6fe9bf1ef83ba751c37939e0d12ac14f2df949c3f53c"
@@ -678,7 +678,7 @@ reference = ["src/dynamisbench_soccer/reference/spatial_observations.py::contact
 tests = ["tests/test_timing_contact.py::test_refuses_independent_contact_event_faults", "tests/test_timing_contact.py::test_declared_contact_bounce_and_same_state_repeat_are_auditable", "tests/test_timing_contact.py::test_plausible_but_extra_flight_and_wrong_device_are_refused"]
 
 [receipt.digests]
-"src/dynamisbench_soccer/engines/contact.py::contact" = "fe638e0b5fc9e1974c99c48164e4c703aa43187a512d62ee5019cc4078f6d0fd"
+"src/dynamisbench_soccer/engines/contact.py::contact" = "b4e4b717166e311a0b700df1e6fc08c995af8d474dd207e8cd7189b48fd2fafe"
 "src/dynamisbench_soccer/reference/spatial_observations.py::contact_events" = "226173ea25f5ef36da8d4c510519743351e1cb70235f071d37999eef5b1df52d"
 "tests/test_timing_contact.py::test_declared_contact_bounce_and_same_state_repeat_are_auditable" = "b01ef0c2b1b91ab70db696fca93aa83a8cbf6d0607a1ba69d631134f9449d509"
 "tests/test_timing_contact.py::test_plausible_but_extra_flight_and_wrong_device_are_refused" = "51265a1b317922bf6d7a6fe9bf1ef83ba751c37939e0d12ac14f2df949c3f53c"
@@ -701,7 +701,7 @@ reference = ["src/dynamisbench_soccer/reference/spatial_observations.py::contact
 tests = ["tests/test_timing_contact.py::test_declared_contact_bounce_and_same_state_repeat_are_auditable", "tests/test_timing_contact.py::test_contact_cli_reports_sensitivity_and_refuses_tampered_parquet", "tests/test_timing_contact.py::test_asymmetric_switch_latency_and_quantized_shared_clock"]
 
 [receipt.digests]
-"src/dynamisbench_soccer/engines/contact.py::contact" = "fe638e0b5fc9e1974c99c48164e4c703aa43187a512d62ee5019cc4078f6d0fd"
+"src/dynamisbench_soccer/engines/contact.py::contact" = "b4e4b717166e311a0b700df1e6fc08c995af8d474dd207e8cd7189b48fd2fafe"
 "src/dynamisbench_soccer/reference/spatial_observations.py::contact_events" = "226173ea25f5ef36da8d4c510519743351e1cb70235f071d37999eef5b1df52d"
 "tests/test_timing_contact.py::test_asymmetric_switch_latency_and_quantized_shared_clock" = "acdb420fd5d79ce5e8aa9f7bf8ed6766c5a5424a2d1272b088f52c54862f4ed6"
 "tests/test_timing_contact.py::test_contact_cli_reports_sensitivity_and_refuses_tampered_parquet" = "5b324645197658f59e6eb618c082d733a9a58183d721e48a928c8b97fdd9a446"
@@ -724,7 +724,7 @@ reference = ["src/dynamisbench_soccer/reference/spatial_observations.py::contact
 tests = ["tests/test_timing_contact.py::test_standing_jumps_report_flight_height_but_no_contact_phase_or_rsi", "tests/test_timing_contact.py::test_asymmetric_switch_latency_and_quantized_shared_clock"]
 
 [receipt.digests]
-"src/dynamisbench_soccer/engines/contact.py::contact" = "fe638e0b5fc9e1974c99c48164e4c703aa43187a512d62ee5019cc4078f6d0fd"
+"src/dynamisbench_soccer/engines/contact.py::contact" = "b4e4b717166e311a0b700df1e6fc08c995af8d474dd207e8cd7189b48fd2fafe"
 "src/dynamisbench_soccer/reference/kinematics.py::Trajectory" = "6c5d2b8879d0384ef30a4044c4ff13b6fe3f69f0ed33232c74da454f9da7d9a7"
 "src/dynamisbench_soccer/reference/spatial_observations.py::contact_events" = "226173ea25f5ef36da8d4c510519743351e1cb70235f071d37999eef5b1df52d"
 "tests/test_timing_contact.py::test_asymmetric_switch_latency_and_quantized_shared_clock" = "acdb420fd5d79ce5e8aa9f7bf8ed6766c5a5424a2d1272b088f52c54862f4ed6"
@@ -748,7 +748,7 @@ tests = ["tests/test_timing_contact.py::test_standing_jumps_report_flight_height
 
 [receipt.digests]
 "src/dynamisbench_soccer/assessment/jumps.py::contact_system_estimates" = "e2b4807aa7de5c1611aefca6663a29ef3d3832d24f588edbeedb8ad1c516ddd3"
-"src/dynamisbench_soccer/engines/contact.py::contact" = "fe638e0b5fc9e1974c99c48164e4c703aa43187a512d62ee5019cc4078f6d0fd"
+"src/dynamisbench_soccer/engines/contact.py::contact" = "b4e4b717166e311a0b700df1e6fc08c995af8d474dd207e8cd7189b48fd2fafe"
 "src/dynamisbench_soccer/reference/kinematics.py::Trajectory" = "6c5d2b8879d0384ef30a4044c4ff13b6fe3f69f0ed33232c74da454f9da7d9a7"
 "src/dynamisbench_soccer/reference/spatial_observations.py::contact_events" = "226173ea25f5ef36da8d4c510519743351e1cb70235f071d37999eef5b1df52d"
 "tests/test_jump_assessment.py::test_latency_bias_shows_up_as_a_difference_not_a_correction" = "6c9437054518fa4cf3a976dc4515f2107561c555debb86c2b23d428e5d9708b7"
@@ -772,7 +772,7 @@ reference = ["src/dynamisbench_soccer/reference/spatial_observations.py::contact
 tests = ["tests/test_timing_contact.py::test_asymmetric_switch_latency_and_quantized_shared_clock", "tests/test_timing_contact.py::test_standing_jumps_report_flight_height_but_no_contact_phase_or_rsi", "tests/test_reference_spatial_observations.py::test_import_boundary_between_references_and_engines"]
 
 [receipt.digests]
-"src/dynamisbench_soccer/engines/contact.py::contact" = "fe638e0b5fc9e1974c99c48164e4c703aa43187a512d62ee5019cc4078f6d0fd"
+"src/dynamisbench_soccer/engines/contact.py::contact" = "b4e4b717166e311a0b700df1e6fc08c995af8d474dd207e8cd7189b48fd2fafe"
 "src/dynamisbench_soccer/reference/kinematics.py::Trajectory" = "6c5d2b8879d0384ef30a4044c4ff13b6fe3f69f0ed33232c74da454f9da7d9a7"
 "src/dynamisbench_soccer/reference/spatial_observations.py::contact_events" = "226173ea25f5ef36da8d4c510519743351e1cb70235f071d37999eef5b1df52d"
 "tests/test_reference_spatial_observations.py::test_import_boundary_between_references_and_engines" = "9da921ff81d53361dc6491bd84940e7f356b20de83804dc104d8d502e812e54a"
@@ -1912,7 +1912,7 @@ issue = "RES-698"
 
 [receipt.digests]
 "src/dynamisbench_soccer/engines/event_time.py::EventStream" = "669395a6a88eeea41f518bb3ad4b153603c0cd3824d37d6044f6652f8a53e528"
-"src/dynamisbench_soccer/engines/timing_gates.py::sprint" = "0f0ee5d59d56329cfd6011e471c2107e25c210a8a22f578d4109d13ab85a8cac"
+"src/dynamisbench_soccer/engines/timing_gates.py::sprint" = "ecf6b065b9a4b5adb1d40da737b5121ddf3af3bbcea452f47eda8a9482bf2113"
 "src/dynamisbench_soccer/reference/clocks.py::DeviceClock" = "a538e7ae80f47d9b0880988f85c6705c2e5bdfe3344e5900158ed90fea72c043"
 "src/dynamisbench_soccer/reference/motion_models.py::MonoExponentialSprint" = "6f5cf86ba81df676877c7e99492f9df0400e35228a59a0f34a1d65bba5e3d493"
 "src/dynamisbench_soccer/reference/observations.py::spherical_gate_trigger_s" = "a3beced3dd0b05c5e5653e5dce37c3a6d8fdd83d71ef99ecf4a130e9baccbff5"
@@ -1936,7 +1936,7 @@ tolerance_unit = "m/s (absolute); separate time and height bounds in the test ba
 issue = "RES-698"
 
 [receipt.digests]
-"src/dynamisbench_soccer/engines/contact.py::contact" = "fe638e0b5fc9e1974c99c48164e4c703aa43187a512d62ee5019cc4078f6d0fd"
+"src/dynamisbench_soccer/engines/contact.py::contact" = "b4e4b717166e311a0b700df1e6fc08c995af8d474dd207e8cd7189b48fd2fafe"
 "src/dynamisbench_soccer/engines/event_time.py::EventStream" = "669395a6a88eeea41f518bb3ad4b153603c0cd3824d37d6044f6652f8a53e528"
 "src/dynamisbench_soccer/reference/kinematics.py::Trajectory" = "6c5d2b8879d0384ef30a4044c4ff13b6fe3f69f0ed33232c74da454f9da7d9a7"
 "src/dynamisbench_soccer/reference/spatial_observations.py::contact_events" = "226173ea25f5ef36da8d4c510519743351e1cb70235f071d37999eef5b1df52d"
@@ -1960,7 +1960,7 @@ issue = "RES-669"
 
 [receipt.digests]
 "src/dynamisbench_soccer/engines/event_time.py::EventStream" = "669395a6a88eeea41f518bb3ad4b153603c0cd3824d37d6044f6652f8a53e528"
-"src/dynamisbench_soccer/engines/timing_gates.py::sprint" = "0f0ee5d59d56329cfd6011e471c2107e25c210a8a22f578d4109d13ab85a8cac"
+"src/dynamisbench_soccer/engines/timing_gates.py::sprint" = "ecf6b065b9a4b5adb1d40da737b5121ddf3af3bbcea452f47eda8a9482bf2113"
 "src/dynamisbench_soccer/reference/faults.py::inject" = "bc803ce121a3bf35662d04ca34370d2f1525a44ac1503ab51c6678a39905bc7e"
 "src/dynamisbench_soccer/reference/motion_models.py::MonoExponentialSprint" = "6f5cf86ba81df676877c7e99492f9df0400e35228a59a0f34a1d65bba5e3d493"
 "src/dynamisbench_soccer/reference/observations.py::spherical_gate_trigger_s" = "a3beced3dd0b05c5e5653e5dce37c3a6d8fdd83d71ef99ecf4a130e9baccbff5"
@@ -1985,7 +1985,7 @@ tolerance_unit = "s and m (absolute)"
 issue = "RES-669"
 
 [receipt.digests]
-"src/dynamisbench_soccer/engines/contact.py::contact" = "fe638e0b5fc9e1974c99c48164e4c703aa43187a512d62ee5019cc4078f6d0fd"
+"src/dynamisbench_soccer/engines/contact.py::contact" = "b4e4b717166e311a0b700df1e6fc08c995af8d474dd207e8cd7189b48fd2fafe"
 "src/dynamisbench_soccer/engines/event_time.py::EventStream" = "669395a6a88eeea41f518bb3ad4b153603c0cd3824d37d6044f6652f8a53e528"
 "src/dynamisbench_soccer/reference/faults.py::inject" = "bc803ce121a3bf35662d04ca34370d2f1525a44ac1503ab51c6678a39905bc7e"
 "src/dynamisbench_soccer/reference/kinematics.py::cmj" = "c37e0d387e173c0b92a8e7a8f277195382a981a228bd6784f6b306b1be3f0821"
@@ -2228,8 +2228,8 @@ issue = "RES-698"
 
 [receipt.digests]
 "src/dynamisbench_soccer/engines/event_time.py::EventStream" = "669395a6a88eeea41f518bb3ad4b153603c0cd3824d37d6044f6652f8a53e528"
-"src/dynamisbench_soccer/engines/timing_cli.py::_run" = "f823f5ac9a71f649e394dd731d81b8af14c9870d98c9ffd3ea474f889eff3b1c"
-"src/dynamisbench_soccer/engines/timing_gates.py::sprint" = "0f0ee5d59d56329cfd6011e471c2107e25c210a8a22f578d4109d13ab85a8cac"
+"src/dynamisbench_soccer/engines/timing_cli.py::_run" = "199fa1db67336b86d320049b8ff60b18b57a2d0079612426f0ad5540a2d534f6"
+"src/dynamisbench_soccer/engines/timing_gates.py::sprint" = "ecf6b065b9a4b5adb1d40da737b5121ddf3af3bbcea452f47eda8a9482bf2113"
 "src/dynamisbench_soccer/reference/exporters.py::export_case" = "dc2d9d2b5e50dcb4255b6fe0a0069e8b7d76676281fab3f501f54d153ae1ad65"
 "tests/test_reference_exporters.py::test_every_export_is_v2_deterministic_separate_and_hash_linked" = "dd5083a390846e2a8e59502d253a571f08ffc5bfab0a6b4d0220e225103805ad"
 "tests/test_timing_provenance.py::test_event_cli_replays_source_and_refuses_mutation" = "d8736d6f1cc39ce7c8bf4679ed5108d812ee1e1c72c7d7969a28c9c72508eedb"
@@ -2251,9 +2251,9 @@ check_kind = "categorical"
 issue = "RES-698"
 
 [receipt.digests]
-"src/dynamisbench_soccer/engines/contact.py::contact" = "fe638e0b5fc9e1974c99c48164e4c703aa43187a512d62ee5019cc4078f6d0fd"
+"src/dynamisbench_soccer/engines/contact.py::contact" = "b4e4b717166e311a0b700df1e6fc08c995af8d474dd207e8cd7189b48fd2fafe"
 "src/dynamisbench_soccer/engines/event_time.py::EventStream" = "669395a6a88eeea41f518bb3ad4b153603c0cd3824d37d6044f6652f8a53e528"
-"src/dynamisbench_soccer/engines/timing_cli.py::_run" = "f823f5ac9a71f649e394dd731d81b8af14c9870d98c9ffd3ea474f889eff3b1c"
+"src/dynamisbench_soccer/engines/timing_cli.py::_run" = "199fa1db67336b86d320049b8ff60b18b57a2d0079612426f0ad5540a2d534f6"
 "src/dynamisbench_soccer/reference/exporters.py::export_case" = "dc2d9d2b5e50dcb4255b6fe0a0069e8b7d76676281fab3f501f54d153ae1ad65"
 "tests/test_reference_exporters.py::test_every_export_is_v2_deterministic_separate_and_hash_linked" = "dd5083a390846e2a8e59502d253a571f08ffc5bfab0a6b4d0220e225103805ad"
 "tests/test_timing_provenance.py::test_event_cli_replays_source_and_refuses_mutation" = "d8736d6f1cc39ce7c8bf4679ed5108d812ee1e1c72c7d7969a28c9c72508eedb"
@@ -2276,7 +2276,7 @@ issue = "RES-698"
 
 [receipt.digests]
 "src/dynamisbench_soccer/engines/event_time.py::EventStream" = "669395a6a88eeea41f518bb3ad4b153603c0cd3824d37d6044f6652f8a53e528"
-"src/dynamisbench_soccer/engines/timing_gates.py::sprint" = "0f0ee5d59d56329cfd6011e471c2107e25c210a8a22f578d4109d13ab85a8cac"
+"src/dynamisbench_soccer/engines/timing_gates.py::sprint" = "ecf6b065b9a4b5adb1d40da737b5121ddf3af3bbcea452f47eda8a9482bf2113"
 "src/dynamisbench_soccer/reference/clocks.py::DeviceClock" = "a538e7ae80f47d9b0880988f85c6705c2e5bdfe3344e5900158ed90fea72c043"
 "src/dynamisbench_soccer/reference/motion_models.py::MonoExponentialSprint" = "6f5cf86ba81df676877c7e99492f9df0400e35228a59a0f34a1d65bba5e3d493"
 "src/dynamisbench_soccer/reference/observations.py::spherical_gate_trigger_s" = "a3beced3dd0b05c5e5653e5dce37c3a6d8fdd83d71ef99ecf4a130e9baccbff5"
@@ -2303,7 +2303,7 @@ issue = "RES-698"
 
 [receipt.digests]
 "src/dynamisbench_soccer/engines/event_time.py::EventStream" = "669395a6a88eeea41f518bb3ad4b153603c0cd3824d37d6044f6652f8a53e528"
-"src/dynamisbench_soccer/engines/timing_gates.py::sprint" = "0f0ee5d59d56329cfd6011e471c2107e25c210a8a22f578d4109d13ab85a8cac"
+"src/dynamisbench_soccer/engines/timing_gates.py::sprint" = "ecf6b065b9a4b5adb1d40da737b5121ddf3af3bbcea452f47eda8a9482bf2113"
 "src/dynamisbench_soccer/reference/clocks.py::DeviceClock" = "a538e7ae80f47d9b0880988f85c6705c2e5bdfe3344e5900158ed90fea72c043"
 "src/dynamisbench_soccer/reference/motion_models.py::MonoExponentialSprint" = "6f5cf86ba81df676877c7e99492f9df0400e35228a59a0f34a1d65bba5e3d493"
 "src/dynamisbench_soccer/reference/observations.py::spherical_gate_trigger_s" = "a3beced3dd0b05c5e5653e5dce37c3a6d8fdd83d71ef99ecf4a130e9baccbff5"
@@ -2614,7 +2614,7 @@ issue = "RES-693"
 
 [receipt.digests]
 "src/dynamisbench_soccer/engines/event_time.py::EventStream" = "669395a6a88eeea41f518bb3ad4b153603c0cd3824d37d6044f6652f8a53e528"
-"src/dynamisbench_soccer/engines/timing_gates.py::sprint" = "0f0ee5d59d56329cfd6011e471c2107e25c210a8a22f578d4109d13ab85a8cac"
+"src/dynamisbench_soccer/engines/timing_gates.py::sprint" = "ecf6b065b9a4b5adb1d40da737b5121ddf3af3bbcea452f47eda8a9482bf2113"
 "src/dynamisbench_soccer/reference/clocks.py::DeviceClock" = "a538e7ae80f47d9b0880988f85c6705c2e5bdfe3344e5900158ed90fea72c043"
 "tests/test_timing_clock_policy_a.py::test_native_timing_entrypoints_enforce_clock_authority" = "b7818e46d827be8136c8afe12c53784daf2dce2656eb0e046e1c2489afc3e8f1"
 "tests/test_timing_clock_policy_a.py::test_wireless_offset_resolution_and_edge_latency_have_distinct_units" = "e7360573fbd6ce470799ea4a0c82ba82f18116095db7aa4fb3a72d11e6438a4b"
@@ -2635,7 +2635,7 @@ tolerance_unit = "s (absolute)"
 issue = "RES-693"
 
 [receipt.digests]
-"src/dynamisbench_soccer/engines/contact.py::contact" = "fe638e0b5fc9e1974c99c48164e4c703aa43187a512d62ee5019cc4078f6d0fd"
+"src/dynamisbench_soccer/engines/contact.py::contact" = "b4e4b717166e311a0b700df1e6fc08c995af8d474dd207e8cd7189b48fd2fafe"
 "src/dynamisbench_soccer/engines/event_time.py::EventStream" = "669395a6a88eeea41f518bb3ad4b153603c0cd3824d37d6044f6652f8a53e528"
 "src/dynamisbench_soccer/reference/clocks.py::DeviceClock" = "a538e7ae80f47d9b0880988f85c6705c2e5bdfe3344e5900158ed90fea72c043"
 "tests/test_timing_clock_policy_a.py::test_native_timing_entrypoints_enforce_clock_authority" = "b7818e46d827be8136c8afe12c53784daf2dce2656eb0e046e1c2489afc3e8f1"
@@ -2658,7 +2658,7 @@ issue = "RES-671"
 
 [receipt.digests]
 "src/dynamisbench_soccer/assessment/jumps.py::contact_system_estimates" = "e2b4807aa7de5c1611aefca6663a29ef3d3832d24f588edbeedb8ad1c516ddd3"
-"src/dynamisbench_soccer/engines/contact.py::contact" = "fe638e0b5fc9e1974c99c48164e4c703aa43187a512d62ee5019cc4078f6d0fd"
+"src/dynamisbench_soccer/engines/contact.py::contact" = "b4e4b717166e311a0b700df1e6fc08c995af8d474dd207e8cd7189b48fd2fafe"
 "src/dynamisbench_soccer/reference/kinematics.py::Trajectory" = "6c5d2b8879d0384ef30a4044c4ff13b6fe3f69f0ed33232c74da454f9da7d9a7"
 "tests/test_timing_assessment_policy_a.py::test_native_contact_height_requires_engine_eligibility" = "12cf4cf593912ff2fc47502d8eb96da1df9c5f578dc9a95a2cc00bc68294f652"
 "tests/test_timing_assessment_policy_a.py::test_rebound_assessment_keeps_each_eligible_flight" = "4512c4b834a0395bc9c589337e144fcc6e14b1dedebfedb22f1adf6bb4b38087"
@@ -2682,7 +2682,7 @@ issue = "RES-671"
 
 [receipt.digests]
 "src/dynamisbench_soccer/assessment/cod.py::assess_gates" = "1199ab444577277d39e4a8c3ef1d5d5f22681fc1b142c26a3439837fa820301c"
-"src/dynamisbench_soccer/engines/timing_gates.py::sprint" = "0f0ee5d59d56329cfd6011e471c2107e25c210a8a22f578d4109d13ab85a8cac"
+"src/dynamisbench_soccer/engines/timing_gates.py::sprint" = "ecf6b065b9a4b5adb1d40da737b5121ddf3af3bbcea452f47eda8a9482bf2113"
 "src/dynamisbench_soccer/reference/observations.py::spherical_gate_trigger_s" = "a3beced3dd0b05c5e5653e5dce37c3a6d8fdd83d71ef99ecf4a130e9baccbff5"
 "tests/test_timing_assessment_policy_a.py::test_native_gate_course_to_declared_path_assessment" = "424b5b91c77378eb7df6d635fa5cb8fb4d1b2ab12bc9162495648752b73f58e5"
 "tests/test_timing_gates.py::test_gate_start_methods_match_independent_absolute_and_elapsed_times" = "07e281951212c8cf12c01eb7508041d07ac1986ea56554bc87aaa8d918329373"
@@ -2705,9 +2705,106 @@ issue = "RES-669"
 
 [receipt.digests]
 "src/dynamisbench_soccer/engines/event_time.py::EventStream" = "669395a6a88eeea41f518bb3ad4b153603c0cd3824d37d6044f6652f8a53e528"
-"src/dynamisbench_soccer/engines/timing_gates.py::sprint" = "0f0ee5d59d56329cfd6011e471c2107e25c210a8a22f578d4109d13ab85a8cac"
+"src/dynamisbench_soccer/engines/timing_gates.py::sprint" = "ecf6b065b9a4b5adb1d40da737b5121ddf3af3bbcea452f47eda8a9482bf2113"
 "src/dynamisbench_soccer/reference/motion_models.py::MonoExponentialSprint" = "6f5cf86ba81df676877c7e99492f9df0400e35228a59a0f34a1d65bba5e3d493"
 "src/dynamisbench_soccer/reference/observations.py::spherical_gate_trigger_s" = "a3beced3dd0b05c5e5653e5dce37c3a6d8fdd83d71ef99ecf4a130e9baccbff5"
 "tests/test_gate_oracle_policy_a.py::test_gate_oracle_and_engine_agree_on_independent_beam_geometry" = "58d75c40f22a51cd7204ab92be82e5ce2444cbef5deac184a14f883c1ff94f9b"
 "tests/test_gate_oracle_policy_a.py::test_gate_oracle_has_no_engine_dependency_and_refuses_incompatible_marker" = "1b5d793f4e7939c4354e5437b0a8a4229a97cac25b791faf0343490619ced688"
 "tests/test_timing_gates.py::test_gate_start_methods_match_independent_absolute_and_elapsed_times" = "07e281951212c8cf12c01eb7508041d07ac1986ea56554bc87aaa8d918329373"
+
+[[receipt]]
+id = "RCP-timing_contact-contact-B"
+dimension = "B"
+subfamilies = ["timing_contact.contact"]
+implementation = ["src/dynamisbench_soccer/engines/contact.py::contact", "src/dynamisbench_soccer/engines/event_time.py::require_canonical_calibration"]
+reference = ["tests/test_timing_geometry_policy_a.py::_prescribed_switch_pattern"]
+tests = ["tests/test_timing_geometry_policy_a.py::test_contact_actuator_polarity_and_edge_calibration", "tests/test_timing_geometry_policy_a.py::test_contact_refuses_missing_ambiguous_or_contradictory_switches", "tests/test_timing_geometry_policy_a.py::test_contact_refuses_bad_native_codes_timing_and_calibration"]
+reference_kind = "closed_form"
+independence = "The independent digital pattern stores prescribed ON/OFF switching times, adds distinct 9 ms and 3 ms delays, and encodes binary polarity without calling the timing implementation."
+claim = "The native contact engine decodes declared actuator and polarity consistently for contact mats, pressure pads and optical bars and subtracts the corresponding edge calibration. Ambiguous or missing declarations, nonbinary codes and unsupported numerical calibration are refused."
+tolerance_basis = "Known touchdown/takeoff/landing times 0.1, 0.3, 0.72 s and ground/flight durations 0.2 and 0.42 s match at absolute 1e-12 s, zero relative tolerance. A shared 1 ms tick gives flight endpoints 0.419 and 0.421 s using conservative edge arithmetic. This is digital switch calibration, not analog threshold inference or a mechanical event validation."
+tolerance = 1e-12
+tolerance_unit = "s (absolute)"
+issue = "RES-698"
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/contact.py::contact" = "b4e4b717166e311a0b700df1e6fc08c995af8d474dd207e8cd7189b48fd2fafe"
+"src/dynamisbench_soccer/engines/event_time.py::require_canonical_calibration" = "a9cb3605c3e1d956f5eea9f910fb6aec74b8bbbda6160ed74d1fdb60d1da7d98"
+"tests/test_timing_geometry_policy_a.py::_prescribed_switch_pattern" = "5b971d1708d5ba5c103197790bd2e2ee21c57ebe7187cf4be586d953dd10822a"
+"tests/test_timing_geometry_policy_a.py::test_contact_actuator_polarity_and_edge_calibration" = "eed3832b2f05b881ec475f38c5006bbc1f6cb30ce1940a1a2a531a2a290279e7"
+"tests/test_timing_geometry_policy_a.py::test_contact_refuses_bad_native_codes_timing_and_calibration" = "f4e56b13fc5c86c292acdfe6f380b5659aa5adc734bde6e2a6f28e7c1bb78d89"
+"tests/test_timing_geometry_policy_a.py::test_contact_refuses_missing_ambiguous_or_contradictory_switches" = "52f58459529c6131b933618d0b3d7d7b4eaa0cce6d30e76dc6f4947de496bab5"
+
+[[receipt]]
+id = "RCP-timing_contact-gates-B"
+dimension = "B"
+subfamilies = ["timing_contact.gates"]
+implementation = ["src/dynamisbench_soccer/engines/timing_gates.py::sprint", "src/dynamisbench_soccer/engines/event_time.py::require_canonical_calibration"]
+reference = ["tests/test_timing_geometry_policy_a.py::_sphere_crossings", "src/dynamisbench_soccer/reference/observations.py::spherical_gate_trigger_s"]
+tests = ["tests/test_timing_geometry_policy_a.py::test_gate_applies_declared_route_and_analytical_beam_crossings", "tests/test_timing_geometry_policy_a.py::test_gate_refuses_unqualified_or_impossible_geometry", "tests/test_timing_geometry_policy_a.py::test_gate_refuses_a_first_gate_start_at_another_coordinate", "tests/test_gate_oracle_policy_a.py::test_gate_oracle_and_engine_agree_on_independent_beam_geometry", "tests/test_timing_gates.py::test_gate_start_methods_match_independent_absolute_and_elapsed_times", "tests/test_timing_gates.py::test_multi_beam_quorum_and_beam_height_sensitivity_on_clean_events"]
+reference_kind = "closed_form"
+independence = "Prescribed linear motion gives independent beam times from the horizontal projection of a spherical marker. A separate exponential motion oracle exercises nonconstant segment speeds and the timing engine uses neither observation model."
+claim = "Native surveyed gate positions, beam types and heights are enforced against the typed course, including known start modes and multi-beam IDs. Event time and course distance reconstruct segment-average speed, and conflicting, unqualified and impossible geometry is refused."
+tolerance_basis = "Row station positions in m match exactly. Independent beam times and differences match within 1e-12 s; segment-average speed within 1e-11 m/s. Zero relative tolerances. The geometry and delay model is prescribed and does not establish real course or optical calibration."
+tolerance = 1e-11
+tolerance_unit = "m/s (absolute); separate time and geometry checks"
+issue = "RES-698"
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/event_time.py::require_canonical_calibration" = "a9cb3605c3e1d956f5eea9f910fb6aec74b8bbbda6160ed74d1fdb60d1da7d98"
+"src/dynamisbench_soccer/engines/timing_gates.py::sprint" = "ecf6b065b9a4b5adb1d40da737b5121ddf3af3bbcea452f47eda8a9482bf2113"
+"src/dynamisbench_soccer/reference/observations.py::spherical_gate_trigger_s" = "a3beced3dd0b05c5e5653e5dce37c3a6d8fdd83d71ef99ecf4a130e9baccbff5"
+"tests/test_gate_oracle_policy_a.py::test_gate_oracle_and_engine_agree_on_independent_beam_geometry" = "58d75c40f22a51cd7204ab92be82e5ce2444cbef5deac184a14f883c1ff94f9b"
+"tests/test_timing_gates.py::test_gate_start_methods_match_independent_absolute_and_elapsed_times" = "07e281951212c8cf12c01eb7508041d07ac1986ea56554bc87aaa8d918329373"
+"tests/test_timing_gates.py::test_multi_beam_quorum_and_beam_height_sensitivity_on_clean_events" = "8e3a60b551a63d448429e7974c183eabf83a6cd7936e80ee4a9558d4282a4e4e"
+"tests/test_timing_geometry_policy_a.py::_sphere_crossings" = "2b7d7927c664e6e71e30f6e9ab12ff2d4d67896cdaaf9f3bc4faf12d18be9208"
+"tests/test_timing_geometry_policy_a.py::test_gate_applies_declared_route_and_analytical_beam_crossings" = "3805a58137048fae14d908ad36edadbf284485238e57f5660aa454105e9a3900"
+"tests/test_timing_geometry_policy_a.py::test_gate_refuses_a_first_gate_start_at_another_coordinate" = "a98a7945cef38b4f15fd3eac188726749216838beec19b993c066ed6a4e9e7e5"
+"tests/test_timing_geometry_policy_a.py::test_gate_refuses_unqualified_or_impossible_geometry" = "9ee27e3e868e53e00ab2622b1e3f58adbdca60d3a4732de923942b19bad076de"
+
+[[receipt]]
+id = "RCP-timing_contact-contact-O"
+dimension = "O"
+subfamilies = ["timing_contact.contact"]
+implementation = ["src/dynamisbench_soccer/engines/contact.py::contact", "src/dynamisbench_soccer/engines/timing_cli.py::_run"]
+reference = ["tests/test_timing_limits_policy_a.py::_published_sources"]
+tests = ["tests/test_timing_limits_policy_a.py::test_contact_emits_sourced_model_and_actuator_limits", "tests/test_timing_limits_policy_a.py::test_cli_roundtrip_preserves_exact_limits_on_success_and_refusal"]
+reference_kind = "closed_form"
+independence = "The registry's DEV-003 source binding and the expected contact limitation statements are checked independently of engine output. Prescribed actuators, phase timings and refusal scenarios exercise the actual engines."
+claim = "Native contact reports separate switch timing from mechanical events, preserve the clock and switching model limitations, and emit applicable posture, actuator, refractory and empirical boundaries through successful, height-refused and structured sensitivity outputs."
+tolerance_basis = "Categorical source and scope checks plus exact equality of all applicable limitations between the direct native result and serialized CLI metrics. Refused parsed policies carry their applicable limitations without metrics."
+tolerance = 0.0
+tolerance_unit = ""
+check_kind = "categorical"
+issue = "RES-698"
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/contact.py::contact" = "b4e4b717166e311a0b700df1e6fc08c995af8d474dd207e8cd7189b48fd2fafe"
+"src/dynamisbench_soccer/engines/timing_cli.py::_run" = "199fa1db67336b86d320049b8ff60b18b57a2d0079612426f0ad5540a2d534f6"
+"tests/test_timing_limits_policy_a.py::_published_sources" = "0dd131bfd74addd3682f7b506ddd163c6a5a5f584733a73a51a10fd477ef86bc"
+"tests/test_timing_limits_policy_a.py::test_cli_roundtrip_preserves_exact_limits_on_success_and_refusal" = "c9290fb4991cd8743dd7f75f4459141cdc78aa31914d7ce034c00a2ae1e9bce1"
+"tests/test_timing_limits_policy_a.py::test_contact_emits_sourced_model_and_actuator_limits" = "d5af8428ffbea072f81e82298ca8e333a28fc49a4f9b8a185e36711c54784208"
+
+[[receipt]]
+id = "RCP-timing_contact-gates-O"
+dimension = "O"
+subfamilies = ["timing_contact.gates"]
+implementation = ["src/dynamisbench_soccer/engines/timing_gates.py::sprint", "src/dynamisbench_soccer/engines/timing_cli.py::_run"]
+reference = ["tests/test_timing_limits_policy_a.py::_published_sources"]
+tests = ["tests/test_timing_limits_policy_a.py::test_gate_limits_follow_the_executed_start_definition", "tests/test_timing_limits_policy_a.py::test_gate_limits_identify_voting_and_refractory_variant", "tests/test_timing_limits_policy_a.py::test_cli_roundtrip_preserves_exact_limits_on_success_and_refusal"]
+reference_kind = "closed_form"
+independence = "The registry's DEV-004 source binding and the expected distinct start-method statements are checked independently. Prescribed course and event patterns exercise the gate engine without deriving expectations from its estimates."
+claim = "Native gates emit sourced beam-method, geometry, latency, resolution and estimand limitations, distinguish all start modes and replay mode-specific voting and refractory limitations through CLI reports, including structured refusals."
+tolerance_basis = "Categorical exact source and start constraints and exact equality of direct and serialized applicable limitations. Refused variants carry the applicable constraints without fabricated metrics. Segment averages and radar estimates remain distinct."
+tolerance = 0.0
+tolerance_unit = ""
+check_kind = "categorical"
+issue = "RES-698"
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/timing_cli.py::_run" = "199fa1db67336b86d320049b8ff60b18b57a2d0079612426f0ad5540a2d534f6"
+"src/dynamisbench_soccer/engines/timing_gates.py::sprint" = "ecf6b065b9a4b5adb1d40da737b5121ddf3af3bbcea452f47eda8a9482bf2113"
+"tests/test_timing_limits_policy_a.py::_published_sources" = "0dd131bfd74addd3682f7b506ddd163c6a5a5f584733a73a51a10fd477ef86bc"
+"tests/test_timing_limits_policy_a.py::test_cli_roundtrip_preserves_exact_limits_on_success_and_refusal" = "c9290fb4991cd8743dd7f75f4459141cdc78aa31914d7ce034c00a2ae1e9bce1"
+"tests/test_timing_limits_policy_a.py::test_gate_limits_follow_the_executed_start_definition" = "653f2812f6e12036cbe214810017b07d2a5a255c20f8a6bbc9b8157d21caec4b"
+"tests/test_timing_limits_policy_a.py::test_gate_limits_identify_voting_and_refractory_variant" = "0432f89619b9afde15cba35647f0a512e0f850675fc7a66aff5c96b959f25724"
