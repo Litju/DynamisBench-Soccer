@@ -13,7 +13,8 @@ match kind:
     case "timing_contact.gates":
         times = channels["t_s"]
         distances = channels["distance_m"]
-        value = (distances[-1] - distances[0]) / (times[-1] - times[0])
+        span = times[-1] - times[0]
+        value = (distances[-1] - distances[0]) / span if span else 0
         method, unit, dimension, estimand = (
             "beam-split",
             "m/s",

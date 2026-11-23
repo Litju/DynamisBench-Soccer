@@ -256,6 +256,7 @@ def _measurement_binding(task: RegistryTask, review: ReviewedSlice) -> bool:
         and procedure is not None
         and review.source == procedure.source
         and review.kind == procedure.kind
+        and set(review.private_inputs_sha256) == {"expected", "oracle", "provenance"}
         and method.specification == {"operation": method.id}
         and (method.estimand, method.dimension, method.unit)
         == (procedure.estimand, procedure.dimension, procedure.unit)
