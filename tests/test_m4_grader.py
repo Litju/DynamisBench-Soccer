@@ -114,3 +114,69 @@ def test_inconsistent_private_reference_is_rejected(update) -> None:
 
     with pytest.raises(ValidationError):
         ExpectedMethod.model_validate_json(json.dumps(EXPECTED.model_dump(mode="json") | update))
+
+
+def test_native_replay_checks_real_eligibility_and_uncertainty() -> None:
+    from math import hypot
+    from pathlib import Path
+
+    from dynamisbench_soccer.m4.grader import _replay_lps
+    from dynamisbench_soccer.m4.task_registry import load_registry
+
+    root = Path(__file__).resolve().parents[1]
+    task = load_registry(root / "benchmark/tasks")["native-lps-speed", 1]
+    inputs = {item.name: (root / item.path).read_bytes() for item in task.artifacts}
+    artifact = task.checkpoints[0].artifacts[0]
+    fixture = json.loads(inputs[artifact])
+    row = fixture["row"]
+    channels = fixture["channels"]
+    delta = {n: channels[n][row + 1] - channels[n][row - 1] for n in channels}
+    candidate = {
+        "decision": "compute",
+        "reasons": ["eligible"],
+        "selected_trials": [artifact],
+        "required_citations": ["DEV-005"],
+        "allowed_citations": ["DEV-005"],
+        "required_claims": [],
+        "allowed_claims": [],
+        "operands": [
+            {"artifact": artifact, "field": f"{name}.{index}", "value": channels[name][index]}
+            for name in ("time", "position_x", "position_y")
+            for index in range(row - 1, row + 2)
+        ],
+        "quantity": {
+            "value": hypot(delta["position_x"], delta["position_y"]) / delta["time"],
+            "unit": "m/s",
+            "estimand": "horizontal_positional_speed",
+            "dimension": "speed",
+            "uncertainty": fixture["horizontal_error_m"] * 25,
+        },
+    }
+    expected = ExpectedMethod.model_validate_json(json.dumps(candidate))
+    assert _replay_lps(expected, task.candidate_payload("clean", inputs, 0), (artifact,), 1e-12)
+    wrong = expected.model_copy(
+        update={"quantity": expected.quantity.model_copy(update={"uncertainty": 0})}
+    )
+    assert not _replay_lps(wrong, task.candidate_payload("clean", inputs, 0), (artifact,), 1e-12)
+    refusal = ExpectedMethod.model_validate_json(
+        json.dumps(
+            candidate
+            | {
+                "decision": "refuse",
+                "reasons": ["not_eligible"],
+                "selected_trials": [],
+                "quantity": None,
+                "operands": [],
+            }
+        )
+    )
+    for checkpoint, eligible in zip(task.checkpoints, (False, True), strict=True):
+        assert (
+            _replay_lps(
+                refusal,
+                task.candidate_payload(checkpoint.id, inputs, 0),
+                checkpoint.artifacts,
+                1e-12,
+            )
+            == eligible
+        )

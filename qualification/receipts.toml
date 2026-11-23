@@ -2379,3 +2379,45 @@ issue = "RES-669"
 "src/dynamisbench_soccer/reference/motion_models.py::MonoExponentialSprint" = "6f5cf86ba81df676877c7e99492f9df0400e35228a59a0f34a1d65bba5e3d493"
 "tests/test_radar_laser_processing.py::test_native_radar_laser_refuse_resampling_dropouts_and_clipping" = "1398cdc3a165ea225dbf9f121c590257beff7cd1cb650806efcee2b322588cf7"
 "tests/test_radar_laser_processing.py::test_small_native_radar_laser_faults_have_predicted_unflagged_effects" = "d67fbd7dbb2b48c408b373d4953d849f4e03aa86ff1ba61809d6b1565f189082"
+
+[[receipt]]
+id = "RCP-gnss_lps-lps-H"
+dimension = "H"
+subfamilies = ["gnss_lps.lps"]
+implementation = ["src/dynamisbench_soccer/engines/lps_speed.py::horizontal_speed"]
+reference = ["src/dynamisbench_soccer/reference/lps_speed.py::linear_tag_speed"]
+tests = ["tests/test_lps_speed_slice.py::test_horizontal_tag_speed_excludes_vertical_motion_and_is_sourced"]
+reference_kind = "closed_form"
+independence = "The oracle evaluates the norm of prescribed horizontal velocity components without using sampled coordinates, engine differentiation, or any engine imports."
+claim = "Fixed-grid synthetic native LPS reconstruction returns the horizontal speed of the tracked tag, excluding vertical motion and Doppler, consistent with the distinction in registry claim DEV-005."
+tolerance_basis = "The unfiltered 25 Hz interior estimate agrees with the horizontal norm of prescribed velocities with absolute 1e-12 m/s and zero relative tolerance, both with and without vertical motion."
+tolerance = 1e-12
+tolerance_unit = "m/s (absolute)"
+issue = "RES-700"
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/lps_speed.py::horizontal_speed" = "b09375434e0a75a59dd7c086d561a0d9a63c13999feaed3090a2c0e5b005307d"
+"src/dynamisbench_soccer/reference/lps_speed.py::linear_tag_speed" = "fab9535c8a663330b3f21e2f69ea17cf7e3e8379eac3391f1f9e919a39f4eb95"
+"tests/test_lps_speed_slice.py::test_horizontal_tag_speed_excludes_vertical_motion_and_is_sourced" = "67d29bf9175176c5154beb5b8ae2ee3668ffb0e3999b4fa73561411fbd53debb"
+
+[[receipt]]
+id = "RCP-gnss_lps-lps-I"
+dimension = "I"
+subfamilies = ["gnss_lps.lps"]
+implementation = ["src/dynamisbench_soccer/engines/lps_speed.py::position_error_radius", "src/dynamisbench_soccer/engines/lps_speed.py::horizontal_speed"]
+reference = ["src/dynamisbench_soccer/reference/lps_speed.py::exact_grid_extreme_speed"]
+tests = ["tests/test_lps_speed_slice.py::test_position_only_radius_contains_and_attains_analytical_extreme", "tests/test_lps_speed_slice.py::test_lps_speed_refuses_unverified_clock_and_signal"]
+reference_kind = "closed_form"
+independence = "The analytical extreme uses prescribed planar velocity and opposite endpoint errors parallel to the path, independently of the engine and its derivative coefficients."
+claim = "For an interior unfiltered 25 Hz LPS estimate with ideal aligned clock and declared horizontal error balls, the position-only speed error is bounded by the sum of derivative weight magnitudes times the position radius."
+tolerance_basis = "At exactly 25 Hz the bound is 25 times the position radius and is attained by opposite endpoint errors parallel to a linear trajectory. Agreement uses 1e-12 m/s absolute, zero relative tolerance. No timing or empirical metrology uncertainty is inferred."
+tolerance = 1e-12
+tolerance_unit = "m/s (absolute)"
+issue = "RES-700"
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/lps_speed.py::horizontal_speed" = "b09375434e0a75a59dd7c086d561a0d9a63c13999feaed3090a2c0e5b005307d"
+"src/dynamisbench_soccer/engines/lps_speed.py::position_error_radius" = "532bab4201441b013f6f836dc481459d1d9638b15f80702434bdf7c43231d887"
+"src/dynamisbench_soccer/reference/lps_speed.py::exact_grid_extreme_speed" = "35ca59411bad9aa71dc02b65c13c2a33245986ce998ee152c7faf09d9f27ca7f"
+"tests/test_lps_speed_slice.py::test_lps_speed_refuses_unverified_clock_and_signal" = "9304fad18d72cea14cfd29c3df475274f2508f93bbbab9f6ffe1dc9d6e746d80"
+"tests/test_lps_speed_slice.py::test_position_only_radius_contains_and_attains_analytical_extreme" = "504cd18b6b3579ef19442ffb842a27bf469e2626053fee6aa8a4fb1d498fc615"

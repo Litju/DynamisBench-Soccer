@@ -2544,6 +2544,12 @@
         "G": [
           "RCP-gnss_lps-lps-G"
         ],
+        "H": [
+          "RCP-gnss_lps-lps-H"
+        ],
+        "I": [
+          "RCP-gnss_lps-lps-I"
+        ],
         "J": [
           "RCP-gnss_lps-lps-J"
         ],

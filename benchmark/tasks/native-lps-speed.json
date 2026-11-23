@@ -1,0 +1,84 @@
+{
+  "version": "m4.registry-task.v1",
+  "task": {
+    "version": "m4.public-task.v1",
+    "id": "native-lps-speed",
+    "revision": 1,
+    "family": "A",
+    "competencies": [
+      "C1"
+    ],
+    "coverage_cell": "C1 / LPS tag speed",
+    "domain": "position kinematics",
+    "protocol": "fixed-grid interior sample",
+    "source": "gnss_lps.lps",
+    "convention": "fixed",
+    "allowed_tools": "offline_python_stdlib",
+    "answer_schema": "m4.formal-answer.v1"
+  },
+  "artifacts": [
+    {
+      "name": "lps-observation",
+      "path": "benchmark/fixtures/lps-observation.json",
+      "sha256": "9fa804738bdcc88e7115d15a871c3ddbdc3ca5bbe4febcbceeb631630d520350",
+      "category": "synthetic",
+      "rights": "Repository-authored synthetic trajectory",
+      "usage": "reference"
+    },
+    {
+      "name": "lps-invalid",
+      "path": "benchmark/fixtures/lps-invalid.json",
+      "sha256": "049e70e3a40979b45200c26b4c10ee47591c2538fd0793cbced1b75ab699fae8",
+      "category": "synthetic",
+      "rights": "Repository-authored synthetic trajectory",
+      "usage": "reference"
+    }
+  ],
+  "checkpoints": [
+    {
+      "id": "clean",
+      "prompt": "For lps-observation, reconstruct horizontal tag speed at the target row using the unfiltered three-point derivative. Report m/s and the position-only bounded-error radius, under the declared ideal measurement clock. Use method three-point. Include surrounding x/y/time evidence and cite DEV-005.",
+      "artifacts": [
+        "lps-observation"
+      ],
+      "corrects": null
+    },
+    {
+      "id": "invalid",
+      "prompt": "Judge eligibility of lps-invalid before calculating. Use method three-point and cite DEV-005.",
+      "artifacts": [
+        "lps-invalid"
+      ],
+      "corrects": null
+    }
+  ],
+  "reference_profile": "native-lps-speed",
+  "methods": [
+    {
+      "id": "three-point",
+      "estimand": "horizontal_positional_speed",
+      "dimension": "speed",
+      "unit": "m/s",
+      "specification": {
+        "operation": "native_lps_horizontal_speed",
+        "derivative": "three_point",
+        "position_filter": "none"
+      },
+      "sampling": "Unfiltered uniform 25 Hz interior sample",
+      "clock": "Common exact measurement clock and zero latency",
+      "geometry": "Z-up field frame with declared synthetic anchors; horizontal tag trajectory",
+      "qc": "Production native admission, signal-valid flag, visibility and integrity checks",
+      "eligibility": "Contiguous native synthetic record, intact channels and supported interior row",
+      "uncertainty": "Conditional deterministic position-error radius from declared horizontal Euclidean bound per sample",
+      "absolute_tolerance": 1e-12,
+      "limitations": [
+        "Synthetic tracked-tag kinematics only. No Doppler, athlete center-of-mass, hardware metrology or interchangeability claim."
+      ],
+      "source_claims": [
+        "DEV-005"
+      ]
+    }
+  ],
+  "engine": "native-lps-speed.v1",
+  "grader": "formal.v1"
+}

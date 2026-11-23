@@ -49,3 +49,28 @@ def test_large_checkpoint_history_preserves_completed_attempts(tmp_path: Path) -
     assert len(result.attempts) == 1
     assert result.attempts[0].execution.workspace_removed
     assert result.attempts[0].grade.outcome == "EXCLUDED_FROM_SCORED_BENCHMARK"
+
+
+def test_oracle_control_cannot_qualify_unadmitted_task(tmp_path: Path) -> None:
+    from dynamisbench_soccer.m4.trials import run_oracle_control
+
+    catalog = (ROOT / "benchmark/reviewed-slices.json").read_bytes()
+    context = TrialContext(ROOT, catalog, digest(catalog), tmp_path)
+    task = load_registry(ROOT / "benchmark/tasks")["native-lps-speed", 1]
+    with pytest.raises(ValueError, match="did not pass all admitted checkpoints"):
+        run_oracle_control(context, task, STUBS["null"], seed=17)
+
+
+def test_lps_solver_uses_released_inputs_only() -> None:
+    import json
+
+    from dynamisbench_soccer.m4.runner import execute_payload
+
+    task = load_registry(ROOT / "benchmark/tasks")["native-lps-speed", 1]
+    source = (ROOT / "scripts/m4_controls/lps_oracle.py").read_bytes()
+    inputs = {artifact.name: (ROOT / artifact.path).read_bytes() for artifact in task.artifacts}
+    for checkpoint, decision in zip(task.checkpoints, ("compute", "refuse"), strict=True):
+        execution = execute_payload(task.candidate_payload(checkpoint.id, inputs, 17), source)
+        assert execution.outcome == "graded"
+        assert json.loads(execution.stdout)["decision"] == decision
+        assert execution.workspace_removed

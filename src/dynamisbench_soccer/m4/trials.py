@@ -140,3 +140,23 @@ STUBS = {
         b"print(json.dumps({'value': random.Random(json.load(sys.stdin)['seed']).random()}))\n"
     ),
 }
+
+
+def run_oracle_control(
+    context: TrialContext, task: RegistryTask, independent_candidate: bytes, seed: int
+) -> TrialReport:
+    """Verify a test-only solver inside the sandbox against host-held answers."""
+    report = run_episode(context, task, "oracle", independent_candidate, seed)
+    if (
+        report.admission.status != "ENGINEERING_ADMITTED"
+        or report.terminal_reason is not None
+        or len(report.attempts) != len(task.checkpoints)
+        or any(
+            attempt.grade.outcome != "PASS"
+            or attempt.execution.outcome != "graded"
+            or not attempt.execution.workspace_removed
+            for attempt in report.attempts
+        )
+    ):
+        raise ValueError("oracle control did not pass all admitted checkpoints")
+    return report
