@@ -57,6 +57,7 @@ class ReviewedSlice(Schema):
     additional_files: tuple[Text, ...] = ()
     files: dict[str, Sha256]
     answer: AnswerLocation
+    private_inputs_sha256: dict[Name, Sha256] = Field(default_factory=dict)
     reviewer: Text
     review_url: Text
     review_head: Annotated[str, Field(pattern=r"^[0-9a-f]{40}$")]
@@ -85,6 +86,29 @@ def _read(root: Path, relative: str) -> bytes:
     return resolved.read_bytes()
 
 
+def _import_modules(node: ast.Import | ast.ImportFrom, package: str) -> set[str]:
+    if isinstance(node, ast.Import):
+        return {alias.name for alias in node.names}
+    base = resolve_name("." * node.level + (node.module or ""), package)
+    return {base, *(f"{base}.{alias.name}" for alias in node.names)}
+
+
+def _package_paths(root: Path, modules: set[str]) -> set[str]:
+    paths: set[str] = set()
+    for module in modules:
+        if module != PACKAGE and not module.startswith(f"{PACKAGE}."):
+            continue
+        parts = module.split(".")
+        for length in range(1, len(parts) + 1):
+            prefix = "src/" + "/".join(parts[:length])
+            paths.update(
+                candidate
+                for candidate in (f"{prefix}.py", f"{prefix}/__init__.py")
+                if (root / candidate).is_file()
+            )
+    return paths
+
+
 def _closure(root: Path, entries: set[str]) -> dict[str, str]:
     """Overapproximate static imports, including package initialization and unused branches."""
     pending = {entry.split("::", 1)[0] for entry in entries}
@@ -101,23 +125,51 @@ def _closure(root: Path, entries: set[str]) -> dict[str, str]:
         package = module.rpartition(".")[0]
         modules: set[str] = set()
         for node in ast.walk(ast.parse(raw, filename=path)):
-            if isinstance(node, ast.Import):
-                modules.update(alias.name for alias in node.names)
-            elif isinstance(node, ast.ImportFrom):
-                base = resolve_name("." * node.level + (node.module or ""), package)
-                modules.add(base)
-                modules.update(f"{base}.{alias.name}" for alias in node.names)
-        modules.add(package)
-        for module in modules:
-            if module != PACKAGE and not module.startswith(f"{PACKAGE}."):
-                continue
-            parts = module.split(".")
-            for length in range(1, len(parts) + 1):
-                prefix = "src/" + "/".join(parts[:length])
-                for candidate in (f"{prefix}.py", f"{prefix}/__init__.py"):
-                    if (root / candidate).is_file() and candidate not in found:
-                        pending.add(candidate)
+            if isinstance(node, (ast.Import, ast.ImportFrom)):
+                modules.update(_import_modules(node, package))
+        pending.update(_package_paths(root, modules | {package}) - found.keys())
     return found
+
+
+def _oracle_closure(root: Path, entries: set[str]) -> dict[str, str]:
+    """Follow the oracle symbols inside mixed test modules, including their used imports."""
+    source_entries = {entry for entry in entries if entry.startswith(SOURCE)}
+    test_files: dict[str, str] = {}
+    for entry in entries - source_entries:
+        path, symbol = receipts._split(entry)
+        if (
+            not path.startswith("tests/test_")
+            or not path.endswith(".py")
+            or Path(path).parent != Path("tests")
+        ):
+            raise ValueError(f"oracle outside supported reference paths: {path}")
+        raw = _read(root, path)
+        tree = ast.parse(raw, filename=path)
+        target = receipts._find(tree, symbol)
+        if target is None:
+            raise ValueError(f"missing oracle symbol {symbol}")
+        nodes = [
+            part
+            for definition in (target, *receipts.closure(tree, target).values())
+            for part in ast.walk(definition)
+        ]
+        names = {node.id for node in nodes if isinstance(node, ast.Name)}
+        imports = [node for node in nodes if isinstance(node, (ast.Import, ast.ImportFrom))]
+        for stmt in tree.body:
+            if isinstance(stmt, (ast.Import, ast.ImportFrom)) and any(
+                alias.name == "*" or (alias.asname or alias.name.split(".")[0]) in names
+                for alias in stmt.names
+            ):
+                imports.append(stmt)
+        for stmt in imports:
+            modules = _import_modules(stmt, "")
+            if any(
+                module.startswith(("test_", "tests.")) or module == "tests" for module in modules
+            ):
+                raise ValueError("test oracle imports another test module")
+            source_entries.update(_package_paths(root, modules))
+        test_files[path] = digest(raw)
+    return _closure(root, source_entries) | test_files
 
 
 def _receipt_digest(receipt: receipts.Receipt) -> str:
@@ -209,7 +261,7 @@ def evaluate(
         if set(review.implementations) != implementations or set(review.oracle) != oracles:
             return decision("REFUSED", "incomplete or incompatible implementation/oracle closure")
         production = _closure(root, implementations)
-        oracle = _closure(root, set(review.oracle))
+        oracle = _oracle_closure(root, set(review.oracle))
         production_entries = {ref.split("::", 1)[0] for ref in implementations}
         oracle_entries = {ref.split("::", 1)[0] for ref in oracles}
         shared = production.keys() & oracle.keys()

@@ -1,0 +1,151 @@
+{
+  "version": "m4.registry-task.v1",
+  "task": {
+    "version": "m4.public-task.v1",
+    "id": "lps-filter-sensitivity",
+    "revision": 1,
+    "family": "A",
+    "competencies": [
+      "C1",
+      "C3",
+      "C4",
+      "C5"
+    ],
+    "coverage_cell": "Native position inference, acquisition quality, deterministic uncertainty and measurement boundaries",
+    "domain": "native position kinematics",
+    "protocol": "res704.lps.interior-row",
+    "source": "gnss_lps.lps",
+    "convention": "fixed",
+    "allowed_tools": "offline_python_stdlib",
+    "answer_schema": "m5.measurement-answer.v1"
+  },
+  "reference_profile": "lps-filter-sensitivity",
+  "engine": "m5-measurement.v1",
+  "grader": "measurement.v1",
+  "artifacts": [
+    {
+      "name": "position-lps-01",
+      "path": "benchmark/fixtures/position-lps-01.json",
+      "sha256": "57badd6e1ccaeeff320d98740e3b0b885d4b72e7e6a81316182335f5973d0c0b",
+      "category": "synthetic",
+      "rights": "Repository-authored synthetic positions and acquisition metadata",
+      "usage": "reference"
+    },
+    {
+      "name": "position-lps-02",
+      "path": "benchmark/fixtures/position-lps-02.json",
+      "sha256": "809b9d20256a90727ef39ded3d430349203656964aa8f8f40e54bf764d4e02f8",
+      "category": "synthetic",
+      "rights": "Repository-authored synthetic positions and acquisition metadata",
+      "usage": "reference"
+    },
+    {
+      "name": "position-lps-03",
+      "path": "benchmark/fixtures/position-lps-03.json",
+      "sha256": "cc1941f31e1ea5e77ad03ecdc604558869353210a54b44753285f2e291a649bd",
+      "category": "synthetic",
+      "rights": "Repository-authored synthetic positions and acquisition metadata",
+      "usage": "reference"
+    },
+    {
+      "name": "position-lps-04",
+      "path": "benchmark/fixtures/position-lps-04.json",
+      "sha256": "b840d32e5a17d18483989ef403099d2f870f96c781054f25683514fde539de1b",
+      "category": "synthetic",
+      "rights": "Repository-authored synthetic positions and acquisition metadata",
+      "usage": "reference"
+    },
+    {
+      "name": "position-lps-05",
+      "path": "benchmark/fixtures/position-lps-05.json",
+      "sha256": "365d030f0a5623c7aac7c10d8fe15f4b6131367791919080abc4e3d422224195",
+      "category": "synthetic",
+      "rights": "Repository-authored synthetic positions and acquisition metadata",
+      "usage": "reference"
+    },
+    {
+      "name": "position-lps-06",
+      "path": "benchmark/fixtures/position-lps-06.json",
+      "sha256": "d064fca84476c09f349bff5b72ed9562257afc197b43fb06cc52425d3a2878df",
+      "category": "synthetic",
+      "rights": "Repository-authored synthetic positions and acquisition metadata",
+      "usage": "reference"
+    }
+  ],
+  "checkpoints": [
+    {
+      "id": "p1",
+      "prompt": "Judge eligibility using the single supplied current observation. Earlier checkpoints are independent questions. For an ineligible record, decline with reason not_eligible, no quantity, no operands, no selected trials, and choose the one applicable finding: native_rate_unverified, declared_geometry_required or failed_signal_qc. A processed/interpolated record or disagreement among observed, declared and metadata native rates cannot enter the native method. Any required record-wide quality flag failure disqualifies the observation before computation. Return one JSON object with version m5.measurement-answer.v1, decision (compute or refuse), method, reason (eligible for a computation), selected_trials, citations, claims, quantity and operands. Use string arrays for selected_trials, citations and claims. Each operand has artifact, field, and numeric value. A computed quantity has numeric value and uncertainty, plus unit, dimension and estimand strings. When refusing, use null for quantity and empty arrays for operands and selected_trials. Cite DEV-005 and CX-003 in all decisions. DEV-005 describes method- and condition-specific GNSS/LPS results and distinguishes positional and Doppler observations. CX-003 documents acquisition and processing dependence of GNSS-derived external-load metrics. Use method lps-filter-sensitivity. For an eligible Z-up field record, report horizontal_positional_acceleration_filter_delta in m/s^2 (dimension acceleration) at row r as the horizontal acceleration norm from binomial-five smoothed positions minus the unfiltered norm. Use centered three-point differentiation twice for both estimators on the same admitted measurement grid. Binomial-five weights from earliest to latest are (1, 4, 6, 4, 1)/16, applied componentwise before differentiating. Report the sum of conservative fixed-grid radii 16e/h^2 and 1.25\u00d716e/h^2, using horizontal_error_m for e and the minimum admitted reference step for h. This bounds the change in the contrast under deterministic position error balls. Use ordered raw operands: time, position_x and position_y each at rows r\u22124 through r+4 in channel order with keys like time.1, then horizontal_error_m. Select the current artifact name as the sole trial. Decide compute only with claims tag_horizontal_acceleration, filter_sensitivity_not_accuracy and fixed_grid_bound.",
+      "artifacts": [
+        "position-lps-01"
+      ],
+      "corrects": null
+    },
+    {
+      "id": "p2",
+      "prompt": "Judge eligibility using the single supplied current observation. Earlier checkpoints are independent questions. For an ineligible record, decline with reason not_eligible, no quantity, no operands, no selected trials, and choose the one applicable finding: native_rate_unverified, declared_geometry_required or failed_signal_qc. A processed/interpolated record or disagreement among observed, declared and metadata native rates cannot enter the native method. Any required record-wide quality flag failure disqualifies the observation before computation. Return one JSON object with version m5.measurement-answer.v1, decision (compute or refuse), method, reason (eligible for a computation), selected_trials, citations, claims, quantity and operands. Use string arrays for selected_trials, citations and claims. Each operand has artifact, field, and numeric value. A computed quantity has numeric value and uncertainty, plus unit, dimension and estimand strings. When refusing, use null for quantity and empty arrays for operands and selected_trials. Cite DEV-005 and CX-003 in all decisions. DEV-005 describes method- and condition-specific GNSS/LPS results and distinguishes positional and Doppler observations. CX-003 documents acquisition and processing dependence of GNSS-derived external-load metrics. Use method lps-filter-sensitivity. For an eligible Z-up field record, report horizontal_positional_acceleration_filter_delta in m/s^2 (dimension acceleration) at row r as the horizontal acceleration norm from binomial-five smoothed positions minus the unfiltered norm. Use centered three-point differentiation twice for both estimators on the same admitted measurement grid. Binomial-five weights from earliest to latest are (1, 4, 6, 4, 1)/16, applied componentwise before differentiating. Report the sum of conservative fixed-grid radii 16e/h^2 and 1.25\u00d716e/h^2, using horizontal_error_m for e and the minimum admitted reference step for h. This bounds the change in the contrast under deterministic position error balls. Use ordered raw operands: time, position_x and position_y each at rows r\u22124 through r+4 in channel order with keys like time.1, then horizontal_error_m. Select the current artifact name as the sole trial. Decide compute only with claims tag_horizontal_acceleration, filter_sensitivity_not_accuracy and fixed_grid_bound.",
+      "artifacts": [
+        "position-lps-02"
+      ],
+      "corrects": null
+    },
+    {
+      "id": "p3",
+      "prompt": "Judge eligibility using the single supplied current observation. Earlier checkpoints are independent questions. For an ineligible record, decline with reason not_eligible, no quantity, no operands, no selected trials, and choose the one applicable finding: native_rate_unverified, declared_geometry_required or failed_signal_qc. A processed/interpolated record or disagreement among observed, declared and metadata native rates cannot enter the native method. Any required record-wide quality flag failure disqualifies the observation before computation. Return one JSON object with version m5.measurement-answer.v1, decision (compute or refuse), method, reason (eligible for a computation), selected_trials, citations, claims, quantity and operands. Use string arrays for selected_trials, citations and claims. Each operand has artifact, field, and numeric value. A computed quantity has numeric value and uncertainty, plus unit, dimension and estimand strings. When refusing, use null for quantity and empty arrays for operands and selected_trials. Cite DEV-005 and CX-003 in all decisions. DEV-005 describes method- and condition-specific GNSS/LPS results and distinguishes positional and Doppler observations. CX-003 documents acquisition and processing dependence of GNSS-derived external-load metrics. Use method lps-filter-sensitivity. For an eligible Z-up field record, report horizontal_positional_acceleration_filter_delta in m/s^2 (dimension acceleration) at row r as the horizontal acceleration norm from binomial-five smoothed positions minus the unfiltered norm. Use centered three-point differentiation twice for both estimators on the same admitted measurement grid. Binomial-five weights from earliest to latest are (1, 4, 6, 4, 1)/16, applied componentwise before differentiating. Report the sum of conservative fixed-grid radii 16e/h^2 and 1.25\u00d716e/h^2, using horizontal_error_m for e and the minimum admitted reference step for h. This bounds the change in the contrast under deterministic position error balls. Use ordered raw operands: time, position_x and position_y each at rows r\u22124 through r+4 in channel order with keys like time.1, then horizontal_error_m. Select the current artifact name as the sole trial. Decide compute only with claims tag_horizontal_acceleration, filter_sensitivity_not_accuracy and fixed_grid_bound.",
+      "artifacts": [
+        "position-lps-03"
+      ],
+      "corrects": null
+    },
+    {
+      "id": "p4",
+      "prompt": "Judge eligibility using the single supplied current observation. Earlier checkpoints are independent questions. For an ineligible record, decline with reason not_eligible, no quantity, no operands, no selected trials, and choose the one applicable finding: native_rate_unverified, declared_geometry_required or failed_signal_qc. A processed/interpolated record or disagreement among observed, declared and metadata native rates cannot enter the native method. Any required record-wide quality flag failure disqualifies the observation before computation. Return one JSON object with version m5.measurement-answer.v1, decision (compute or refuse), method, reason (eligible for a computation), selected_trials, citations, claims, quantity and operands. Use string arrays for selected_trials, citations and claims. Each operand has artifact, field, and numeric value. A computed quantity has numeric value and uncertainty, plus unit, dimension and estimand strings. When refusing, use null for quantity and empty arrays for operands and selected_trials. Cite DEV-005 and CX-003 in all decisions. DEV-005 describes method- and condition-specific GNSS/LPS results and distinguishes positional and Doppler observations. CX-003 documents acquisition and processing dependence of GNSS-derived external-load metrics. Use method lps-filter-sensitivity. For an eligible Z-up field record, report horizontal_positional_acceleration_filter_delta in m/s^2 (dimension acceleration) at row r as the horizontal acceleration norm from binomial-five smoothed positions minus the unfiltered norm. Use centered three-point differentiation twice for both estimators on the same admitted measurement grid. Binomial-five weights from earliest to latest are (1, 4, 6, 4, 1)/16, applied componentwise before differentiating. Report the sum of conservative fixed-grid radii 16e/h^2 and 1.25\u00d716e/h^2, using horizontal_error_m for e and the minimum admitted reference step for h. This bounds the change in the contrast under deterministic position error balls. Use ordered raw operands: time, position_x and position_y each at rows r\u22124 through r+4 in channel order with keys like time.1, then horizontal_error_m. Select the current artifact name as the sole trial. Decide compute only with claims tag_horizontal_acceleration, filter_sensitivity_not_accuracy and fixed_grid_bound.",
+      "artifacts": [
+        "position-lps-04"
+      ],
+      "corrects": null
+    },
+    {
+      "id": "p5",
+      "prompt": "Judge eligibility using the single supplied current observation. Earlier checkpoints are independent questions. For an ineligible record, decline with reason not_eligible, no quantity, no operands, no selected trials, and choose the one applicable finding: native_rate_unverified, declared_geometry_required or failed_signal_qc. A processed/interpolated record or disagreement among observed, declared and metadata native rates cannot enter the native method. Any required record-wide quality flag failure disqualifies the observation before computation. Return one JSON object with version m5.measurement-answer.v1, decision (compute or refuse), method, reason (eligible for a computation), selected_trials, citations, claims, quantity and operands. Use string arrays for selected_trials, citations and claims. Each operand has artifact, field, and numeric value. A computed quantity has numeric value and uncertainty, plus unit, dimension and estimand strings. When refusing, use null for quantity and empty arrays for operands and selected_trials. Cite DEV-005 and CX-003 in all decisions. DEV-005 describes method- and condition-specific GNSS/LPS results and distinguishes positional and Doppler observations. CX-003 documents acquisition and processing dependence of GNSS-derived external-load metrics. Use method lps-filter-sensitivity. For an eligible Z-up field record, report horizontal_positional_acceleration_filter_delta in m/s^2 (dimension acceleration) at row r as the horizontal acceleration norm from binomial-five smoothed positions minus the unfiltered norm. Use centered three-point differentiation twice for both estimators on the same admitted measurement grid. Binomial-five weights from earliest to latest are (1, 4, 6, 4, 1)/16, applied componentwise before differentiating. Report the sum of conservative fixed-grid radii 16e/h^2 and 1.25\u00d716e/h^2, using horizontal_error_m for e and the minimum admitted reference step for h. This bounds the change in the contrast under deterministic position error balls. Use ordered raw operands: time, position_x and position_y each at rows r\u22124 through r+4 in channel order with keys like time.1, then horizontal_error_m. Select the current artifact name as the sole trial. Decide compute only with claims tag_horizontal_acceleration, filter_sensitivity_not_accuracy and fixed_grid_bound.",
+      "artifacts": [
+        "position-lps-05"
+      ],
+      "corrects": null
+    },
+    {
+      "id": "p6",
+      "prompt": "Judge eligibility using the single supplied current observation. Earlier checkpoints are independent questions. For an ineligible record, decline with reason not_eligible, no quantity, no operands, no selected trials, and choose the one applicable finding: native_rate_unverified, declared_geometry_required or failed_signal_qc. A processed/interpolated record or disagreement among observed, declared and metadata native rates cannot enter the native method. Any required record-wide quality flag failure disqualifies the observation before computation. Return one JSON object with version m5.measurement-answer.v1, decision (compute or refuse), method, reason (eligible for a computation), selected_trials, citations, claims, quantity and operands. Use string arrays for selected_trials, citations and claims. Each operand has artifact, field, and numeric value. A computed quantity has numeric value and uncertainty, plus unit, dimension and estimand strings. When refusing, use null for quantity and empty arrays for operands and selected_trials. Cite DEV-005 and CX-003 in all decisions. DEV-005 describes method- and condition-specific GNSS/LPS results and distinguishes positional and Doppler observations. CX-003 documents acquisition and processing dependence of GNSS-derived external-load metrics. Use method lps-filter-sensitivity. A colleague plans to use this one synthetic tag record's filter sensitivity to certify interchangeability between native LPS and GNSS athlete accelerations. Decide whether the available evidence supports that claim. If unsupported, decline with reason unsupported_claim, claims filter_sensitivity_not_accuracy and synthetic_evidence_only, and no operands, quantity or selected trials. ",
+      "artifacts": [
+        "position-lps-06"
+      ],
+      "corrects": null
+    }
+  ],
+  "methods": [
+    {
+      "id": "lps-filter-sensitivity",
+      "estimand": "horizontal_positional_acceleration_filter_delta",
+      "dimension": "acceleration",
+      "unit": "m/s^2",
+      "sampling": "Contiguous uniform native 25 Hz; nine-row support; fixed interior row; unfiltered and binomial5 position methods",
+      "clock": "Common exact measurement clock with zero latency",
+      "geometry": "Explicit Cartesian Z-up field frame and three synthetic non-collinear anchors",
+      "qc": "Production native admission, declared frame/anchors, timestamp-rate compatibility, integrity and per-anchor visibility",
+      "eligibility": "Synthetic native observation with intact channels and visibility throughout; row must support both centered derivative passes and filter",
+      "uncertainty": "Sum of conservative unfiltered and filtered horizontal acceleration radii under deterministic per-sample horizontal position error balls with fixed rows and exact timestamps",
+      "limitations": [
+        "The signed filter contrast evaluates sensitivity of horizontal position-derived tag kinematics.",
+        "A response to smoothing gives no direction of correction, surveyed anchor validity, centre-of-mass acceleration or empirical instrument agreement."
+      ],
+      "specification": {
+        "operation": "lps-filter-sensitivity"
+      },
+      "absolute_tolerance": 2e-09,
+      "source_claims": [
+        "DEV-005",
+        "CX-003"
+      ]
+    }
+  ]
+}

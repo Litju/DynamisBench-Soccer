@@ -108,3 +108,29 @@ def test_task_class_requires_explicit_omissions(kind) -> None:
     for role in sorted(DIMENSIONS - set(profile.evidence))[1:]:
         profile.inapplicable[role] = "independently reviewed inapplicability"
     assert _check(task, profile)[1] == ("every omitted dimension needs reviewed inapplicability",)
+
+
+def test_mixed_test_oracle_tracks_only_reached_imports(tmp_path: Path) -> None:
+    from dynamisbench_soccer.m4.admission import _oracle_closure
+
+    test = tmp_path / "tests/test_mixed.py"
+    test.parent.mkdir()
+    test.write_text(
+        "from dynamisbench_soccer.engine import process\n"
+        "from dynamisbench_soccer.truth import expected\n"
+        "def oracle(): return helper()\n"
+        "def helper(): return expected()\n"
+        "def test_agreement(): assert process() == oracle()\n"
+    )
+    source = tmp_path / "src/dynamisbench_soccer"
+    source.mkdir(parents=True)
+    for name in ("engine", "truth"):
+        (source / f"{name}.py").write_text("")
+    assert set(_oracle_closure(tmp_path, {"tests/test_mixed.py::oracle"})) == {
+        "tests/test_mixed.py",
+        "src/dynamisbench_soccer/truth.py",
+    }
+    test.write_text(test.read_text().replace("return expected()", "return process()"))
+    assert "src/dynamisbench_soccer/engine.py" in _oracle_closure(
+        tmp_path, {"tests/test_mixed.py::oracle"}
+    )
