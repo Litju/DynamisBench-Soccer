@@ -1,0 +1,1205 @@
+{
+  "catalog_sha256": "141e960f1e8779aeb19eb1026ebdae9cce8dce967aafd816dd10934ecff1b0be",
+  "head": "ac49967da8fda2ceb25e567cf5b3bd4f2f69721c",
+  "passed": true,
+  "runner_limits": {
+    "max_output_bytes": 16384,
+    "max_source_bytes": 65536,
+    "wall_s": 3
+  },
+  "seed": 704,
+  "tasks": {
+    "contact-flight-height@1": {
+      "admission": "ENGINEERING_ADMITTED",
+      "admission_controls": {
+        "invalid_pin": "REFUSED",
+        "stale_artifact": "REFUSED",
+        "stale_receipt": "REFUSED"
+      },
+      "cleanup_errors": 0,
+      "controls": {
+        "c03_correct_qc": {
+          "actual": "PASS",
+          "expected": "PASS",
+          "findings": [],
+          "passed": true,
+          "repeatable": true
+        },
+        "c03_ignored_qc": {
+          "actual": "FAIL",
+          "expected": "FAIL",
+          "findings": [
+            "eligibility_or_refusal",
+            "trial_selection",
+            "interpretation_boundary",
+            "derivation",
+            "quantity_absent_or_unexpected"
+          ],
+          "passed": true,
+          "repeatable": true
+        },
+        "c03_wrong_qc_finding": {
+          "actual": "FAIL",
+          "expected": "FAIL",
+          "findings": [
+            "interpretation_boundary"
+          ],
+          "passed": true,
+          "repeatable": true
+        },
+        "c04_correct_qc": {
+          "actual": "PASS",
+          "expected": "PASS",
+          "findings": [],
+          "passed": true,
+          "repeatable": true
+        },
+        "c04_ignored_qc": {
+          "actual": "FAIL",
+          "expected": "FAIL",
+          "findings": [
+            "eligibility_or_refusal",
+            "trial_selection",
+            "interpretation_boundary",
+            "derivation",
+            "quantity_absent_or_unexpected"
+          ],
+          "passed": true,
+          "repeatable": true
+        },
+        "c04_wrong_qc_finding": {
+          "actual": "FAIL",
+          "expected": "FAIL",
+          "findings": [
+            "interpretation_boundary"
+          ],
+          "passed": true,
+          "repeatable": true
+        },
+        "c05_correct_qc": {
+          "actual": "PASS",
+          "expected": "PASS",
+          "findings": [],
+          "passed": true,
+          "repeatable": true
+        },
+        "c05_ignored_qc": {
+          "actual": "FAIL",
+          "expected": "FAIL",
+          "findings": [
+            "eligibility_or_refusal",
+            "trial_selection",
+            "interpretation_boundary",
+            "derivation",
+            "quantity_absent_or_unexpected"
+          ],
+          "passed": true,
+          "repeatable": true
+        },
+        "c05_wrong_qc_finding": {
+          "actual": "FAIL",
+          "expected": "FAIL",
+          "findings": [
+            "interpretation_boundary"
+          ],
+          "passed": true,
+          "repeatable": true
+        },
+        "claim_order": {
+          "actual": "PASS",
+          "expected": "PASS",
+          "findings": [],
+          "passed": true,
+          "repeatable": true
+        },
+        "contradictory_free_text": {
+          "actual": "FAIL",
+          "expected": "FAIL",
+          "findings": [
+            "invalid_submission"
+          ],
+          "passed": true,
+          "repeatable": true
+        },
+        "correct_refusal": {
+          "actual": "PASS",
+          "expected": "PASS",
+          "findings": [],
+          "passed": true,
+          "repeatable": true
+        },
+        "dropped_evidence": {
+          "actual": "FAIL",
+          "expected": "FAIL",
+          "findings": [
+            "derivation"
+          ],
+          "passed": true,
+          "repeatable": true
+        },
+        "inside_tolerance": {
+          "actual": "PASS",
+          "expected": "PASS",
+          "findings": [],
+          "passed": true,
+          "repeatable": true
+        },
+        "invented_equivalence": {
+          "actual": "FAIL",
+          "expected": "FAIL",
+          "findings": [
+            "interpretation_boundary"
+          ],
+          "passed": true,
+          "repeatable": true
+        },
+        "numeric_error": {
+          "actual": "FAIL",
+          "expected": "FAIL",
+          "findings": [
+            "value"
+          ],
+          "passed": true,
+          "repeatable": true
+        },
+        "positive": {
+          "actual": "PASS",
+          "expected": "PASS",
+          "findings": [],
+          "passed": true,
+          "repeatable": true
+        },
+        "unnecessary_abstention": {
+          "actual": "FAIL",
+          "expected": "FAIL",
+          "findings": [
+            "eligibility_or_refusal",
+            "trial_selection",
+            "interpretation_boundary",
+            "derivation",
+            "quantity_absent_or_unexpected"
+          ],
+          "passed": true,
+          "repeatable": true
+        },
+        "wrong_citation": {
+          "actual": "FAIL",
+          "expected": "FAIL",
+          "findings": [
+            "source_citations"
+          ],
+          "passed": true,
+          "repeatable": true
+        },
+        "wrong_contact_polarity": {
+          "actual": "FAIL",
+          "expected": "FAIL",
+          "findings": [
+            "interpretation_boundary"
+          ],
+          "passed": true,
+          "repeatable": true
+        },
+        "wrong_estimand": {
+          "actual": "FAIL",
+          "expected": "FAIL",
+          "findings": [
+            "estimand"
+          ],
+          "passed": true,
+          "repeatable": true
+        },
+        "wrong_method": {
+          "actual": "FAIL",
+          "expected": "FAIL",
+          "findings": [
+            "unsupported_method"
+          ],
+          "passed": true,
+          "repeatable": true
+        },
+        "wrong_refusal_reason": {
+          "actual": "FAIL",
+          "expected": "FAIL",
+          "findings": [
+            "eligibility_or_refusal"
+          ],
+          "passed": true,
+          "repeatable": true
+        },
+        "wrong_uncertainty": {
+          "actual": "FAIL",
+          "expected": "FAIL",
+          "findings": [
+            "uncertainty"
+          ],
+          "passed": true,
+          "repeatable": true
+        },
+        "wrong_units": {
+          "actual": "FAIL",
+          "expected": "FAIL",
+          "findings": [
+            "unit_or_dimension"
+          ],
+          "passed": true,
+          "repeatable": true
+        }
+      },
+      "environment": {
+        "candidate_python": "Python 3.12.3",
+        "host_python": "3.12.13",
+        "lockfile_sha256": "7fb1024b1c70e5a4eea523bb3f751b0e45219a4d7d7a4a968d2ef6008b5a31c0",
+        "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+        "python_binary_sha256": "e50d468e8b0adfb05733f5b87b3cff34829c4a8c1aea50c865aa8bdfe4bb150f",
+        "sandbox_binary_sha256": "e318903862396f96de3df57264e0158682b952fd3fb53ac23d876413e7b30f71"
+      },
+      "execution_errors": {
+        "naive": 0,
+        "null": 0,
+        "oracle": 0,
+        "random": 0
+      },
+      "false_fail": 0,
+      "false_pass": 0,
+      "isolation": "PASS",
+      "oracle_sha256": "e605dcb4dd827c50e4bb2eed1f874005abc30aa0f78c2089981197a69b886b03",
+      "reasons": [],
+      "receipt_digests": {
+        "RCP-timing_contact-contact-A": "02b0ad72fa2ff265715288116d06f0fc2d0fdf1457703d17484fe6fca64217ad",
+        "RCP-timing_contact-contact-B": "cf4eda0152595d6239482e8124fce1b79d43ebba5f220b193f07251180810ee3",
+        "RCP-timing_contact-contact-C": "07450a5d910b78f91d8468032a1b3db279ba324779b5c948d092c86d8077bc7e",
+        "RCP-timing_contact-contact-D": "ac6c0823225a2eb52480b54d8913e0baeae73d6072e5de433be663bc09076b4d",
+        "RCP-timing_contact-contact-E": "02a93f3638f0105ab3e450823935ccede091e4edd1d360a155fc5d9c39729964",
+        "RCP-timing_contact-contact-F": "f3e2e0306a48cb03b95a8fce408a3606d371485ebdd27b0f4414175f3399172c",
+        "RCP-timing_contact-contact-G": "aed50af36f9dc476bb57ddb206c40c6925f916055bfe64d0e4a7d3b8a05e496f",
+        "RCP-timing_contact-contact-H": "c77070ae93a848ca0ba7df5138015c8fbe4ae074534f8157ab3ec53ef6c31799",
+        "RCP-timing_contact-contact-I": "3d3fc05320487435a4710e3cc693954d5eb23fa7c5774cf6c528dfb73f88031c",
+        "RCP-timing_contact-contact-J": "2e32db52fa60571238b6bc917c2f7e97f8e9f37173abaa5d980ef3b329932e31",
+        "RCP-timing_contact-contact-K": "13fd1905701e429c6f523402f5b50da8511ee9434d88d44a7e4117d8aa171b86",
+        "RCP-timing_contact-contact-M": "4c70f61cea20e9e2c5843ecd434c5788b7fd0a653d69752f78233c117d2071a1",
+        "RCP-timing_contact-contact-O": "2d21cb896c30475781f59d034cfdb8e7da7ee138e2a73f1114ff7bdd3107c163"
+      },
+      "replay_differences": 0,
+      "score": {
+        "naive": {
+          "FAIL": 6
+        },
+        "null": {
+          "FAIL": 6
+        },
+        "oracle": {
+          "PASS": 6
+        },
+        "random": {
+          "FAIL": 6
+        }
+      },
+      "source_digests": {
+        "contact-record-01": "eb4520c8ae2361660b06d2af1a1139b4533221f90a3a0da78143db5858537a5c",
+        "contact-record-02": "ffb3546759011bb6691ed9917fa2fcb6cdcfb141d50e3092ce3c5dc2f51327df",
+        "contact-record-03": "26b81dbfa04fa4a3f7a9769d2e900d87b797d411553348642727c422a3c789cd",
+        "contact-record-04": "83ca454830be52bf1fa6d08d9c6359950242bf0089f6711a0a028fd4982d0909",
+        "contact-record-05": "db5615b36e3e5150cb9b646cfa93ddcf683a9596e26aee6121241bc9431c3ee8",
+        "contact-record-06": "138f2abbad1952b06a0d88bfaefc7d2ee06f5aaa856bf3156e2f2d1b0f3fef6c"
+      },
+      "task_sha256": "3af6670925f0ca8e27f0da6a42426c70cb5ca668dfbc8509fd280bb916700d34"
+    },
+    "gate-split-speed@1": {
+      "admission": "ENGINEERING_ADMITTED",
+      "admission_controls": {
+        "invalid_pin": "REFUSED",
+        "stale_artifact": "REFUSED",
+        "stale_receipt": "REFUSED"
+      },
+      "cleanup_errors": 0,
+      "controls": {
+        "c04_correct_qc": {
+          "actual": "PASS",
+          "expected": "PASS",
+          "findings": [],
+          "passed": true,
+          "repeatable": true
+        },
+        "c04_ignored_qc": {
+          "actual": "FAIL",
+          "expected": "FAIL",
+          "findings": [
+            "eligibility_or_refusal",
+            "trial_selection",
+            "interpretation_boundary",
+            "derivation",
+            "quantity_absent_or_unexpected"
+          ],
+          "passed": true,
+          "repeatable": true
+        },
+        "c04_wrong_qc_finding": {
+          "actual": "FAIL",
+          "expected": "FAIL",
+          "findings": [
+            "interpretation_boundary"
+          ],
+          "passed": true,
+          "repeatable": true
+        },
+        "c05_correct_qc": {
+          "actual": "PASS",
+          "expected": "PASS",
+          "findings": [],
+          "passed": true,
+          "repeatable": true
+        },
+        "c05_ignored_qc": {
+          "actual": "FAIL",
+          "expected": "FAIL",
+          "findings": [
+            "eligibility_or_refusal",
+            "trial_selection",
+            "interpretation_boundary",
+            "derivation",
+            "quantity_absent_or_unexpected"
+          ],
+          "passed": true,
+          "repeatable": true
+        },
+        "c05_wrong_qc_finding": {
+          "actual": "FAIL",
+          "expected": "FAIL",
+          "findings": [
+            "interpretation_boundary"
+          ],
+          "passed": true,
+          "repeatable": true
+        },
+        "c06_correct_qc": {
+          "actual": "PASS",
+          "expected": "PASS",
+          "findings": [],
+          "passed": true,
+          "repeatable": true
+        },
+        "c06_ignored_qc": {
+          "actual": "FAIL",
+          "expected": "FAIL",
+          "findings": [
+            "eligibility_or_refusal",
+            "trial_selection",
+            "interpretation_boundary",
+            "derivation",
+            "quantity_absent_or_unexpected"
+          ],
+          "passed": true,
+          "repeatable": true
+        },
+        "c06_wrong_qc_finding": {
+          "actual": "FAIL",
+          "expected": "FAIL",
+          "findings": [
+            "interpretation_boundary"
+          ],
+          "passed": true,
+          "repeatable": true
+        },
+        "claim_order": {
+          "actual": "PASS",
+          "expected": "PASS",
+          "findings": [],
+          "passed": true,
+          "repeatable": true
+        },
+        "contradictory_free_text": {
+          "actual": "FAIL",
+          "expected": "FAIL",
+          "findings": [
+            "invalid_submission"
+          ],
+          "passed": true,
+          "repeatable": true
+        },
+        "correct_refusal": {
+          "actual": "PASS",
+          "expected": "PASS",
+          "findings": [],
+          "passed": true,
+          "repeatable": true
+        },
+        "dropped_evidence": {
+          "actual": "FAIL",
+          "expected": "FAIL",
+          "findings": [
+            "derivation"
+          ],
+          "passed": true,
+          "repeatable": true
+        },
+        "inside_tolerance": {
+          "actual": "PASS",
+          "expected": "PASS",
+          "findings": [],
+          "passed": true,
+          "repeatable": true
+        },
+        "invented_equivalence": {
+          "actual": "FAIL",
+          "expected": "FAIL",
+          "findings": [
+            "interpretation_boundary"
+          ],
+          "passed": true,
+          "repeatable": true
+        },
+        "numeric_error": {
+          "actual": "FAIL",
+          "expected": "FAIL",
+          "findings": [
+            "value"
+          ],
+          "passed": true,
+          "repeatable": true
+        },
+        "omit_fixed_start_offset": {
+          "actual": "FAIL",
+          "expected": "FAIL",
+          "findings": [
+            "derivation"
+          ],
+          "passed": true,
+          "repeatable": true
+        },
+        "positive": {
+          "actual": "PASS",
+          "expected": "PASS",
+          "findings": [],
+          "passed": true,
+          "repeatable": true
+        },
+        "unnecessary_abstention": {
+          "actual": "FAIL",
+          "expected": "FAIL",
+          "findings": [
+            "eligibility_or_refusal",
+            "trial_selection",
+            "interpretation_boundary",
+            "derivation",
+            "quantity_absent_or_unexpected"
+          ],
+          "passed": true,
+          "repeatable": true
+        },
+        "wrong_citation": {
+          "actual": "FAIL",
+          "expected": "FAIL",
+          "findings": [
+            "source_citations"
+          ],
+          "passed": true,
+          "repeatable": true
+        },
+        "wrong_estimand": {
+          "actual": "FAIL",
+          "expected": "FAIL",
+          "findings": [
+            "estimand"
+          ],
+          "passed": true,
+          "repeatable": true
+        },
+        "wrong_method": {
+          "actual": "FAIL",
+          "expected": "FAIL",
+          "findings": [
+            "unsupported_method"
+          ],
+          "passed": true,
+          "repeatable": true
+        },
+        "wrong_refusal_reason": {
+          "actual": "FAIL",
+          "expected": "FAIL",
+          "findings": [
+            "eligibility_or_refusal"
+          ],
+          "passed": true,
+          "repeatable": true
+        },
+        "wrong_uncertainty": {
+          "actual": "FAIL",
+          "expected": "FAIL",
+          "findings": [
+            "uncertainty"
+          ],
+          "passed": true,
+          "repeatable": true
+        },
+        "wrong_units": {
+          "actual": "FAIL",
+          "expected": "FAIL",
+          "findings": [
+            "unit_or_dimension"
+          ],
+          "passed": true,
+          "repeatable": true
+        }
+      },
+      "environment": {
+        "candidate_python": "Python 3.12.3",
+        "host_python": "3.12.13",
+        "lockfile_sha256": "7fb1024b1c70e5a4eea523bb3f751b0e45219a4d7d7a4a968d2ef6008b5a31c0",
+        "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+        "python_binary_sha256": "e50d468e8b0adfb05733f5b87b3cff34829c4a8c1aea50c865aa8bdfe4bb150f",
+        "sandbox_binary_sha256": "e318903862396f96de3df57264e0158682b952fd3fb53ac23d876413e7b30f71"
+      },
+      "execution_errors": {
+        "naive": 0,
+        "null": 0,
+        "oracle": 0,
+        "random": 0
+      },
+      "false_fail": 0,
+      "false_pass": 0,
+      "isolation": "PASS",
+      "oracle_sha256": "e605dcb4dd827c50e4bb2eed1f874005abc30aa0f78c2089981197a69b886b03",
+      "reasons": [],
+      "receipt_digests": {
+        "RCP-timing_contact-gates-A": "9f3db76d32c639b379dbd596e23ffc298501675c6c94c1a3adcb5a6733d07d60",
+        "RCP-timing_contact-gates-B": "4b9b7b355444bd5177740d16b820c23b0386c29c2fc2ce2eea192af4c5082300",
+        "RCP-timing_contact-gates-C": "dae566dcac08cfd055318e9c54cc8e0b861e54e4f45aeb33d585e2112982a490",
+        "RCP-timing_contact-gates-D": "7aa625b4eb61a73ab47ef358db2700b856081cdbb792d63615a78a68b6ccb3eb",
+        "RCP-timing_contact-gates-E": "79b7be469526d5e2f4e3daa010e620ae5ee43a496bb3b0d74c531a7c5c6b3a21",
+        "RCP-timing_contact-gates-F": "42491cb63e58c7045b83e3e7bd1db235df137b4b38f1fd3dff607ee99948067c",
+        "RCP-timing_contact-gates-G": "dadce0d109b30cad12f4f1b9514727bf234fde4c0c7fc09a439b252bcdfea324",
+        "RCP-timing_contact-gates-H": "62ff32ba2c26a4620b4328bb3ee7c04370c8ddddf4c6f37e8de2ec3e70ecfcc2",
+        "RCP-timing_contact-gates-I": "f036dab3dd793a8dd3246bc8c0202c722c9e68daa67ddb560e837a0f819c9f8c",
+        "RCP-timing_contact-gates-J": "ee715b8a8e322df65d0b9bb20595b90d5570f04611dd06a4de1920136e94cef1",
+        "RCP-timing_contact-gates-K": "a6360286de6d285cc31f736844be775c3c94918cec6485468a241bd9c32275d3",
+        "RCP-timing_contact-gates-M": "13998aa83990b1921c0c07b3f32271a7f8f2c49b00e32785aae671dcc5645cae",
+        "RCP-timing_contact-gates-O": "56eee0e767a7da0115caf551b670ea3732b04972ab1cbdab6bcce3d52d19bbb6"
+      },
+      "replay_differences": 0,
+      "score": {
+        "naive": {
+          "FAIL": 7
+        },
+        "null": {
+          "FAIL": 7
+        },
+        "oracle": {
+          "PASS": 7
+        },
+        "random": {
+          "FAIL": 7
+        }
+      },
+      "source_digests": {
+        "gate-record-01": "4149d4f979062864876990089ea415d39afa22b71c30eae040db99a5343bcfff",
+        "gate-record-02": "36fe73424fa595d6d9c9e2a8daeeb32ca570d3999b0b1e883f1a4f19561e7cf7",
+        "gate-record-03": "a1c142bb7d35fb8c96d6cf5b8b8afc259f70b2d63057194fb10fdd08e64127f2",
+        "gate-record-04": "ffedf19b3700b45a49eff40327d1f8c1b7744f887b1ecf2c62fa552b883cc4f7",
+        "gate-record-05": "20497b4ef56927e82dd6c7e4ee71e4617c3b05a7fa70fa982d291c578ea47f23",
+        "gate-record-06": "432b36039a89066b2d3d32ef868bea5de8a7de49970ab8b48955a2eff71d2da0",
+        "gate-record-07": "e4b4e09e0b60e97439b378cce7ba19c56f7f4276ee56cf56a56277e0ebc2af4f"
+      },
+      "task_sha256": "5a8bc1c03eddbcbae1c058096917c60ae5a474c3a661d0760762c856e82cd8d0"
+    },
+    "gnss-positional-speed@1": {
+      "admission": "ENGINEERING_ADMITTED",
+      "admission_controls": {
+        "invalid_pin": "REFUSED",
+        "stale_artifact": "REFUSED",
+        "stale_receipt": "REFUSED"
+      },
+      "cleanup_errors": 0,
+      "controls": {
+        "claim_order": {
+          "actual": "PASS",
+          "expected": "PASS",
+          "findings": [],
+          "passed": true,
+          "repeatable": true
+        },
+        "contradictory_free_text": {
+          "actual": "FAIL",
+          "expected": "FAIL",
+          "findings": [
+            "invalid_submission"
+          ],
+          "passed": true,
+          "repeatable": true
+        },
+        "correct_refusal": {
+          "actual": "PASS",
+          "expected": "PASS",
+          "findings": [],
+          "passed": true,
+          "repeatable": true
+        },
+        "dropped_evidence": {
+          "actual": "FAIL",
+          "expected": "FAIL",
+          "findings": [
+            "derivation"
+          ],
+          "passed": true,
+          "repeatable": true
+        },
+        "ignore_affine_clock": {
+          "actual": "FAIL",
+          "expected": "FAIL",
+          "findings": [
+            "value"
+          ],
+          "passed": true,
+          "repeatable": true
+        },
+        "inside_tolerance": {
+          "actual": "PASS",
+          "expected": "PASS",
+          "findings": [],
+          "passed": true,
+          "repeatable": true
+        },
+        "invented_equivalence": {
+          "actual": "FAIL",
+          "expected": "FAIL",
+          "findings": [
+            "interpretation_boundary"
+          ],
+          "passed": true,
+          "repeatable": true
+        },
+        "numeric_error": {
+          "actual": "FAIL",
+          "expected": "FAIL",
+          "findings": [
+            "value"
+          ],
+          "passed": true,
+          "repeatable": true
+        },
+        "p3_correct_qc": {
+          "actual": "PASS",
+          "expected": "PASS",
+          "findings": [],
+          "passed": true,
+          "repeatable": true
+        },
+        "p3_ignored_qc": {
+          "actual": "FAIL",
+          "expected": "FAIL",
+          "findings": [
+            "eligibility_or_refusal",
+            "trial_selection",
+            "interpretation_boundary",
+            "derivation",
+            "quantity_absent_or_unexpected"
+          ],
+          "passed": true,
+          "repeatable": true
+        },
+        "p3_wrong_qc_finding": {
+          "actual": "FAIL",
+          "expected": "FAIL",
+          "findings": [
+            "interpretation_boundary"
+          ],
+          "passed": true,
+          "repeatable": true
+        },
+        "p4_correct_qc": {
+          "actual": "PASS",
+          "expected": "PASS",
+          "findings": [],
+          "passed": true,
+          "repeatable": true
+        },
+        "p4_ignored_qc": {
+          "actual": "FAIL",
+          "expected": "FAIL",
+          "findings": [
+            "eligibility_or_refusal",
+            "trial_selection",
+            "interpretation_boundary",
+            "derivation",
+            "quantity_absent_or_unexpected"
+          ],
+          "passed": true,
+          "repeatable": true
+        },
+        "p4_wrong_qc_finding": {
+          "actual": "FAIL",
+          "expected": "FAIL",
+          "findings": [
+            "interpretation_boundary"
+          ],
+          "passed": true,
+          "repeatable": true
+        },
+        "p5_correct_qc": {
+          "actual": "PASS",
+          "expected": "PASS",
+          "findings": [],
+          "passed": true,
+          "repeatable": true
+        },
+        "p5_ignored_qc": {
+          "actual": "FAIL",
+          "expected": "FAIL",
+          "findings": [
+            "eligibility_or_refusal",
+            "trial_selection",
+            "interpretation_boundary",
+            "derivation",
+            "quantity_absent_or_unexpected"
+          ],
+          "passed": true,
+          "repeatable": true
+        },
+        "p5_wrong_qc_finding": {
+          "actual": "FAIL",
+          "expected": "FAIL",
+          "findings": [
+            "interpretation_boundary"
+          ],
+          "passed": true,
+          "repeatable": true
+        },
+        "positive": {
+          "actual": "PASS",
+          "expected": "PASS",
+          "findings": [],
+          "passed": true,
+          "repeatable": true
+        },
+        "substitute_native_doppler": {
+          "actual": "FAIL",
+          "expected": "FAIL",
+          "findings": [
+            "value"
+          ],
+          "passed": true,
+          "repeatable": true
+        },
+        "unnecessary_abstention": {
+          "actual": "FAIL",
+          "expected": "FAIL",
+          "findings": [
+            "eligibility_or_refusal",
+            "trial_selection",
+            "interpretation_boundary",
+            "derivation",
+            "quantity_absent_or_unexpected"
+          ],
+          "passed": true,
+          "repeatable": true
+        },
+        "wrong_citation": {
+          "actual": "FAIL",
+          "expected": "FAIL",
+          "findings": [
+            "source_citations"
+          ],
+          "passed": true,
+          "repeatable": true
+        },
+        "wrong_estimand": {
+          "actual": "FAIL",
+          "expected": "FAIL",
+          "findings": [
+            "estimand"
+          ],
+          "passed": true,
+          "repeatable": true
+        },
+        "wrong_method": {
+          "actual": "FAIL",
+          "expected": "FAIL",
+          "findings": [
+            "unsupported_method"
+          ],
+          "passed": true,
+          "repeatable": true
+        },
+        "wrong_refusal_reason": {
+          "actual": "FAIL",
+          "expected": "FAIL",
+          "findings": [
+            "eligibility_or_refusal"
+          ],
+          "passed": true,
+          "repeatable": true
+        },
+        "wrong_uncertainty": {
+          "actual": "FAIL",
+          "expected": "FAIL",
+          "findings": [
+            "uncertainty"
+          ],
+          "passed": true,
+          "repeatable": true
+        },
+        "wrong_units": {
+          "actual": "FAIL",
+          "expected": "FAIL",
+          "findings": [
+            "unit_or_dimension"
+          ],
+          "passed": true,
+          "repeatable": true
+        }
+      },
+      "environment": {
+        "candidate_python": "Python 3.12.3",
+        "host_python": "3.12.13",
+        "lockfile_sha256": "7fb1024b1c70e5a4eea523bb3f751b0e45219a4d7d7a4a968d2ef6008b5a31c0",
+        "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+        "python_binary_sha256": "e50d468e8b0adfb05733f5b87b3cff34829c4a8c1aea50c865aa8bdfe4bb150f",
+        "sandbox_binary_sha256": "e318903862396f96de3df57264e0158682b952fd3fb53ac23d876413e7b30f71"
+      },
+      "execution_errors": {
+        "naive": 0,
+        "null": 0,
+        "oracle": 0,
+        "random": 0
+      },
+      "false_fail": 0,
+      "false_pass": 0,
+      "isolation": "PASS",
+      "oracle_sha256": "f47e25cda4bb2b9a2ec4e1c52539bf9123a89bf02be2e3fe7b0f7ca2d2eb0b14",
+      "reasons": [],
+      "receipt_digests": {
+        "RCP-gnss_lps-gnss-A": "6045ba2aae7d0b48b645c8f650b641e4bb70b87c9f619b2a582c17d2a3655a39",
+        "RCP-gnss_lps-gnss-B": "329663525c992c48baac87424f427495df492e664f068d071aa0019b734e6402",
+        "RCP-gnss_lps-gnss-C": "74ca509b4443c60cc0c8769cd0a0eb76c6747367e4b3d9a8a0b41600acb761e9",
+        "RCP-gnss_lps-gnss-D": "a07ea69110c8f8c1097b9814a2d7e298004a4f27d75241588823cf40aeb8729a",
+        "RCP-gnss_lps-gnss-E": "17a0beb5c0d88b8faffdadc6d13908a2bfa0b9c62628ff2f41c3707868bc11d8",
+        "RCP-gnss_lps-gnss-F": "6ed12333aa94faf579de653fe14183c314891582046b951879f14f12f51a989d",
+        "RCP-gnss_lps-gnss-H-native-assessment": "0dfecc127e666a8b10f9dbe7d84cbf22e04c9edc991986d4fff6eab1a5cad28c",
+        "RCP-gnss_lps-gnss-I-native-bounds": "31df74a9826fb3571c4d63e3af15ffc9e499c204dafff6fe960337cfd6e40eff",
+        "RCP-gnss_lps-gnss-J": "c1d916d857f5b1aa57b50721d7490738dbf069e60fb083793eab948f99ddb133",
+        "RCP-gnss_lps-gnss-K": "8c47c1f22f79aef448e2235465490378f523f436a9ebc62f4fd09264b8eb2fdf",
+        "RCP-gnss_lps-gnss-M": "294d6c17e9c5c6c9b26f23c665a391d3ccffa2322d859e2fb5b8ba61722a3350",
+        "RCP-gnss_lps-gnss-O": "320a1f03ff663d6d82943812239c407386bb65eec976984751e0dd0e8993634c"
+      },
+      "replay_differences": 0,
+      "score": {
+        "naive": {
+          "FAIL": 6
+        },
+        "null": {
+          "FAIL": 6
+        },
+        "oracle": {
+          "PASS": 6
+        },
+        "random": {
+          "FAIL": 6
+        }
+      },
+      "source_digests": {
+        "position-gnss-01": "a9146c840d9b5e9c1b381a2c1bcf116213fc1818666e6f428169334a483fc2da",
+        "position-gnss-02": "9368f7d53acd4525f57286ac61fcacae6f5718b3d41dd9be1fceebe98a95a1ec",
+        "position-gnss-03": "d9e07b6da5ad5843fa86600643298288f1bfce4b1159388991ab29e68c7bb1d8",
+        "position-gnss-04": "ea5f51c4f9255d4b7f3045f2cb3fec9e99cca3a75a43949da1ab435de8c1eee8",
+        "position-gnss-05": "ebc5f9b49ebe0c913973a9168d17ec5f0e0ab792c21edce3428c4cfc52fad981",
+        "position-gnss-06": "938249d80194842007cc8c014e5fed46ef98e168d4a97acfef47284c79910640"
+      },
+      "task_sha256": "afbeca160753c19426fdb26ecf11887e5430ffaa74627ec8aba00ab2d68f2223"
+    },
+    "lps-filter-sensitivity@1": {
+      "admission": "ENGINEERING_ADMITTED",
+      "admission_controls": {
+        "invalid_pin": "REFUSED",
+        "stale_artifact": "REFUSED",
+        "stale_receipt": "REFUSED"
+      },
+      "cleanup_errors": 0,
+      "controls": {
+        "claim_order": {
+          "actual": "PASS",
+          "expected": "PASS",
+          "findings": [],
+          "passed": true,
+          "repeatable": true
+        },
+        "contradictory_free_text": {
+          "actual": "FAIL",
+          "expected": "FAIL",
+          "findings": [
+            "invalid_submission"
+          ],
+          "passed": true,
+          "repeatable": true
+        },
+        "correct_refusal": {
+          "actual": "PASS",
+          "expected": "PASS",
+          "findings": [],
+          "passed": true,
+          "repeatable": true
+        },
+        "drop_filter_contrast_sign": {
+          "actual": "FAIL",
+          "expected": "FAIL",
+          "findings": [
+            "value"
+          ],
+          "passed": true,
+          "repeatable": true
+        },
+        "dropped_evidence": {
+          "actual": "FAIL",
+          "expected": "FAIL",
+          "findings": [
+            "derivation"
+          ],
+          "passed": true,
+          "repeatable": true
+        },
+        "inside_tolerance": {
+          "actual": "PASS",
+          "expected": "PASS",
+          "findings": [],
+          "passed": true,
+          "repeatable": true
+        },
+        "invented_equivalence": {
+          "actual": "FAIL",
+          "expected": "FAIL",
+          "findings": [
+            "interpretation_boundary"
+          ],
+          "passed": true,
+          "repeatable": true
+        },
+        "numeric_error": {
+          "actual": "FAIL",
+          "expected": "FAIL",
+          "findings": [
+            "value"
+          ],
+          "passed": true,
+          "repeatable": true
+        },
+        "p3_correct_qc": {
+          "actual": "PASS",
+          "expected": "PASS",
+          "findings": [],
+          "passed": true,
+          "repeatable": true
+        },
+        "p3_ignored_qc": {
+          "actual": "FAIL",
+          "expected": "FAIL",
+          "findings": [
+            "eligibility_or_refusal",
+            "trial_selection",
+            "interpretation_boundary",
+            "derivation",
+            "quantity_absent_or_unexpected"
+          ],
+          "passed": true,
+          "repeatable": true
+        },
+        "p3_wrong_qc_finding": {
+          "actual": "FAIL",
+          "expected": "FAIL",
+          "findings": [
+            "interpretation_boundary"
+          ],
+          "passed": true,
+          "repeatable": true
+        },
+        "p4_correct_qc": {
+          "actual": "PASS",
+          "expected": "PASS",
+          "findings": [],
+          "passed": true,
+          "repeatable": true
+        },
+        "p4_ignored_qc": {
+          "actual": "FAIL",
+          "expected": "FAIL",
+          "findings": [
+            "eligibility_or_refusal",
+            "trial_selection",
+            "interpretation_boundary",
+            "derivation",
+            "quantity_absent_or_unexpected"
+          ],
+          "passed": true,
+          "repeatable": true
+        },
+        "p4_wrong_qc_finding": {
+          "actual": "FAIL",
+          "expected": "FAIL",
+          "findings": [
+            "interpretation_boundary"
+          ],
+          "passed": true,
+          "repeatable": true
+        },
+        "p5_correct_qc": {
+          "actual": "PASS",
+          "expected": "PASS",
+          "findings": [],
+          "passed": true,
+          "repeatable": true
+        },
+        "p5_ignored_qc": {
+          "actual": "FAIL",
+          "expected": "FAIL",
+          "findings": [
+            "eligibility_or_refusal",
+            "trial_selection",
+            "interpretation_boundary",
+            "derivation",
+            "quantity_absent_or_unexpected"
+          ],
+          "passed": true,
+          "repeatable": true
+        },
+        "p5_wrong_qc_finding": {
+          "actual": "FAIL",
+          "expected": "FAIL",
+          "findings": [
+            "interpretation_boundary"
+          ],
+          "passed": true,
+          "repeatable": true
+        },
+        "positive": {
+          "actual": "PASS",
+          "expected": "PASS",
+          "findings": [],
+          "passed": true,
+          "repeatable": true
+        },
+        "unnecessary_abstention": {
+          "actual": "FAIL",
+          "expected": "FAIL",
+          "findings": [
+            "eligibility_or_refusal",
+            "trial_selection",
+            "interpretation_boundary",
+            "derivation",
+            "quantity_absent_or_unexpected"
+          ],
+          "passed": true,
+          "repeatable": true
+        },
+        "wrong_citation": {
+          "actual": "FAIL",
+          "expected": "FAIL",
+          "findings": [
+            "source_citations"
+          ],
+          "passed": true,
+          "repeatable": true
+        },
+        "wrong_estimand": {
+          "actual": "FAIL",
+          "expected": "FAIL",
+          "findings": [
+            "estimand"
+          ],
+          "passed": true,
+          "repeatable": true
+        },
+        "wrong_method": {
+          "actual": "FAIL",
+          "expected": "FAIL",
+          "findings": [
+            "unsupported_method"
+          ],
+          "passed": true,
+          "repeatable": true
+        },
+        "wrong_refusal_reason": {
+          "actual": "FAIL",
+          "expected": "FAIL",
+          "findings": [
+            "eligibility_or_refusal"
+          ],
+          "passed": true,
+          "repeatable": true
+        },
+        "wrong_uncertainty": {
+          "actual": "FAIL",
+          "expected": "FAIL",
+          "findings": [
+            "uncertainty"
+          ],
+          "passed": true,
+          "repeatable": true
+        },
+        "wrong_units": {
+          "actual": "FAIL",
+          "expected": "FAIL",
+          "findings": [
+            "unit_or_dimension"
+          ],
+          "passed": true,
+          "repeatable": true
+        }
+      },
+      "environment": {
+        "candidate_python": "Python 3.12.3",
+        "host_python": "3.12.13",
+        "lockfile_sha256": "7fb1024b1c70e5a4eea523bb3f751b0e45219a4d7d7a4a968d2ef6008b5a31c0",
+        "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+        "python_binary_sha256": "e50d468e8b0adfb05733f5b87b3cff34829c4a8c1aea50c865aa8bdfe4bb150f",
+        "sandbox_binary_sha256": "e318903862396f96de3df57264e0158682b952fd3fb53ac23d876413e7b30f71"
+      },
+      "execution_errors": {
+        "naive": 0,
+        "null": 0,
+        "oracle": 0,
+        "random": 0
+      },
+      "false_fail": 0,
+      "false_pass": 0,
+      "isolation": "PASS",
+      "oracle_sha256": "f47e25cda4bb2b9a2ec4e1c52539bf9123a89bf02be2e3fe7b0f7ca2d2eb0b14",
+      "reasons": [],
+      "receipt_digests": {
+        "RCP-gnss_lps-lps-A": "30bcd840d016d3c1aee1a204282e87637b447e8c0537c46a5ac998d9bc481364",
+        "RCP-gnss_lps-lps-B": "f1a1e74ebb2ca2db3b426c6b4795e14ed5e3c18e5b781fd2927a0c6f7597f7da",
+        "RCP-gnss_lps-lps-C": "b348df290902c955b2aaf076add1f871bfdf8435ef41670123fc6f49656ea719",
+        "RCP-gnss_lps-lps-D": "67e889cfd09bccaafdc9ba32932b9b59867f8d9bed35053bb1fcd397b87da72e",
+        "RCP-gnss_lps-lps-E": "714ed44f813713fbebc1daa0e0a9b85535d3d8576ca6721a2608684f59263ed0",
+        "RCP-gnss_lps-lps-F": "94ac91b74dada07238625d2892d7a78f4a74b52e4e2f1270dfbfe6084aa78f0f",
+        "RCP-gnss_lps-lps-H-native-assessment": "012ef9045a37c0be261301c5001dd5ccc45be9e228089157422b742fcd692a0a",
+        "RCP-gnss_lps-lps-I-native-bounds": "5eaee99f4f1b2bf39b9a6195b2e102d4bc98a5567b39b491f352b1f876965419",
+        "RCP-gnss_lps-lps-J": "00b3e06dc4c69f1a1228a8a2e91732a39749f8ee5e8467a76b86bcd78332c4e3",
+        "RCP-gnss_lps-lps-K": "091768cf686effc5ed94337ed3c49416370dba7fec1fe9dea0bf1ade0bee29f4",
+        "RCP-gnss_lps-lps-M": "5e97363a4f099153f06efdde5ec6761d8a3c9777c81df97115a9e454f00f4639",
+        "RCP-gnss_lps-lps-O": "776df5d4552c6ddf372941e3fef990f0a4c11f90d26cf1cda7e3dc21baf3a380"
+      },
+      "replay_differences": 0,
+      "score": {
+        "naive": {
+          "FAIL": 6
+        },
+        "null": {
+          "FAIL": 6
+        },
+        "oracle": {
+          "PASS": 6
+        },
+        "random": {
+          "FAIL": 6
+        }
+      },
+      "source_digests": {
+        "position-lps-01": "57badd6e1ccaeeff320d98740e3b0b885d4b72e7e6a81316182335f5973d0c0b",
+        "position-lps-02": "809b9d20256a90727ef39ded3d430349203656964aa8f8f40e54bf764d4e02f8",
+        "position-lps-03": "cc1941f31e1ea5e77ad03ecdc604558869353210a54b44753285f2e291a649bd",
+        "position-lps-04": "b840d32e5a17d18483989ef403099d2f870f96c781054f25683514fde539de1b",
+        "position-lps-05": "365d030f0a5623c7aac7c10d8fe15f4b6131367791919080abc4e3d422224195",
+        "position-lps-06": "d064fca84476c09f349bff5b72ed9562257afc197b43fb06cc52425d3a2878df"
+      },
+      "task_sha256": "9879c631d736158751ebece7ac6f4f9fab5aeb6346f41611359ec1f3f0b73b78"
+    }
+  }
+}
