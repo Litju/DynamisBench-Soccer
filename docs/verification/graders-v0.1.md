@@ -31,14 +31,14 @@ estimate error rates in a deployed benchmark.
 
 The versioned registry has one two-checkpoint analytical demonstration.
 The pinned empty catalog returns `DEVELOPMENT_ONLY_NOT_QUALIFIED` for it.
-Ten admission rejection cases exercise untrusted catalog data, changed
+Eleven admission rejection cases exercise untrusted catalog data, changed
 method, clock, geometry, uncertainty and estimand, stale input, empirical
 and diagnostic source categories, missing QC, and wrong subfamily. The
 missing-QC and wrong-subfamily checks share a test function. No expected
 positive admission was available, so the positive admission error rate is
 undefined.
 
-A fresh Linux wheel environment ran 47 M4 tests. The tests exercised
+A fresh Linux wheel environment ran 54 M4 tests. The tests exercised
 ephemeral private custody, metadata canaries, host files and sockets,
 environment and descriptor isolation, filesystem link handling,
 read-only input, execution limits, cleanup and staged correction release.
