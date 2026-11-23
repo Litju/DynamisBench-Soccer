@@ -14,10 +14,14 @@ from dynamisbench_soccer.reference.kinematics import dj
 from dynamisbench_soccer.signals.schema import Calibration
 
 
+def _prescribed_switch_pattern(polarity):
+    on = int(polarity == "active_high")
+    return [(0.109, on), (0.303, 1 - on), (0.729, on)]
+
+
 def _contact_fixture(actuator, polarity):
     template = export_case("timing_contact.contact", dj()).observation
-    on = int(polarity == "active_high")
-    source = stream(template, [(0.109, on), (0.303, 1 - on), (0.729, on)], shared=True)
+    source = stream(template, _prescribed_switch_pattern(polarity), shared=True)
     geometry = source.meta.acquisition.sources[0].geometry
     geometry.trigger_method = f"{actuator}:{polarity}"
     chosen = policy(
@@ -91,11 +95,15 @@ def test_contact_refuses_bad_native_codes_timing_and_calibration():
         contact(source, chosen)
 
 
+def _sphere_crossings(positions, height, speed):
+    lead = math.sqrt(0.12**2 - (height - 1.0) ** 2)
+    return [(distance - lead) / speed for distance in positions]
+
+
 def _linear_gate_fixture(height, speed):
     source = export_case("timing_contact.gates").observation
     positions = [4.0, 9.0, 16.0, 27.0]
-    lead = math.sqrt(0.12**2 - (height - 1.0) ** 2)
-    crossing = [(distance - lead) / speed for distance in positions]
+    crossing = _sphere_crossings(positions, height, speed)
     times = [t + 0.017 for t in crossing]
     declared = gate_policy()
     gates = [

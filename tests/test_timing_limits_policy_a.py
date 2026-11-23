@@ -27,6 +27,10 @@ GATE_SOURCE = (
 )
 
 
+def _published_sources():
+    return {claim.id: claim.sources for claim in load(ROOT / "registry").claims}
+
+
 @pytest.mark.parametrize(
     ("actuator", "definition"),
     [
@@ -41,8 +45,7 @@ GATE_SOURCE = (
 def test_contact_emits_sourced_model_and_actuator_limits(actuator, definition):
     source, chosen = _contact_fixture(actuator, "active_low")
     result = contact(source, chosen)
-    claims = {claim.id: claim for claim in load(ROOT / "registry").claims}
-    assert claims["DEV-003"].sources == ["tenelsen2019"]
+    assert _published_sources()["DEV-003"] == ["tenelsen2019"]
     assert CONTACT_SOURCE in result.limitations
     assert definition in result.limitations
     text = " ".join(result.limitations)
@@ -109,8 +112,7 @@ def test_gate_limits_follow_the_executed_start_definition(start, description):
             }
         )
     result = sprint([source], policy)
-    claims = {claim.id: claim for claim in load(ROOT / "registry").claims}
-    assert claims["DEV-004"].sources == ["haugen2014"]
+    assert _published_sources()["DEV-004"] == ["haugen2014"]
     assert GATE_SOURCE in result.limitations
     assert description in result.limitations
     text = " ".join(result.limitations)
