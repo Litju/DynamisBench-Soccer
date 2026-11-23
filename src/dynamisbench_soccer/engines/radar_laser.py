@@ -25,6 +25,7 @@ from dynamisbench_soccer.signals.schema import DeviceClass, FloatArray, SignalBu
 DerivativeMethod = Literal["central", "five_point"]
 StartMethod = Literal["record_origin", "velocity_threshold", "range_change", "external_trigger"]
 CorrectionMethod = Literal["none", "declared_fixed_angle"]
+_MIN_COSINE = 0.25
 
 
 @dataclass(frozen=True)
@@ -181,7 +182,7 @@ def _sensitivity(
         if angle is None:
             raise AcquisitionRefusal("declared cosine calibration missing")
         perturbation = math.radians(options.cosine_perturbation_deg)
-        if abs(angle) + perturbation >= math.pi / 2:
+        if abs(angle) + perturbation > math.acos(_MIN_COSINE):
             result["cosine_sensitivity"] = "UNSUPPORTED: perturbed angle crosses projection limit"
         else:
             lower = float(np.max(line_velocity / math.cos(max(0.0, abs(angle) - perturbation))))
@@ -231,7 +232,7 @@ def process(bundle: SignalBundle, options: ProcessingOptions) -> VelocityResult:
         if angle is None:
             raise AcquisitionRefusal("declared cosine calibration missing; no angle inferred")
         cosine = math.cos(angle)
-        if cosine < 0.25:
+        if cosine < _MIN_COSINE:
             raise AcquisitionRefusal("near-perpendicular cosine correction is ill-conditioned")
         velocity = line / cosine
         estimand = (
