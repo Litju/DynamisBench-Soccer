@@ -468,13 +468,13 @@
    "verdict": "PARTIAL"
   },
   "RCP-imu-inertial-O": {
-   "bound_digest": "f26922caa76533823c59771b9fbba831d6b64b6668911dbbdfd4a88205926f38",
+   "bound_digest": "11391257d852b07f01770ed1616d54b10206245a555172916dad041ed4e2f662",
    "evidence_head": "b5e360921f0264d7eea5444e5f3516d059e9061c",
    "fix": "",
    "prior_fix": "Bind the limitations to sourced records.",
    "prior_reason": "The heuristic limitation test [imu] checks no sourcing.",
    "prior_verdict": "PARTIAL",
-   "reason": "Complete IMU reports emit sourced frame, orientation, integration, sampling and instrumentation limitations for both successful and diagnostic-reject cases. Exact ordered limitation topics and serialized list for gyro and complementary variants under declared 30 m/s\u00b2 and 5 m/s\u00b2 accelerometer ranges. Registry DEV-002 identifies sensor versus COM displacement and tested placement scope. An independent 100 Hz constant 2 m/s\u00b2 horizontal-acceleration fixture satisfies the gravity magnitude gate but induces about 0.1741 rad of false tilt. The scalar recurrence seeded by atan2(2,g) matches this diagnostic within absolute 1e-12 rad with zero relative allowance. ZUPT alone requires zero-velocity windows, and flight reports the larger edge bracket rather than a total duration error bound.",
+   "reason": "Complete IMU reports emit sourced frame, orientation, integration, sampling and instrumentation limitations for both successful and diagnostic-reject cases. Exact ordered limitation topics and serialized list for gyro and complementary variants under declared 30 m/s\u00b2 and 5 m/s\u00b2 accelerometer ranges. Registry DEV-002 identifies sensor versus COM displacement and tested placement scope. An independent 100 Hz constant 2 m/s\u00b2 horizontal-acceleration fixture satisfies the gravity magnitude gate but induces about 0.1741 rad of false tilt. The scalar recurrence driven toward atan2(2,g) from zero matches this diagnostic within absolute 1e-12 rad with zero relative allowance. ZUPT alone requires zero-velocity windows, and flight reports the larger edge bracket rather than a total duration error bound.",
    "verdict": "SUPPORTED"
   },
   "RCP-load_cell_isometric-isometric_rig-A": {
