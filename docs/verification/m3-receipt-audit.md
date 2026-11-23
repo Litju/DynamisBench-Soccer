@@ -4,9 +4,7 @@
 
 The baseline audit reviewed 177 draft receipts. Its findings and the 147
 baseline open cells are indexed in the [evidence gap inventory](m3-evidence-gaps.md).
-Follow-up reviews support 17 further receipts covering accepted single- and
-dual-plate reconstruction, GNSS and LPS integrity, LPS surveyed geometry,
-native laser range rate, hip reference and calibration, and additional GNSS/LPS admission, timing, method, event, independence and provenance evidence. The audit JSON
+The audit JSON
 retains the prior verdicts and binds accepted receipts to their content digests.
 The five other re-reviewed hip candidates remain partial.
 
@@ -14,7 +12,7 @@ Only SUPPORTED receipts are committed in `qualification/receipts.toml` and
 rated verified. `scripts/bind_audit.py --check` verifies their receipt bindings.
 These are model-based independent engineering checks. Radar L has no verdict.
 
-Verdicts: {'PARTIAL': 88, 'SUPPORTED': 80, 'UNSUPPORTED': 9, 'NOT_AUDITED': 1}
+Verdicts: {'PARTIAL': 86, 'SUPPORTED': 82, 'UNSUPPORTED': 9, 'NOT_AUDITED': 1}
 
 ## SUPPORTED
 
@@ -94,11 +92,13 @@ Verdicts: {'PARTIAL': 88, 'SUPPORTED': 80, 'UNSUPPORTED': 9, 'NOT_AUDITED': 1}
 | RCP-timing_contact-contact-E | Three contact systems, debounce and latency variants are compared with the contact_events truth. The CLI sensitivity variant shifts flight by exactly 0.02 and refuses height. The tolerance is 0.005. |  |
 | RCP-timing_contact-contact-F | Flight time, flight height and RSI are compared with the Trajectory truth for CMJ, SJ and DJ, within abs 0.005 as recorded. |  |
 | RCP-timing_contact-contact-H | Flight-time height, RSI definition and protocol refusals are executed against the truth, and the latency bias is kept as a difference rather than a correction in jumps.contact_system_estimates. |  |
+| RCP-timing_contact-contact-I | Contact-system flight, stance, flight-time height and height/contact RSI propagate asymmetric declared switch errors as conservative timing intervals. With a 1 ms shared clock and ideal transitions at 0, 0.25 and 0.75 s, stance and flight centers are 0.25 and 0.5 s and their half-widths are 0.0027 and 0.0042 s in the two trials. Height is 9.80665 times squared flight time divided by eight, with nominal 0.3064578125 m. Nominal RSI is 1.22583125 m/s. RSI endpoint pairs are 1.199671564838989/1.2526344245241106 and 1.1854089099655785/1.267810933332994 m/s. Use absolute 1e-12 s and m and 1e-11 m/s with zero relative tolerance for arithmetic roundoff. Refuse unresolved transitions. |  |
 | RCP-timing_contact-contact-J | The engine is compared with the independent contact_events and Trajectory reference, and the AST import-boundary test passes. |  |
 | RCP-timing_contact-contact-L | Force versus contact flight time agrees within 0.004 and 0.002 of the truth, with the engine-to-engine evidence context asserted and no interchangeability claims. |  |
 | RCP-timing_contact-gates-A | The tests refuse missing, out-of-order and duplicate events, mismatched or absent start triggers, impossible routes, an unresolved clock, a missing acquisition and data labelled as analytical truth. That is a broad admission set on the gates engine. |  |
 | RCP-timing_contact-gates-D | Injected missing, out-of-order and duplicate events and impossible routes are refused. The refractory test removes a duplicate and matches the clean split, which serves as the clean control. |  |
 | RCP-timing_contact-gates-H | Gates are refused as instantaneous velocity, estimand labels are distinct, the split fit recovers vmax and tau (rel 1e-4, F0 1e-3), and segment averages are defined. These match the recorded rel 1e-3. |  |
+| RCP-timing_contact-gates-I | Wireless gate splits and segment-average speeds propagate declared clock, trigger and event-definition error as conservative elapsed-time endpoint intervals. At 800 ppm and 0.5 ms native resolution, each timing radius includes 0.0002502 s from the clock, 1e-12 s alignment uncertainty, 0 or 0.0015 s synchronization error, 0.0007 s trigger error and 0.0002 s definition error. The two endpoint radii sum to 0.002300400002 or 0.005300400002 s. Split centers are 0.7324799388172911, 1.2470407645364006 and 1.1571471988932043 s, for 5, 10 and 10 m. Speed endpoints are distance divided by the opposite time endpoints. Use absolute 1e-12 s and 1e-11 m/s with zero relative allowance for floating-point arithmetic. Refuse unresolved ordering. |  |
 | RCP-timing_contact-gates-L | Gates versus radar timing agree with a bias within 2e-4, and the gate velocity versus radar comparison is a definition mismatch derived in closed form. The global test forbids interchangeability claims. |  |
 
 ## PARTIAL
@@ -184,13 +184,11 @@ Verdicts: {'PARTIAL': 88, 'SUPPORTED': 80, 'UNSUPPORTED': 9, 'NOT_AUDITED': 1}
 | RCP-radar_laser-radar-O | test_every_result_carries_substantive_limitation_statements[radar] only checks ≥2 distinct strings of ≥3 words and a keyword heuristic, for one option set. Nothing checks that the statements are sourced or present across stages and corrections. | Assert that each limitation maps to a sourced ledger or registry entry. Parametrize over native/processed stages and correction methods. |
 | RCP-timing_contact-contact-C | Asymmetric switch latency on a quantized shared clock is checked against the truth (abs 0.001), but no cited C test refuses bad timing, and the affine DeviceClock case (in the standing-jumps test) is not cited. | Add or cite a timing refusal (missing switching definition or clock authority, unresolved latency) and the affine-clock test. |
 | RCP-timing_contact-contact-G | Takeoff, touchdown and contact times are recovered, with RSI and equal-COM refusals, but the receipt is labelled categorical with tolerance 0 while it asserts pytest.approx times at the default rel 1e-6. | Record a numeric tolerance (rel 1e-6). |
-| RCP-timing_contact-contact-I | Propagated intervals are only checked to bracket the truth (low < rsi < high), and the CLI checks only a mean shift. The interval width is never compared with the analytic propagation of latency_error_s. | Assert the RSI and flight interval bounds equal the closed-form propagation of the declared on and off latency errors. |
 | RCP-timing_contact-contact-K | The MISSING, DUPLICATE and OUT_OF_ORDER faults have engine verdicts. test_contact_protocol_double_contact_and_step_off checks only the injected bytes, with no engine verdict, and the LATENCY fault has no verdict. | Run contact() on the DOUBLE_CONTACT, STEP_OFF and LATENCY fixtures and assert the expected refusal or verdict. |
 | RCP-timing_contact-gates-C | The wireless sync, latency and refusal coverage is good. The 1e-11 tolerance, however, comes from test_clock_synchronization_inverse_and_gate_geometry, which tests only the reference. Engine timing is asserted at pytest.approx's default rel 1e-6, so the tolerance is overstated. | Record a tolerance of rel 1e-6, or assert engine splits at abs 1e-11. Also cite the affine-clock round-trip splits test. |
 | RCP-timing_contact-gates-E | Dual- and multi-beam variants are compared with the spherical_gate_trigger_s reference, but the check is labelled categorical while it uses pytest.approx's default rel 1e-6. The start-mode variants (trigger, fixed_offset) are not compared with the reference in E. | Record the numeric tolerance and add trigger and fixed_offset start variants against the truth time. |
 | RCP-timing_contact-gates-F | Splits and segment averages match the truth after an affine clock and a file round-trip, but only at pytest.approx's default rel 1e-6. The recorded 1e-11 comes from the reference self-test test_sprint_model_and_numerical_gate_inverse. | Set the tolerance to rel 1e-6, or tighten the engine assertions. |
 | RCP-timing_contact-gates-G | Event and split recovery and the eligibility refusals (start trigger, COD course) are covered, but the receipt is labelled categorical with tolerance 0 while it asserts pytest.approx times with the default rel 1e-6. The COD tests use hand lists, not gate engine output. | Record the numeric tolerance, and feed engine splits into assess_gates. |
-| RCP-timing_contact-gates-I | Only the fixed-offset shift (+0.2) and one definition_error widening (+0.002) are checked. The width from latency_error_s and sync_latency_error_s propagation is never compared with an analytic value, and the receipt is labelled categorical despite numeric assertions. | Assert the split interval half-width equals the root-sum or linear combination of the declared errors. |
 | RCP-timing_contact-gates-J | Independence is sound: the import-boundary test passes and the MonoExponentialSprint truth is used. The 1e-11 tolerance, however, is from the reference self-test, while the engine is asserted at default rel 1e-6. | Correct the tolerance to the engine's asserted bound. |
 | RCP-timing_contact-gates-K | The MISSING, DUPLICATE and OUT_OF_ORDER faults have engine verdicts. The declared EventKind.LATENCY ('trigger_latency') fault has no expected gates-engine verdict in any cited test. | Add a LATENCY fault case to test_adversarial_reference_faults_are_refused, or an expected detection or bias verdict for it. |
 

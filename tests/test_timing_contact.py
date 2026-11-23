@@ -221,3 +221,49 @@ def test_contact_cli_reports_sensitivity_and_refuses_tampered_parquet(tmp_path, 
     parquet.write_bytes(parquet.read_bytes() + b"invalid")
     assert main(args) == 1
     assert "REFUSED:" in capsys.readouterr().err
+
+
+@pytest.mark.parametrize("off_error_s", [0.0005, 0.002])
+def test_contact_uncertainty_matches_asymmetric_endpoint_extrema(off_error_s):
+    # Traceable ideal touchdown, takeoff and landing at 0, 0.25 and 0.75
+    # on a shared 1 ms counter. The native records include switch latency.
+    source = stream(
+        export_case("timing_contact.contact", dj()).observation,
+        [(0.026, 1), (0.254, 0), (0.776, 1)],
+        shared=True,
+    )
+    chosen = policy(
+        timing=Timing(
+            clock_model="shared", clocks={"reference": CLOCK}, authority="synthetic timer"
+        ),
+        initial_event="touchdown",
+        switch_on=EdgeTiming(latency_s=0.026, latency_error_s=0.001),
+        switch_off=EdgeTiming(
+            latency_s=0.004, latency_error_s=off_error_s, definition_error_s=0.0002
+        ),
+    )
+    [jump] = contact(source, chosen).flights
+    # A late takeoff reduces flight time and increases stance time, so each
+    # RSI endpoint is attainable with the same takeoff perturbation.
+    error_s = 0.001 + 0.001 + off_error_s + 0.0002
+    for estimate, center in ((jump.flight_s, 0.5), (jump.ground_contact_s, 0.25)):
+        assert (estimate.value, estimate.low, estimate.high) == pytest.approx(
+            (center, center - error_s, center + error_s), rel=0, abs=1e-12
+        )
+    height = tuple(9.80665 * duration**2 / 8 for duration in (0.5, 0.5 - error_s, 0.5 + error_s))
+    assert (
+        jump.flight_time_height_m.value,
+        jump.flight_time_height_m.low,
+        jump.flight_time_height_m.high,
+    ) == pytest.approx(height, rel=0, abs=1e-12)
+    rsi = jump.flight_height_rsi_m_s
+    assert (rsi.value, rsi.low, rsi.high) == pytest.approx(
+        (height[0] / 0.25, height[1] / (0.25 + error_s), height[2] / (0.25 - error_s)),
+        rel=0,
+        abs=1e-11,
+    )
+    unresolved = chosen.model_copy(
+        update={"switch_off": EdgeTiming(latency_s=0.004, latency_error_s=0.25)}
+    )
+    with pytest.raises(EventRefusal, match="out of order or unresolved"):
+        contact(source, unresolved)
