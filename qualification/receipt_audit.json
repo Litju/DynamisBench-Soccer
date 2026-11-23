@@ -398,6 +398,15 @@
    "reason": "Independent GPT-6.2 Astra review supported affine-clock bounds, deterministic radii, and dense independent verification of component SD and magnitude RMS bounds for supported stencils and filters. All 39 focused controls passed.",
    "verdict": "SUPPORTED"
   },
+  "RCP-gnss_lps-lps-I-paired-speed": {
+   "bound_digest": "0cc28dc61e0422ba37f0e61e6f575636a0855c2ff266d13ad61e8eaeb711af98",
+   "evidence_head": "f5fdf36c893d219a1945c4d56f28e33e09113ecf",
+   "fix": "",
+   "reason": "Independent Codex review re-derived variance with the four method-level offset outcomes, including radial projection and offsets shared across pairs, and verified separation from descriptive agreement limits.",
+   "review_url": "https://github.com/Litju/DynamisBench-Soccer/pull/69",
+   "reviewer": "Independent Codex model review",
+   "verdict": "SUPPORTED"
+  },
   "RCP-gnss_lps-lps-J": {
    "bound_digest": "00b3e06dc4c69f1a1228a8a2e91732a39749f8ee5e8467a76b86bcd78332c4e3",
    "evidence_head": "2b1aeced0cdf8613fd09b23737f711bda88a53b1",
@@ -421,6 +430,15 @@
    "evidence_head": "86cf0b290a1d3a8eb0befac78d90c61bbe9a9b58",
    "fix": "",
    "reason": "Independent GPT-6.2 Astra review exercised all 16 focused tests and confirmed signed shared-motion components, projection mismatch and refusal cases. Synthetic constant planar comparison only.",
+   "verdict": "SUPPORTED"
+  },
+  "RCP-gnss_lps-lps-L-paired-speed": {
+   "bound_digest": "92bc8d4784199a287675e8a593c8366cb3b804c00c77298194d62da3ecb4106f",
+   "evidence_head": "f5fdf36c893d219a1945c4d56f28e33e09113ecf",
+   "fix": "",
+   "reason": "Independent Codex review re-derived endpoint horizontal tag speed and paired sample variance, verified signed bias and normal-quantile limits across matched, biased, spread, mismatched, invalid and repeated controls, and confirmed the selected dependency closure.",
+   "review_url": "https://github.com/Litju/DynamisBench-Soccer/pull/69",
+   "reviewer": "Independent Codex model review",
    "verdict": "SUPPORTED"
   },
   "RCP-gnss_lps-lps-M": {
