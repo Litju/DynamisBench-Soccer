@@ -41,7 +41,8 @@ Onset variants: `first_exceedance` (no backdating) plus the load-cell `5sd`, `re
 For unilateral hip squeeze, registry claim HG-004 (Light and Thorborg) binds the
 squeeze-force and torque estimands to declared position and lever geometry.
 Peak cuff force is the greatest force sample in the selected effort. Best mean
-force uses consecutive samples in the declared window, and mean peak force
+force is a repository-defined metric using consecutive samples in the declared
+window. Mean peak force
 averages the detected per-effort maxima. The output withholds bilateral metrics
 when only a unilateral channel is available.
 

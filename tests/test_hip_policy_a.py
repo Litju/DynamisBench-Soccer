@@ -259,14 +259,31 @@ def test_hip_estimands_match_sourced_peak_torque_and_sample_window_definitions()
 def test_unilateral_hip_mean_peak_is_not_peak_force_or_bilateral_mean() -> None:
     observation = export_case("nordic_hip.hip", scenario=RAMP, hz=HZ).observation
     force = observation["force"]
-    data = np.concatenate((force, force * 0.8, force * 0.9))
+    data = np.concatenate((force, force * 0.7, force * 0.9))
     bundle = SignalBundle(
         observation.meta.model_copy(update={"n_rows": len(data)}),
         {"time": np.arange(len(data)) / HZ, "force": data},
     )
     result = process(bundle, _spec(), MethodSpec(repetition="detect"))
     side = result.sides["unilateral"]
-    assert len(side.repetitions) == 3
+    assert [row["peak_force_n"] for row in side.repetitions] == pytest.approx(
+        [2500, 1750, 2250], rel=0, abs=ABS
+    )
     assert side.metrics["peak_force_n"] == pytest.approx(2500, rel=0, abs=ABS)
-    assert side.metrics["mean_peak_force_n"] == pytest.approx(2250, rel=0, abs=ABS)
+    assert side.metrics["mean_peak_force_n"] == pytest.approx(6500 / 3, rel=0, abs=ABS)
     assert result.bilateral["available"] is False
+
+
+def test_hip_max_mean_window_cannot_combine_separated_holds() -> None:
+    observation = export_case("nordic_hip.hip", scenario=RAMP, hz=HZ).observation
+    force = np.zeros_like(observation["force"])
+    force[600:800] = 2500
+    force[1250:1450] = 2000
+    bundle = SignalBundle(observation.meta, {**observation.data, "force": force})
+    result = process(bundle, _spec(), MethodSpec(max_mean_window_s=0.5))
+    assert result.verdict != "reject"
+    # Each hold is 200 samples and the 450-sample trough prevents any
+    # width-500 window spanning it from containing more than 50 loaded rows.
+    assert result.sides["unilateral"].metrics["max_mean_force_n"] == pytest.approx(
+        200 * 2500 / 500, rel=0, abs=ABS
+    )
