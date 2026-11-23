@@ -357,9 +357,11 @@
    "verdict": "SUPPORTED"
   },
   "RCP-gnss_lps-lps-L": {
-   "fix": "Assert radar_vs_lps_speed sensitivities against the latency closed form.",
-   "reason": "The radar_vs_lps_speed study exists, but no cited test checks it against a closed form. test_positional... checks the GNSS study, and the handoff test is GNSS-only. LPS is covered only by the generic counting test.",
-   "verdict": "PARTIAL"
+   "bound_digest": "a64c97abb916451066fddbc084d52e74769e6c0e99f78013d1cd1ecd43136f85",
+   "evidence_head": "86cf0b290a1d3a8eb0befac78d90c61bbe9a9b58",
+   "fix": "",
+   "reason": "Independent GPT-6.2 Astra review exercised all 16 focused tests and confirmed signed shared-motion components, projection mismatch and refusal cases. Synthetic constant planar comparison only.",
+   "verdict": "SUPPORTED"
   },
   "RCP-gnss_lps-lps-M": {
    "bound_digest": "e62d3d01b03ea979e885f5301486ad229534710ba3d1a822af85d4cca64a5981",

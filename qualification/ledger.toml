@@ -165,7 +165,7 @@ paradigm = "position_track"
 issue = "RES-700"
 engine_id = "lps"
 methods = ["resample", "smooth"]
-ratings = { A = "verified", B = "verified", C = "verified", D = "verified", E = "verified", F = "verified", G = "verified", H = "partial", I = "partial", J = "verified", K = "verified", L = "partial", M = "verified", N = "absent", O = "verified" }
+ratings = { A = "verified", B = "verified", C = "verified", D = "verified", E = "verified", F = "verified", G = "verified", H = "partial", I = "partial", J = "verified", K = "verified", L = "verified", M = "verified", N = "absent", O = "verified" }
 empirical_gaps = ["Engine verified on analytical tracks (RES-700); audited native LPS data, anchor survey and latency evidence remain open (RES-694)", "Positional versus radar agreement is analytical only (RES-703)"]
 blockers = []
 
@@ -360,7 +360,7 @@ right = "gnss_lps.lps"
 quantity = "running_speed"
 verdict = "unknown"
 evidence_level = "analytical"
-refs = ["repo:docs/verification/cross-device-agreement.json"]
+refs = ["repo:docs/verification/cross-device-agreement.json", "repo:tests/test_lps_agreement.py"]
 reviewer_status = "pending"
 
 [[comparison]]
@@ -4779,3 +4779,11 @@ kind = "independent_test"
 issue = "RES-669"
 ref = "repo:tests/test_radar_laser_processing.py"
 rationale = "Native laser processing exercises all six declared continuous fault classes, including expected transfer of small biases and noise and refusal of clipping, dropout and explicit resampling."
+
+[[evidence]]
+subfamily = "gnss_lps.lps"
+dimension = "L"
+kind = "independent_test"
+issue = "RES-703"
+ref = "repo:tests/test_lps_agreement.py"
+rationale = "Independently reviewed native synthetic LPS and radar projection agree on matched constant planar motion. Radial-only speed is a distinct estimand and invalid input is refused."
