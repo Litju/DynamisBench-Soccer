@@ -65,7 +65,8 @@ errors across two positive, two negative, two adversarial and three refusal case
 
 The test oracle reconstructed each result inside bubblewrap from public checkpoint
 inputs. Host-side scoring loaded separately withheld answers. Each attempt completed
-with a cleanup receipt. Both oracle checkpoint output digests matched on replay.
+with a cleanup receipt. The four baselines, all native grading and admission controls,
+and the isolation probe replayed with zero differences.
 Full transcripts, resource outcomes, environment fingerprints and digests remain
 in owner-private custody. An installed-wheel run repeated the same gate outcomes.
 

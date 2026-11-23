@@ -48,10 +48,11 @@ def main() -> None:
     inputs = {a.name: (root / a.path).read_bytes() for a in task.artifacts}
     source = (root / "scripts/m4_controls/lps_oracle.py").read_bytes()
     oracle = run_oracle_control(context, task, source, seed=17)
-    replay = run_oracle_control(context, task, source, seed=17)
     baselines = {"oracle": oracle}
+    repeats = {"oracle": run_oracle_control(context, task, source, seed=17)}
     for name, stub in STUBS.items():
         baselines[name] = run_episode(context, task, name, stub, seed=17)
+        repeats[name] = run_episode(context, task, name, stub, seed=17)
     with tempfile.NamedTemporaryFile(
         mode="w",
         encoding="utf-8",
@@ -71,11 +72,24 @@ def main() -> None:
     row = track["row"]
     quantity = clean["quantity"]
 
-    differences = int(oracle.admission != replay.admission)
-    differences += sum(
-        (a.candidate_payload_sha256, a.output_sha256, a.grade)
-        != (b.candidate_payload_sha256, b.output_sha256, b.grade)
-        for a, b in zip(oracle.attempts, replay.attempts, strict=True)
+    def stable_report(report):
+        return (
+            report.admission,
+            report.terminal_reason,
+            tuple(
+                (
+                    a.candidate_payload_sha256,
+                    a.output_sha256,
+                    a.grade,
+                    a.execution.outcome,
+                    a.execution.workspace_removed,
+                )
+                for a in report.attempts
+            ),
+        )
+
+    differences = sum(
+        stable_report(report) != stable_report(repeats[name]) for name, report in baselines.items()
     )
     differences += int(legacy["replay_differences"])
 
