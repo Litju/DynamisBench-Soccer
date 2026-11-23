@@ -251,9 +251,14 @@
    "verdict": "SUPPORTED"
   },
   "RCP-gnss_lps-gnss-O": {
-   "fix": "Bind the limitations to sourced records.",
-   "reason": "The heuristic limitation test [gnss] checks no sourcing, for a single configuration.",
-   "verdict": "PARTIAL"
+   "bound_digest": "f402e6398c82ceec02fe01236d093ef495197a3fe6b1fd6b14047b05dea1546e",
+   "evidence_head": "409ae841edda356ee932a44a8324324029f5fb0e",
+   "fix": "",
+   "prior_fix": "Bind the limitations to sourced records.",
+   "prior_reason": "The heuristic limitation test [gnss] checks no sourcing, for a single configuration.",
+   "prior_verdict": "PARTIAL",
+   "reason": "Every successful GNSS result carries the declared native-position and processing limitations, and the CLI preserves them. Exact five-statement tuple and identical JSON list: tracked antenna/tag point; producer-solved LPS positions without range residuals, covariance or survey validation; conditional affine-clock and latency assumptions; whole sampled intervals and differentiation dependence; and offline stride-two sensitivity without independent lower-rate data. The direct 25 Hz controls cover three position filters, both differentiation methods and native GNSS with/without Doppler or LPS without Doppler. Provenance for the limits is the acquisition and processing specification, independent rigid-body offset motion, and existing registry claims DEV-005 (Linke et al.) for both modalities and CX-003 (Malone et al.) for GPS context.",
+   "verdict": "SUPPORTED"
   },
   "RCP-gnss_lps-lps-A": {
    "bound_digest": "8422e3613f1ae2e5cd00e2903d733fd13356c91c537164ca3d782fe61eec2f0b",
@@ -363,9 +368,14 @@
    "verdict": "SUPPORTED"
   },
   "RCP-gnss_lps-lps-O": {
-   "fix": "Bind the limitations to sourced records.",
-   "reason": "The heuristic limitation test [lps] checks no sourcing.",
-   "verdict": "PARTIAL"
+   "bound_digest": "a2ea7419fac85a9dc6ce689b38e03ae7c0f338c2eea8c7e6699e813a9de6e9ad",
+   "evidence_head": "409ae841edda356ee932a44a8324324029f5fb0e",
+   "fix": "",
+   "prior_fix": "Bind the limitations to sourced records.",
+   "prior_reason": "The heuristic limitation test [lps] checks no sourcing.",
+   "prior_verdict": "PARTIAL",
+   "reason": "Every successful LPS result carries the declared native-position and processing limitations, and the CLI preserves them. Exact five-statement tuple and identical JSON list: tracked antenna/tag point; producer-solved LPS positions without range residuals, covariance or survey validation; conditional affine-clock and latency assumptions; whole sampled intervals and differentiation dependence; and offline stride-two sensitivity without independent lower-rate data. The direct 25 Hz controls cover three position filters, both differentiation methods and native GNSS with/without Doppler or LPS without Doppler. Provenance for the limits is the acquisition and processing specification, independent rigid-body offset motion, and existing registry claims DEV-005 (Linke et al.) for both modalities and CX-003 (Malone et al.) for GPS context.",
+   "verdict": "SUPPORTED"
   },
   "RCP-imu-inertial-A": {
    "fix": "Add stage, unit-label and non-finite or non-monotonic input refusals for imu.inertial.",
