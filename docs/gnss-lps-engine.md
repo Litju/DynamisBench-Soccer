@@ -25,6 +25,7 @@ time interval. These limits are engineering options.
   within 10 km per axis. The WGS84 constants and topocentric axes follow the
   published definitions. [NGA WGS84](https://earth-info.nga.mil/?action=wgs84&dir=wgs84)
   [PROJ topocentric conversion](https://proj.org/en/stable/operations/conversions/topocentric.html)
+  Latitude, longitude and height must reference the same declared geodetic frame.
 - **GNSS diagnostics.** The producer supplies `hdop` (dimensionless),
   `satellites` and `fix_quality` (integer counts), and `multipath` (binary).
   Admission requires positive HDOP up to 3 by default, at least four satellites

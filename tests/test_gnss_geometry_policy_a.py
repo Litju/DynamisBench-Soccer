@@ -50,3 +50,32 @@ def test_equator_direction_and_invalid_geometry():
     bundle["longitude"][:] += math.degrees(0.01)
     with pytest.raises(AcquisitionRefusal, match="10 km"):
         admit(bundle, declaration)
+
+
+def test_meridian_displacement_and_missing_fix_frame():
+    case, declaration = track_case("gnss", hz=18, latency=0, drift=0)
+    bundle = case.observation
+    angle = 1e-7 * case.truth["time"]
+    bundle["latitude"][:] = np.rad2deg(angle)
+    bundle["longitude"][:] = 0
+    bundle["height"][:] = 0
+    declaration = declaration.model_copy(
+        update={"enu_origin": EnuOrigin(latitude_deg=0, longitude_deg=0, ellipsoidal_height_m=0)}
+    )
+    # At the equatorial origin, local north is ECEF Z. This independent meridian
+    # formula gives a positive north displacement and zero east.
+    eccentricity_squared = 0.0066943799901413165
+    z = (
+        6378137
+        * (1 - eccentricity_squared)
+        * np.sin(angle)
+        / np.sqrt(1 - eccentricity_squared * np.sin(angle) ** 2)
+    )
+    position = admit(bundle, declaration).position_m
+    np.testing.assert_allclose(position[:, 1], z, atol=5e-9, rtol=0)
+    np.testing.assert_allclose(position[:, 0], 0, atol=5e-9, rtol=0)
+    assert position[-1, 1] > 0
+    for name in ("latitude", "longitude", "height"):
+        bundle.meta.channel(name).frame = None
+    with pytest.raises(AcquisitionRefusal, match="share a geodetic frame"):
+        admit(bundle, declaration)
