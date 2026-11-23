@@ -1687,7 +1687,6 @@
         "C: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused (owner RES-693; rated specified)",
         "G: protocol events are recovered against analytically known event times, with eligibility refusals (owner RES-671; rated partial)",
         "H: metric definitions are bound to sourced registry claims and executable exactly (owner RES-671; rated partial)",
-        "K: synthetic fault fixtures cover the declared fault classes with expected verdicts (owner RES-669; rated partial)",
         "L: analytical cross-device studies are executed and classified, never read as interchangeability (owner RES-703; rated partial)",
         "M: seeded, hash-bound provenance chain for every processing stage, reproduced exactly (owner RES-701; rated partial)"
       ],
@@ -2599,6 +2598,7 @@
         "F",
         "I",
         "J",
+        "K",
         "O"
       ],
       "blockers": [
@@ -2606,7 +2606,6 @@
         "C: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused (owner RES-693; rated specified)",
         "G: protocol events are recovered against analytically known event times, with eligibility refusals (owner RES-671; rated partial)",
         "H: metric definitions are bound to sourced registry claims and executable exactly (owner RES-671; rated partial)",
-        "K: synthetic fault fixtures cover the declared fault classes with expected verdicts (owner RES-669; rated partial)",
         "L: analytical cross-device studies are executed and classified, never read as interchangeability (owner RES-703; rated partial)",
         "M: seeded, hash-bound provenance chain for every processing stage, reproduced exactly (owner RES-701; rated partial)"
       ],
@@ -2664,7 +2663,7 @@
         "H": "partial",
         "I": "verified",
         "J": "verified",
-        "K": "partial",
+        "K": "verified",
         "L": "partial",
         "M": "partial",
         "N": "absent",
@@ -2689,6 +2688,9 @@
         "J": [
           "RCP-imu-inertial-J"
         ],
+        "K": [
+          "RCP-imu-inertial-K"
+        ],
         "O": [
           "RCP-imu-inertial-O"
         ]
@@ -2698,7 +2700,6 @@
         "C": "clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused",
         "G": "protocol events are recovered against analytically known event times, with eligibility refusals",
         "H": "metric definitions are bound to sourced registry claims and executable exactly",
-        "K": "synthetic fault fixtures cover the declared fault classes with expected verdicts",
         "L": "analytical cross-device studies are executed and classified, never read as interchangeability",
         "M": "seeded, hash-bound provenance chain for every processing stage, reproduced exactly"
       },
@@ -2709,7 +2710,6 @@
         "C",
         "G",
         "H",
-        "K",
         "L",
         "M"
       ],
@@ -2720,6 +2720,7 @@
         "F",
         "I",
         "J",
+        "K",
         "O"
       ]
     },

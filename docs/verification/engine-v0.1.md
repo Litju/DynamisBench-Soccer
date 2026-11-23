@@ -23,7 +23,7 @@ Engineering calculations only; no scientific qualification of any device or metr
 | force_platform.single | SPECIFIED | yes | 8 of 14 |
 | gnss_lps.gnss | SPECIFIED | yes | 4 of 14 |
 | gnss_lps.lps | SPECIFIED | yes | 3 of 14 |
-| imu.inertial | SPECIFIED | yes | 7 of 14 |
+| imu.inertial | SPECIFIED | yes | 6 of 14 |
 | load_cell_isometric.isometric_rig | SPECIFIED | yes | 11 of 14 |
 | load_cell_isometric.load_cell | SPECIFIED | yes | 5 of 14 |
 | lpt_encoder.encoder | SPECIFIED | yes | 12 of 14 |
@@ -96,10 +96,8 @@ Engineering calculations only; no scientific qualification of any device or metr
 * computational blocker: C: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused (owner RES-693; rated specified)
 * computational blocker: G: protocol events are recovered against analytically known event times, with eligibility refusals (owner RES-671; rated partial)
 * computational blocker: H: metric definitions are bound to sourced registry claims and executable exactly (owner RES-671; rated partial)
-* computational blocker: K: synthetic fault fixtures cover the declared fault classes with expected verdicts (owner RES-669; rated partial)
 * computational blocker: L: analytical cross-device studies are executed and classified, never read as interchangeability (owner RES-703; rated partial)
 * computational blocker: M: seeded, hash-bound provenance chain for every processing stage, reproduced exactly (owner RES-701; rated partial)
-* K - owner RES-669: synthetic fault fixtures cover the declared fault classes with expected verdicts
 * H - owner RES-671: metric definitions are bound to sourced registry claims and executable exactly
 * G - owner RES-671: protocol events are recovered against analytically known event times, with eligibility refusals
 * C - owner RES-693: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused
@@ -408,7 +406,7 @@ Open empirical requirements (what only physical measurement can close):
 | force_platform.single | s | s | s | p | p | V | V | p | V | V | p | V | V | - | p |
 | gnss_lps.gnss | V | s | V | V | p | V | V | p | p | V | V | V | V | - | V |
 | gnss_lps.lps | V | V | V | V | V | V | V | p | p | V | V | p | V | - | V |
-| imu.inertial | s | V | s | V | V | V | p | p | V | V | p | p | p | - | V |
+| imu.inertial | s | V | s | V | V | V | p | p | V | V | V | p | p | - | V |
 | load_cell_isometric.isometric_rig | V | s | s | p | p | p | p | p | p | p | p | p | V | - | V |
 | load_cell_isometric.load_cell | V | V | s | V | p | V | V | p | p | V | p | V | V | - | V |
 | lpt_encoder.encoder | s | V | s | p | p | p | p | p | p | p | p | p | V | - | p |

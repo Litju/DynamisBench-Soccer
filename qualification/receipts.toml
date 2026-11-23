@@ -2184,3 +2184,27 @@ issue = "RES-701"
 "src/dynamisbench_soccer/reference/spatial.py::RigidBody" = "3f6ce7c7d3d600665ad4e580bff84c581243abbb2cad1dc11c92c8e51ab42fe7"
 "tests/test_imu_engine.py::test_imu_complementary_gravity_gate_admits_biased_tilt_under_acceleration" = "4b63b1aa58a7e2a1e00f93b674706d585ba868d5a97b089efe573c7698755eef"
 "tests/test_imu_engine.py::test_imu_retains_sourced_physical_and_numerical_limits" = "a60f99c9a00ba9d3b4249f2c4fb6b406bba0c62563573af698a3e26fe54eff4a"
+
+[[receipt]]
+id = "RCP-imu-inertial-K"
+dimension = "K"
+subfamilies = ["imu.inertial"]
+implementation = ["src/dynamisbench_soccer/engines/imu.py::process"]
+reference = ["src/dynamisbench_soccer/reference/faults.py::inject", "src/dynamisbench_soccer/reference/spatial.py::RigidBody"]
+tests = ["tests/test_imu_engine.py::test_injected_fixed_imu_misalignment_is_conditional_on_declared_calibration", "tests/test_imu_engine.py::test_injected_imu_gyro_bias_flags_and_gyro_rail_rejects", "tests/test_imu_engine.py::test_integrity_faults_are_detected"]
+reference_kind = "independent_implementation"
+independence = "The deterministic injection and rigid-body comparator do not call the engine. Measured-looking faults have explicit independent values and expected engine verdicts."
+check_kind = "numeric"
+claim = "Native IMU fault controls verify declared-axis bias flags, rail rejection, and the known effect of fixed accelerometer misalignment with and without declared calibration."
+tolerance_basis = "At 100 Hz on a stationary rigid body, injected 0.2 rad fixed accelerometer tilt is accepted with the slip check passing, while free acceleration is biased by [0, −1.9482805928413869, −0.19548009441318778] m/s². With declared calibration the nominal zero acceleration is recovered. Unclipped 0.1 rad/s gyro bias is accepted with a gyro-bias flag. Under a declared 0.05 rad/s rail, clipping rejects with 201 channel samples at rail and marks the report diagnostic-only. A declared 5 m/s² accelerometer rail also rejects. Absolute 1e-12 m/s² and rad/s with zero relative allowance cover arithmetic rounding; status and counts are exact."
+tolerance = 1e-12
+tolerance_unit = "m/s² and rad/s (absolute); exact outcomes and counts"
+issue = "RES-669"
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/imu.py::process" = "79e817e8da6ed0dc308187c5f346f798d9089e3e70ccb514ac601bfccb1dd4a8"
+"src/dynamisbench_soccer/reference/faults.py::inject" = "bc803ce121a3bf35662d04ca34370d2f1525a44ac1503ab51c6678a39905bc7e"
+"src/dynamisbench_soccer/reference/spatial.py::RigidBody" = "3f6ce7c7d3d600665ad4e580bff84c581243abbb2cad1dc11c92c8e51ab42fe7"
+"tests/test_imu_engine.py::test_injected_fixed_imu_misalignment_is_conditional_on_declared_calibration" = "cb0d4a098bdbf1de1f5f9dd03bd1b1b2614b8c3548439265b23100779cde7c19"
+"tests/test_imu_engine.py::test_injected_imu_gyro_bias_flags_and_gyro_rail_rejects" = "964e1833e9dbfd2dc59ae6d9127844802deec7317f7c67b18d0f39052d42b419"
+"tests/test_imu_engine.py::test_integrity_faults_are_detected" = "9bc9206509e824833530a7da64400a6c1eccd3c75235c11cb101218f5c1a5733"

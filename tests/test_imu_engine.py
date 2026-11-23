@@ -422,3 +422,69 @@ def test_imu_complementary_gravity_gate_admits_biased_tilt_under_acceleration() 
     estimated = math.acos(float(result.rotation_field_from_sensor[-1, 2, 2]))
     assert angle > 0.1  # The true orientation is fixed, so this is a false tilt.
     assert estimated == pytest.approx(angle, rel=0, abs=1e-12)
+
+
+def test_injected_fixed_imu_misalignment_is_conditional_on_declared_calibration() -> None:
+    body = RigidBody(PlanarTrajectory((PlanarPhase(2, (0, 0)),)))
+    clean = export_case("imu.inertial", body, hz=100).observation
+    angle = 0.2
+    rotation = (
+        (1.0, 0.0, 0.0),
+        (0.0, math.cos(angle), -math.sin(angle)),
+        (0.0, math.sin(angle), math.cos(angle)),
+    )
+    mistilted = inject(clean, InertialFault(InertialKind.MISALIGNMENT, rotation=rotation))
+    spec = ImuSpec(
+        initial_orientation=imu.IDENTITY,
+        static_window_s=(0.2, 0.8),
+        end_static_window_s=(1.2, 1.8),
+        accel_range_m_s2=20,
+        gyro_range_rad_s=3,
+    )
+    nominal = process(clean, spec)
+    assert nominal.verdict == "accept"
+    affected = process(mistilted, spec)
+    assert affected.verdict == "accept"
+    # A constant wrong sensor calibration gives the same tilt at both windows.
+    # The slip detector therefore passes while the acceleration is biased.
+    assert _qc(affected, "IMU-SLIP") is Status.PASS
+    expected = np.array([0, -9.80665 * math.sin(angle), 9.80665 * (math.cos(angle) - 1)])
+    assert affected.free_acceleration_m_s2 is not None
+    np.testing.assert_allclose(
+        affected.free_acceleration_m_s2 - expected[None, :], 0, rtol=0, atol=1e-12
+    )
+    corrected = process(
+        mistilted,
+        spec.model_copy(update={"accel_misalignment": rotation, "calibration_declared": True}),
+    )
+    assert corrected.verdict == "accept"
+    np.testing.assert_allclose(corrected.free_acceleration_m_s2, 0, rtol=0, atol=1e-12)
+
+
+def test_injected_imu_gyro_bias_flags_and_gyro_rail_rejects() -> None:
+    body = RigidBody(PlanarTrajectory((PlanarPhase(2, (0, 0)),)))
+    clean = export_case("imu.inertial", body, hz=100).observation
+    spec = ImuSpec(
+        initial_orientation=imu.IDENTITY, static_window_s=(0.2, 0.8), gyro_range_rad_s=0.05
+    )
+    good = process(clean, spec)
+    assert good.verdict == "accept"
+    assert _qc(good, "IMU-GYROBIAS") is Status.PASS
+    assert _qc(good, "IMU-SAT-GYRO") is Status.PASS
+
+    biased = inject(clean, InertialFault(InertialKind.BIAS, "angular_velocity", bias=(0.1, 0, 0)))
+    flagged = process(biased, spec.model_copy(update={"gyro_range_rad_s": 1}))
+    assert flagged.verdict == "accept_with_flags"
+    assert _qc(flagged, "IMU-GYROBIAS") is Status.FAIL
+    bias_rule = next(item for item in flagged.qc if item.rule_id == "IMU-GYROBIAS")
+    assert bias_rule.values["static_gyro_rad_s"] == pytest.approx(0.1, rel=0, abs=1e-12)
+
+    saturated = inject(
+        biased, InertialFault(InertialKind.SATURATION, "angular_velocity", limit=0.05)
+    )
+    rejected = process(saturated, spec)
+    assert rejected.verdict == "reject"
+    assert _qc(rejected, "IMU-SAT-GYRO") is Status.FAIL
+    assert rejected.report()["diagnostic_only"] is True
+    rail_rule = next(item for item in rejected.qc if item.rule_id == "IMU-SAT-GYRO")
+    assert rail_rule.values["samples_at_rail"] == clean.meta.n_rows
