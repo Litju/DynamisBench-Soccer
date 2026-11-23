@@ -7,6 +7,8 @@ import signal
 import subprocess
 import sysconfig
 import tempfile
+import time
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Literal
 
@@ -89,40 +91,65 @@ def _command(candidate: Path) -> list[str]:
     ]
 
 
-def execute(episode: Episode, source: bytes) -> tuple[LauncherResult, bytes]:
-    """Mount only the candidate program and system runtime. Stream the public episode as stdin."""
+@dataclass(frozen=True)
+class Execution:
+    outcome: LauncherResult
+    stdout: bytes
+    wall_seconds: float
+    stdout_bytes: int
+    workspace_removed: bool
+
+
+def execute_payload(public: bytes, source: bytes) -> Execution:
+    """Run only a candidate program and a bounded public stdin payload."""
     if len(source) > MAX_SOURCE:
         raise ValueError("candidate source exceeds size limit")
-    public = episode.model_dump_json().encode()
     if len(public) > MAX_SOURCE:
         raise ValueError("public episode exceeds size limit")
+    started = time.monotonic()
+    stdout = b""
     with tempfile.TemporaryDirectory(prefix="dbs-m4-") as tmp:
-        path = Path(tmp) / "candidate.py"
+        workspace = Path(tmp)
+        path = workspace / "candidate.py"
         path.write_bytes(source)
-        with tempfile.TemporaryFile() as payload, tempfile.TemporaryFile() as output:
-            payload.write(public)
-            payload.seek(0)
+        public_file = workspace / "input.json"
+        public_file.write_bytes(public)
+        with public_file.open("rb") as payload, tempfile.TemporaryFile() as output:
+            timed_out = False
             with subprocess.Popen(
                 _command(path),
                 stdin=payload,
                 stdout=output,
                 stderr=subprocess.DEVNULL,
                 env={},
+                close_fds=True,
                 start_new_session=True,
             ) as child:
                 try:
                     code = child.wait(timeout=WALL_SECONDS)
                 except subprocess.TimeoutExpired:
+                    timed_out = True
                     os.killpg(child.pid, signal.SIGKILL)
-                    child.wait()
-                    return "timeout", b""
-            output.seek(0, os.SEEK_END)
-            if output.tell() >= MAX_OUTPUT:
-                return "output_limit", b""
-            if code:
-                return "execution_error", b""
-            output.seek(0)
-            return "graded", output.read(MAX_OUTPUT)
+                    code = child.wait()
+            size = output.seek(0, os.SEEK_END)
+            outcome: LauncherResult
+            if timed_out:
+                outcome = "timeout"
+            elif size >= MAX_OUTPUT:
+                outcome = "output_limit"
+            elif code:
+                outcome = "execution_error"
+            else:
+                outcome = "graded"
+                output.seek(0)
+                stdout = output.read(MAX_OUTPUT)
+    return Execution(outcome, stdout, time.monotonic() - started, size, not workspace.exists())
+
+
+def execute(episode: Episode, source: bytes) -> tuple[LauncherResult, bytes]:
+    """Compatibility entry point for the public RES-737 development demo."""
+    attempt = execute_payload(episode.model_dump_json().encode(), source)
+    return attempt.outcome, attempt.stdout
 
 
 def trial(episode: Episode, source: bytes, key: PrivateKey) -> Score:
