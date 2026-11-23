@@ -184,7 +184,7 @@ def _sensitivity(
         if abs(angle) + perturbation >= math.pi / 2:
             result["cosine_sensitivity"] = "UNSUPPORTED: perturbed angle crosses projection limit"
         else:
-            lower = float(np.max(line_velocity / math.cos(abs(angle) - perturbation)))
+            lower = float(np.max(line_velocity / math.cos(max(0.0, abs(angle) - perturbation))))
             upper = float(np.max(line_velocity / math.cos(abs(angle) + perturbation)))
             result["cosine_peak_low_m_s"] = min(lower, upper)
             result["cosine_peak_high_m_s"] = max(lower, upper)
