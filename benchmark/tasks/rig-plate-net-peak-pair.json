@@ -1,0 +1,121 @@
+{
+  "version": "m4.registry-task.v1",
+  "task": {
+    "version": "m4.public-task.v1",
+    "id": "rig-plate-net-peak-pair",
+    "revision": 1,
+    "family": "A",
+    "competencies": [
+      "C1",
+      "C2",
+      "C3",
+      "C4",
+      "C5"
+    ],
+    "coverage_cell": "Instrument axes, protocol alignment, matched net force and comparison limits",
+    "domain": "isometric measurement reasoning",
+    "protocol": "One paired same-trial synthetic fixed-bar IMTP",
+    "source": "load_cell_isometric.isometric_rig",
+    "convention": "fixed",
+    "allowed_tools": "offline_python_stdlib",
+    "answer_schema": "m5.measurement-answer.v1"
+  },
+  "artifacts": [
+    {
+      "name": "rig-case-01",
+      "path": "benchmark/fixtures/m5-force-development/rig-case-01.json",
+      "sha256": "2e53b8a163f678dc050fdb5091e0fbb14bed91f19ee5340a8ca2617d716ab110",
+      "category": "synthetic",
+      "rights": "Repository-authored synthetic observations, no measured data",
+      "usage": "reference"
+    },
+    {
+      "name": "rig-case-02",
+      "path": "benchmark/fixtures/m5-force-development/rig-case-02.json",
+      "sha256": "3a051722985320ac98340bdb6abc56cbeae36510f201ee76e5beedbc63d99f97",
+      "category": "synthetic",
+      "rights": "Repository-authored synthetic observations, no measured data",
+      "usage": "reference"
+    },
+    {
+      "name": "rig-case-03",
+      "path": "benchmark/fixtures/m5-force-development/rig-case-03.json",
+      "sha256": "e3b16f7f44612ad524dc3a8d0aad1a29b8bd4179a26f7a461e0a940f7cad418a",
+      "category": "synthetic",
+      "rights": "Repository-authored synthetic observations, no measured data",
+      "usage": "reference"
+    },
+    {
+      "name": "rig-case-04",
+      "path": "benchmark/fixtures/m5-force-development/rig-case-04.json",
+      "sha256": "067ebc28babd278c3a963468223589d9e0d5c8e7b934e585589eca5b6c89dc13",
+      "category": "synthetic",
+      "rights": "Repository-authored synthetic observations, no measured data",
+      "usage": "reference"
+    }
+  ],
+  "checkpoints": [
+    {
+      "id": "c01",
+      "prompt": "Analyze rig-case-01. Use paired-net-peak-difference. Match session, trial, clock epoch, protocol and sampling. Refuse not_eligible with pair_timing_or_identity_unresolved when the common pairing is unsupported. Assess the force plate axis and the prescribed coaxial quasi-static load-transfer model before numerics. Refuse unsupported_claim with estimand_mismatch if definitions differ. Where matched, subtract each baseline separately, compare the two net peaks as rig minus plate and report rig_minus_plate_net_peak_force (N, dimension force). The two declared net_peak_error_n terms are deterministic absolute bounds and their sum bounds the signed discrepancy. Derive each 100 ms RFD from unfiltered data using the first strict threshold crossing starting at the last baseline sample and one-sample backdating. Use operands rig_net_peak_n, plate_net_peak_n, rig_rfd_100ms_n_s and plate_rfd_100ms_n_s. Use claims matched_net_vertical_force, analytical_single_pair, paired_variance_unavailable and hardware_interchangeability_unknown. Add inside_declared_peak_tolerance or outside_declared_peak_tolerance using the nominal discrepancy and the declared absolute limit; do not infer an error mechanism from the difference. Return m5.measurement-answer.v1 JSON with decision, reason, method, selected_trials, citations, claims, quantity and operands. Cite DEV-006 for the instrument boundary. For a computation use reason eligible, select the current artifact name and report the quantity fields value, unit, dimension, estimand and uncertainty. Each operand has artifact, field and value. Round operands to 10 decimal places. For a refusal use the corresponding reason and claims below, with null quantity and empty selected_trials and operands. Read only the current checkpoint artifact for the requested result.",
+      "artifacts": [
+        "rig-case-01"
+      ],
+      "corrects": null
+    },
+    {
+      "id": "c02",
+      "prompt": "Analyze rig-case-02. Use paired-net-peak-difference. Match session, trial, clock epoch, protocol and sampling. Refuse not_eligible with pair_timing_or_identity_unresolved when the common pairing is unsupported. Assess the force plate axis and the prescribed coaxial quasi-static load-transfer model before numerics. Refuse unsupported_claim with estimand_mismatch if definitions differ. Where matched, subtract each baseline separately, compare the two net peaks as rig minus plate and report rig_minus_plate_net_peak_force (N, dimension force). The two declared net_peak_error_n terms are deterministic absolute bounds and their sum bounds the signed discrepancy. Derive each 100 ms RFD from unfiltered data using the first strict threshold crossing starting at the last baseline sample and one-sample backdating. Use operands rig_net_peak_n, plate_net_peak_n, rig_rfd_100ms_n_s and plate_rfd_100ms_n_s. Use claims matched_net_vertical_force, analytical_single_pair, paired_variance_unavailable and hardware_interchangeability_unknown. Add inside_declared_peak_tolerance or outside_declared_peak_tolerance using the nominal discrepancy and the declared absolute limit; do not infer an error mechanism from the difference. Return m5.measurement-answer.v1 JSON with decision, reason, method, selected_trials, citations, claims, quantity and operands. Cite DEV-006 for the instrument boundary. For a computation use reason eligible, select the current artifact name and report the quantity fields value, unit, dimension, estimand and uncertainty. Each operand has artifact, field and value. Round operands to 10 decimal places. For a refusal use the corresponding reason and claims below, with null quantity and empty selected_trials and operands. Read only the current checkpoint artifact for the requested result.",
+      "artifacts": [
+        "rig-case-02"
+      ],
+      "corrects": null
+    },
+    {
+      "id": "c03",
+      "prompt": "Analyze rig-case-03. Use paired-net-peak-difference. Match session, trial, clock epoch, protocol and sampling. Refuse not_eligible with pair_timing_or_identity_unresolved when the common pairing is unsupported. Assess the force plate axis and the prescribed coaxial quasi-static load-transfer model before numerics. Refuse unsupported_claim with estimand_mismatch if definitions differ. Where matched, subtract each baseline separately, compare the two net peaks as rig minus plate and report rig_minus_plate_net_peak_force (N, dimension force). The two declared net_peak_error_n terms are deterministic absolute bounds and their sum bounds the signed discrepancy. Derive each 100 ms RFD from unfiltered data using the first strict threshold crossing starting at the last baseline sample and one-sample backdating. Use operands rig_net_peak_n, plate_net_peak_n, rig_rfd_100ms_n_s and plate_rfd_100ms_n_s. Use claims matched_net_vertical_force, analytical_single_pair, paired_variance_unavailable and hardware_interchangeability_unknown. Add inside_declared_peak_tolerance or outside_declared_peak_tolerance using the nominal discrepancy and the declared absolute limit; do not infer an error mechanism from the difference. Return m5.measurement-answer.v1 JSON with decision, reason, method, selected_trials, citations, claims, quantity and operands. Cite DEV-006 for the instrument boundary. For a computation use reason eligible, select the current artifact name and report the quantity fields value, unit, dimension, estimand and uncertainty. Each operand has artifact, field and value. Round operands to 10 decimal places. For a refusal use the corresponding reason and claims below, with null quantity and empty selected_trials and operands. Read only the current checkpoint artifact for the requested result.",
+      "artifacts": [
+        "rig-case-03"
+      ],
+      "corrects": null
+    },
+    {
+      "id": "c04",
+      "prompt": "Analyze rig-case-04. Use paired-net-peak-difference. Match session, trial, clock epoch, protocol and sampling. Refuse not_eligible with pair_timing_or_identity_unresolved when the common pairing is unsupported. Assess the force plate axis and the prescribed coaxial quasi-static load-transfer model before numerics. Refuse unsupported_claim with estimand_mismatch if definitions differ. Where matched, subtract each baseline separately, compare the two net peaks as rig minus plate and report rig_minus_plate_net_peak_force (N, dimension force). The two declared net_peak_error_n terms are deterministic absolute bounds and their sum bounds the signed discrepancy. Derive each 100 ms RFD from unfiltered data using the first strict threshold crossing starting at the last baseline sample and one-sample backdating. Use operands rig_net_peak_n, plate_net_peak_n, rig_rfd_100ms_n_s and plate_rfd_100ms_n_s. Use claims matched_net_vertical_force, analytical_single_pair, paired_variance_unavailable and hardware_interchangeability_unknown. Add inside_declared_peak_tolerance or outside_declared_peak_tolerance using the nominal discrepancy and the declared absolute limit; do not infer an error mechanism from the difference. Return m5.measurement-answer.v1 JSON with decision, reason, method, selected_trials, citations, claims, quantity and operands. Cite DEV-006 for the instrument boundary. For a computation use reason eligible, select the current artifact name and report the quantity fields value, unit, dimension, estimand and uncertainty. Each operand has artifact, field and value. Round operands to 10 decimal places. For a refusal use the corresponding reason and claims below, with null quantity and empty selected_trials and operands. Read only the current checkpoint artifact for the requested result.",
+      "artifacts": [
+        "rig-case-04"
+      ],
+      "corrects": null
+    }
+  ],
+  "reference_profile": "rig-plate-net-peak-pair",
+  "methods": [
+    {
+      "id": "paired-net-peak-difference",
+      "estimand": "rig_minus_plate_net_peak_force",
+      "dimension": "force",
+      "unit": "N",
+      "specification": {
+        "operation": "signed_difference_of_separately_baseline_corrected_peaks",
+        "diagnostic": "individual_unfiltered_100ms_RFD"
+      },
+      "sampling": "Paired exact native 1000 Hz observations within one synthetic trial.",
+      "clock": "Shared counter and epoch, required for a common trial and baseline/onset comparison.",
+      "geometry": "Coaxial quasistatic force transfer from rigid vertical fixed-bar rig and +z force plate.",
+      "qc": "Verify paired scope, axis, clock and force definitions before comparing.",
+      "eligibility": "One complete matched paired trial. RFD windows use a common declared method and native support.",
+      "uncertainty": "Sum of declared absolute deterministic net force bounds. No sampling uncertainty or empirical limits of agreement.",
+      "absolute_tolerance": 1e-8,
+      "limitations": [
+        "A single synthetic paired trace cannot estimate between-pair dispersion, interdevice reliability or limits of agreement.",
+        "Differences between trace summaries do not establish their causes. Real compliance, line of action and plate validity remain unassessed.",
+        "The DEV-006 measured findings are specific to their device, protocol and settings."
+      ],
+      "source_claims": [
+        "DEV-006"
+      ]
+    }
+  ],
+  "engine": "m5-advanced-development.v1",
+  "grader": "measurement.v1"
+}

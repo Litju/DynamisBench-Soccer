@@ -1,0 +1,127 @@
+{
+  "artifacts": [
+    {
+      "category": "synthetic",
+      "name": "lpt-vertical-attachment-01",
+      "path": "benchmark/fixtures/m5-motion/lpt-vertical-attachment-01.json",
+      "rights": "Repository-authored synthetic sensor observation",
+      "sha256": "84af0861e431b561a97bb51a6d64d2f883eb28572a4d85fdc99a5e99f246a5f4",
+      "usage": "reference"
+    },
+    {
+      "category": "synthetic",
+      "name": "lpt-vertical-attachment-02",
+      "path": "benchmark/fixtures/m5-motion/lpt-vertical-attachment-02.json",
+      "rights": "Repository-authored synthetic sensor observation",
+      "sha256": "04572a0c8ec16e5d87e5838190e0a12c85abcbb56b5e8f01595e2b04bc25139b",
+      "usage": "reference"
+    },
+    {
+      "category": "synthetic",
+      "name": "lpt-vertical-attachment-03",
+      "path": "benchmark/fixtures/m5-motion/lpt-vertical-attachment-03.json",
+      "rights": "Repository-authored synthetic sensor observation",
+      "sha256": "5d862e22ac5a2d8dffc38cb803589fd53c4e48be4f45bd10c26354af858f54ae",
+      "usage": "reference"
+    },
+    {
+      "category": "synthetic",
+      "name": "lpt-vertical-attachment-04",
+      "path": "benchmark/fixtures/m5-motion/lpt-vertical-attachment-04.json",
+      "rights": "Repository-authored synthetic sensor observation",
+      "sha256": "c9c21bca701bcd5ca476c590b02235affaaae8e92fd0d1b5f6692b59931d3b27",
+      "usage": "reference"
+    },
+    {
+      "category": "synthetic",
+      "name": "lpt-vertical-attachment-05",
+      "path": "benchmark/fixtures/m5-motion/lpt-vertical-attachment-05.json",
+      "rights": "Repository-authored synthetic sensor observation",
+      "sha256": "40474afe7b9524380627cbfa5bf81d3243dff60ae5ecb41f801cf709f155d6c0",
+      "usage": "reference"
+    }
+  ],
+  "checkpoints": [
+    {
+      "artifacts": [
+        "lpt-vertical-attachment-01"
+      ],
+      "id": "c01",
+      "prompt": "Use method fixed-angle-attachment-speed and cite DEV-001. For eligible records, calculate bar attachment vertical speed from the unfiltered centered cable derivative divided by the cosine of the declared angle from vertical. Use the stated effective constant projection model, at the designated row on the native measurement clock. Include cable_speed_m_s, vertical_displacement_m, vertical_acceleration_m_s2, and vertical_mass_model_power_w operands. Use the supplied rigid-load assumption for mass-model power m(g+a)v with g=9.80665 m/s\u00b2. Report bar_vertical_attachment_speed (speed, m/s). For the primary positive speed, vary angle and the common clock scale to the stated extremes and report the largest absolute deviation from nominal. The angle convention is a model condition. It does not infer athlete centre-of-mass motion or measured force-plate power. Return JSON with version m5.measurement-answer.v1, method, decision, reason, citations, claims, selected_trials, quantity, operands, and corrects set to null. Use compute with eligible, or refuse with not_eligible (invalid acquisition), insufficient_evidence (required declaration absent), or unsupported_claim. Computations use one selected artifact and quantity fields value, uncertainty, estimand, dimension, and unit. Each operand names artifact, field, and value. Refusals use null quantity and empty operands and selected_trials. Cite the prescribed registry claim and state the relevant reasoning in claims as short snake_case identifiers."
+    },
+    {
+      "artifacts": [
+        "lpt-vertical-attachment-02"
+      ],
+      "id": "c02",
+      "prompt": "Use method fixed-angle-attachment-speed and cite DEV-001. For eligible records, calculate bar attachment vertical speed from the unfiltered centered cable derivative divided by the cosine of the declared angle from vertical. Use the stated effective constant projection model, at the designated row on the native measurement clock. Include cable_speed_m_s, vertical_displacement_m, vertical_acceleration_m_s2, and vertical_mass_model_power_w operands. Use the supplied rigid-load assumption for mass-model power m(g+a)v with g=9.80665 m/s\u00b2. Report bar_vertical_attachment_speed (speed, m/s). For the primary positive speed, vary angle and the common clock scale to the stated extremes and report the largest absolute deviation from nominal. The angle convention is a model condition. It does not infer athlete centre-of-mass motion or measured force-plate power. Return JSON with version m5.measurement-answer.v1, method, decision, reason, citations, claims, selected_trials, quantity, operands, and corrects set to null. Use compute with eligible, or refuse with not_eligible (invalid acquisition), insufficient_evidence (required declaration absent), or unsupported_claim. Computations use one selected artifact and quantity fields value, uncertainty, estimand, dimension, and unit. Each operand names artifact, field, and value. Refusals use null quantity and empty operands and selected_trials. Cite the prescribed registry claim and state the relevant reasoning in claims as short snake_case identifiers."
+    },
+    {
+      "artifacts": [
+        "lpt-vertical-attachment-03"
+      ],
+      "id": "c03",
+      "prompt": "Use method fixed-angle-attachment-speed and cite DEV-001. For eligible records, calculate bar attachment vertical speed from the unfiltered centered cable derivative divided by the cosine of the declared angle from vertical. Use the stated effective constant projection model, at the designated row on the native measurement clock. Include cable_speed_m_s, vertical_displacement_m, vertical_acceleration_m_s2, and vertical_mass_model_power_w operands. Use the supplied rigid-load assumption for mass-model power m(g+a)v with g=9.80665 m/s\u00b2. Report bar_vertical_attachment_speed (speed, m/s). For the primary positive speed, vary angle and the common clock scale to the stated extremes and report the largest absolute deviation from nominal. The angle convention is a model condition. It does not infer athlete centre-of-mass motion or measured force-plate power. Return JSON with version m5.measurement-answer.v1, method, decision, reason, citations, claims, selected_trials, quantity, operands, and corrects set to null. Use compute with eligible, or refuse with not_eligible (invalid acquisition), insufficient_evidence (required declaration absent), or unsupported_claim. Computations use one selected artifact and quantity fields value, uncertainty, estimand, dimension, and unit. Each operand names artifact, field, and value. Refusals use null quantity and empty operands and selected_trials. Cite the prescribed registry claim and state the relevant reasoning in claims as short snake_case identifiers."
+    },
+    {
+      "artifacts": [
+        "lpt-vertical-attachment-04"
+      ],
+      "id": "c04",
+      "prompt": "Use method fixed-angle-attachment-speed and cite DEV-001. For eligible records, calculate bar attachment vertical speed from the unfiltered centered cable derivative divided by the cosine of the declared angle from vertical. Use the stated effective constant projection model, at the designated row on the native measurement clock. Include cable_speed_m_s, vertical_displacement_m, vertical_acceleration_m_s2, and vertical_mass_model_power_w operands. Use the supplied rigid-load assumption for mass-model power m(g+a)v with g=9.80665 m/s\u00b2. Report bar_vertical_attachment_speed (speed, m/s). For the primary positive speed, vary angle and the common clock scale to the stated extremes and report the largest absolute deviation from nominal. The angle convention is a model condition. It does not infer athlete centre-of-mass motion or measured force-plate power. Return JSON with version m5.measurement-answer.v1, method, decision, reason, citations, claims, selected_trials, quantity, operands, and corrects set to null. Use compute with eligible, or refuse with not_eligible (invalid acquisition), insufficient_evidence (required declaration absent), or unsupported_claim. Computations use one selected artifact and quantity fields value, uncertainty, estimand, dimension, and unit. Each operand names artifact, field, and value. Refusals use null quantity and empty operands and selected_trials. Cite the prescribed registry claim and state the relevant reasoning in claims as short snake_case identifiers."
+    },
+    {
+      "artifacts": [
+        "lpt-vertical-attachment-05"
+      ],
+      "id": "c05",
+      "prompt": "Can these inputs establish measured force-platform or athlete COM power? Use method fixed-angle-attachment-speed and cite DEV-001. Return JSON with version m5.measurement-answer.v1, method, decision, reason, citations, claims, selected_trials, quantity, operands, and corrects set to null. Use compute with eligible, or refuse with not_eligible (invalid acquisition), insufficient_evidence (required declaration absent), or unsupported_claim. Computations use one selected artifact and quantity fields value, uncertainty, estimand, dimension, and unit. Each operand names artifact, field, and value. Refusals use null quantity and empty operands and selected_trials. Cite the prescribed registry claim and state the relevant reasoning in claims as short snake_case identifiers."
+    }
+  ],
+  "engine": "m5-advanced-development.v1",
+  "grader": "development-diagnostic.v1",
+  "methods": [
+    {
+      "absolute_tolerance": 1e-09,
+      "clock": "Native clock with a declared uniform scale-error bound.",
+      "dimension": "speed",
+      "eligibility": "Prescribed rigid translated bar load and available attachment geometry.",
+      "estimand": "bar_vertical_attachment_speed",
+      "geometry": "Bar tether with a prescribed effective constant direction cosine.",
+      "id": "fixed-angle-attachment-speed",
+      "limitations": [
+        "Constant effective angle is an explicit synthetic local projection model.",
+        "Conditional rigid-load model power does not identify force-platform or athlete COM power."
+      ],
+      "qc": "Require increasing native timestamps and unflagged cable tension.",
+      "sampling": "Unfiltered 50 Hz native centered differences at an interior row.",
+      "source_claims": [
+        "DEV-001"
+      ],
+      "specification": {
+        "operation": "fixed-angle-attachment-speed"
+      },
+      "uncertainty": "Conditional maximum absolute speed shift over angle and time-scale corners.",
+      "unit": "m/s"
+    }
+  ],
+  "reference_profile": "lpt-vertical-attachment",
+  "task": {
+    "answer_schema": "m5.measurement-answer.v1",
+    "competencies": [
+      "C1",
+      "C3",
+      "C4",
+      "C5"
+    ],
+    "convention": "fixed",
+    "coverage_cell": "Angle, timing, attachment point and power semantics",
+    "domain": "synthetic motion reconstruction",
+    "family": "A",
+    "id": "lpt-vertical-attachment",
+    "protocol": "Prescribed rigid translated bar load and available attachment geometry.",
+    "revision": 1,
+    "source": "lpt_encoder.lpt"
+  },
+  "version": "m4.registry-task.v1"
+}
