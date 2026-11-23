@@ -408,3 +408,19 @@ def test_gate_timing_uncertainty_refuses_unresolved_beam_order():
     assert len(sprint([case.observation], gate_policy()).splits) == 4
     with pytest.raises(EventRefusal, match="out of order or unresolved"):
         sprint([case.observation], gate_policy(EdgeTiming(latency_s=0, latency_error_s=0.5)))
+
+
+def test_injected_gate_latency_biases_adjacent_splits_or_refuses_native_order():
+    case = export_case("timing_contact.gates")
+    shifted = inject(case.observation, EventFault(EventKind.LATENCY, index=1, latency_s=0.02))
+    result = sprint([shifted], gate_policy())
+    expected_times = np.add(np.diff(case.truth["time"]), (0.02, -0.02, 0))
+    assert [row.split_s.value for row in result.splits[1:]] == pytest.approx(
+        expected_times, rel=0, abs=1e-12
+    )
+    assert [row.segment_average_velocity_m_s.value for row in result.splits[1:]] == pytest.approx(
+        np.diff(DISTANCES) / expected_times, rel=0, abs=1e-11
+    )
+    reordered = inject(case.observation, EventFault(EventKind.LATENCY, index=1, latency_s=2))
+    with pytest.raises(EventRefusal, match="out-of-order native"):
+        sprint([reordered], gate_policy())

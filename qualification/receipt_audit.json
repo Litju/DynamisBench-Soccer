@@ -1033,9 +1033,14 @@
    "verdict": "SUPPORTED"
   },
   "RCP-timing_contact-contact-K": {
-   "fix": "Run contact() on the DOUBLE_CONTACT, STEP_OFF and LATENCY fixtures and assert the expected refusal or verdict.",
-   "reason": "The MISSING, DUPLICATE and OUT_OF_ORDER faults have engine verdicts. test_contact_protocol_double_contact_and_step_off checks only the injected bytes, with no engine verdict, and the LATENCY fault has no verdict.",
-   "verdict": "PARTIAL"
+   "bound_digest": "66d649f65242dc07df9bda5dc13d7e360a1a93fce7945051a67edd9f74bbe4ba",
+   "evidence_head": "86e1b58e86bc800327e3400698c64060a745db66",
+   "fix": "",
+   "prior_fix": "Run contact() on the DOUBLE_CONTACT, STEP_OFF and LATENCY fixtures and assert the expected refusal or verdict.",
+   "prior_reason": "The MISSING, DUPLICATE and OUT_OF_ORDER faults have engine verdicts. test_contact_protocol_double_contact_and_step_off checks only the injected bytes, with no engine verdict, and the LATENCY fault has no verdict.",
+   "prior_verdict": "PARTIAL",
+   "reason": "Contact switching exercises missing, duplicate, reordered, latency, double-contact and step-off faults under a single-flight CMJ protocol. Clean switching yields one flight. Missing takeoff or touchdown, duplicate/reordered rows, double contact and step-off have explicit engine refusal outcomes. A 1 s delayed takeoff refuses native order. A 20 ms delayed landing refuses a wired alignment whose pulse span ends before the delayed row. With a declared shared clock the same delay yields 0.5706467550080814 s flight and 0.39917689213045504 m height from gT\u00b2/8. Absolute 1e-12 s and m with zero relative tolerance allow arithmetic roundoff.",
+   "verdict": "SUPPORTED"
   },
   "RCP-timing_contact-contact-L": {
    "bound_digest": "9d05c676969369ba09920d71b3f78a2760dd6e125e08d462dc08a2d60493f092",
@@ -1097,9 +1102,14 @@
    "verdict": "PARTIAL"
   },
   "RCP-timing_contact-gates-K": {
-   "fix": "Add a LATENCY fault case to test_adversarial_reference_faults_are_refused, or an expected detection or bias verdict for it.",
-   "reason": "The MISSING, DUPLICATE and OUT_OF_ORDER faults have engine verdicts. The declared EventKind.LATENCY ('trigger_latency') fault has no expected gates-engine verdict in any cited test.",
-   "verdict": "PARTIAL"
+   "bound_digest": "746b57c98e17ab004e7f09dc2a25a136cb39e6d158fb7d5171563c4a2727c6de",
+   "evidence_head": "86e1b58e86bc800327e3400698c64060a745db66",
+   "fix": "",
+   "prior_fix": "Add a LATENCY fault case to test_adversarial_reference_faults_are_refused, or an expected detection or bias verdict for it.",
+   "prior_reason": "The MISSING, DUPLICATE and OUT_OF_ORDER faults have engine verdicts. The declared EventKind.LATENCY ('trigger_latency') fault has no expected gates-engine verdict in any cited test.",
+   "prior_verdict": "PARTIAL",
+   "reason": "Native gates exercise missing, duplicate, reordered and latency faults. Moderate unlabelled latency changes the neighboring split estimates, while latency that reorders events is refused. Clean controls complete a four-gate route. Missing gate 2, ambiguous duplicate and reordered native rows refuse. A 20 ms late second crossing biases neighboring splits by +0.02, \u22120.02 and 0 s, giving 0.7524799388172911, 1.2270407645364005 and 1.1571471988932043 s. Segment speeds are 6.644695415878781, 8.149688493664831 and 8.641942882949435 m/s. Use absolute 1e-12 s and 1e-11 m/s with zero relative allowance for arithmetic roundoff. A 2 s injected delay refuses native order.",
+   "verdict": "SUPPORTED"
   },
   "RCP-timing_contact-gates-L": {
    "bound_digest": "b78404a9c8a24dcda31bca428b84064a1b536e2ac239935a968a698c6b4dc940",
