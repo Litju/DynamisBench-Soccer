@@ -30,8 +30,8 @@ def test_radar_recovers_independent_exact_velocity_at_native_rate(rate: int) -> 
     result = process(case.observation, _native(correction_method="declared_fixed_angle"))
     assert result.estimand == "radar_declared_axis_projection_velocity"
     assert result.native_quantity == "velocity"
-    np.testing.assert_allclose(result.velocity_m_s, case.truth["velocity"], atol=2e-12)
-    np.testing.assert_allclose(result.time_reference_s, case.truth["time"], atol=2e-12)
+    np.testing.assert_allclose(result.velocity_m_s, case.truth["velocity"], rtol=0, atol=2e-12)
+    np.testing.assert_allclose(result.time_reference_s, case.truth["time"], rtol=0, atol=2e-12)
     assert result.sensitivity["cosine_peak_high_m_s"] > result.peak_velocity_m_s
 
 
@@ -199,3 +199,81 @@ def test_stationary_prestart_zeros_are_not_false_clipping() -> None:
     result = process(rested, _native())
     assert result.velocity_m_s[0] == 0.0
     assert result.peak_velocity_m_s > 1.0
+
+
+@pytest.mark.parametrize("angle_deg", [-0.5, 0, 0.5, 10])
+def test_radar_cosine_sensitivity_includes_the_closest_angle_to_zero(angle_deg: float) -> None:
+    bundle, peak = _radar_at_calibrated_angle(angle_deg)
+    report = process(bundle, _native(correction_method="declared_fixed_angle"))
+    line_peak = peak * math.cos(math.radians(angle_deg))
+    endpoints = [abs(angle_deg - 1), abs(angle_deg + 1)]
+    least_angle = 0 if -1 <= angle_deg <= 1 else min(endpoints)
+    lower = line_peak / math.cos(math.radians(least_angle))
+    upper = line_peak / math.cos(math.radians(max(endpoints)))
+    assert report.sensitivity["cosine_peak_low_m_s"] == pytest.approx(lower, rel=0, abs=1e-12)
+    assert report.sensitivity["cosine_peak_high_m_s"] == pytest.approx(upper, rel=0, abs=1e-12)
+    assert lower <= report.peak_velocity_m_s <= upper
+
+
+def _radar_at_calibrated_angle(angle_deg: float) -> tuple[SignalBundle, float]:
+    case = export_case("radar_laser.radar", hz=100)
+    raw = case.observation.meta.model_dump()
+    angle = math.radians(angle_deg)
+    for record in raw["calibration"] + raw["acquisition"]["sources"][0]["calibration"]:
+        if record["cosine_angle_rad"] is not None:
+            record["cosine_angle_rad"] = angle
+    data = {"time": case.observation["time"], "velocity": case.truth["velocity"] * math.cos(angle)}
+    return SignalBundle(BundleMeta.model_validate(raw), data), float(case.truth["velocity"][-1])
+
+
+def test_radar_projection_uncertainty_refuses_ill_conditioned_perturbations() -> None:
+    bundle, peak = _radar_at_calibrated_angle(74.8)
+    result = process(bundle, _native(correction_method="declared_fixed_angle"))
+    assert result.peak_velocity_m_s == pytest.approx(peak, abs=1e-12, rel=0)
+    assert result.sensitivity["cosine_sensitivity"] == (
+        "UNSUPPORTED: perturbed angle crosses projection limit"
+    )
+    assert "cosine_peak_low_m_s" not in result.sensitivity
+    assert "cosine_peak_high_m_s" not in result.sensitivity
+
+
+def test_radar_start_and_filter_sensitivity_against_exponential_velocity() -> None:
+    from dynamisbench_soccer.reference.motion_models import MonoExponentialSprint
+
+    model = MonoExponentialSprint()
+    radar = export_case("radar_laser.radar", model, hz=100).observation
+    result = process(radar, _native(timing_perturbation_s=0.04))
+    # The queried times lie exactly on the 100 Hz sample grid.
+    times = (0.96, 1.0, 1.04)
+    expected = [9 * (1 - math.exp(-t / 1.2)) * math.cos(0.2) for t in times]
+    actual = [
+        result.sensitivity[f"los_velocity_at_1s_{key}_m_s"]
+        for key in ("start_minus", "baseline", "start_plus")
+    ]
+    assert actual == pytest.approx(expected, rel=0, abs=1e-12)
+
+    duration = (radar.meta.n_rows - 1) / 100
+    # Positive smoothing weights preserve monotonicity. Evaluate the final
+    # five-point neighborhood with the specified linear endpoint extension.
+    first, second, last = [
+        9 * (1 - math.exp(-t / 1.2)) * math.cos(0.2)
+        for t in (duration - 0.02, duration - 0.01, duration)
+    ]
+    step = last - second
+    samples = (first, second, last, last + step, last + 2 * step)
+    box = sum(samples) / 5
+    binomial = (
+        sum(value * weight for value, weight in zip(samples, (1, 4, 6, 4, 1), strict=True)) / 16
+    )
+    spread = max(last, box, binomial) - min(last, box, binomial)
+    assert spread > 0
+    assert result.sensitivity["filter_peak_spread_m_s"] == pytest.approx(spread, rel=0, abs=1e-12)
+
+    no_window = process(
+        radar,
+        _native(start_method="external_trigger", external_trigger_reference_s=duration - 0.1),
+    )
+    assert no_window.sensitivity["los_velocity_at_1s"] == (
+        "UNSUPPORTED: start perturbation outside observed clock"
+    )
+    assert "los_velocity_at_1s_baseline_m_s" not in no_window.sensitivity

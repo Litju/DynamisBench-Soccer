@@ -1782,7 +1782,6 @@
       "radar_laser.radar": [
         "B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-699; rated specified)",
         "E: every processing method variant is compared with an independent reference with stated sensitivity bounds (owner RES-699; rated partial)",
-        "I: declared uncertainty propagation is checked against an independent analytical result (owner RES-699; rated partial)",
         "K: synthetic fault fixtures cover the declared fault classes with expected verdicts (owner RES-669; rated partial)",
         "L: analytical cross-device studies are executed and classified, never read as interchangeability (owner RES-703; rated partial)",
         "M: seeded, hash-bound provenance chain for every processing stage, reproduced exactly (owner RES-699; rated partial)",
@@ -3611,12 +3610,12 @@
         "F",
         "G",
         "H",
+        "I",
         "J"
       ],
       "blockers": [
         "B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-699; rated specified)",
         "E: every processing method variant is compared with an independent reference with stated sensitivity bounds (owner RES-699; rated partial)",
-        "I: declared uncertainty propagation is checked against an independent analytical result (owner RES-699; rated partial)",
         "K: synthetic fault fixtures cover the declared fault classes with expected verdicts (owner RES-669; rated partial)",
         "L: analytical cross-device studies are executed and classified, never read as interchangeability (owner RES-703; rated partial)",
         "M: seeded, hash-bound provenance chain for every processing stage, reproduced exactly (owner RES-699; rated partial)",
@@ -3674,7 +3673,7 @@
         "F": "verified",
         "G": "verified",
         "H": "verified",
-        "I": "partial",
+        "I": "verified",
         "J": "verified",
         "K": "partial",
         "L": "partial",
@@ -3701,6 +3700,9 @@
         "H": [
           "RCP-radar_laser-radar-H"
         ],
+        "I": [
+          "RCP-radar_laser-radar-I"
+        ],
         "J": [
           "RCP-radar_laser-radar-J"
         ]
@@ -3708,7 +3710,6 @@
       "required_computational": {
         "B": "declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused",
         "E": "every processing method variant is compared with an independent reference with stated sensitivity bounds",
-        "I": "declared uncertainty propagation is checked against an independent analytical result",
         "K": "synthetic fault fixtures cover the declared fault classes with expected verdicts",
         "L": "analytical cross-device studies are executed and classified, never read as interchangeability",
         "M": "seeded, hash-bound provenance chain for every processing stage, reproduced exactly",
@@ -3719,7 +3720,6 @@
       "unverified_m3": [
         "B",
         "E",
-        "I",
         "K",
         "L",
         "M",
@@ -3732,6 +3732,7 @@
         "F",
         "G",
         "H",
+        "I",
         "J"
       ]
     },

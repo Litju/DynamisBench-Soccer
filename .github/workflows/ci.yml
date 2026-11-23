@@ -146,6 +146,10 @@ jobs:
           "$wheel_bin/python" -m pytest "$GITHUB_WORKSPACE/tests/test_gnss_lps_acquisition.py" "$GITHUB_WORKSPACE/tests/test_gnss_lps_processing.py"
       - name: RES-699 installed-wheel processing
         run: |
+          wheel_bin="$RUNNER_TEMP/wheel-venv/bin"
+          (cd "$RUNNER_TEMP" && "$wheel_bin/python" -m pytest \
+            "$GITHUB_WORKSPACE/tests/test_radar_laser_acquisition.py" \
+            "$GITHUB_WORKSPACE/tests/test_radar_laser_processing.py")
           uv run python - <<'PY'
           from pathlib import Path
           from dynamisbench_soccer.reference.exporters import export_case

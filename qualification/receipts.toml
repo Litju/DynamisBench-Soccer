@@ -821,7 +821,7 @@ tests = ["tests/test_radar_laser_acquisition.py::test_admits_distinct_native_mea
 [receipt.digests]
 "src/dynamisbench_soccer/engines/radar_laser_acquisition.py::admit" = "3cbcb0ccf599e5d9d9df29e82672871a51a05fb48a4e749f01ab6dbd953ea81c"
 "src/dynamisbench_soccer/reference/motion_models.py::MonoExponentialSprint" = "6f5cf86ba81df676877c7e99492f9df0400e35228a59a0f34a1d65bba5e3d493"
-"tests/test_radar_laser_acquisition.py::test_admits_distinct_native_measurands_and_affine_clocks" = "ae3f7848d4dd6713e4102793ab6fde1cfa11e1397f00c9fecf8246c10577060f"
+"tests/test_radar_laser_acquisition.py::test_admits_distinct_native_measurands_and_affine_clocks" = "737235e54a5d87fee30bb4457b6d54aa88554f529420948df1448599bf225739"
 "tests/test_radar_laser_acquisition.py::test_processed_data_are_admitted_only_under_honest_stage" = "437754419bde9f8eb9f3ef78adab00455c77bd0048d4aa03527e8389c888e496"
 "tests/test_radar_laser_acquisition.py::test_rejects_truth_wrong_device_and_undeclared_processing_stage" = "e8915232ae59223e78883a82e386d3b8ea6011b5d1595e5a8190a49b73e3f4d6"
 "tests/test_radar_laser_acquisition.py::test_source_calibration_ambiguity_refuses" = "048f597eaafc1a407365817353d163effb98c1c4d72a9c1597a8ff99931d3261"
@@ -829,26 +829,26 @@ tests = ["tests/test_radar_laser_acquisition.py::test_admits_distinct_native_mea
 [[receipt]]
 id = "RCP-radar_laser-radar-C"
 dimension = "C"
-claim = "Radar. Clock, latency and synchronisation handling is exact against the declared timing model and bad timing is refused."
+claim = "Radar observation admission maps a declared affine clock, applies an explicitly paired fixed-delay correction and refuses inconsistent timing."
 issue = "RES-693"
 reference_kind = "closed_form"
 independence = "The mono-exponential sprint and its gate-time inverse are closed forms in the reference substrate; that module imports no engine or assessment code."
 check_kind = "numeric"
-tolerance_unit = "as asserted in the cited tests (absolute)"
-tolerance_basis = "largest absolute bound asserted in the cited tests: 1e-12; largest relative bound 1e-10"
+tolerance_unit = "s (absolute), separate relative rate bound"
+tolerance_basis = "At 47 Hz and 90 ppm, the 14 ms synthetic acquisition delay remains on receipt timestamps and disappears under the explicit paired measurement-clock alignment. Expected elapsed reference samples follow the independent affine clock. Compare timestamps with absolute 1e-12 s, zero relative tolerance, and native rate with relative 1e-10. Refuse duplicates, dropout and uncertainty beyond one sample."
 tolerance = 1e-12
 subfamilies = ["radar_laser.radar"]
 implementation = ["src/dynamisbench_soccer/engines/radar_laser_acquisition.py::admit", "src/dynamisbench_soccer/engines/radar_laser.py::process"]
-reference = ["src/dynamisbench_soccer/reference/motion_models.py::MonoExponentialSprint"]
-tests = ["tests/test_radar_laser_acquisition.py::test_native_timestamp_fault_and_dropouts_refuse", "tests/test_radar_laser_acquisition.py::test_admits_distinct_native_measurands_and_affine_clocks", "tests/test_radar_laser_processing.py::test_start_modes_are_distinct_and_refuse_missing_triggers"]
+reference = ["src/dynamisbench_soccer/reference/clocks.py::DeviceClock", "src/dynamisbench_soccer/reference/motion_models.py::MonoExponentialSprint"]
+tests = ["tests/test_radar_laser_acquisition.py::test_native_timestamp_fault_and_dropouts_refuse", "tests/test_radar_laser_acquisition.py::test_admits_distinct_native_measurands_and_affine_clocks"]
 
 [receipt.digests]
-"src/dynamisbench_soccer/engines/radar_laser.py::process" = "9ab9db6c532a1c8b13f97eceb8135e8e86058cba526ec9f9dcf42f31e0fc9228"
+"src/dynamisbench_soccer/engines/radar_laser.py::process" = "996a6a3856d6e132735e4646379f0370b7671f205c3008afe30ae3c2fb381567"
 "src/dynamisbench_soccer/engines/radar_laser_acquisition.py::admit" = "3cbcb0ccf599e5d9d9df29e82672871a51a05fb48a4e749f01ab6dbd953ea81c"
+"src/dynamisbench_soccer/reference/clocks.py::DeviceClock" = "a538e7ae80f47d9b0880988f85c6705c2e5bdfe3344e5900158ed90fea72c043"
 "src/dynamisbench_soccer/reference/motion_models.py::MonoExponentialSprint" = "6f5cf86ba81df676877c7e99492f9df0400e35228a59a0f34a1d65bba5e3d493"
-"tests/test_radar_laser_acquisition.py::test_admits_distinct_native_measurands_and_affine_clocks" = "ae3f7848d4dd6713e4102793ab6fde1cfa11e1397f00c9fecf8246c10577060f"
-"tests/test_radar_laser_acquisition.py::test_native_timestamp_fault_and_dropouts_refuse" = "31f5268bf4e0605f939dbda420576e6a338bf0587fafd0a62c44ea826bbc36ef"
-"tests/test_radar_laser_processing.py::test_start_modes_are_distinct_and_refuse_missing_triggers" = "0ee00425c0a6724d96cace16d5f86580895479f82fdf1c3b82f3ddd786756df6"
+"tests/test_radar_laser_acquisition.py::test_admits_distinct_native_measurands_and_affine_clocks" = "737235e54a5d87fee30bb4457b6d54aa88554f529420948df1448599bf225739"
+"tests/test_radar_laser_acquisition.py::test_native_timestamp_fault_and_dropouts_refuse" = "647baa5877402ccd9f5386428e8ad251297a82197bf953b623267cdbf71a0e33"
 
 [[receipt]]
 id = "RCP-radar_laser-radar-D"
@@ -859,7 +859,7 @@ reference_kind = "closed_form"
 independence = "The mono-exponential sprint and its gate-time inverse are closed forms in the reference substrate; that module imports no engine or assessment code."
 check_kind = "categorical"
 tolerance_unit = ""
-tolerance_basis = "Exact outcomes asserted by the cited tests: expected refusals, verdicts, classifications and counts, with no numeric tolerance."
+tolerance_basis = "Exact failure outcomes for radar nonmonotonic timestamps, dropout, synchronization uncertainty, reflection/target switch and a clipped rail. Clean stationary prestart and smooth acceleration complete admission and processing."
 tolerance = 0.0
 subfamilies = ["radar_laser.radar"]
 implementation = ["src/dynamisbench_soccer/engines/radar_laser_acquisition.py::admit", "src/dynamisbench_soccer/engines/radar_laser.py::process"]
@@ -867,10 +867,10 @@ reference = ["src/dynamisbench_soccer/reference/motion_models.py::MonoExponentia
 tests = ["tests/test_radar_laser_acquisition.py::test_native_timestamp_fault_and_dropouts_refuse", "tests/test_radar_laser_processing.py::test_second_athlete_reflection_and_target_switch_refuse_without_repair", "tests/test_radar_laser_processing.py::test_clipped_native_radar_plateau_refuses_without_inventing_speed", "tests/test_radar_laser_processing.py::test_stationary_prestart_zeros_are_not_false_clipping"]
 
 [receipt.digests]
-"src/dynamisbench_soccer/engines/radar_laser.py::process" = "9ab9db6c532a1c8b13f97eceb8135e8e86058cba526ec9f9dcf42f31e0fc9228"
+"src/dynamisbench_soccer/engines/radar_laser.py::process" = "996a6a3856d6e132735e4646379f0370b7671f205c3008afe30ae3c2fb381567"
 "src/dynamisbench_soccer/engines/radar_laser_acquisition.py::admit" = "3cbcb0ccf599e5d9d9df29e82672871a51a05fb48a4e749f01ab6dbd953ea81c"
 "src/dynamisbench_soccer/reference/motion_models.py::MonoExponentialSprint" = "6f5cf86ba81df676877c7e99492f9df0400e35228a59a0f34a1d65bba5e3d493"
-"tests/test_radar_laser_acquisition.py::test_native_timestamp_fault_and_dropouts_refuse" = "31f5268bf4e0605f939dbda420576e6a338bf0587fafd0a62c44ea826bbc36ef"
+"tests/test_radar_laser_acquisition.py::test_native_timestamp_fault_and_dropouts_refuse" = "647baa5877402ccd9f5386428e8ad251297a82197bf953b623267cdbf71a0e33"
 "tests/test_radar_laser_processing.py::test_clipped_native_radar_plateau_refuses_without_inventing_speed" = "677a67c00204b1882563fa92b5da4f49bce64f5fcc5c14c5a0a52a28ded50d8a"
 "tests/test_radar_laser_processing.py::test_second_athlete_reflection_and_target_switch_refuse_without_repair" = "542a840116712657e487c9e9a3feaa1cdd5c191e7e3e6c5fa37bdbbaeba2ec7e"
 "tests/test_radar_laser_processing.py::test_stationary_prestart_zeros_are_not_false_clipping" = "d819af94dda94ec1c4581c0d29288c7c93617463d6f44f9f651deedc4ebc4bd1"
@@ -883,8 +883,8 @@ issue = "RES-699"
 reference_kind = "closed_form"
 independence = "The mono-exponential sprint and its gate-time inverse are closed forms in the reference substrate; that module imports no engine or assessment code."
 check_kind = "numeric"
-tolerance_unit = "as asserted in the cited tests (absolute)"
-tolerance_basis = "largest absolute bound asserted in the cited tests: 2e-12"
+tolerance_unit = "m/s and s (absolute)"
+tolerance_basis = "A declared 0.2 rad cosine projection of the monoexponential trace projects back to 9(1−exp(−t/1.2)) m/s at 47, 100 and 256 Hz. The affine fixture with offset 0.12 s and drift 60 ppm matches its reference timestamps. Both compare with absolute 2e-12 in the stated units and zero relative allowance for floating-point arithmetic."
 tolerance = 2e-12
 subfamilies = ["radar_laser.radar"]
 implementation = ["src/dynamisbench_soccer/engines/radar_laser.py::process"]
@@ -892,38 +892,32 @@ reference = ["src/dynamisbench_soccer/reference/motion_models.py::MonoExponentia
 tests = ["tests/test_radar_laser_processing.py::test_radar_recovers_independent_exact_velocity_at_native_rate", "tests/test_radar_laser_processing.py::test_smooth_aiming_drift_is_not_improperly_corrected"]
 
 [receipt.digests]
-"src/dynamisbench_soccer/engines/radar_laser.py::process" = "9ab9db6c532a1c8b13f97eceb8135e8e86058cba526ec9f9dcf42f31e0fc9228"
+"src/dynamisbench_soccer/engines/radar_laser.py::process" = "996a6a3856d6e132735e4646379f0370b7671f205c3008afe30ae3c2fb381567"
 "src/dynamisbench_soccer/reference/motion_models.py::MonoExponentialSprint" = "6f5cf86ba81df676877c7e99492f9df0400e35228a59a0f34a1d65bba5e3d493"
-"tests/test_radar_laser_processing.py::test_radar_recovers_independent_exact_velocity_at_native_rate" = "b7c52d3f55fcf3a3f159df24bb154f90f8f041bfb64eab14bd8aabd9011823c2"
+"tests/test_radar_laser_processing.py::test_radar_recovers_independent_exact_velocity_at_native_rate" = "0234db1f132fad697f3fbd1eeec2858384f452f0b3d6dce90e182a9aefaa111c"
 "tests/test_radar_laser_processing.py::test_smooth_aiming_drift_is_not_improperly_corrected" = "70443fd76229e7a6fb31f60bffc41103d2b8c9e21844d74fd6ff6fcde8991d7a"
 
 [[receipt]]
 id = "RCP-radar_laser-radar-G"
 dimension = "G"
-claim = "Radar. Protocol events and phases are recovered at the analytically known times, with eligibility refusals."
+claim = "Native axis-corrected radar at 100 Hz recovers sampled sprint milestones at 10, 20 and 30 m and withholds an arrival beyond recorded support."
 issue = "RES-673"
 reference_kind = "closed_form"
 independence = "The mono-exponential sprint and its gate-time inverse are closed forms in the reference substrate; that module imports no engine or assessment code."
 check_kind = "numeric"
-tolerance_unit = "as asserted in the cited tests (absolute)"
-tolerance_basis = "largest absolute bound asserted in the cited tests: 0.02; largest relative bound 0.05"
-tolerance = 0.02
+tolerance_unit = "s (absolute)"
+tolerance_basis = "Expected arrivals are the inverse of the monoexponential distance: 2.1031246565401025, 3.3485505747362385 and 4.505234882806160 s. The 1e-4 s absolute tolerance, without a relative allowance, covers integrated piecewise-linear interpolation at 100 Hz (distance error bounded by T·h²·max|v''|/12 and arrival speed above 5 m/s). 1000 m is unobserved and returns no arrival."
+tolerance = 0.0001
 subfamilies = ["radar_laser.radar"]
-implementation = ["src/dynamisbench_soccer/assessment/sprint.py::milestones", "src/dynamisbench_soccer/assessment/cod.py::assess_trace", "src/dynamisbench_soccer/engines/radar_laser.py::process"]
+implementation = ["src/dynamisbench_soccer/assessment/sprint.py::milestones", "src/dynamisbench_soccer/engines/radar_laser.py::process"]
 reference = ["src/dynamisbench_soccer/reference/motion_models.py::MonoExponentialSprint"]
-tests = ["tests/test_sprint_cod_assessment.py::test_start_definitions_are_reported_and_change_the_answer", "tests/test_sprint_cod_assessment.py::test_milestone_times_match_exact_position_inverse", "tests/test_sprint_cod_assessment.py::test_cod_trace_metrics_match_piecewise_closed_form", "tests/test_sprint_cod_assessment.py::test_native_radar_to_fv_pipeline_and_cli", "tests/test_sprint_milestones.py::test_stationary_tail_does_not_move_the_first_arrival", "tests/test_sprint_milestones.py::test_milestones_for_a_linear_ramp_are_exact_between_samples"]
+tests = ["tests/test_sprint_cod_assessment.py::test_native_radar_milestones_match_independent_sprint_arrivals"]
 
 [receipt.digests]
-"src/dynamisbench_soccer/assessment/cod.py::assess_trace" = "490f06a7cfd9c17d48321c97642a1f45eee3a5cbc42130f38d0310cdc43b5595"
 "src/dynamisbench_soccer/assessment/sprint.py::milestones" = "13d728b0eb0ea039b61834bac4b1054cf6df96ebcc3e2079655eb0a185d3fb84"
-"src/dynamisbench_soccer/engines/radar_laser.py::process" = "9ab9db6c532a1c8b13f97eceb8135e8e86058cba526ec9f9dcf42f31e0fc9228"
+"src/dynamisbench_soccer/engines/radar_laser.py::process" = "996a6a3856d6e132735e4646379f0370b7671f205c3008afe30ae3c2fb381567"
 "src/dynamisbench_soccer/reference/motion_models.py::MonoExponentialSprint" = "6f5cf86ba81df676877c7e99492f9df0400e35228a59a0f34a1d65bba5e3d493"
-"tests/test_sprint_cod_assessment.py::test_cod_trace_metrics_match_piecewise_closed_form" = "5826e7bfbdf885adf91d2304860329a7e7e4387027ce0e261c671d3abd3a2074"
-"tests/test_sprint_cod_assessment.py::test_milestone_times_match_exact_position_inverse" = "cdc5d752e7af7f6753c7ba32248ca14b695b8a2ca4d81e4920bd944bba6fead5"
-"tests/test_sprint_cod_assessment.py::test_native_radar_to_fv_pipeline_and_cli" = "c008ab397ae78f971f24eb24f3105d7058021325df2b50384df1782c79bc41c8"
-"tests/test_sprint_cod_assessment.py::test_start_definitions_are_reported_and_change_the_answer" = "b5c5704d9f38118cf07caba15b640eb175388c1ac9c69581f867281a97a42ac8"
-"tests/test_sprint_milestones.py::test_milestones_for_a_linear_ramp_are_exact_between_samples" = "6a9581c66b9f8febdbd75f1436217a54f1273ac0b783231c72f60e87b61f4d92"
-"tests/test_sprint_milestones.py::test_stationary_tail_does_not_move_the_first_arrival" = "81ad403bb204d4891383f60a79b86598edc285f45d8a28f81c0337bdec76ddaf"
+"tests/test_sprint_cod_assessment.py::test_native_radar_milestones_match_independent_sprint_arrivals" = "b9a321f0b9c6c347c99ff3e245f0ac94bfebf4e8c5d5d95fadb70e60f3169213"
 
 [[receipt]]
 id = "RCP-radar_laser-radar-H"
@@ -957,45 +951,44 @@ issue = "RES-669"
 reference_kind = "closed_form"
 independence = "The mono-exponential sprint and its gate-time inverse are closed forms in the reference substrate; that module imports no engine or assessment code."
 check_kind = "numeric"
-tolerance_unit = "as asserted in the cited tests (absolute)"
-tolerance_basis = "largest absolute bound asserted in the cited tests: 2e-12"
+tolerance_unit = "m/s and s (absolute)"
+tolerance_basis = "A declared 0.2 rad cosine projection of the monoexponential trace projects back to 9(1−exp(−t/1.2)) m/s at 47, 100 and 256 Hz. The affine fixture with offset 0.12 s and drift 60 ppm matches its reference timestamps. Both compare with absolute 2e-12 in the stated units and zero relative allowance for floating-point arithmetic."
 tolerance = 2e-12
 subfamilies = ["radar_laser.radar"]
 implementation = ["src/dynamisbench_soccer/engines/radar_laser.py::process"]
 reference = ["src/dynamisbench_soccer/reference/motion_models.py::MonoExponentialSprint"]
-tests = ["tests/test_radar_laser_processing.py::test_radar_recovers_independent_exact_velocity_at_native_rate", "tests/test_radar_laser_processing.py::test_laser_distance_derivative_recovers_analytical_speed", "tests/test_radar_laser_processing.py::test_no_reference_imports_in_engine_files", "tests/test_radar_laser_acquisition.py::test_engine_is_independent_of_reference_generators"]
+tests = ["tests/test_radar_laser_processing.py::test_radar_recovers_independent_exact_velocity_at_native_rate", "tests/test_radar_laser_processing.py::test_no_reference_imports_in_engine_files", "tests/test_radar_laser_acquisition.py::test_engine_is_independent_of_reference_generators"]
 
 [receipt.digests]
-"src/dynamisbench_soccer/engines/radar_laser.py::process" = "9ab9db6c532a1c8b13f97eceb8135e8e86058cba526ec9f9dcf42f31e0fc9228"
+"src/dynamisbench_soccer/engines/radar_laser.py::process" = "996a6a3856d6e132735e4646379f0370b7671f205c3008afe30ae3c2fb381567"
 "src/dynamisbench_soccer/reference/motion_models.py::MonoExponentialSprint" = "6f5cf86ba81df676877c7e99492f9df0400e35228a59a0f34a1d65bba5e3d493"
 "tests/test_radar_laser_acquisition.py::test_engine_is_independent_of_reference_generators" = "d36d621205ece2043f99501f2aa9fc38bedfef55b82c50d95a764d871c3404b6"
-"tests/test_radar_laser_processing.py::test_laser_distance_derivative_recovers_analytical_speed" = "2a514b17e5f70d07a7d6b444db3210ac0683c59e628a7a765d97704c6bcb07c3"
 "tests/test_radar_laser_processing.py::test_no_reference_imports_in_engine_files" = "6a51f2c8522d93cf7765b701c04673384ab8e7ca003c1b7a2473439b2ed63d55"
-"tests/test_radar_laser_processing.py::test_radar_recovers_independent_exact_velocity_at_native_rate" = "b7c52d3f55fcf3a3f159df24bb154f90f8f041bfb64eab14bd8aabd9011823c2"
+"tests/test_radar_laser_processing.py::test_radar_recovers_independent_exact_velocity_at_native_rate" = "0234db1f132fad697f3fbd1eeec2858384f452f0b3d6dce90e182a9aefaa111c"
 
 [[receipt]]
 id = "RCP-radar_laser-laser-C"
 dimension = "C"
-claim = "Laser. Clock, latency and synchronisation handling is exact against the declared timing model and bad timing is refused."
+claim = "Laser observation admission maps a declared affine clock, applies an explicitly paired fixed-delay correction and refuses inconsistent timing."
 issue = "RES-693"
 reference_kind = "closed_form"
 independence = "The mono-exponential sprint and its gate-time inverse are closed forms in the reference substrate; that module imports no engine or assessment code."
 check_kind = "numeric"
-tolerance_unit = "as asserted in the cited tests (absolute)"
-tolerance_basis = "largest absolute bound asserted in the cited tests: 1e-12; largest relative bound 1e-10"
+tolerance_unit = "s (absolute), separate relative rate bound"
+tolerance_basis = "At 256 Hz and 90 ppm, the 14 ms synthetic acquisition delay remains on receipt timestamps and disappears under the explicit paired measurement-clock alignment. Expected elapsed reference samples follow the independent affine clock. Compare timestamps with absolute 1e-12 s, zero relative tolerance, and native rate with relative 1e-10. Refuse duplicates, dropout and uncertainty beyond one sample."
 tolerance = 1e-12
 subfamilies = ["radar_laser.laser"]
 implementation = ["src/dynamisbench_soccer/engines/radar_laser_acquisition.py::admit", "src/dynamisbench_soccer/engines/radar_laser.py::process"]
-reference = ["src/dynamisbench_soccer/reference/motion_models.py::MonoExponentialSprint"]
-tests = ["tests/test_radar_laser_acquisition.py::test_native_timestamp_fault_and_dropouts_refuse", "tests/test_radar_laser_acquisition.py::test_admits_distinct_native_measurands_and_affine_clocks", "tests/test_radar_laser_processing.py::test_start_modes_are_distinct_and_refuse_missing_triggers"]
+reference = ["src/dynamisbench_soccer/reference/clocks.py::DeviceClock", "src/dynamisbench_soccer/reference/motion_models.py::MonoExponentialSprint"]
+tests = ["tests/test_radar_laser_acquisition.py::test_native_timestamp_fault_and_dropouts_refuse", "tests/test_radar_laser_acquisition.py::test_admits_distinct_native_measurands_and_affine_clocks"]
 
 [receipt.digests]
-"src/dynamisbench_soccer/engines/radar_laser.py::process" = "9ab9db6c532a1c8b13f97eceb8135e8e86058cba526ec9f9dcf42f31e0fc9228"
+"src/dynamisbench_soccer/engines/radar_laser.py::process" = "996a6a3856d6e132735e4646379f0370b7671f205c3008afe30ae3c2fb381567"
 "src/dynamisbench_soccer/engines/radar_laser_acquisition.py::admit" = "3cbcb0ccf599e5d9d9df29e82672871a51a05fb48a4e749f01ab6dbd953ea81c"
+"src/dynamisbench_soccer/reference/clocks.py::DeviceClock" = "a538e7ae80f47d9b0880988f85c6705c2e5bdfe3344e5900158ed90fea72c043"
 "src/dynamisbench_soccer/reference/motion_models.py::MonoExponentialSprint" = "6f5cf86ba81df676877c7e99492f9df0400e35228a59a0f34a1d65bba5e3d493"
-"tests/test_radar_laser_acquisition.py::test_admits_distinct_native_measurands_and_affine_clocks" = "ae3f7848d4dd6713e4102793ab6fde1cfa11e1397f00c9fecf8246c10577060f"
-"tests/test_radar_laser_acquisition.py::test_native_timestamp_fault_and_dropouts_refuse" = "31f5268bf4e0605f939dbda420576e6a338bf0587fafd0a62c44ea826bbc36ef"
-"tests/test_radar_laser_processing.py::test_start_modes_are_distinct_and_refuse_missing_triggers" = "0ee00425c0a6724d96cace16d5f86580895479f82fdf1c3b82f3ddd786756df6"
+"tests/test_radar_laser_acquisition.py::test_admits_distinct_native_measurands_and_affine_clocks" = "737235e54a5d87fee30bb4457b6d54aa88554f529420948df1448599bf225739"
+"tests/test_radar_laser_acquisition.py::test_native_timestamp_fault_and_dropouts_refuse" = "647baa5877402ccd9f5386428e8ad251297a82197bf953b623267cdbf71a0e33"
 
 [[receipt]]
 id = "RCP-radar_laser-laser-L"
@@ -1707,7 +1700,7 @@ reference = ["src/dynamisbench_soccer/reference/motion_models.py::MonoExponentia
 tests = ["tests/test_radar_laser_processing.py::test_laser_distance_derivative_recovers_analytical_speed"]
 
 [receipt.digests]
-"src/dynamisbench_soccer/engines/radar_laser.py::process" = "9ab9db6c532a1c8b13f97eceb8135e8e86058cba526ec9f9dcf42f31e0fc9228"
+"src/dynamisbench_soccer/engines/radar_laser.py::process" = "996a6a3856d6e132735e4646379f0370b7671f205c3008afe30ae3c2fb381567"
 "src/dynamisbench_soccer/reference/motion_models.py::MonoExponentialSprint" = "6f5cf86ba81df676877c7e99492f9df0400e35228a59a0f34a1d65bba5e3d493"
 "tests/test_radar_laser_processing.py::test_laser_distance_derivative_recovers_analytical_speed" = "2a514b17e5f70d07a7d6b444db3210ac0683c59e628a7a765d97704c6bcb07c3"
 
@@ -2045,3 +2038,29 @@ issue = "RES-670"
 "src/dynamisbench_soccer/reference/kinematics.py::cmj" = "c37e0d387e173c0b92a8e7a8f277195382a981a228bd6784f6b306b1be3f0821"
 "tests/test_force_platform_policy_a.py::test_accepted_force_platform_uncertainty_matches_independent_corner_extrema" = "4961166b513bf3532bc58f1c8213b31f820c51673543415a03b44c423d28f6a4"
 "tests/test_force_platform_policy_a.py::test_force_platform_aggregate_calibration_perturbation_and_bound_refusal" = "ba6a7474def8a3d5778fd66fdefe71e6141c67828042a4176dde156c3b5f4b8f"
+
+[[receipt]]
+id = "RCP-radar_laser-radar-I"
+dimension = "I"
+subfamilies = ["radar_laser.radar"]
+implementation = ["src/dynamisbench_soccer/engines/radar_laser.py::process", "src/dynamisbench_soccer/engines/radar_laser_acquisition.py::admit", "src/dynamisbench_soccer/engines/filtering.py::smooth_samples"]
+reference = ["src/dynamisbench_soccer/reference/motion_models.py::MonoExponentialSprint", "src/dynamisbench_soccer/reference/observations.py::radar_radial_velocity_m_s"]
+tests = ["tests/test_radar_laser_processing.py::test_radar_cosine_sensitivity_includes_the_closest_angle_to_zero", "tests/test_radar_laser_processing.py::test_radar_projection_uncertainty_refuses_ill_conditioned_perturbations", "tests/test_radar_laser_processing.py::test_radar_start_and_filter_sensitivity_against_exponential_velocity"]
+reference_kind = "closed_form"
+independence = "The analytical monoexponential and cosine expressions and the explicit endpoint-stencil calculation produce expected values without calling production."
+claim = "Native radar reports analytically verified sensitivity to a declared cosine interval, on-grid start shifts and alternate smoothing, withholds ill-conditioned or unsupported diagnostics, and retains the valid nominal trace."
+tolerance_basis = "At 100 Hz, angles −0.5°, 0°, +0.5° and 10° have hypothetical ±1° projection budgets. Evaluate secant extrema including zero when inside the interval; for a zero nominal angle the lower/upper peaks are 8.860465317608917/8.861815014958859 m/s. A nominal 74.8° passes, but the perturbed cosine falls below the 0.25 minimum and withholds bounds. At reference times 0.96, 1.00 and 1.04 s the independent radial speeds are 4.857248498885337, 4.987182590043976 and 5.1128569350141095 m/s. The native, boxcar and binomial analytic endpoint spread is 1.9152562344970647e-6 m/s. All numerical comparisons use absolute 1e-12 m/s and zero relative allowance for floating-point arithmetic. The out-of-window external trigger case retains the trace and withholds the unsupported interpolation."
+check_kind = "numeric"
+tolerance_unit = "m/s (absolute)"
+tolerance = 1e-12
+issue = "RES-699"
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/filtering.py::smooth_samples" = "b2ffd93eb709412659ad6937412b30f488b61d8b6bb4632f1dff11d112ccf6b5"
+"src/dynamisbench_soccer/engines/radar_laser.py::process" = "996a6a3856d6e132735e4646379f0370b7671f205c3008afe30ae3c2fb381567"
+"src/dynamisbench_soccer/engines/radar_laser_acquisition.py::admit" = "3cbcb0ccf599e5d9d9df29e82672871a51a05fb48a4e749f01ab6dbd953ea81c"
+"src/dynamisbench_soccer/reference/motion_models.py::MonoExponentialSprint" = "6f5cf86ba81df676877c7e99492f9df0400e35228a59a0f34a1d65bba5e3d493"
+"src/dynamisbench_soccer/reference/observations.py::radar_radial_velocity_m_s" = "019a4c39f93958211ba6ca9b2d98d47dec0890b5c97fd7f1ce74bb07c7d785d7"
+"tests/test_radar_laser_processing.py::test_radar_cosine_sensitivity_includes_the_closest_angle_to_zero" = "19cb0dd6c4285a778c73755ad70701534c4f0c413ff52b011607694d317b12fa"
+"tests/test_radar_laser_processing.py::test_radar_projection_uncertainty_refuses_ill_conditioned_perturbations" = "67c15915a1619ef0d0f7e7b49de824ae4bea1a6c8ae78bd3b8d1c6f396be6f7a"
+"tests/test_radar_laser_processing.py::test_radar_start_and_filter_sensitivity_against_exponential_velocity" = "e00a16f82a94bcd38241a4ab0a115e4ce6e00368082288c0ff28b387070fbe15"
