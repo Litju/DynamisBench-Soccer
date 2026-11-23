@@ -110,3 +110,53 @@ def test_accepted_force_platform_uncertainty_matches_independent_corner_extrema(
         1 / hz + 2e-12, rel=0, abs=1e-14
     )
     assert uncertainty["complete_measurement_uncertainty"] is False
+
+
+@pytest.mark.parametrize(
+    ("family", "increments"),
+    [
+        ("force_platform.single", {"fz": 2.0}),
+        ("force_platform.dual", {"fz_left": 0.6, "fz_right": 1.4}),
+    ],
+)
+def test_force_platform_aggregate_calibration_perturbation_and_bound_refusal(
+    family: str, increments: dict[str, float]
+) -> None:
+    hz = 1000
+    motion = cmj()
+    original = _nonflat_observation(family, motion, hz)
+    data = original.data.copy()
+    data.update({channel: data[channel] + delta for channel, delta in increments.items()})
+    shifted = SignalBundle(original.meta, data)
+    method = MethodSpec(
+        integration_start="record_start",
+        initial_velocity_m_s=0,
+        calibration_force_bound_n=2,
+        body_weight_bound_n=0,
+    )
+    # An independent unchanged weighing trace isolates force error from weight estimation.
+    clean = process(original, method=method, weighing=original)
+    altered = process(shifted, method=method, weighing=original)
+    assert clean.verdict != "reject" and altered.verdict != "reject"
+    t = np.arange(original.meta.n_rows) / hz
+    np.testing.assert_allclose(
+        altered.velocity_m_s - clean.velocity_m_s, 2 * t / 75, rtol=0, atol=1e-12
+    )
+    np.testing.assert_allclose(
+        altered.displacement_m - clean.displacement_m, t**2 / 75, rtol=0, atol=1e-12
+    )
+    assert clean.uncertainty["velocity_input_error_envelope_m_s"] == pytest.approx(
+        2 * t[-1] / 75, rel=0, abs=1e-12
+    )
+    unavailable = process(
+        original, method=method.model_copy(update={"filter": "butterworth"}), weighing=original
+    )
+    assert unavailable.uncertainty["velocity_input_error_envelope_m_s"] is None
+    assert unavailable.uncertainty["displacement_input_error_envelope_m"] is None
+    assert "filter-operator" in unavailable.uncertainty["input_envelope_unavailable"]
+    with pytest.raises(ValueError, match="bodyweight error bound must be smaller"):
+        process(
+            original,
+            method=method.model_copy(update={"body_weight_bound_n": 1000}),
+            weighing=original,
+        )
