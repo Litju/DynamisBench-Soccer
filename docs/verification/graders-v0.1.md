@@ -7,7 +7,7 @@ M4 infrastructure and the exact engineered slice below.
 
 ## Reference and scope
 
-`native-lps-speed` revision 1 binds two synthetic LPS observations to an independently
+`native-lps-speed` revision 2 binds two synthetic LPS observations to an independently
 reviewed external catalog and salted private answer. The clean checkpoint reconstructs
 the horizontal speed of the tracked tag at one interior row on a contiguous, unfiltered
 25 Hz grid. Production replay uses the three-point derivative and the Euclidean norm
@@ -29,7 +29,8 @@ supports the distinction between positional and Doppler estimates. G is inapplic
 because the prespecified row uses no protocol event. L is inapplicable because the
 task reconstructs a single source. Input hashes, implementation and independent
 oracle dependencies, source claims, and verification files are bound by the operator
-catalog. The remaining elapsed demonstration is development-only.
+catalog. Revision 2 explicitly records the independent trajectory as its source
+and links the injected fault to its clean artifact. Revision 1 is superseded. The remaining elapsed demonstration is development-only.
 
 ## Controls
 

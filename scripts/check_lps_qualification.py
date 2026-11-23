@@ -44,7 +44,7 @@ def main() -> None:
     legacy = evaluate_controls(Controls.model_validate_json(controls_path.read_bytes()))
     catalog = (private / "catalog.json").read_bytes()
     context = TrialContext(root, catalog, args.catalog_sha256, private)
-    task = load_registry(root / "benchmark/tasks")["native-lps-speed", 1]
+    task = load_registry(root / "benchmark/tasks")["native-lps-speed", 2]
     inputs = {a.name: (root / a.path).read_bytes() for a in task.artifacts}
     source = (root / "scripts/m4_controls/lps_oracle.py").read_bytes()
     oracle = run_oracle_control(context, task, source, seed=17)
