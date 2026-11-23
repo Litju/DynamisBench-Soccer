@@ -32,6 +32,7 @@ from dynamisbench_soccer.reference.faults import (
 )
 from dynamisbench_soccer.reference.kinematics import cmj
 from dynamisbench_soccer.reference.spatial import PlanarPhase, PlanarTrajectory, RigidBody
+from dynamisbench_soccer.registry.models import load as load_registry
 from dynamisbench_soccer.signals import io
 from dynamisbench_soccer.signals.schema import SignalBundle
 
@@ -354,3 +355,40 @@ def test_cli_round_trip(tmp_path: Path) -> None:
     bad.write_text(json.dumps({"spec": {"mounting_rotation": [[0, -1, 0], [1, 0, 0], [0, 0, 1]]}}))
     assert main(["imu", "process", str(stem), "--config", str(bad), "--out", str(out)]) == 2
     assert "placement" in json.loads(out.read_text())["error"]
+
+
+@pytest.mark.parametrize("orientation", ["gyro_integration", "complementary"])
+@pytest.mark.parametrize("range_m_s2", [5.0, 30.0])
+def test_imu_retains_sourced_physical_and_numerical_limits(
+    orientation: str, range_m_s2: float
+) -> None:
+    root = Path(__file__).resolve().parents[1]
+    registry = load_registry(root / "registry")
+    claim = next(claim for claim in registry.claims if claim.id == "DEV-002")
+    assert claim.sources == ["nielsen2019"] and "nielsen2019" in registry.sources
+    assert "sensor position displacement and COM displacement" in claim.statement
+    assert "Registry claim DEV-002 (Nielsen et al.)" in (root / "docs/imu-engine.md").read_text()
+
+    _, bundle = _rigid()
+    result = process(
+        bundle,
+        ImuSpec(initial_orientation=imu.IDENTITY, accel_range_m_s2=range_m_s2),
+        MethodSpec(orientation=orientation),
+    )
+    expected_topics = (
+        "Specific force is not free acceleration",
+        "cannot observe heading",
+        "complementary variant bounds roll/pitch only",
+        "position error b*t^2/2",
+        "Sensor-to-segment placement is a declared rotation",
+        "Flight events from the specific-force magnitude",
+        "clipping cannot be undone",
+        "Time-synchronisation uncertainty is a declaration",
+        "no device, placement or physiological qualification",
+    )
+    assert len(result.limitations) == len(expected_topics)
+    assert all(topic in row for topic, row in zip(expected_topics, result.limitations, strict=True))
+    report = json.loads(result.report_json())
+    assert report["limitations"] == list(result.limitations)
+    assert report["diagnostic_only"] is (range_m_s2 == 5)
+    assert result.summary["yaw_observable"] is False

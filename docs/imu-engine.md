@@ -45,6 +45,22 @@ minimum time, with take-off and landing at the bracketing samples (resolution re
 the landing impact peak. Sensitivity: flight time at several thresholds, velocity bound `b·T`
 and position bound `b·T²/2` for an assumed accelerometer bias, and the tilt leakage rate.
 
+## Sourced limits retained in the report
+
+- The specific-force equation and the independent rigid-body fixture explain
+  gravity compensation and why an offset sensor point differs from segment
+  translation. For an attitude error θ, the leaked gravity components are
+  g·sin θ horizontally and g·(1−cos θ) vertically.
+- The orientation and integration definitions above give the yaw
+  observability limit, bias growth, the conditional gravity correction, and
+  the need for initial conditions and declared zero-velocity windows.
+- Registry claim DEV-002 (Nielsen et al.) distinguishes sensor displacement
+  from center-of-mass displacement and limits agreement to the tested device,
+  placement, and methods. Sensor mounting is an input declaration.
+- The flight definition uses sampled specific-force thresholds. The integrity
+  contract declares rails and timing uncertainty. It cannot recover clipped
+  samples, establish empirical synchronization, or validate a placement.
+
 ## Verification
 
 `tests/test_imu_engine.py` compares against RES-669 closed forms (rigid-body rotation and
