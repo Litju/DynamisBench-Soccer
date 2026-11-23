@@ -424,3 +424,46 @@ def test_injected_gate_latency_biases_adjacent_splits_or_refuses_native_order():
     reordered = inject(case.observation, EventFault(EventKind.LATENCY, index=1, latency_s=2))
     with pytest.raises(EventRefusal, match="out-of-order native"):
         sprint([reordered], gate_policy())
+
+
+@pytest.mark.parametrize("mode", ["first_gate", "fixed_offset", "pressure_pad", "sound_cue"])
+def test_gate_start_methods_match_independent_absolute_and_elapsed_times(mode):
+    case = export_case("timing_contact.gates")
+    source = case.observation
+    truth = case.truth["time"]
+    expected = truth
+    if mode == "first_gate":
+        start = FirstGate(mode="first_gate")
+        expected = truth - truth[0]
+    elif mode == "fixed_offset":
+        start = FixedOffset(mode="fixed_offset", offset_s=float(truth[0]), error_s=0.002)
+    else:
+        trigger_kind = 1 if mode == "pressure_pad" else 2
+        rows = [(0.04, 0, 0, 0, trigger_kind)]
+        rows.extend(
+            (t, d, i, 1, 0)
+            for i, (t, d) in enumerate(zip(source["t_s"], DISTANCES, strict=True), start=1)
+        )
+        source = gate_stream(source, rows)
+        start = TriggerStart(
+            mode=mode,
+            position_m=0,
+            timing=EdgeTiming(
+                latency_s=0.04,
+                latency_error_s=0.0003,
+            ),
+        )
+    result = sprint([source], gate_policy(start=start))
+    assert result.start_mode == mode
+    assert not result.discarded
+    assert [row.cumulative_s.value for row in result.splits] == pytest.approx(
+        expected, rel=0, abs=1e-12
+    )
+    elapsed = np.diff(truth)
+    assert [row.split_s.value for row in result.splits[1:]] == pytest.approx(
+        elapsed, rel=0, abs=1e-12
+    )
+    assert [row.segment_average_velocity_m_s.value for row in result.splits[1:]] == pytest.approx(
+        np.diff(DISTANCES) / elapsed, rel=0, abs=1e-11
+    )
+    assert result.splits[0].segment_average_velocity_m_s is None
