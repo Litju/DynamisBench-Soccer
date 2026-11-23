@@ -6,7 +6,6 @@ from dataclasses import dataclass
 from typing import Literal
 
 import numpy as np
-from pydantic import ValidationError
 
 from dynamisbench_soccer.data.manifest import DataCategory
 from dynamisbench_soccer.engines.contact import ContactPolicy, contact
@@ -105,8 +104,17 @@ def _timing(operation: str, bundle: SignalBundle, policy: object, request: str) 
         else:
             contact_policy = ContactPolicy.model_validate(policy)
             contact_result = contact(bundle, contact_policy)
-    except (EventRefusal, ValidationError):
-        return Reading("not_eligible", ("event_integrity",))
+    except EventRefusal as exc:
+        for prefix, claim in (
+            ("missing gate ", "missing_station"),
+            ("gate 2: duplicate or ambiguous beam trigger", "duplicate_beam"),
+            ("unexpected gate ID or position at ", "course_mismatch"),
+            ("missing touchdown for the final flight", "missing_touchdown"),
+            ("flight duration outside declared protocol limits", "flight_outside_protocol"),
+        ):
+            if str(exc).startswith(prefix):
+                return Reading("not_eligible", (claim,))
+        raise ValueError("event refusal outside the reviewed case classes") from exc
 
     if request == "equivalence":
         return Reading("unsupported_claim", ("different_estimands", "paired_validation_absent"))
@@ -187,9 +195,15 @@ def _position(
         finding = "filter_sensitivity_not_accuracy" if lps else "doppler_separate_estimand"
         return Reading("unsupported_claim", (finding, "synthetic_evidence_only"))
 
-    grid = np.diff(native.acquisition.clock.elapsed_s)
-    if not np.allclose(grid, grid[0], rtol=0, atol=1e-12):
-        raise ValueError("measurement reference requires a uniform aligned grid")
+    clock = native.acquisition.clock
+    grid = np.diff(clock.elapsed_s)
+    if (
+        declaration.native_hz != 25
+        or clock.alignment_uncertainty_s
+        or declaration.latency_uncertainty_s
+        or not np.allclose(grid, grid[0], rtol=0, atol=1e-12)
+    ):
+        raise ValueError("measurement reference requires a uniform aligned grid with exact timing")
     radii = input_error_radii(native, bound, 0)
     fields: tuple[str, ...]
     if lps:
