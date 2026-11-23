@@ -161,9 +161,9 @@ def test_dual_beam_vote_rejects_early_arm_and_changes_event_definition():
         beams=(Beam(id=1, height_m=1, timing=EDGE), Beam(id=2, height_m=1.08, timing=EDGE)),
     )
     result = sprint([single, dual], gate_policy(gates=gates))
-    assert result.splits[1].crossing.time_s.value == pytest.approx(second)
+    assert result.splits[1].crossing.time_s.value == pytest.approx(second, rel=0, abs=1e-12)
     assert result.discarded[0].reason == "incomplete beam quorum"
-    assert result.discarded[0].native[0].native_s == pytest.approx(arm)
+    assert result.discarded[0].native[0].native_s == pytest.approx(arm, rel=0, abs=1e-12)
     assert abs(result.splits[1].crossing.time_s.value - arm) > 0.05
     gates[1] = gates[1].model_copy(update={"quorum": 1})
     with pytest.raises(EventRefusal, match="found 2"):
@@ -348,12 +348,12 @@ def test_multi_beam_quorum_and_beam_height_sensitivity_on_clean_events():
         ),
     ]
     first = sprint(sources, gate_policy(gates=gates)).splits[1]
-    assert first.crossing.time_s.value == pytest.approx(events[0][0])
+    assert first.crossing.time_s.value == pytest.approx(events[0][0], rel=0, abs=1e-12)
     gates[1] = gates[1].model_copy(update={"quorum": 3})
     all_beams = sprint(sources, gate_policy(gates=gates)).splits[1]
-    assert all_beams.crossing.time_s.value == pytest.approx(events[-1][0])
+    assert all_beams.crossing.time_s.value == pytest.approx(events[-1][0], rel=0, abs=1e-12)
     assert all_beams.split_s.value - first.split_s.value == pytest.approx(
-        events[-1][0] - events[0][0]
+        events[-1][0] - events[0][0], rel=0, abs=1e-12
     )
     uncertain = (
         gates[1]
@@ -365,7 +365,7 @@ def test_multi_beam_quorum_and_beam_height_sensitivity_on_clean_events():
     gates[1] = gates[1].model_copy(update={"beams": (*gates[1].beams[:-1], uncertain)})
     sensitivity = sprint(sources, gate_policy(gates=gates)).splits[1].split_s
     assert sensitivity.value == all_beams.split_s.value
-    assert sensitivity.high == pytest.approx(all_beams.split_s.high + 0.002)
+    assert sensitivity.high == pytest.approx(all_beams.split_s.high + 0.002, rel=0, abs=1e-12)
 
 
 @pytest.mark.parametrize("sync_error_s", [0, 0.0015])
@@ -424,3 +424,69 @@ def test_injected_gate_latency_biases_adjacent_splits_or_refuses_native_order():
     reordered = inject(case.observation, EventFault(EventKind.LATENCY, index=1, latency_s=2))
     with pytest.raises(EventRefusal, match="out-of-order native"):
         sprint([reordered], gate_policy())
+
+
+@pytest.mark.parametrize("mode", ["first_gate", "fixed_offset", "pressure_pad", "sound_cue"])
+def test_gate_start_methods_match_independent_absolute_and_elapsed_times(mode):
+    case = export_case("timing_contact.gates")
+    source = case.observation
+    truth = case.truth["time"]
+    expected = truth
+    if mode == "first_gate":
+        start = FirstGate(mode="first_gate")
+        expected = truth - truth[0]
+    elif mode == "fixed_offset":
+        start = FixedOffset(mode="fixed_offset", offset_s=float(truth[0]), error_s=0.002)
+    else:
+        trigger_kind = 1 if mode == "pressure_pad" else 2
+        rows = [(0.04, 0, 0, 0, trigger_kind)]
+        rows.extend(
+            (t, d, i, 1, 0)
+            for i, (t, d) in enumerate(zip(source["t_s"], DISTANCES, strict=True), start=1)
+        )
+        source = gate_stream(source, rows)
+        start = TriggerStart(
+            mode=mode,
+            position_m=0,
+            timing=EdgeTiming(
+                latency_s=0.04,
+                latency_error_s=0.0003,
+            ),
+        )
+    result = sprint([source], gate_policy(start=start))
+    assert result.start_mode == mode
+    assert not result.discarded
+    assert [row.cumulative_s.value for row in result.splits] == pytest.approx(
+        expected, rel=0, abs=1e-12
+    )
+    elapsed = np.diff(truth)
+    assert [row.split_s.value for row in result.splits[1:]] == pytest.approx(
+        elapsed, rel=0, abs=1e-12
+    )
+    assert [row.segment_average_velocity_m_s.value for row in result.splits[1:]] == pytest.approx(
+        np.diff(DISTANCES) / elapsed, rel=0, abs=1e-11
+    )
+    assert result.splits[0].segment_average_velocity_m_s is None
+
+
+def test_roundtripped_gate_metrics_match_independent_affine_clock_fixture(tmp_path):
+    case = export_case("timing_contact.gates", clock=DeviceClock(0.32, 812), latency_s=0.018)
+    case.write(tmp_path)
+    observation = io.read(tmp_path / "observation")
+    result = sprint([observation], gate_policy(EdgeTiming(latency_s=0.018, latency_error_s=0.001)))
+    assert not result.discarded
+    truth = case.truth["time"]
+    elapsed = np.diff(truth)
+    assert [row.crossing.time_s.value for row in result.splits] == pytest.approx(
+        truth, rel=0, abs=1e-12
+    )
+    assert [row.cumulative_s.value for row in result.splits] == pytest.approx(
+        truth - truth[0], rel=0, abs=1e-12
+    )
+    assert [row.split_s.value for row in result.splits[1:]] == pytest.approx(
+        elapsed, rel=0, abs=1e-12
+    )
+    assert [row.segment_average_velocity_m_s.value for row in result.splits[1:]] == pytest.approx(
+        np.diff(DISTANCES) / elapsed, rel=0, abs=1e-11
+    )
+    assert result.splits[0].segment_average_velocity_m_s is None

@@ -2208,3 +2208,102 @@ issue = "RES-669"
 "tests/test_imu_engine.py::test_injected_fixed_imu_misalignment_is_conditional_on_declared_calibration" = "cb0d4a098bdbf1de1f5f9dd03bd1b1b2614b8c3548439265b23100779cde7c19"
 "tests/test_imu_engine.py::test_injected_imu_gyro_bias_flags_and_gyro_rail_rejects" = "964e1833e9dbfd2dc59ae6d9127844802deec7317f7c67b18d0f39052d42b419"
 "tests/test_imu_engine.py::test_integrity_faults_are_detected" = "9bc9206509e824833530a7da64400a6c1eccd3c75235c11cb101218f5c1a5733"
+
+[[receipt]]
+id = "RCP-timing_contact-gates-M"
+dimension = "M"
+subfamilies = ["timing_contact.gates"]
+implementation = ["src/dynamisbench_soccer/engines/timing_cli.py::_run", "src/dynamisbench_soccer/engines/timing_gates.py::sprint", "src/dynamisbench_soccer/engines/event_time.py::EventStream"]
+reference = ["src/dynamisbench_soccer/reference/exporters.py::export_case"]
+tests = ["tests/test_timing_provenance.py::test_event_cli_replays_source_and_refuses_mutation", "tests/test_reference_exporters.py::test_every_export_is_v2_deterministic_separate_and_hash_linked"]
+reference_kind = "independent_implementation"
+independence = "Expected beam arrivals and numerical properties come from the independent analytical fixture, or exact file digests are calculated directly over independently exported observations and declarations."
+claim = "Successful gates CLI processing binds verified event samples, canonical validated metadata and the exact nominal and sensitivity policy bytes."
+tolerance_basis = "Exact deterministic replay of two independent observation exports and the complete report. Compare each SHA-256 with a direct file hash on canonical fixtures. A 2 ms event change changes Parquet and metadata hashes and metrics. A metadata-only identifier change changes canonical metadata and retains the Parquet hash. A policy whitespace change changes only the byte-level policy identity. Malformed metadata and tampered Parquet refuse."
+tolerance = 0
+tolerance_unit = ""
+check_kind = "categorical"
+issue = "RES-698"
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/event_time.py::EventStream" = "305ab1a1d39cfffee2c1d8606d31e0cad49bf48afea802a4a9d88e019a366f94"
+"src/dynamisbench_soccer/engines/timing_cli.py::_run" = "f823f5ac9a71f649e394dd731d81b8af14c9870d98c9ffd3ea474f889eff3b1c"
+"src/dynamisbench_soccer/engines/timing_gates.py::sprint" = "0f0ee5d59d56329cfd6011e471c2107e25c210a8a22f578d4109d13ab85a8cac"
+"src/dynamisbench_soccer/reference/exporters.py::export_case" = "3cf942e1d9c8bfce28253a1aacf6b4ff60afd78e6a37aa92ae88be042b289c09"
+"tests/test_reference_exporters.py::test_every_export_is_v2_deterministic_separate_and_hash_linked" = "dd5083a390846e2a8e59502d253a571f08ffc5bfab0a6b4d0220e225103805ad"
+"tests/test_timing_provenance.py::test_event_cli_replays_source_and_refuses_mutation" = "d8736d6f1cc39ce7c8bf4679ed5108d812ee1e1c72c7d7969a28c9c72508eedb"
+
+[[receipt]]
+id = "RCP-timing_contact-contact-M"
+dimension = "M"
+subfamilies = ["timing_contact.contact"]
+implementation = ["src/dynamisbench_soccer/engines/timing_cli.py::_run", "src/dynamisbench_soccer/engines/contact.py::contact", "src/dynamisbench_soccer/engines/event_time.py::EventStream"]
+reference = ["src/dynamisbench_soccer/reference/exporters.py::export_case"]
+tests = ["tests/test_timing_provenance.py::test_event_cli_replays_source_and_refuses_mutation", "tests/test_reference_exporters.py::test_every_export_is_v2_deterministic_separate_and_hash_linked"]
+reference_kind = "independent_implementation"
+independence = "Expected beam arrivals and numerical properties come from the independent analytical fixture, or exact file digests are calculated directly over independently exported observations and declarations."
+claim = "Successful contact CLI processing binds verified event samples, canonical validated metadata and the exact nominal and sensitivity policy bytes."
+tolerance_basis = "Exact deterministic replay of two independent observation exports and the complete report. Compare each SHA-256 with a direct file hash on canonical fixtures. A 2 ms event change changes Parquet and metadata hashes and metrics. A metadata-only identifier change changes canonical metadata and retains the Parquet hash. A policy whitespace change changes only the byte-level policy identity. Malformed metadata and tampered Parquet refuse."
+tolerance = 0
+tolerance_unit = ""
+check_kind = "categorical"
+issue = "RES-698"
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/contact.py::contact" = "fe638e0b5fc9e1974c99c48164e4c703aa43187a512d62ee5019cc4078f6d0fd"
+"src/dynamisbench_soccer/engines/event_time.py::EventStream" = "305ab1a1d39cfffee2c1d8606d31e0cad49bf48afea802a4a9d88e019a366f94"
+"src/dynamisbench_soccer/engines/timing_cli.py::_run" = "f823f5ac9a71f649e394dd731d81b8af14c9870d98c9ffd3ea474f889eff3b1c"
+"src/dynamisbench_soccer/reference/exporters.py::export_case" = "3cf942e1d9c8bfce28253a1aacf6b4ff60afd78e6a37aa92ae88be042b289c09"
+"tests/test_reference_exporters.py::test_every_export_is_v2_deterministic_separate_and_hash_linked" = "dd5083a390846e2a8e59502d253a571f08ffc5bfab0a6b4d0220e225103805ad"
+"tests/test_timing_provenance.py::test_event_cli_replays_source_and_refuses_mutation" = "d8736d6f1cc39ce7c8bf4679ed5108d812ee1e1c72c7d7969a28c9c72508eedb"
+
+[[receipt]]
+id = "RCP-timing_contact-gates-E"
+dimension = "E"
+subfamilies = ["timing_contact.gates"]
+implementation = ["src/dynamisbench_soccer/engines/timing_gates.py::sprint", "src/dynamisbench_soccer/engines/event_time.py::EventStream"]
+reference = ["src/dynamisbench_soccer/reference/motion_models.py::MonoExponentialSprint", "src/dynamisbench_soccer/reference/observations.py::spherical_gate_trigger_s", "src/dynamisbench_soccer/reference/clocks.py::DeviceClock"]
+tests = ["tests/test_timing_gates.py::test_gate_start_methods_match_independent_absolute_and_elapsed_times", "tests/test_timing_gates.py::test_dual_beam_vote_rejects_early_arm_and_changes_event_definition", "tests/test_timing_gates.py::test_multi_beam_quorum_and_beam_height_sensitivity_on_clean_events", "tests/test_timing_gates.py::test_declared_refractory_removes_duplicate_but_does_not_select_between_crossings"]
+reference_kind = "closed_form"
+independence = "Expected beam arrivals and numerical properties come from the independent analytical fixture, or exact file digests are calculated directly over independently exported observations and declarations."
+claim = "Gate start definitions, beam voting and refractory handling preserve their independently expected event and speed results."
+tolerance_basis = "With the 5, 10, 20 and 30 m beam route, first-gate start subtracts the independently known first crossing. Fixed-offset, pressure-pad and sound-cue modes recover absolute elapsed times. All later segment speeds are distance over elapsed time. The 10 m earliest/latest multi-beam events are 2.089668101741136 and 2.0950545483728 s, the discarded early arm occurred at 2.0218908916394556 s, and the added definition error raises the high endpoint by 0.002 s while preserving the nominal estimate. Refractory removal preserves the clean split exactly and competing crossings refuse. Compare with absolute 1e-12 s and 1e-11 m/s, zero relative allowance for arithmetic roundoff."
+tolerance = 1e-11
+tolerance_unit = "m/s (absolute); separate time bound"
+check_kind = "numeric"
+issue = "RES-698"
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/event_time.py::EventStream" = "305ab1a1d39cfffee2c1d8606d31e0cad49bf48afea802a4a9d88e019a366f94"
+"src/dynamisbench_soccer/engines/timing_gates.py::sprint" = "0f0ee5d59d56329cfd6011e471c2107e25c210a8a22f578d4109d13ab85a8cac"
+"src/dynamisbench_soccer/reference/clocks.py::DeviceClock" = "a538e7ae80f47d9b0880988f85c6705c2e5bdfe3344e5900158ed90fea72c043"
+"src/dynamisbench_soccer/reference/motion_models.py::MonoExponentialSprint" = "6f5cf86ba81df676877c7e99492f9df0400e35228a59a0f34a1d65bba5e3d493"
+"src/dynamisbench_soccer/reference/observations.py::spherical_gate_trigger_s" = "a3beced3dd0b05c5e5653e5dce37c3a6d8fdd83d71ef99ecf4a130e9baccbff5"
+"tests/test_timing_gates.py::test_declared_refractory_removes_duplicate_but_does_not_select_between_crossings" = "0df261beae8550f7558a84b98337d7c7fd4bdca53cab6110c996a8f9f150df14"
+"tests/test_timing_gates.py::test_dual_beam_vote_rejects_early_arm_and_changes_event_definition" = "5ed5ed1c1774555c5af233f22ce7dff8a04acd117b266c0481514142164db548"
+"tests/test_timing_gates.py::test_gate_start_methods_match_independent_absolute_and_elapsed_times" = "07e281951212c8cf12c01eb7508041d07ac1986ea56554bc87aaa8d918329373"
+"tests/test_timing_gates.py::test_multi_beam_quorum_and_beam_height_sensitivity_on_clean_events" = "8e3a60b551a63d448429e7974c183eabf83a6cd7936e80ee4a9558d4282a4e4e"
+
+[[receipt]]
+id = "RCP-timing_contact-gates-F"
+dimension = "F"
+subfamilies = ["timing_contact.gates"]
+implementation = ["src/dynamisbench_soccer/engines/timing_gates.py::sprint", "src/dynamisbench_soccer/engines/event_time.py::EventStream"]
+reference = ["src/dynamisbench_soccer/reference/motion_models.py::MonoExponentialSprint", "src/dynamisbench_soccer/reference/observations.py::spherical_gate_trigger_s", "src/dynamisbench_soccer/reference/clocks.py::DeviceClock"]
+tests = ["tests/test_timing_gates.py::test_roundtripped_gate_metrics_match_independent_affine_clock_fixture"]
+reference_kind = "closed_form"
+independence = "Expected beam arrivals and numerical properties come from the independent analytical fixture, or exact file digests are calculated directly over independently exported observations and declarations."
+claim = "Canonical single-beam gate events recover strict crossing, cumulative and split times and segment-average speed after a Parquet round trip."
+tolerance_basis = "Apply 0.32 s clock offset, 812 ppm clock drift and declared 18 ms edge latency in the independent fixture. Spherical beam crossings are 1.357188162923845, 2.089668101741136, 3.3367088662775366 and 4.493856065170741 s. Segment averages are 6.826125515564725, 8.018984049585256 and 8.641942882949435 m/s. Time values use absolute 1e-12 s and speeds 1e-11 m/s, zero relative allowance for arithmetic roundoff. There is no initial segment speed."
+tolerance = 1e-11
+tolerance_unit = "m/s (absolute); separate time bound"
+check_kind = "numeric"
+issue = "RES-698"
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/event_time.py::EventStream" = "305ab1a1d39cfffee2c1d8606d31e0cad49bf48afea802a4a9d88e019a366f94"
+"src/dynamisbench_soccer/engines/timing_gates.py::sprint" = "0f0ee5d59d56329cfd6011e471c2107e25c210a8a22f578d4109d13ab85a8cac"
+"src/dynamisbench_soccer/reference/clocks.py::DeviceClock" = "a538e7ae80f47d9b0880988f85c6705c2e5bdfe3344e5900158ed90fea72c043"
+"src/dynamisbench_soccer/reference/motion_models.py::MonoExponentialSprint" = "6f5cf86ba81df676877c7e99492f9df0400e35228a59a0f34a1d65bba5e3d493"
+"src/dynamisbench_soccer/reference/observations.py::spherical_gate_trigger_s" = "a3beced3dd0b05c5e5653e5dce37c3a6d8fdd83d71ef99ecf4a130e9baccbff5"
+"tests/test_timing_gates.py::test_roundtripped_gate_metrics_match_independent_affine_clock_fixture" = "a7c76e963731da52300593da8c0712998c12be3b0bf397d168f0ad0472ed796d"

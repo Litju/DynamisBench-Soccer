@@ -105,7 +105,7 @@ paradigm = "discrete_event"
 issue = "RES-698"
 engine_id = "gates"
 methods = ["debounce", "multi_beam_voting", "trigger_latency_correction"]
-ratings = { A = "verified", B = "specified", C = "specified", D = "verified", E = "partial", F = "partial", G = "partial", H = "verified", I = "verified", J = "partial", K = "verified", L = "verified", M = "partial", N = "absent", O = "partial" }
+ratings = { A = "verified", B = "specified", C = "specified", D = "verified", E = "verified", F = "verified", G = "partial", H = "verified", I = "verified", J = "partial", K = "verified", L = "verified", M = "verified", N = "absent", O = "partial" }
 empirical_gaps = ["Gate geometry, trigger validity and timing-error bounds need empirical metrology (RES-694)", "Sprint assessment variants and cross-device agreement remain open (RES-673/703)"]
 blockers = []
 
@@ -117,7 +117,7 @@ paradigm = "discrete_event"
 issue = "RES-698"
 engine_id = "contact"
 methods = ["debounce", "pair_events", "trigger_latency_correction"]
-ratings = { A = "verified", B = "specified", C = "specified", D = "verified", E = "verified", F = "verified", G = "partial", H = "verified", I = "verified", J = "verified", K = "verified", L = "verified", M = "partial", N = "absent", O = "partial" }
+ratings = { A = "verified", B = "specified", C = "specified", D = "verified", E = "verified", F = "verified", G = "partial", H = "verified", I = "verified", J = "verified", K = "verified", L = "verified", M = "verified", N = "absent", O = "partial" }
 empirical_gaps = ["Contact-system switching thresholds and latency bounds need empirical metrology (RES-694)", "Assessment-specific validity and force-platform/IMU agreement remain open (RES-671/703)"]
 blockers = []
 
@@ -4723,3 +4723,35 @@ kind = "independent_test"
 issue = "RES-669"
 ref = "repo:tests/test_imu_engine.py"
 rationale = "Native IMU fault controls verify declared-axis bias flags, rail rejection, and the known effect of fixed accelerometer misalignment with and without declared calibration."
+
+[[evidence]]
+subfamily = "timing_contact.gates"
+dimension = "M"
+kind = "independent_test"
+issue = "RES-698"
+ref = "repo:tests/test_timing_provenance.py"
+rationale = "Successful gates CLI processing binds verified event samples, canonical validated metadata and the exact nominal and sensitivity policy bytes."
+
+[[evidence]]
+subfamily = "timing_contact.contact"
+dimension = "M"
+kind = "independent_test"
+issue = "RES-698"
+ref = "repo:tests/test_timing_provenance.py"
+rationale = "Successful contact CLI processing binds verified event samples, canonical validated metadata and the exact nominal and sensitivity policy bytes."
+
+[[evidence]]
+subfamily = "timing_contact.gates"
+dimension = "E"
+kind = "independent_test"
+issue = "RES-698"
+ref = "repo:tests/test_timing_gates.py"
+rationale = "Gate start definitions, beam voting and refractory handling preserve their independently expected event and speed results."
+
+[[evidence]]
+subfamily = "timing_contact.gates"
+dimension = "F"
+kind = "independent_test"
+issue = "RES-698"
+ref = "repo:tests/test_timing_gates.py"
+rationale = "Canonical single-beam gate events recover strict crossing, cumulative and split times and segment-average speed after a Parquet round trip."

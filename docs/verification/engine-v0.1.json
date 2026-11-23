@@ -1785,17 +1785,13 @@
         "B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-698; rated specified)",
         "C: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused (owner RES-693; rated specified)",
         "G: protocol events are recovered against analytically known event times, with eligibility refusals (owner RES-671; rated partial)",
-        "M: seeded, hash-bound provenance chain for every processing stage, reproduced exactly (owner RES-698; rated partial)",
         "O: limitation statements are sourced and emitted with every result (owner RES-698; rated partial)"
       ],
       "timing_contact.gates": [
         "B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-698; rated specified)",
         "C: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused (owner RES-693; rated specified)",
-        "E: every processing method variant is compared with an independent reference with stated sensitivity bounds (owner RES-698; rated partial)",
-        "F: reconstructed quantities agree with an independent analytical truth within tolerance (owner RES-698; rated partial)",
         "G: protocol events are recovered against analytically known event times, with eligibility refusals (owner RES-671; rated partial)",
         "J: an independent reference implementation or closed form that shares no code with the engine (owner RES-669; rated partial)",
-        "M: seeded, hash-bound provenance chain for every processing stage, reproduced exactly (owner RES-698; rated partial)",
         "O: limitation statements are sourced and emitted with every result (owner RES-698; rated partial)"
       ]
     },
@@ -3752,13 +3748,13 @@
         "I",
         "J",
         "K",
-        "L"
+        "L",
+        "M"
       ],
       "blockers": [
         "B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-698; rated specified)",
         "C: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused (owner RES-693; rated specified)",
         "G: protocol events are recovered against analytically known event times, with eligibility refusals (owner RES-671; rated partial)",
-        "M: seeded, hash-bound provenance chain for every processing stage, reproduced exactly (owner RES-698; rated partial)",
         "O: limitation statements are sourced and emitted with every result (owner RES-698; rated partial)"
       ],
       "empirical_dimensions_covered": [],
@@ -3817,7 +3813,7 @@
         "J": "verified",
         "K": "verified",
         "L": "verified",
-        "M": "partial",
+        "M": "verified",
         "N": "absent",
         "O": "partial"
       },
@@ -3848,13 +3844,15 @@
         ],
         "L": [
           "RCP-timing_contact-contact-L"
+        ],
+        "M": [
+          "RCP-timing_contact-contact-M"
         ]
       },
       "required_computational": {
         "B": "declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused",
         "C": "clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused",
         "G": "protocol events are recovered against analytically known event times, with eligibility refusals",
-        "M": "seeded, hash-bound provenance chain for every processing stage, reproduced exactly",
         "O": "limitation statements are sourced and emitted with every result"
       },
       "state": "SPECIFIED",
@@ -3863,7 +3861,6 @@
         "B",
         "C",
         "G",
-        "M",
         "O"
       ],
       "verified_m3": [
@@ -3875,26 +3872,27 @@
         "I",
         "J",
         "K",
-        "L"
+        "L",
+        "M"
       ]
     },
     {
       "analytical_only_dimensions": [
         "A",
         "D",
+        "E",
+        "F",
         "H",
         "I",
         "K",
-        "L"
+        "L",
+        "M"
       ],
       "blockers": [
         "B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-698; rated specified)",
         "C: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused (owner RES-693; rated specified)",
-        "E: every processing method variant is compared with an independent reference with stated sensitivity bounds (owner RES-698; rated partial)",
-        "F: reconstructed quantities agree with an independent analytical truth within tolerance (owner RES-698; rated partial)",
         "G: protocol events are recovered against analytically known event times, with eligibility refusals (owner RES-671; rated partial)",
         "J: an independent reference implementation or closed form that shares no code with the engine (owner RES-669; rated partial)",
-        "M: seeded, hash-bound provenance chain for every processing stage, reproduced exactly (owner RES-698; rated partial)",
         "O: limitation statements are sourced and emitted with every result (owner RES-698; rated partial)"
       ],
       "empirical_dimensions_covered": [],
@@ -3945,15 +3943,15 @@
         "B": "specified",
         "C": "specified",
         "D": "verified",
-        "E": "partial",
-        "F": "partial",
+        "E": "verified",
+        "F": "verified",
         "G": "partial",
         "H": "verified",
         "I": "verified",
         "J": "partial",
         "K": "verified",
         "L": "verified",
-        "M": "partial",
+        "M": "verified",
         "N": "absent",
         "O": "partial"
       },
@@ -3963,6 +3961,12 @@
         ],
         "D": [
           "RCP-timing_contact-gates-D"
+        ],
+        "E": [
+          "RCP-timing_contact-gates-E"
+        ],
+        "F": [
+          "RCP-timing_contact-gates-F"
         ],
         "H": [
           "RCP-timing_contact-gates-H"
@@ -3975,16 +3979,16 @@
         ],
         "L": [
           "RCP-timing_contact-gates-L"
+        ],
+        "M": [
+          "RCP-timing_contact-gates-M"
         ]
       },
       "required_computational": {
         "B": "declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused",
         "C": "clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused",
-        "E": "every processing method variant is compared with an independent reference with stated sensitivity bounds",
-        "F": "reconstructed quantities agree with an independent analytical truth within tolerance",
         "G": "protocol events are recovered against analytically known event times, with eligibility refusals",
         "J": "an independent reference implementation or closed form that shares no code with the engine",
-        "M": "seeded, hash-bound provenance chain for every processing stage, reproduced exactly",
         "O": "limitation statements are sourced and emitted with every result"
       },
       "state": "SPECIFIED",
@@ -3992,20 +3996,20 @@
       "unverified_m3": [
         "B",
         "C",
-        "E",
-        "F",
         "G",
         "J",
-        "M",
         "O"
       ],
       "verified_m3": [
         "A",
         "D",
+        "E",
+        "F",
         "H",
         "I",
         "K",
-        "L"
+        "L",
+        "M"
       ]
     }
   ]
