@@ -73,3 +73,43 @@ def clock_kinematic_bounds(
         doppler_speed_change_m_s2=rate(change, 1) if change is not None else None,
         common_time_offset_bound_s=offset,
     )
+
+
+@dataclass(frozen=True)
+class InputErrorRadii:
+    horizontal_positional_speed_m_s: float
+    horizontal_positional_acceleration_m_s2: float
+    accumulated_horizontal_distance_m: FloatArray
+    doppler_speed_m_s: float | None
+    doppler_speed_change_m_s2: float | None
+
+
+def input_error_radii(
+    result: TrackResult, horizontal_position_m: float, doppler_m_s: float
+) -> InputErrorRadii:
+    """Conservative radii on the admitted grid with frozen rows and exact time.
+
+    The user supplies horizontal error-ball radii in the already admitted
+    Cartesian frame and optional Doppler speed bounds. This is a deterministic
+    conditional bound, with no model of receiver covariance or threshold status.
+    """
+    if not all(math.isfinite(x) and x >= 0 for x in (horizontal_position_m, doppler_m_s)):
+        raise AcquisitionRefusal("input error radii must be finite and nonnegative")
+    has_doppler = result.kinematics.doppler_speed_m_s is not None
+    if not has_doppler and doppler_m_s:
+        raise AcquisitionRefusal("Doppler error requires a native Doppler speed trace")
+    delay = float(np.min(np.diff(result.acquisition.clock.elapsed_s)))
+    # Quadratic boundary rows have absolute weight sum <= 4 / min step.
+    # Centered three- and five-point rows have smaller absolute sums.
+    derivative_gain = 4 / delay
+    smoothing_gain = {"none": 1.0, "boxcar5": 1.8, "binomial5": 1.25}
+    position = horizontal_position_m * smoothing_gain[result.options.position_filter]
+    return InputErrorRadii(
+        horizontal_positional_speed_m_s=position * derivative_gain,
+        horizontal_positional_acceleration_m_s2=position * derivative_gain**2,
+        accumulated_horizontal_distance_m=2
+        * position
+        * np.arange(len(result.acquisition.clock.elapsed_s), dtype=np.float64),
+        doppler_speed_m_s=doppler_m_s if has_doppler else None,
+        doppler_speed_change_m_s2=doppler_m_s * derivative_gain if has_doppler else None,
+    )
