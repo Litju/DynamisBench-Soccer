@@ -1773,7 +1773,6 @@
       ],
       "timing_contact.gates": [
         "B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-698; rated specified)",
-        "J: an independent reference implementation or closed form that shares no code with the engine (owner RES-669; rated partial)",
         "O: limitation statements are sourced and emitted with every result (owner RES-698; rated partial)"
       ]
     },
@@ -3889,13 +3888,13 @@
         "G",
         "H",
         "I",
+        "J",
         "K",
         "L",
         "M"
       ],
       "blockers": [
         "B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-698; rated specified)",
-        "J: an independent reference implementation or closed form that shares no code with the engine (owner RES-669; rated partial)",
         "O: limitation statements are sourced and emitted with every result (owner RES-698; rated partial)"
       ],
       "empirical_dimensions_covered": [],
@@ -3951,7 +3950,7 @@
         "G": "verified",
         "H": "verified",
         "I": "verified",
-        "J": "partial",
+        "J": "verified",
         "K": "verified",
         "L": "verified",
         "M": "verified",
@@ -3983,6 +3982,9 @@
         "I": [
           "RCP-timing_contact-gates-I"
         ],
+        "J": [
+          "RCP-timing_contact-gates-J"
+        ],
         "K": [
           "RCP-timing_contact-gates-K"
         ],
@@ -3995,14 +3997,12 @@
       },
       "required_computational": {
         "B": "declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused",
-        "J": "an independent reference implementation or closed form that shares no code with the engine",
         "O": "limitation statements are sourced and emitted with every result"
       },
       "state": "SPECIFIED",
       "subfamily": "timing_contact.gates",
       "unverified_m3": [
         "B",
-        "J",
         "O"
       ],
       "verified_m3": [
@@ -4014,6 +4014,7 @@
         "G",
         "H",
         "I",
+        "J",
         "K",
         "L",
         "M"

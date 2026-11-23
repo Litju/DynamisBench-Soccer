@@ -1334,9 +1334,11 @@
    "verdict": "SUPPORTED"
   },
   "RCP-timing_contact-gates-J": {
-   "fix": "Correct the tolerance to the engine's asserted bound.",
-   "reason": "Independence is sound: the import-boundary test passes and the MonoExponentialSprint truth is used. The 1e-11 tolerance, however, is from the reference self-test, while the engine is asserted at default rel 1e-6.",
-   "verdict": "PARTIAL"
+   "bound_digest": "ccbb1c50a1a6b2f853556d3e86f45a84c010d2c59fc7a1159105e74e5cbc1b76",
+   "evidence_head": "6e17b2052e4fa1bf686760c7fd21fcf09a935fae",
+   "fix": "",
+   "reason": "Independent GPT-6.2 Astra review supported the spherical beam oracle and independent displacement equation across geometry and calibrated clock cases. All 25 focused tests passed.",
+   "verdict": "SUPPORTED"
   },
   "RCP-timing_contact-gates-K": {
    "bound_digest": "bde6c68d9cc74838e86062ff4230c7d99d9e3312013e4be714afc144593bab68",
