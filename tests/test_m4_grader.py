@@ -124,7 +124,7 @@ def test_native_replay_checks_real_eligibility_and_uncertainty() -> None:
     from dynamisbench_soccer.m4.task_registry import load_registry
 
     root = Path(__file__).resolve().parents[1]
-    task = load_registry(root / "benchmark/tasks")["native-lps-speed", 1]
+    task = load_registry(root / "benchmark/tasks")["native-lps-speed", 2]
     inputs = {item.name: (root / item.path).read_bytes() for item in task.artifacts}
     artifact = task.checkpoints[0].artifacts[0]
     fixture = json.loads(inputs[artifact])

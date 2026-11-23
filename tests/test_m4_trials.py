@@ -56,7 +56,7 @@ def test_oracle_control_cannot_qualify_unadmitted_task(tmp_path: Path) -> None:
 
     catalog = (ROOT / "benchmark/reviewed-slices.json").read_bytes()
     context = TrialContext(ROOT, catalog, digest(catalog), tmp_path)
-    task = load_registry(ROOT / "benchmark/tasks")["native-lps-speed", 1]
+    task = load_registry(ROOT / "benchmark/tasks")["native-lps-speed", 2]
     with pytest.raises(ValueError, match="did not pass all admitted checkpoints"):
         run_oracle_control(context, task, STUBS["null"], seed=17)
 
@@ -66,7 +66,7 @@ def test_lps_solver_uses_released_inputs_only() -> None:
 
     from dynamisbench_soccer.m4.runner import execute_payload
 
-    task = load_registry(ROOT / "benchmark/tasks")["native-lps-speed", 1]
+    task = load_registry(ROOT / "benchmark/tasks")["native-lps-speed", 2]
     source = (ROOT / "scripts/m4_controls/lps_oracle.py").read_bytes()
     inputs = {artifact.name: (ROOT / artifact.path).read_bytes() for artifact in task.artifacts}
     for checkpoint, decision in zip(task.checkpoints, ("compute", "refuse"), strict=True):
