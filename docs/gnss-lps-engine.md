@@ -156,3 +156,20 @@ observations and metrology, sprint assessment profiling in RES-673, and
 empirical agreement in RES-703. GNSS Doppler, differentiated GNSS/LPS
 position, radar, laser, and timing-gate splits have distinct measurement models.
 RES-721 data rights and any empirical validity claims remain outside RES-700.
+
+### Conditional uncertainty on admitted tracks
+
+The Python functions `clock_kinematic_bounds` and `input_error_radii` in
+`dynamisbench_soccer.engines.position_clock_bounds` consume an admitted
+`TrackResult`. The clock calculation bounds absolute timestamps and the
+derivatives under a record-wide phase offset and a declared fractional affine
+stretch. It refuses stretch endpoints outside the declared drift, native
+interval or position-jump limits. The input calculation holds time and row
+membership fixed and propagates supplied horizontal position and Doppler-speed
+error radii through smoothing, derivative operators and accumulated chord length.
+
+These are separate deterministic conditional calculations. They assume a
+record-wide offset or declared error balls, as applicable. Receiver covariance,
+variable latency, joint perturbations and threshold/dwell eligibility uncertainty
+are outside the calculations. The alternative-filter and half-rate sensitivity
+in the nominal report remains a comparison of processing conditions.

@@ -55,6 +55,8 @@ def clock_kinematic_bounds(
 
     def rate(values: FloatArray, power: int) -> Bounds:
         first, second = values / low_scale**power, values / high_scale**power
+        if not np.all(np.isfinite(first) & np.isfinite(second)):
+            raise AcquisitionRefusal("perturbed kinematics exceed numerical precision")
         return Bounds(np.minimum(first, second), np.maximum(first, second))
 
     kinematics = result.kinematics
@@ -104,12 +106,20 @@ def input_error_radii(
     derivative_gain = 4 / delay
     smoothing_gain = {"none": 1.0, "boxcar5": 1.8, "binomial5": 1.25}
     position = horizontal_position_m * smoothing_gain[result.options.position_filter]
+    count = len(result.acquisition.clock.elapsed_s)
+    # Compute in ascending powers so a zero input error remains exactly zero.
+    velocity = position * derivative_gain
+    acceleration = velocity * derivative_gain
+    doppler_change = doppler_m_s * derivative_gain
+    distance = position * (2 * (count - 1))
+    if not all(math.isfinite(x) for x in (velocity, acceleration, doppler_change, distance)):
+        raise AcquisitionRefusal("input error bounds exceed numerical precision")
     return InputErrorRadii(
-        horizontal_positional_speed_m_s=position * derivative_gain,
-        horizontal_positional_acceleration_m_s2=position * derivative_gain**2,
+        horizontal_positional_speed_m_s=velocity,
+        horizontal_positional_acceleration_m_s2=acceleration,
         accumulated_horizontal_distance_m=2
         * position
         * np.arange(len(result.acquisition.clock.elapsed_s), dtype=np.float64),
         doppler_speed_m_s=doppler_m_s if has_doppler else None,
-        doppler_speed_change_m_s2=doppler_m_s * derivative_gain if has_doppler else None,
+        doppler_speed_change_m_s2=doppler_change if has_doppler else None,
     )

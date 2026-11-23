@@ -101,15 +101,22 @@ def test_clock_bounds_refuse_unqualified_scale_and_support_jittered_three_point(
 
 @pytest.mark.parametrize("method", ["three_point", "five_point"])
 @pytest.mark.parametrize("filter_name", ["none", "boxcar5", "binomial5"])
-def test_lps_bounded_position_perturbation_includes_filter_edges(method, filter_name):
-    observation, declaration, t = _quadratic_track("lps", 25)
+@pytest.mark.parametrize("kind", ["gnss", "lps"])
+def test_bounded_position_perturbation_includes_filter_edges(kind, method, filter_name):
+    observation, declaration, t = _quadratic_track(kind, 25)
     options = ProcessingOptions(derivative=method, position_filter=filter_name, thresholds=())
     before = process(observation, declaration, options)
     delta = 0.016
-    radius = input_error_radii(before, delta, 0)
+    doppler_delta = 0.02 if kind == "gnss" else 0
+    radius = input_error_radii(before, delta, doppler_delta)
     # A sinusoid stays within each horizontal error ball; its actual native
     # support includes feature and boundary errors from both differentiations.
-    observation["position_x"][:] += delta * np.cos(12 * t)
+    if kind == "lps":
+        observation["position_x"][:] += delta * np.cos(12 * t)
+    else:
+        east = t + 0.25 * t**2 + delta * np.cos(12 * t)
+        observation["longitude"][:] = np.rad2deg(np.arcsin(east / 6378137))
+        observation["doppler_speed"][:] += doppler_delta * np.sin(12 * t)
     after = process(observation, declaration, options)
     original, perturb = before.kinematics, after.kinematics
     for a, b, bound in (
@@ -131,8 +138,20 @@ def test_lps_bounded_position_perturbation_includes_filter_edges(method, filter_
     ):
         assert np.any(a != b)
         assert np.all(np.abs(a - b) <= bound + 1e-12)
-    with pytest.raises(AcquisitionRefusal, match="Doppler error"):
-        input_error_radii(before, delta, 0.2)
+    if kind == "lps":
+        with pytest.raises(AcquisitionRefusal, match="Doppler error"):
+            input_error_radii(before, delta, 0.2)
+    else:
+        assert np.all(
+            np.abs(original.doppler_speed_m_s - perturb.doppler_speed_m_s)
+            <= radius.doppler_speed_m_s + 1e-12
+        )
+        assert np.all(
+            np.abs(original.doppler_speed_change_m_s2 - perturb.doppler_speed_change_m_s2)
+            <= radius.doppler_speed_change_m_s2 + 1e-12
+        )
+    with pytest.raises(AcquisitionRefusal, match="numerical precision"):
+        input_error_radii(before, 1e300 * 1e8, 0)
 
 
 def test_unfiltered_boundary_position_and_doppler_bound_is_attained():
