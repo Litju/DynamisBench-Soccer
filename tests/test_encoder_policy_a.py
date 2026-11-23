@@ -8,7 +8,7 @@ import numpy as np
 import pytest
 
 from dynamisbench_soccer.cli import main
-from dynamisbench_soccer.engines.lpt import process
+from dynamisbench_soccer.engines.lpt import MethodSpec, process
 from dynamisbench_soccer.engines.lpt_acquisition import CableSpec, GeometrySpec, acquire
 from dynamisbench_soccer.reference.exporters import export_case
 from dynamisbench_soccer.reference.kinematics import Phase, Trajectory
@@ -131,11 +131,21 @@ def test_encoder_count_allowance_survives_large_counter_origin(hz: int) -> None:
     assert cable.faults == {}
 
 
-def test_encoder_cli_replays_verified_artifacts_and_detects_mutation(tmp_path: Path) -> None:
+def test_encoder_cli_replays_verified_artifacts_and_detects_mutation(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
     stem, config, out = tmp_path / "observation", tmp_path / "config.json", tmp_path / "result.json"
     args = ["lpt-encoder", "process", str(stem), "--config", str(config), "--out", str(out)]
+    geometry = GEOMETRY.model_copy(update={"gap_factor": 4})
+    method = MethodSpec(timebase_scale_ppm=350, summary_trim_s=0.1)
     config.write_text(
-        json.dumps({"cables": [CABLE.model_dump()], "geometry": GEOMETRY.model_dump()})
+        json.dumps(
+            {
+                "cables": [CABLE.model_dump()],
+                "geometry": geometry.model_dump(),
+                "method": method.model_dump(),
+            }
+        )
     )
 
     artifacts = []
@@ -148,6 +158,8 @@ def test_encoder_cli_replays_verified_artifacts_and_detects_mutation(tmp_path: P
         assert reported["data_sha256"] == hashlib.sha256(raw).hexdigest()
         assert reported["bundle_id"] == case.observation.meta.bundle_id
         assert reported["cables"][0]["spec"] == CABLE.model_dump()
+        assert reported["geometry"] == geometry.model_dump()
+        assert reported["method"] == method.model_dump()
         artifacts.append((raw, sidecar.read_bytes(), out.read_bytes()))
     assert artifacts[0] == artifacts[1]
 
@@ -159,6 +171,7 @@ def test_encoder_cli_replays_verified_artifacts_and_detects_mutation(tmp_path: P
     assert new["data_sha256"] != reported["data_sha256"]
     parquet.write_bytes(parquet.read_bytes() + b"altered")
     assert main(args) == 2
+    assert "sha256 mismatch" in capsys.readouterr().err
     assert json.loads(out.read_bytes()) == new
 
 
