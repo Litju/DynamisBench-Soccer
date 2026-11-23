@@ -1999,3 +1999,49 @@ issue = "RES-669"
 "tests/test_timing_contact.py::test_contact_refuses_injected_protocol_and_reordering_faults" = "48c37a490086ebe8c191258a4e1945ba63acd9854a7ce80a135d44e7224d5a49"
 "tests/test_timing_contact.py::test_injected_contact_latency_inside_protocol_shifts_flight_and_height" = "814cae2265f3f94aa720536cdc7b02b177425fda6e9ae5c7c8e4f9a80237698c"
 "tests/test_timing_contact.py::test_refuses_independent_contact_event_faults" = "34ddef8b5814c9a77b120cc8b630ef8843b1f7805287c4c845e3799c87b1bb0d"
+
+[[receipt]]
+id = "RCP-force_platform-single-I"
+dimension = "I"
+subfamilies = ["force_platform.single"]
+implementation = ["src/dynamisbench_soccer/engines/force_platform.py::process", "src/dynamisbench_soccer/engines/force_platform_acquisition.py::acquire"]
+reference = ["src/dynamisbench_soccer/reference/kinematics.py::cmj"]
+tests = ["tests/test_force_platform_policy_a.py::test_accepted_force_platform_uncertainty_matches_independent_corner_extrema", "tests/test_force_platform_policy_a.py::test_force_platform_aggregate_calibration_perturbation_and_bound_refusal"]
+reference_kind = "closed_form"
+independence = "The independent phase-based reference defines force and timing. The tests use analytical corner extrema and constant-force perturbation integration without relying on engine output for the expected values."
+check_kind = "numeric"
+claim = "Single-plate raw fixed-grid processing propagates the declared aggregate force, body-weight and initial-velocity error bounds under trapezoid and Simpson integration."
+tolerance_basis = "An accepted 75 kg CMJ with 0.05 N trial ripple uses 2 N on one plate for the 2 N aggregate force budget, 2.5 N weighing error and 0.02 m/s initial-velocity error. Independently enumerate force/weight perturbation corners and integrate their maximum acceleration error over 2.8 s. Absolute quadrature row norm is 1 for trapezoids and bounded conservatively by 1.5 for uniform-grid Simpson, whose subinterval weights have absolute sum 7/6. Expected velocity and displacement envelopes are 0.317501811078381 m/s and 0.889005071019468 m at 600 Hz trapezoid, or 0.466252717015502 m/s and 1.958261411465108 m at 1000 Hz Simpson. Actual 2 N perturbations at 1000 Hz with unchanged weighing give velocity change 2t/75 and displacement change t²/75. Time, velocity and displacement use absolute 1e-12 in their physical units, with a separate absolute 1e-14 s bound on event resolution 1/Hz+2e-12 s. All relative tolerances are zero. Filtered envelopes are withheld and a weight-error bound at or above nominal weight is refused."
+tolerance = 1e-12
+tolerance_unit = "m/s, m and s (absolute); 1e-14 s for event resolution"
+issue = "RES-670"
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/force_platform.py::process" = "ca3b9be95416aa1c48dbeeaadea7ccbe8ca9dbd7aaf341eec2572db5d0ec6e13"
+"src/dynamisbench_soccer/engines/force_platform_acquisition.py::acquire" = "f5d6601ab3f1e987b0add265a1f5f73303eb4d1bc6c6dadda49864f6f36ce645"
+"src/dynamisbench_soccer/reference/kinematics.py::cmj" = "c37e0d387e173c0b92a8e7a8f277195382a981a228bd6784f6b306b1be3f0821"
+"tests/test_force_platform_policy_a.py::test_accepted_force_platform_uncertainty_matches_independent_corner_extrema" = "4961166b513bf3532bc58f1c8213b31f820c51673543415a03b44c423d28f6a4"
+"tests/test_force_platform_policy_a.py::test_force_platform_aggregate_calibration_perturbation_and_bound_refusal" = "ba6a7474def8a3d5778fd66fdefe71e6141c67828042a4176dde156c3b5f4b8f"
+
+[[receipt]]
+id = "RCP-force_platform-dual-I"
+dimension = "I"
+subfamilies = ["force_platform.dual"]
+implementation = ["src/dynamisbench_soccer/engines/force_platform.py::process", "src/dynamisbench_soccer/engines/force_platform_acquisition.py::acquire"]
+reference = ["src/dynamisbench_soccer/reference/kinematics.py::cmj"]
+tests = ["tests/test_force_platform_policy_a.py::test_accepted_force_platform_uncertainty_matches_independent_corner_extrema", "tests/test_force_platform_policy_a.py::test_force_platform_aggregate_calibration_perturbation_and_bound_refusal"]
+reference_kind = "closed_form"
+independence = "The independent phase-based reference defines force and timing. The tests use analytical corner extrema and constant-force perturbation integration without relying on engine output for the expected values."
+check_kind = "numeric"
+claim = "Dual-plate raw fixed-grid processing propagates the declared aggregate force, body-weight and initial-velocity error bounds under trapezoid and Simpson integration."
+tolerance_basis = "An accepted 75 kg CMJ with 0.05 N trial ripple uses 0.6 and 1.4 N on two plates for the 2 N aggregate force budget, 2.5 N weighing error and 0.02 m/s initial-velocity error. Independently enumerate force/weight perturbation corners and integrate their maximum acceleration error over 2.8 s. Absolute quadrature row norm is 1 for trapezoids and bounded conservatively by 1.5 for uniform-grid Simpson, whose subinterval weights have absolute sum 7/6. Expected velocity and displacement envelopes are 0.317501811078381 m/s and 0.889005071019468 m at 600 Hz trapezoid, or 0.466252717015502 m/s and 1.958261411465108 m at 1000 Hz Simpson. Actual 2 N perturbations at 1000 Hz with unchanged weighing give velocity change 2t/75 and displacement change t²/75. Time, velocity and displacement use absolute 1e-12 in their physical units, with a separate absolute 1e-14 s bound on event resolution 1/Hz+2e-12 s. All relative tolerances are zero. Filtered envelopes are withheld and a weight-error bound at or above nominal weight is refused."
+tolerance = 1e-12
+tolerance_unit = "m/s, m and s (absolute); 1e-14 s for event resolution"
+issue = "RES-670"
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/force_platform.py::process" = "ca3b9be95416aa1c48dbeeaadea7ccbe8ca9dbd7aaf341eec2572db5d0ec6e13"
+"src/dynamisbench_soccer/engines/force_platform_acquisition.py::acquire" = "f5d6601ab3f1e987b0add265a1f5f73303eb4d1bc6c6dadda49864f6f36ce645"
+"src/dynamisbench_soccer/reference/kinematics.py::cmj" = "c37e0d387e173c0b92a8e7a8f277195382a981a228bd6784f6b306b1be3f0821"
+"tests/test_force_platform_policy_a.py::test_accepted_force_platform_uncertainty_matches_independent_corner_extrema" = "4961166b513bf3532bc58f1c8213b31f820c51673543415a03b44c423d28f6a4"
+"tests/test_force_platform_policy_a.py::test_force_platform_aggregate_calibration_perturbation_and_bound_refusal" = "ba6a7474def8a3d5778fd66fdefe71e6141c67828042a4176dde156c3b5f4b8f"

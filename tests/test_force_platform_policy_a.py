@@ -47,3 +47,116 @@ def test_force_platform_numerical_reconstruction_on_accepted_trials(
     states = [motion.state(float(t)) for t in result.time_s]
     assert np.max(np.abs(result.velocity_m_s - [s.velocity_m_s for s in states])) < 0.06
     assert np.max(np.abs(result.displacement_m - [s.displacement_m for s in states])) < 0.07
+
+
+@pytest.mark.parametrize(
+    ("family", "plate_budgets_n"),
+    [
+        ("force_platform.single", (2.0,)),
+        ("force_platform.dual", (0.6, 1.4)),
+    ],
+)
+@pytest.mark.parametrize(
+    ("hz", "method_name", "norm_bound"),
+    [
+        (600, "trapezoid", 1.0),
+        (1000, "simpson", 1.5),
+    ],
+)
+def test_accepted_force_platform_uncertainty_matches_independent_corner_extrema(
+    family: str, plate_budgets_n: tuple[float, ...], hz: int, method_name: str, norm_bound: float
+) -> None:
+    motion = cmj()
+    observation = _nonflat_observation(family, motion, hz)
+    gravity = 9.80665
+    total_error_n, weight_error_n, velocity_error_m_s = sum(plate_budgets_n), 2.5, 0.02
+    result = process(
+        observation,
+        method=MethodSpec(
+            integration=method_name,
+            calibration_force_bound_n=total_error_n,
+            body_weight_bound_n=weight_error_n,
+            initial_velocity_bound_m_s=velocity_error_m_s,
+        ),
+    )
+    assert result.verdict != "reject"
+
+    times = np.arange(observation.meta.n_rows) / hz
+    body_weight_n = 75 * gravity + np.sin(2 * np.pi * 17 * times[:hz]).mean() * 0.05
+    # The peak lies in the landing phase (13.5 m/s²), above the propulsion phase.
+    landing = (times > 1.75 + 5.4 / gravity) & (times < 1.95 + 5.4 / gravity)
+    peak_n = 75 * (gravity + 13.5) + np.max(0.05 * np.sin(2 * np.pi * 17 * times[landing]))
+    # Acceleration error is affine in force for fixed perturbed weight and
+    # monotonic in weight for fixed perturbed force. Its extrema lie at corners.
+    acceleration_error = max(
+        abs(gravity * ((force + error_f) / (body_weight_n + error_w) - force / body_weight_n))
+        for force in (0, peak_n)
+        for error_f in (-total_error_n, total_error_n)
+        for error_w in (-weight_error_n, weight_error_n)
+    )
+    duration_s = (observation.meta.n_rows - 1) / hz
+    expected_velocity = velocity_error_m_s + norm_bound * duration_s * acceleration_error
+    expected_displacement = norm_bound * duration_s * expected_velocity
+
+    uncertainty = result.uncertainty
+    assert uncertainty["velocity_input_error_envelope_m_s"] == pytest.approx(
+        expected_velocity, rel=0, abs=1e-12
+    )
+    assert uncertainty["displacement_input_error_envelope_m"] == pytest.approx(
+        expected_displacement, rel=0, abs=1e-12
+    )
+    assert uncertainty["sample_interval_s"] == pytest.approx(1 / hz, rel=0, abs=1e-12)
+    assert uncertainty["event_interval_resolution_s"] == pytest.approx(
+        1 / hz + 2e-12, rel=0, abs=1e-14
+    )
+    assert uncertainty["complete_measurement_uncertainty"] is False
+
+
+@pytest.mark.parametrize(
+    ("family", "increments"),
+    [
+        ("force_platform.single", {"fz": 2.0}),
+        ("force_platform.dual", {"fz_left": 0.6, "fz_right": 1.4}),
+    ],
+)
+def test_force_platform_aggregate_calibration_perturbation_and_bound_refusal(
+    family: str, increments: dict[str, float]
+) -> None:
+    hz = 1000
+    motion = cmj()
+    original = _nonflat_observation(family, motion, hz)
+    data = original.data.copy()
+    data.update({channel: data[channel] + delta for channel, delta in increments.items()})
+    shifted = SignalBundle(original.meta, data)
+    method = MethodSpec(
+        integration_start="record_start",
+        initial_velocity_m_s=0,
+        calibration_force_bound_n=2,
+        body_weight_bound_n=0,
+    )
+    # An independent unchanged weighing trace isolates force error from weight estimation.
+    clean = process(original, method=method, weighing=original)
+    altered = process(shifted, method=method, weighing=original)
+    assert clean.verdict != "reject" and altered.verdict != "reject"
+    t = np.arange(original.meta.n_rows) / hz
+    np.testing.assert_allclose(
+        altered.velocity_m_s - clean.velocity_m_s, 2 * t / 75, rtol=0, atol=1e-12
+    )
+    np.testing.assert_allclose(
+        altered.displacement_m - clean.displacement_m, t**2 / 75, rtol=0, atol=1e-12
+    )
+    assert clean.uncertainty["velocity_input_error_envelope_m_s"] == pytest.approx(
+        2 * t[-1] / 75, rel=0, abs=1e-12
+    )
+    unavailable = process(
+        original, method=method.model_copy(update={"filter": "butterworth"}), weighing=original
+    )
+    assert unavailable.uncertainty["velocity_input_error_envelope_m_s"] is None
+    assert unavailable.uncertainty["displacement_input_error_envelope_m"] is None
+    assert "filter-operator" in unavailable.uncertainty["input_envelope_unavailable"]
+    with pytest.raises(ValueError, match="bodyweight error bound must be smaller"):
+        process(
+            original,
+            method=method.model_copy(update={"body_weight_bound_n": 1000}),
+            weighing=original,
+        )

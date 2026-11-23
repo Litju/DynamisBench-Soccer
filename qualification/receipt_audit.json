@@ -55,9 +55,14 @@
    "verdict": "PARTIAL"
   },
   "RCP-force_platform-dual-I": {
-   "fix": "Dual-fixture test: per-plate calibration bounds propagate to envelope matching closed form.",
-   "reason": "The three cited tests (conditional uncertainty, filtered envelopes, threshold sensitivity) all run force_platform.single. Two-plate uncertainty combination is never exercised or compared with an analytic value.",
-   "verdict": "UNSUPPORTED"
+   "bound_digest": "e745457349435e0c641e71af987aedbe9fc829f8db8b59d51d558f2870386784",
+   "evidence_head": "eba71532279300975e1dad8f8d3a495697172bf3",
+   "fix": "",
+   "prior_fix": "Dual-fixture test: per-plate calibration bounds propagate to envelope matching closed form.",
+   "prior_reason": "The three cited tests (conditional uncertainty, filtered envelopes, threshold sensitivity) all run force_platform.single. Two-plate uncertainty combination is never exercised or compared with an analytic value.",
+   "prior_verdict": "UNSUPPORTED",
+   "reason": "Dual-plate raw fixed-grid processing propagates the declared aggregate force, body-weight and initial-velocity error bounds under trapezoid and Simpson integration. An accepted 75 kg CMJ with 0.05 N trial ripple uses 0.6 and 1.4 N on two plates for the 2 N aggregate force budget, 2.5 N weighing error and 0.02 m/s initial-velocity error. Independently enumerate force/weight perturbation corners and integrate their maximum acceleration error over 2.8 s. Absolute quadrature row norm is 1 for trapezoids and bounded conservatively by 1.5 for uniform-grid Simpson, whose subinterval weights have absolute sum 7/6. Expected velocity and displacement envelopes are 0.317501811078381 m/s and 0.889005071019468 m at 600 Hz trapezoid, or 0.466252717015502 m/s and 1.958261411465108 m at 1000 Hz Simpson. Actual 2 N perturbations at 1000 Hz with unchanged weighing give velocity change 2t/75 and displacement change t\u00b2/75. Time, velocity and displacement use absolute 1e-12 in their physical units, with a separate absolute 1e-14 s bound on event resolution 1/Hz+2e-12 s. All relative tolerances are zero. Filtered envelopes are withheld and a weight-error bound at or above nominal weight is refused.",
+   "verdict": "SUPPORTED"
   },
   "RCP-force_platform-dual-J": {
    "bound_digest": "4eaa7dc3b451bfd54d71e3cdcf28dfa57974ef10c1ea3a7ee3b371f32aeae4e8",
@@ -127,9 +132,14 @@
    "verdict": "PARTIAL"
   },
   "RCP-force_platform-single-I": {
-   "fix": "Assert envelope equals the closed form for declared bounds; make the receipt numeric.",
-   "reason": "Only the body-weight sensitivity is compared with a closed form ((0.98v)^2/2g). The velocity envelope is checked only as an upper bound on one 0.5 N offset, not against the analytic dF*t/m. The receipt is marked categorical but uses numeric approx comparisons.",
-   "verdict": "PARTIAL"
+   "bound_digest": "5db786ed50fdc51c36b238eece4e71e00963705bac6bd31d1c942ab749d619de",
+   "evidence_head": "eba71532279300975e1dad8f8d3a495697172bf3",
+   "fix": "",
+   "prior_fix": "Assert envelope equals the closed form for declared bounds; make the receipt numeric.",
+   "prior_reason": "Only the body-weight sensitivity is compared with a closed form ((0.98v)^2/2g). The velocity envelope is checked only as an upper bound on one 0.5 N offset, not against the analytic dF*t/m. The receipt is marked categorical but uses numeric approx comparisons.",
+   "prior_verdict": "PARTIAL",
+   "reason": "Single-plate raw fixed-grid processing propagates the declared aggregate force, body-weight and initial-velocity error bounds under trapezoid and Simpson integration. An accepted 75 kg CMJ with 0.05 N trial ripple uses 2 N on one plate for the 2 N aggregate force budget, 2.5 N weighing error and 0.02 m/s initial-velocity error. Independently enumerate force/weight perturbation corners and integrate their maximum acceleration error over 2.8 s. Absolute quadrature row norm is 1 for trapezoids and bounded conservatively by 1.5 for uniform-grid Simpson, whose subinterval weights have absolute sum 7/6. Expected velocity and displacement envelopes are 0.317501811078381 m/s and 0.889005071019468 m at 600 Hz trapezoid, or 0.466252717015502 m/s and 1.958261411465108 m at 1000 Hz Simpson. Actual 2 N perturbations at 1000 Hz with unchanged weighing give velocity change 2t/75 and displacement change t\u00b2/75. Time, velocity and displacement use absolute 1e-12 in their physical units, with a separate absolute 1e-14 s bound on event resolution 1/Hz+2e-12 s. All relative tolerances are zero. Filtered envelopes are withheld and a weight-error bound at or above nominal weight is refused.",
+   "verdict": "SUPPORTED"
   },
   "RCP-force_platform-single-J": {
    "bound_digest": "8b69797aae990236f154e716eddf0bc56f5722fa6826a7187430c6852e777c50",
