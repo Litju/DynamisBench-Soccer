@@ -33,6 +33,11 @@ def test_event_cli_replays_source_and_refuses_mutation(command, policy, tmp_path
             report["sources"][0]["data_sha256"] == hashlib.sha256(parquet.read_bytes()).hexdigest()
         )
         assert report["policy"] == policy.model_dump(mode="json")
+        assert report["policy_sha256"] == hashlib.sha256(config.read_bytes()).hexdigest()
+        assert (
+            report["sources"][0]["validated_metadata_sha256"]
+            == hashlib.sha256(sidecar.read_bytes()).hexdigest()
+        )
         evidence.append((output, parquet.read_bytes(), sidecar.read_bytes()))
     assert evidence[0] == evidence[1]
 
@@ -44,6 +49,18 @@ def test_event_cli_replays_source_and_refuses_mutation(command, policy, tmp_path
     new_hash = revised["sources"][0]["data_sha256"]
     assert new_hash == hashlib.sha256(parquet.read_bytes()).hexdigest()
     assert new_hash != report["sources"][0]["data_sha256"]
+    assert (
+        revised["sources"][0]["validated_metadata_sha256"]
+        != report["sources"][0]["validated_metadata_sha256"]
+    )
+
+    config.write_bytes(config.read_bytes() + b"\n")
+    assert main(args) == 0
+    new_policy = json.loads(capsys.readouterr().out)
+    assert new_policy["metrics"] == revised["metrics"]
+    assert new_policy["policy"] == revised["policy"]
+    assert new_policy["policy_sha256"] == hashlib.sha256(config.read_bytes()).hexdigest()
+    assert new_policy["policy_sha256"] != revised["policy_sha256"]
 
     parquet.write_bytes(parquet.read_bytes() + b"altered")
     assert main(args) == 1

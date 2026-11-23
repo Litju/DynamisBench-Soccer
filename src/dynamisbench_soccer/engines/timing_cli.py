@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import sys
 from dataclasses import asdict
@@ -18,16 +19,19 @@ def _run(args: argparse.Namespace) -> int:
         bundles = [io.read(path) for path in args.bundles]
 
         def evaluate(path: Path) -> dict[str, object]:
-            raw = path.read_text(encoding="utf-8")
+            raw = path.read_bytes()
+            policy_sha256 = hashlib.sha256(raw).hexdigest()
             if args.timing_command == "gates":
                 policy = GatePolicy.model_validate_json(raw)
                 return {
                     "policy": policy.model_dump(mode="json"),
+                    "policy_sha256": policy_sha256,
                     "metrics": asdict(sprint(bundles, policy)),
                 }
             contact_policy = ContactPolicy.model_validate_json(raw)
             return {
                 "policy": contact_policy.model_dump(mode="json"),
+                "policy_sha256": policy_sha256,
                 "metrics": asdict(contact(bundles[0], contact_policy)),
             }
 
@@ -46,6 +50,9 @@ def _run(args: argparse.Namespace) -> int:
                         {
                             "bundle_id": b.meta.bundle_id,
                             "data_sha256": b.meta.data_sha256,
+                            "validated_metadata_sha256": hashlib.sha256(
+                                io.meta_json(b.meta).encode("utf-8")
+                            ).hexdigest(),
                             "data_category": b.meta.data_category,
                             "test_id": b.meta.test_id,
                             "protocol": b.meta.protocol.model_dump(mode="json"),
