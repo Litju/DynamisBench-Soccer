@@ -422,3 +422,40 @@ def test_imu_complementary_gravity_gate_admits_biased_tilt_under_acceleration() 
     estimated = math.acos(float(result.rotation_field_from_sensor[-1, 2, 2]))
     assert angle > 0.1  # The true orientation is fixed, so this is a false tilt.
     assert estimated == pytest.approx(angle, rel=0, abs=1e-12)
+
+
+def test_injected_fixed_imu_misalignment_is_conditional_on_declared_calibration() -> None:
+    body = RigidBody(PlanarTrajectory((PlanarPhase(2, (0, 0)),)))
+    clean = export_case("imu.inertial", body, hz=100).observation
+    angle = 0.2
+    rotation = (
+        (1.0, 0.0, 0.0),
+        (0.0, math.cos(angle), -math.sin(angle)),
+        (0.0, math.sin(angle), math.cos(angle)),
+    )
+    mistilted = inject(clean, InertialFault(InertialKind.MISALIGNMENT, rotation=rotation))
+    spec = ImuSpec(
+        initial_orientation=imu.IDENTITY,
+        static_window_s=(0.2, 0.8),
+        end_static_window_s=(1.2, 1.8),
+        accel_range_m_s2=20,
+        gyro_range_rad_s=3,
+    )
+    nominal = process(clean, spec)
+    assert nominal.verdict == "accept"
+    affected = process(mistilted, spec)
+    assert affected.verdict == "accept"
+    # A constant wrong sensor calibration gives the same tilt at both windows.
+    # The slip detector therefore passes while the acceleration is biased.
+    assert _qc(affected, "IMU-SLIP") is Status.PASS
+    expected = np.array([0, -9.80665 * math.sin(angle), 9.80665 * (math.cos(angle) - 1)])
+    assert affected.free_acceleration_m_s2 is not None
+    np.testing.assert_allclose(
+        affected.free_acceleration_m_s2 - expected[None, :], 0, rtol=0, atol=1e-12
+    )
+    corrected = process(
+        mistilted,
+        spec.model_copy(update={"accel_misalignment": rotation, "calibration_declared": True}),
+    )
+    assert corrected.verdict == "accept"
+    np.testing.assert_allclose(corrected.free_acceleration_m_s2, 0, rtol=0, atol=1e-12)
