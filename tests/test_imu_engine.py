@@ -459,3 +459,32 @@ def test_injected_fixed_imu_misalignment_is_conditional_on_declared_calibration(
     )
     assert corrected.verdict == "accept"
     np.testing.assert_allclose(corrected.free_acceleration_m_s2, 0, rtol=0, atol=1e-12)
+
+
+def test_injected_imu_gyro_bias_flags_and_gyro_rail_rejects() -> None:
+    body = RigidBody(PlanarTrajectory((PlanarPhase(2, (0, 0)),)))
+    clean = export_case("imu.inertial", body, hz=100).observation
+    spec = ImuSpec(
+        initial_orientation=imu.IDENTITY, static_window_s=(0.2, 0.8), gyro_range_rad_s=0.05
+    )
+    good = process(clean, spec)
+    assert good.verdict == "accept"
+    assert _qc(good, "IMU-GYROBIAS") is Status.PASS
+    assert _qc(good, "IMU-SAT-GYRO") is Status.PASS
+
+    biased = inject(clean, InertialFault(InertialKind.BIAS, "angular_velocity", bias=(0.1, 0, 0)))
+    flagged = process(biased, spec.model_copy(update={"gyro_range_rad_s": 1}))
+    assert flagged.verdict == "accept_with_flags"
+    assert _qc(flagged, "IMU-GYROBIAS") is Status.FAIL
+    bias_rule = next(item for item in flagged.qc if item.rule_id == "IMU-GYROBIAS")
+    assert bias_rule.values["static_gyro_rad_s"] == pytest.approx(0.1, rel=0, abs=1e-12)
+
+    saturated = inject(
+        biased, InertialFault(InertialKind.SATURATION, "angular_velocity", limit=0.05)
+    )
+    rejected = process(saturated, spec)
+    assert rejected.verdict == "reject"
+    assert _qc(rejected, "IMU-SAT-GYRO") is Status.FAIL
+    assert rejected.report()["diagnostic_only"] is True
+    rail_rule = next(item for item in rejected.qc if item.rule_id == "IMU-SAT-GYRO")
+    assert rail_rule.values["samples_at_rail"] == clean.meta.n_rows
