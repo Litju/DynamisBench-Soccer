@@ -1,0 +1,113 @@
+{
+  "version": "m4.registry-task.v1",
+  "task": {
+    "id": "lps-repeat-session-change",
+    "revision": 1,
+    "family": "A",
+    "competencies": [
+      "C3",
+      "C4",
+      "C5",
+      "C7"
+    ],
+    "coverage_cell": "Conditional repeated-measures error, smallest worthwhile change and individual change",
+    "domain": "development-only same-method analytical summaries",
+    "protocol": "fixed-baseline-repeat-session",
+    "source": "gnss_lps.lps",
+    "convention": "fixed",
+    "answer_schema": "m5.measurement-answer.v1"
+  },
+  "reference_profile": "lps-repeat-session-change",
+  "engine": "m5-advanced-development.v1",
+  "grader": "measurement.v1",
+  "artifacts": [
+    {
+      "name": "repeat-session-01",
+      "path": "benchmark/fixtures/m5-repeat-session/repeat-session-01.json",
+      "sha256": "cafe0eab50c3334f949bb13f46d5ca58cd6687ec8545dc8b6252cd2d2230d555",
+      "category": "analytical",
+      "rights": "Repository-authored analytical summary values. No participant measurements.",
+      "usage": "reference"
+    },
+    {
+      "name": "repeat-session-02",
+      "path": "benchmark/fixtures/m5-repeat-session/repeat-session-02.json",
+      "sha256": "49d59b2d756216ae64894acdf217827ab9652c6e8caa05676af976516a392f1f",
+      "category": "analytical",
+      "rights": "Repository-authored analytical summary values. No participant measurements.",
+      "usage": "reference"
+    },
+    {
+      "name": "repeat-session-03",
+      "path": "benchmark/fixtures/m5-repeat-session/repeat-session-03.json",
+      "sha256": "6bebff645b8521d4a0120e5fe23d3db7ae5372fb97fa4ea15ececb27588375bd",
+      "category": "analytical",
+      "rights": "Repository-authored analytical summary values. No participant measurements.",
+      "usage": "reference"
+    },
+    {
+      "name": "repeat-session-04",
+      "path": "benchmark/fixtures/m5-repeat-session/repeat-session-04.json",
+      "sha256": "f85321a5805100f7c3f6ba39f0c3be75b0cdaebf981f0ddc5c18af96c71a7552",
+      "category": "analytical",
+      "rights": "Repository-authored analytical summary values. No participant measurements.",
+      "usage": "reference"
+    }
+  ],
+  "checkpoints": [
+    {
+      "id": "p1",
+      "prompt": "Use only the current artifact. Cohort rows are independent subjects, each reporting two single trials with the same synthetic measurement method under stable conditions. The individual is outside that cohort. Cohort trial error is transferable and independent of individual trial error by construction. Require unique cohort ID, at least three cohort subjects, distinct baseline and current session IDs, and the stated fixed-window minimum trial counts. Return refuse with reason not_eligible and claim duplicate_cohort_identity for a repeated cohort ID. For insufficient eligible sessions use reason insufficient_evidence and claim baseline_design_incomplete. For eligible data compute same-method typical error as the sample SD of cohort retest-minus-baseline divided by sqrt(2). Calculate SWC as the prespecified multiplier times the sample SD of cohort baselines. Give each individual baseline session equal weight, regardless of the number of trials. Calculate signed current-session mean minus the mean of the fixed three baseline session means. Use a conditional normal 95% interval under the stated independent trial model. Its variance is TE squared times (the reciprocal current trial count plus the sum of reciprocal baseline trial counts divided by the squared baseline session count). Use likely_real only if the entire interval excludes zero, otherwise within_noise. Separately use point_reaches_swc if the absolute point change meets SWC, otherwise point_below_swc. Use conditional_trial_model as an additional computation claim. This is an analytical trial model, without a native acquisition or empirical reliability claim. Return m5.measurement-answer.v1 using method fixed-session-change and cite ST-001, ST-005 and ST-006. For a computation, set reason eligible and select the artifact name alone. Set quantity to value, unit m/s, dimension speed, estimand horizontal_tag_speed_session_mean_change, and uncertainty as the interval half-width. Return ordered operands typical_error, swc, baseline_mean, current_mean, interval_lower, interval_upper with artifact, field and value. For refusals, set quantity to null, selected_trials and operands to empty arrays.",
+      "artifacts": [
+        "repeat-session-01"
+      ]
+    },
+    {
+      "id": "p2",
+      "prompt": "Use only the current artifact. Cohort rows are independent subjects, each reporting two single trials with the same synthetic measurement method under stable conditions. The individual is outside that cohort. Cohort trial error is transferable and independent of individual trial error by construction. Require unique cohort ID, at least three cohort subjects, distinct baseline and current session IDs, and the stated fixed-window minimum trial counts. Return refuse with reason not_eligible and claim duplicate_cohort_identity for a repeated cohort ID. For insufficient eligible sessions use reason insufficient_evidence and claim baseline_design_incomplete. For eligible data compute same-method typical error as the sample SD of cohort retest-minus-baseline divided by sqrt(2). Calculate SWC as the prespecified multiplier times the sample SD of cohort baselines. Give each individual baseline session equal weight, regardless of the number of trials. Calculate signed current-session mean minus the mean of the fixed three baseline session means. Use a conditional normal 95% interval under the stated independent trial model. Its variance is TE squared times (the reciprocal current trial count plus the sum of reciprocal baseline trial counts divided by the squared baseline session count). Use likely_real only if the entire interval excludes zero, otherwise within_noise. Separately use point_reaches_swc if the absolute point change meets SWC, otherwise point_below_swc. Use conditional_trial_model as an additional computation claim. This is an analytical trial model, without a native acquisition or empirical reliability claim. Return m5.measurement-answer.v1 using method fixed-session-change and cite ST-001, ST-005 and ST-006. For a computation, set reason eligible and select the artifact name alone. Set quantity to value, unit m/s, dimension speed, estimand horizontal_tag_speed_session_mean_change, and uncertainty as the interval half-width. Return ordered operands typical_error, swc, baseline_mean, current_mean, interval_lower, interval_upper with artifact, field and value. For refusals, set quantity to null, selected_trials and operands to empty arrays.",
+      "artifacts": [
+        "repeat-session-02"
+      ]
+    },
+    {
+      "id": "p3",
+      "prompt": "Use only the current artifact. Cohort rows are independent subjects, each reporting two single trials with the same synthetic measurement method under stable conditions. The individual is outside that cohort. Cohort trial error is transferable and independent of individual trial error by construction. Require unique cohort ID, at least three cohort subjects, distinct baseline and current session IDs, and the stated fixed-window minimum trial counts. Return refuse with reason not_eligible and claim duplicate_cohort_identity for a repeated cohort ID. For insufficient eligible sessions use reason insufficient_evidence and claim baseline_design_incomplete. For eligible data compute same-method typical error as the sample SD of cohort retest-minus-baseline divided by sqrt(2). Calculate SWC as the prespecified multiplier times the sample SD of cohort baselines. Give each individual baseline session equal weight, regardless of the number of trials. Calculate signed current-session mean minus the mean of the fixed three baseline session means. Use a conditional normal 95% interval under the stated independent trial model. Its variance is TE squared times (the reciprocal current trial count plus the sum of reciprocal baseline trial counts divided by the squared baseline session count). Use likely_real only if the entire interval excludes zero, otherwise within_noise. Separately use point_reaches_swc if the absolute point change meets SWC, otherwise point_below_swc. Use conditional_trial_model as an additional computation claim. This is an analytical trial model, without a native acquisition or empirical reliability claim. Return m5.measurement-answer.v1 using method fixed-session-change and cite ST-001, ST-005 and ST-006. For a computation, set reason eligible and select the artifact name alone. Set quantity to value, unit m/s, dimension speed, estimand horizontal_tag_speed_session_mean_change, and uncertainty as the interval half-width. Return ordered operands typical_error, swc, baseline_mean, current_mean, interval_lower, interval_upper with artifact, field and value. For refusals, set quantity to null, selected_trials and operands to empty arrays.",
+      "artifacts": [
+        "repeat-session-03"
+      ]
+    },
+    {
+      "id": "p4",
+      "prompt": "Use only the current artifact. Cohort rows are independent subjects, each reporting two single trials with the same synthetic measurement method under stable conditions. The individual is outside that cohort. Cohort trial error is transferable and independent of individual trial error by construction. Require unique cohort ID, at least three cohort subjects, distinct baseline and current session IDs, and the stated fixed-window minimum trial counts. Return refuse with reason not_eligible and claim duplicate_cohort_identity for a repeated cohort ID. For insufficient eligible sessions use reason insufficient_evidence and claim baseline_design_incomplete. For eligible data compute same-method typical error as the sample SD of cohort retest-minus-baseline divided by sqrt(2). Calculate SWC as the prespecified multiplier times the sample SD of cohort baselines. Give each individual baseline session equal weight, regardless of the number of trials. Calculate signed current-session mean minus the mean of the fixed three baseline session means. Use a conditional normal 95% interval under the stated independent trial model. Its variance is TE squared times (the reciprocal current trial count plus the sum of reciprocal baseline trial counts divided by the squared baseline session count). Use likely_real only if the entire interval excludes zero, otherwise within_noise. Separately use point_reaches_swc if the absolute point change meets SWC, otherwise point_below_swc. Use conditional_trial_model as an additional computation claim. This is an analytical trial model, without a native acquisition or empirical reliability claim. Return m5.measurement-answer.v1 using method fixed-session-change and cite ST-001, ST-005 and ST-006. For a computation, set reason eligible and select the artifact name alone. Set quantity to value, unit m/s, dimension speed, estimand horizontal_tag_speed_session_mean_change, and uncertainty as the interval half-width. Return ordered operands typical_error, swc, baseline_mean, current_mean, interval_lower, interval_upper with artifact, field and value. For refusals, set quantity to null, selected_trials and operands to empty arrays.",
+      "artifacts": [
+        "repeat-session-04"
+      ]
+    }
+  ],
+  "methods": [
+    {
+      "id": "fixed-session-change",
+      "estimand": "horizontal_tag_speed_session_mean_change",
+      "dimension": "speed",
+      "unit": "m/s",
+      "specification": {
+        "operation": "fixed-session-change"
+      },
+      "sampling": "Analytical horizontal tag speed summaries only, with one baseline and retest trial per cohort subject and separate individual sessions.",
+      "clock": "Chronological named sessions, with no raw time-series or synchronization inference.",
+      "geometry": "A common declared horizontal tag speed estimand, with no native geometrical validation.",
+      "qc": "Distinct cohort and session identities, complete observations, and complete fixed-window trial counts.",
+      "eligibility": "Cohort stable under independent homogeneous trial errors. Target outside cohort. Typical error transferred only under declared homogeneous conditions.",
+      "uncertainty": "Fixed equal session weighting and conditional normal trial-error interval. Cohort typical error treated as a known plug-in parameter, without accounting for its estimation error.",
+      "absolute_tolerance": 1e-10,
+      "limitations": [
+        "Conditional analytical summaries only. No LPS device validation, empirical repeatability, native acquisition evidence, or advice for an athlete."
+      ],
+      "source_claims": [
+        "ST-001",
+        "ST-005",
+        "ST-006"
+      ]
+    }
+  ]
+}

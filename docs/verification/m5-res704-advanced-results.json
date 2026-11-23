@@ -1,0 +1,478 @@
+{
+  "catalog_sha256": "3567b4bdf54cda5ff45c4e3508b3b662e8b0365f1c3e78b1c6195fe36afb09cb",
+  "head": "972393d5193fba70b374af04cdc7984fd8307dbb",
+  "legacy_profile_regression": {
+    "contact-flight-height@1": {
+      "admission": "ENGINEERING_ADMITTED",
+      "false_fail": 0,
+      "false_pass": 0,
+      "isolation": "PASS",
+      "score": {
+        "naive": {
+          "FAIL": 6
+        },
+        "null": {
+          "FAIL": 6
+        },
+        "oracle": {
+          "PASS": 6
+        },
+        "random": {
+          "FAIL": 6
+        }
+      },
+      "task_sha256": "3af6670925f0ca8e27f0da6a42426c70cb5ca668dfbc8509fd280bb916700d34"
+    },
+    "gate-split-speed@1": {
+      "admission": "ENGINEERING_ADMITTED",
+      "false_fail": 0,
+      "false_pass": 0,
+      "isolation": "PASS",
+      "score": {
+        "naive": {
+          "FAIL": 7
+        },
+        "null": {
+          "FAIL": 7
+        },
+        "oracle": {
+          "PASS": 7
+        },
+        "random": {
+          "FAIL": 7
+        }
+      },
+      "task_sha256": "5a8bc1c03eddbcbae1c058096917c60ae5a474c3a661d0760762c856e82cd8d0"
+    },
+    "gnss-positional-speed@1": {
+      "admission": "ENGINEERING_ADMITTED",
+      "false_fail": 0,
+      "false_pass": 0,
+      "isolation": "PASS",
+      "score": {
+        "naive": {
+          "FAIL": 6
+        },
+        "null": {
+          "FAIL": 6
+        },
+        "oracle": {
+          "PASS": 6
+        },
+        "random": {
+          "FAIL": 6
+        }
+      },
+      "task_sha256": "afbeca160753c19426fdb26ecf11887e5430ffaa74627ec8aba00ab2d68f2223"
+    },
+    "lps-filter-sensitivity@1": {
+      "admission": "ENGINEERING_ADMITTED",
+      "false_fail": 0,
+      "false_pass": 0,
+      "isolation": "PASS",
+      "score": {
+        "naive": {
+          "FAIL": 6
+        },
+        "null": {
+          "FAIL": 6
+        },
+        "oracle": {
+          "PASS": 6
+        },
+        "random": {
+          "FAIL": 6
+        }
+      },
+      "task_sha256": "9879c631d736158751ebece7ac6f4f9fab5aeb6346f41611359ec1f3f0b73b78"
+    }
+  },
+  "paired_task": {
+    "admission": "ENGINEERING_ADMITTED",
+    "admission_controls": {
+      "invalid_pin": "REFUSED",
+      "stale_artifact": "REFUSED",
+      "stale_receipt": "REFUSED"
+    },
+    "cleanup_errors": 0,
+    "controls": {
+      "bias_only_tolerance": {
+        "actual": "FAIL",
+        "expected": "FAIL",
+        "findings": [
+          "interpretation_boundary"
+        ],
+        "passed": true,
+        "repeatable": true
+      },
+      "claim_order": {
+        "actual": "PASS",
+        "expected": "PASS",
+        "findings": [],
+        "passed": true,
+        "repeatable": true
+      },
+      "compute_after_definition_mismatch": {
+        "actual": "FAIL",
+        "expected": "FAIL",
+        "findings": [
+          "eligibility_or_refusal",
+          "trial_selection",
+          "interpretation_boundary",
+          "derivation",
+          "quantity_absent_or_unexpected"
+        ],
+        "passed": true,
+        "repeatable": true
+      },
+      "contradictory_free_text": {
+        "actual": "FAIL",
+        "expected": "FAIL",
+        "findings": [
+          "invalid_submission"
+        ],
+        "passed": true,
+        "repeatable": true
+      },
+      "copied_radial_value": {
+        "actual": "FAIL",
+        "expected": "FAIL",
+        "findings": [
+          "value"
+        ],
+        "passed": true,
+        "repeatable": true
+      },
+      "correct_refusal": {
+        "actual": "PASS",
+        "expected": "PASS",
+        "findings": [],
+        "passed": true,
+        "repeatable": true
+      },
+      "dropped_evidence": {
+        "actual": "FAIL",
+        "expected": "FAIL",
+        "findings": [
+          "derivation"
+        ],
+        "passed": true,
+        "repeatable": true
+      },
+      "inside_tolerance": {
+        "actual": "PASS",
+        "expected": "PASS",
+        "findings": [],
+        "passed": true,
+        "repeatable": true
+      },
+      "invented_equivalence": {
+        "actual": "FAIL",
+        "expected": "FAIL",
+        "findings": [
+          "interpretation_boundary"
+        ],
+        "passed": true,
+        "repeatable": true
+      },
+      "numeric_error": {
+        "actual": "FAIL",
+        "expected": "FAIL",
+        "findings": [
+          "value"
+        ],
+        "passed": true,
+        "repeatable": true
+      },
+      "omitted_common_offset_uncertainty": {
+        "actual": "FAIL",
+        "expected": "FAIL",
+        "findings": [
+          "uncertainty"
+        ],
+        "passed": true,
+        "repeatable": true
+      },
+      "p5_correct_qc": {
+        "actual": "PASS",
+        "expected": "PASS",
+        "findings": [],
+        "passed": true,
+        "repeatable": true
+      },
+      "p5_ignored_qc": {
+        "actual": "FAIL",
+        "expected": "FAIL",
+        "findings": [
+          "eligibility_or_refusal",
+          "trial_selection",
+          "interpretation_boundary",
+          "derivation",
+          "quantity_absent_or_unexpected"
+        ],
+        "passed": true,
+        "repeatable": true
+      },
+      "p5_wrong_qc_finding": {
+        "actual": "FAIL",
+        "expected": "FAIL",
+        "findings": [
+          "interpretation_boundary"
+        ],
+        "passed": true,
+        "repeatable": true
+      },
+      "p6_correct_qc": {
+        "actual": "PASS",
+        "expected": "PASS",
+        "findings": [],
+        "passed": true,
+        "repeatable": true
+      },
+      "p6_ignored_qc": {
+        "actual": "FAIL",
+        "expected": "FAIL",
+        "findings": [
+          "eligibility_or_refusal",
+          "trial_selection",
+          "interpretation_boundary",
+          "derivation",
+          "quantity_absent_or_unexpected"
+        ],
+        "passed": true,
+        "repeatable": true
+      },
+      "p6_wrong_qc_finding": {
+        "actual": "FAIL",
+        "expected": "FAIL",
+        "findings": [
+          "interpretation_boundary"
+        ],
+        "passed": true,
+        "repeatable": true
+      },
+      "p7_correct_qc": {
+        "actual": "PASS",
+        "expected": "PASS",
+        "findings": [],
+        "passed": true,
+        "repeatable": true
+      },
+      "p7_ignored_qc": {
+        "actual": "FAIL",
+        "expected": "FAIL",
+        "findings": [
+          "eligibility_or_refusal",
+          "trial_selection",
+          "interpretation_boundary",
+          "derivation",
+          "quantity_absent_or_unexpected"
+        ],
+        "passed": true,
+        "repeatable": true
+      },
+      "p7_wrong_qc_finding": {
+        "actual": "FAIL",
+        "expected": "FAIL",
+        "findings": [
+          "interpretation_boundary"
+        ],
+        "passed": true,
+        "repeatable": true
+      },
+      "positive": {
+        "actual": "PASS",
+        "expected": "PASS",
+        "findings": [],
+        "passed": true,
+        "repeatable": true
+      },
+      "reversed_bias_sign": {
+        "actual": "FAIL",
+        "expected": "FAIL",
+        "findings": [
+          "value"
+        ],
+        "passed": true,
+        "repeatable": true
+      },
+      "shrink_common_offset_by_pair_count": {
+        "actual": "FAIL",
+        "expected": "FAIL",
+        "findings": [
+          "uncertainty"
+        ],
+        "passed": true,
+        "repeatable": true
+      },
+      "te_or_change_inferred_from_paired_devices": {
+        "actual": "FAIL",
+        "expected": "FAIL",
+        "findings": [
+          "interpretation_boundary"
+        ],
+        "passed": true,
+        "repeatable": true
+      },
+      "unnecessary_abstention": {
+        "actual": "FAIL",
+        "expected": "FAIL",
+        "findings": [
+          "eligibility_or_refusal",
+          "trial_selection",
+          "interpretation_boundary",
+          "derivation",
+          "quantity_absent_or_unexpected"
+        ],
+        "passed": true,
+        "repeatable": true
+      },
+      "wrong_acquisition_source": {
+        "actual": "FAIL",
+        "expected": "FAIL",
+        "findings": [
+          "derivation"
+        ],
+        "passed": true,
+        "repeatable": true
+      },
+      "wrong_citation": {
+        "actual": "FAIL",
+        "expected": "FAIL",
+        "findings": [
+          "source_citations"
+        ],
+        "passed": true,
+        "repeatable": true
+      },
+      "wrong_coordinate_frame": {
+        "actual": "FAIL",
+        "expected": "FAIL",
+        "findings": [
+          "interpretation_boundary"
+        ],
+        "passed": true,
+        "repeatable": true
+      },
+      "wrong_estimand": {
+        "actual": "FAIL",
+        "expected": "FAIL",
+        "findings": [
+          "estimand"
+        ],
+        "passed": true,
+        "repeatable": true
+      },
+      "wrong_method": {
+        "actual": "FAIL",
+        "expected": "FAIL",
+        "findings": [
+          "unsupported_method"
+        ],
+        "passed": true,
+        "repeatable": true
+      },
+      "wrong_pair_identity": {
+        "actual": "FAIL",
+        "expected": "FAIL",
+        "findings": [
+          "trial_selection"
+        ],
+        "passed": true,
+        "repeatable": true
+      },
+      "wrong_refusal_reason": {
+        "actual": "FAIL",
+        "expected": "FAIL",
+        "findings": [
+          "eligibility_or_refusal"
+        ],
+        "passed": true,
+        "repeatable": true
+      },
+      "wrong_uncertainty": {
+        "actual": "FAIL",
+        "expected": "FAIL",
+        "findings": [
+          "uncertainty"
+        ],
+        "passed": true,
+        "repeatable": true
+      },
+      "wrong_units": {
+        "actual": "FAIL",
+        "expected": "FAIL",
+        "findings": [
+          "unit_or_dimension"
+        ],
+        "passed": true,
+        "repeatable": true
+      }
+    },
+    "environment": {
+      "candidate_python": "Python 3.12.3",
+      "host_python": "3.12.13",
+      "lockfile_sha256": "7fb1024b1c70e5a4eea523bb3f751b0e45219a4d7d7a4a968d2ef6008b5a31c0",
+      "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+      "python_binary_sha256": "e50d468e8b0adfb05733f5b87b3cff34829c4a8c1aea50c865aa8bdfe4bb150f",
+      "sandbox_binary_sha256": "e318903862396f96de3df57264e0158682b952fd3fb53ac23d876413e7b30f71"
+    },
+    "execution_errors": {
+      "naive": 0,
+      "null": 0,
+      "oracle": 0,
+      "random": 0
+    },
+    "false_fail": 0,
+    "false_pass": 0,
+    "isolation": "PASS",
+    "oracle_sha256": "dccc662998aa7d82c0a1ff5b162f4cd685ae60b862207659adf42194d9f692ec",
+    "reasons": [],
+    "receipt_digests": {
+      "RCP-gnss_lps-lps-A": "30bcd840d016d3c1aee1a204282e87637b447e8c0537c46a5ac998d9bc481364",
+      "RCP-gnss_lps-lps-B": "f1a1e74ebb2ca2db3b426c6b4795e14ed5e3c18e5b781fd2927a0c6f7597f7da",
+      "RCP-gnss_lps-lps-C": "b348df290902c955b2aaf076add1f871bfdf8435ef41670123fc6f49656ea719",
+      "RCP-gnss_lps-lps-D": "67e889cfd09bccaafdc9ba32932b9b59867f8d9bed35053bb1fcd397b87da72e",
+      "RCP-gnss_lps-lps-E": "714ed44f813713fbebc1daa0e0a9b85535d3d8576ca6721a2608684f59263ed0",
+      "RCP-gnss_lps-lps-F": "94ac91b74dada07238625d2892d7a78f4a74b52e4e2f1270dfbfe6084aa78f0f",
+      "RCP-gnss_lps-lps-H-native-assessment": "012ef9045a37c0be261301c5001dd5ccc45be9e228089157422b742fcd692a0a",
+      "RCP-gnss_lps-lps-I-paired-speed": "0cc28dc61e0422ba37f0e61e6f575636a0855c2ff266d13ad61e8eaeb711af98",
+      "RCP-gnss_lps-lps-J": "00b3e06dc4c69f1a1228a8a2e91732a39749f8ee5e8467a76b86bcd78332c4e3",
+      "RCP-gnss_lps-lps-K": "091768cf686effc5ed94337ed3c49416370dba7fec1fe9dea0bf1ade0bee29f4",
+      "RCP-gnss_lps-lps-L-paired-speed": "92bc8d4784199a287675e8a593c8366cb3b804c00c77298194d62da3ecb4106f",
+      "RCP-gnss_lps-lps-M": "5e97363a4f099153f06efdde5ec6761d8a3c9777c81df97115a9e454f00f4639",
+      "RCP-gnss_lps-lps-O": "776df5d4552c6ddf372941e3fef990f0a4c11f90d26cf1cda7e3dc21baf3a380"
+    },
+    "replay_differences": 0,
+    "score": {
+      "naive": {
+        "FAIL": 7
+      },
+      "null": {
+        "FAIL": 7
+      },
+      "oracle": {
+        "PASS": 7
+      },
+      "random": {
+        "FAIL": 7
+      }
+    },
+    "source_digests": {
+      "pair-sequence-01": "7bce48bdae3652d198adf67cebe62af3e7beade43c33d382bc9b18256a02e765",
+      "pair-sequence-02": "c9c50d0d7565ca305fb9c9f61a6620b47292959c6622b9469e32cda739f300ed",
+      "pair-sequence-03": "cd96169258904f60fd7fab4a516e39c2c281d914db34e15fd5e87fb06489ed68",
+      "pair-sequence-04": "b301d7baebcf9e63dc441ebcb02967eb38af252086f3f5639ba2a8ec964c9e39",
+      "pair-sequence-05": "44768f440521152eafea298481d169901c67e9763d3abebb6ca4a29cb6c348a9",
+      "pair-sequence-06": "0072bfcbba30518d9226e620ff366f3af544c2450d72b51940f6ad952d704857",
+      "pair-sequence-07": "5c475fb124114cf85b5975e7f70a7d1901044b7639dcb4b506e60249d6d15ed7"
+    },
+    "task_sha256": "ce03235d958cf7b11a74cac68ca807e507524e86514039a1ad716354750264e1"
+  },
+  "runner_limits": {
+    "max_output_bytes": 16384,
+    "max_source_bytes": 65536,
+    "wall_s": 3
+  },
+  "seed": 704
+}

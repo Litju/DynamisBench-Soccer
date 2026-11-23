@@ -249,6 +249,12 @@ def _replay_lps(
 def _measurement_binding(task: RegistryTask, review: ReviewedSlice) -> bool:
     method = task.methods[0]
     procedure = measurement.PROCEDURES.get(method.id)
+    if method.id == "paired-speed-bias" and any(
+        role not in review.evidence
+        or review.evidence[role].id != f"RCP-gnss_lps-lps-{role}-paired-speed"
+        for role in ("I", "L")
+    ):
+        return False
     return (
         task.grader == measurement.GRADER
         and task.task.answer_schema == measurement.ANSWER_VERSION

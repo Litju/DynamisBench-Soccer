@@ -110,3 +110,40 @@ def test_source_hash_and_frame_are_enforced():
     definition = record.declaration.model_copy(update={"lps_z_up_frame": "sensor"})
     with pytest.raises(ValueError, match="Z-up"):
         compare(record.model_copy(update={"declaration": definition}))
+
+
+def test_paired_grader_requires_the_exact_uncertainty_and_agreement_receipts():
+    from dynamisbench_soccer.m4.admission import ReceiptBinding, ReviewedSlice
+    from dynamisbench_soccer.m4.custody import AnswerLocation
+    from dynamisbench_soccer.m4.grader import _measurement_binding
+    from dynamisbench_soccer.m4.measurement import PROCEDURES
+    from dynamisbench_soccer.m4.task_registry import fingerprint, load_registry
+
+    registry = Path(__file__).resolve().parents[1] / "benchmark/tasks"
+    task = load_registry(registry)["paired-lps-radar-agreement", 1]
+    procedure = PROCEDURES[task.methods[0].id]
+    placeholder = "0" * 64
+    evidence = {
+        role: ReceiptBinding(id=f"RCP-gnss_lps-lps-{role}-paired-speed", sha256=placeholder)
+        for role in ("I", "L")
+    }
+    review = ReviewedSlice(
+        task_sha256=fingerprint(task),
+        source=procedure.source,
+        kind=procedure.kind,
+        evidence=evidence,
+        inapplicable={},
+        implementations=tuple(f"src/dynamisbench_soccer/{dep}" for dep in procedure.dependencies),
+        oracle=("test-only oracle",),
+        files={},
+        answer=AnswerLocation(id="test-only", sha256=placeholder),
+        private_inputs_sha256=dict.fromkeys(("expected", "oracle", "provenance"), placeholder),
+        reviewer="test only",
+        review_url="test only",
+        review_head="0" * 40,
+    )
+    assert _measurement_binding(task, review)
+    for role, other in (("I", "I-native-bounds"), ("L", "L")):
+        wrong = ReceiptBinding(id=f"RCP-gnss_lps-lps-{other}", sha256=placeholder)
+        changed = review.model_copy(update={"evidence": evidence | {role: wrong}})
+        assert not _measurement_binding(task, changed)
