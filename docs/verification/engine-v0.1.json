@@ -1768,14 +1768,12 @@
         "H: metric definitions are bound to sourced registry claims and executable exactly (owner RES-673; rated partial)",
         "I: declared uncertainty propagation is checked against an independent analytical result (owner RES-699; rated partial)",
         "J: an independent reference implementation or closed form that shares no code with the engine (owner RES-669; rated partial)",
-        "K: synthetic fault fixtures cover the declared fault classes with expected verdicts (owner RES-669; rated partial)",
         "M: seeded, hash-bound provenance chain for every processing stage, reproduced exactly (owner RES-699; rated partial)",
         "O: limitation statements are sourced and emitted with every result (owner RES-699; rated partial)"
       ],
       "radar_laser.radar": [
         "B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-699; rated specified)",
         "E: every processing method variant is compared with an independent reference with stated sensitivity bounds (owner RES-699; rated partial)",
-        "K: synthetic fault fixtures cover the declared fault classes with expected verdicts (owner RES-669; rated partial)",
         "L: analytical cross-device studies are executed and classified, never read as interchangeability (owner RES-703; rated partial)",
         "M: seeded, hash-bound provenance chain for every processing stage, reproduced exactly (owner RES-699; rated partial)",
         "O: limitation statements are sourced and emitted with every result (owner RES-699; rated partial)"
@@ -3485,6 +3483,7 @@
       "analytical_only_dimensions": [
         "C",
         "F",
+        "K",
         "L"
       ],
       "blockers": [
@@ -3496,7 +3495,6 @@
         "H: metric definitions are bound to sourced registry claims and executable exactly (owner RES-673; rated partial)",
         "I: declared uncertainty propagation is checked against an independent analytical result (owner RES-699; rated partial)",
         "J: an independent reference implementation or closed form that shares no code with the engine (owner RES-669; rated partial)",
-        "K: synthetic fault fixtures cover the declared fault classes with expected verdicts (owner RES-669; rated partial)",
         "M: seeded, hash-bound provenance chain for every processing stage, reproduced exactly (owner RES-699; rated partial)",
         "O: limitation statements are sourced and emitted with every result (owner RES-699; rated partial)"
       ],
@@ -3554,7 +3552,7 @@
         "H": "partial",
         "I": "partial",
         "J": "partial",
-        "K": "partial",
+        "K": "verified",
         "L": "verified",
         "M": "partial",
         "N": "absent",
@@ -3566,6 +3564,9 @@
         ],
         "F": [
           "RCP-radar_laser-laser-F"
+        ],
+        "K": [
+          "RCP-radar_laser-laser-K"
         ],
         "L": [
           "RCP-radar_laser-laser-L"
@@ -3580,7 +3581,6 @@
         "H": "metric definitions are bound to sourced registry claims and executable exactly",
         "I": "declared uncertainty propagation is checked against an independent analytical result",
         "J": "an independent reference implementation or closed form that shares no code with the engine",
-        "K": "synthetic fault fixtures cover the declared fault classes with expected verdicts",
         "M": "seeded, hash-bound provenance chain for every processing stage, reproduced exactly",
         "O": "limitation statements are sourced and emitted with every result"
       },
@@ -3595,13 +3595,13 @@
         "H",
         "I",
         "J",
-        "K",
         "M",
         "O"
       ],
       "verified_m3": [
         "C",
         "F",
+        "K",
         "L"
       ]
     },
@@ -3614,12 +3614,12 @@
         "G",
         "H",
         "I",
-        "J"
+        "J",
+        "K"
       ],
       "blockers": [
         "B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-699; rated specified)",
         "E: every processing method variant is compared with an independent reference with stated sensitivity bounds (owner RES-699; rated partial)",
-        "K: synthetic fault fixtures cover the declared fault classes with expected verdicts (owner RES-669; rated partial)",
         "L: analytical cross-device studies are executed and classified, never read as interchangeability (owner RES-703; rated partial)",
         "M: seeded, hash-bound provenance chain for every processing stage, reproduced exactly (owner RES-699; rated partial)",
         "O: limitation statements are sourced and emitted with every result (owner RES-699; rated partial)"
@@ -3678,7 +3678,7 @@
         "H": "verified",
         "I": "verified",
         "J": "verified",
-        "K": "partial",
+        "K": "verified",
         "L": "partial",
         "M": "partial",
         "N": "absent",
@@ -3708,12 +3708,14 @@
         ],
         "J": [
           "RCP-radar_laser-radar-J"
+        ],
+        "K": [
+          "RCP-radar_laser-radar-K"
         ]
       },
       "required_computational": {
         "B": "declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused",
         "E": "every processing method variant is compared with an independent reference with stated sensitivity bounds",
-        "K": "synthetic fault fixtures cover the declared fault classes with expected verdicts",
         "L": "analytical cross-device studies are executed and classified, never read as interchangeability",
         "M": "seeded, hash-bound provenance chain for every processing stage, reproduced exactly",
         "O": "limitation statements are sourced and emitted with every result"
@@ -3723,7 +3725,6 @@
       "unverified_m3": [
         "B",
         "E",
-        "K",
         "L",
         "M",
         "O"
@@ -3736,7 +3737,8 @@
         "G",
         "H",
         "I",
-        "J"
+        "J",
+        "K"
       ]
     },
     {

@@ -811,20 +811,21 @@ reference_kind = "closed_form"
 independence = "The mono-exponential sprint and its gate-time inverse are closed forms in the reference substrate; that module imports no engine or assessment code."
 check_kind = "categorical"
 tolerance_unit = ""
-tolerance_basis = "Exact outcomes asserted by the cited tests: expected refusals, verdicts, classifications and counts, with no numeric tolerance."
+tolerance_basis = "Native radar accepts the intact source and refuses processed, decoded as analytical truth, wrong-device, conflicting declaration, decimated and invalid timing data as asserted by the cited categorical controls. A decimation tag alone cannot authorize manufacturer processing."
 tolerance = 0.0
 subfamilies = ["radar_laser.radar"]
 implementation = ["src/dynamisbench_soccer/engines/radar_laser_acquisition.py::admit"]
 reference = ["src/dynamisbench_soccer/reference/motion_models.py::MonoExponentialSprint"]
-tests = ["tests/test_radar_laser_acquisition.py::test_admits_distinct_native_measurands_and_affine_clocks", "tests/test_radar_laser_acquisition.py::test_rejects_truth_wrong_device_and_undeclared_processing_stage", "tests/test_radar_laser_acquisition.py::test_processed_data_are_admitted_only_under_honest_stage", "tests/test_radar_laser_acquisition.py::test_source_calibration_ambiguity_refuses"]
+tests = ["tests/test_radar_laser_processing.py::test_native_radar_laser_refuse_resampling_dropouts_and_clipping", "tests/test_radar_laser_acquisition.py::test_admits_distinct_native_measurands_and_affine_clocks", "tests/test_radar_laser_acquisition.py::test_rejects_truth_wrong_device_and_undeclared_processing_stage", "tests/test_radar_laser_acquisition.py::test_processed_data_are_admitted_only_under_honest_stage", "tests/test_radar_laser_acquisition.py::test_source_calibration_ambiguity_refuses"]
 
 [receipt.digests]
-"src/dynamisbench_soccer/engines/radar_laser_acquisition.py::admit" = "3cbcb0ccf599e5d9d9df29e82672871a51a05fb48a4e749f01ab6dbd953ea81c"
+"src/dynamisbench_soccer/engines/radar_laser_acquisition.py::admit" = "95ff2fdddef883bb4b37f95d80bdbec59a11c0e8d50ee9dfe7187af85bd697d2"
 "src/dynamisbench_soccer/reference/motion_models.py::MonoExponentialSprint" = "6f5cf86ba81df676877c7e99492f9df0400e35228a59a0f34a1d65bba5e3d493"
 "tests/test_radar_laser_acquisition.py::test_admits_distinct_native_measurands_and_affine_clocks" = "737235e54a5d87fee30bb4457b6d54aa88554f529420948df1448599bf225739"
 "tests/test_radar_laser_acquisition.py::test_processed_data_are_admitted_only_under_honest_stage" = "437754419bde9f8eb9f3ef78adab00455c77bd0048d4aa03527e8389c888e496"
 "tests/test_radar_laser_acquisition.py::test_rejects_truth_wrong_device_and_undeclared_processing_stage" = "e8915232ae59223e78883a82e386d3b8ea6011b5d1595e5a8190a49b73e3f4d6"
 "tests/test_radar_laser_acquisition.py::test_source_calibration_ambiguity_refuses" = "048f597eaafc1a407365817353d163effb98c1c4d72a9c1597a8ff99931d3261"
+"tests/test_radar_laser_processing.py::test_native_radar_laser_refuse_resampling_dropouts_and_clipping" = "1398cdc3a165ea225dbf9f121c590257beff7cd1cb650806efcee2b322588cf7"
 
 [[receipt]]
 id = "RCP-radar_laser-radar-C"
@@ -844,7 +845,7 @@ tests = ["tests/test_radar_laser_acquisition.py::test_native_timestamp_fault_and
 
 [receipt.digests]
 "src/dynamisbench_soccer/engines/radar_laser.py::process" = "996a6a3856d6e132735e4646379f0370b7671f205c3008afe30ae3c2fb381567"
-"src/dynamisbench_soccer/engines/radar_laser_acquisition.py::admit" = "3cbcb0ccf599e5d9d9df29e82672871a51a05fb48a4e749f01ab6dbd953ea81c"
+"src/dynamisbench_soccer/engines/radar_laser_acquisition.py::admit" = "95ff2fdddef883bb4b37f95d80bdbec59a11c0e8d50ee9dfe7187af85bd697d2"
 "src/dynamisbench_soccer/reference/clocks.py::DeviceClock" = "a538e7ae80f47d9b0880988f85c6705c2e5bdfe3344e5900158ed90fea72c043"
 "src/dynamisbench_soccer/reference/motion_models.py::MonoExponentialSprint" = "6f5cf86ba81df676877c7e99492f9df0400e35228a59a0f34a1d65bba5e3d493"
 "tests/test_radar_laser_acquisition.py::test_admits_distinct_native_measurands_and_affine_clocks" = "737235e54a5d87fee30bb4457b6d54aa88554f529420948df1448599bf225739"
@@ -868,7 +869,7 @@ tests = ["tests/test_radar_laser_acquisition.py::test_native_timestamp_fault_and
 
 [receipt.digests]
 "src/dynamisbench_soccer/engines/radar_laser.py::process" = "996a6a3856d6e132735e4646379f0370b7671f205c3008afe30ae3c2fb381567"
-"src/dynamisbench_soccer/engines/radar_laser_acquisition.py::admit" = "3cbcb0ccf599e5d9d9df29e82672871a51a05fb48a4e749f01ab6dbd953ea81c"
+"src/dynamisbench_soccer/engines/radar_laser_acquisition.py::admit" = "95ff2fdddef883bb4b37f95d80bdbec59a11c0e8d50ee9dfe7187af85bd697d2"
 "src/dynamisbench_soccer/reference/motion_models.py::MonoExponentialSprint" = "6f5cf86ba81df676877c7e99492f9df0400e35228a59a0f34a1d65bba5e3d493"
 "tests/test_radar_laser_acquisition.py::test_native_timestamp_fault_and_dropouts_refuse" = "647baa5877402ccd9f5386428e8ad251297a82197bf953b623267cdbf71a0e33"
 "tests/test_radar_laser_processing.py::test_clipped_native_radar_plateau_refuses_without_inventing_speed" = "677a67c00204b1882563fa92b5da4f49bce64f5fcc5c14c5a0a52a28ded50d8a"
@@ -984,7 +985,7 @@ tests = ["tests/test_radar_laser_acquisition.py::test_native_timestamp_fault_and
 
 [receipt.digests]
 "src/dynamisbench_soccer/engines/radar_laser.py::process" = "996a6a3856d6e132735e4646379f0370b7671f205c3008afe30ae3c2fb381567"
-"src/dynamisbench_soccer/engines/radar_laser_acquisition.py::admit" = "3cbcb0ccf599e5d9d9df29e82672871a51a05fb48a4e749f01ab6dbd953ea81c"
+"src/dynamisbench_soccer/engines/radar_laser_acquisition.py::admit" = "95ff2fdddef883bb4b37f95d80bdbec59a11c0e8d50ee9dfe7187af85bd697d2"
 "src/dynamisbench_soccer/reference/clocks.py::DeviceClock" = "a538e7ae80f47d9b0880988f85c6705c2e5bdfe3344e5900158ed90fea72c043"
 "src/dynamisbench_soccer/reference/motion_models.py::MonoExponentialSprint" = "6f5cf86ba81df676877c7e99492f9df0400e35228a59a0f34a1d65bba5e3d493"
 "tests/test_radar_laser_acquisition.py::test_admits_distinct_native_measurands_and_affine_clocks" = "737235e54a5d87fee30bb4457b6d54aa88554f529420948df1448599bf225739"
@@ -2058,7 +2059,7 @@ issue = "RES-699"
 [receipt.digests]
 "src/dynamisbench_soccer/engines/filtering.py::smooth_samples" = "b2ffd93eb709412659ad6937412b30f488b61d8b6bb4632f1dff11d112ccf6b5"
 "src/dynamisbench_soccer/engines/radar_laser.py::process" = "996a6a3856d6e132735e4646379f0370b7671f205c3008afe30ae3c2fb381567"
-"src/dynamisbench_soccer/engines/radar_laser_acquisition.py::admit" = "3cbcb0ccf599e5d9d9df29e82672871a51a05fb48a4e749f01ab6dbd953ea81c"
+"src/dynamisbench_soccer/engines/radar_laser_acquisition.py::admit" = "95ff2fdddef883bb4b37f95d80bdbec59a11c0e8d50ee9dfe7187af85bd697d2"
 "src/dynamisbench_soccer/reference/motion_models.py::MonoExponentialSprint" = "6f5cf86ba81df676877c7e99492f9df0400e35228a59a0f34a1d65bba5e3d493"
 "src/dynamisbench_soccer/reference/observations.py::radar_radial_velocity_m_s" = "019a4c39f93958211ba6ca9b2d98d47dec0890b5c97fd7f1ce74bb07c7d785d7"
 "tests/test_radar_laser_processing.py::test_radar_cosine_sensitivity_includes_the_closest_angle_to_zero" = "19cb0dd6c4285a778c73755ad70701534c4f0c413ff52b011607694d317b12fa"
@@ -2330,3 +2331,51 @@ issue = "RES-672"
 "tests/test_hip_policy_a.py::test_hip_estimands_match_sourced_peak_torque_and_sample_window_definitions" = "8b0c110516e7206bf4b5b6b8c96cf765cae623da6214262649485db5b5dd852f"
 "tests/test_hip_policy_a.py::test_hip_max_mean_window_cannot_combine_separated_holds" = "49e5c86e7e9cc19da2cb3eb9cf2217a835b3762cfbc75211b539b4d06644d8ab"
 "tests/test_hip_policy_a.py::test_unilateral_hip_mean_peak_is_not_peak_force_or_bilateral_mean" = "c68c1e62ebfa504c005d6df69a02f4273ca0151d992f01c270a0b3428f85616b"
+
+[[receipt]]
+id = "RCP-radar_laser-radar-K"
+dimension = "K"
+subfamilies = ["radar_laser.radar"]
+implementation = ["src/dynamisbench_soccer/engines/radar_laser.py::process", "src/dynamisbench_soccer/engines/radar_laser_acquisition.py::admit"]
+reference = ["src/dynamisbench_soccer/reference/faults.py::inject", "src/dynamisbench_soccer/reference/motion_models.py::MonoExponentialSprint"]
+tests = ["tests/test_radar_laser_processing.py::test_native_radar_laser_refuse_resampling_dropouts_and_clipping", "tests/test_radar_laser_processing.py::test_small_native_radar_laser_faults_have_predicted_unflagged_effects"]
+reference_kind = "independent_implementation"
+independence = "The independent synthetic injector supplies named deterministic faults; the expected effects follow from direct range or velocity changes and the independent derivative stencil."
+check_kind = "numeric"
+claim = "Native radar processing exercises all six declared continuous fault classes, including expected transfer of small biases and noise and refusal of clipping, dropout and explicit resampling."
+tolerance_basis = "At 100 Hz compare each changed result to the clean path under native unfiltered processing. A 0.08 m/s offset adds 0.08 m/s, a 0.04 m/s per second drift adds 0.04t m/s, and PCG64 seed 823, 0.002 m/s SD contributes its drawn sequence directly. A sustained 3 m/s clipped rail refuses. Stride-five drops refuse timestamp gaps; stride-two decimation with updated 50 Hz metadata refuses when identified by provenance or source format. Plain decimation alone cannot authorize the opaque manufacturer route. Numeric comparisons use absolute 1e-11 m/s and zero relative tolerance for floating-point arithmetic. Verdicts are categorical."
+tolerance_unit = "m/s (absolute); exact refusal classes"
+tolerance = 1e-11
+issue = "RES-669"
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/radar_laser.py::process" = "996a6a3856d6e132735e4646379f0370b7671f205c3008afe30ae3c2fb381567"
+"src/dynamisbench_soccer/engines/radar_laser_acquisition.py::admit" = "95ff2fdddef883bb4b37f95d80bdbec59a11c0e8d50ee9dfe7187af85bd697d2"
+"src/dynamisbench_soccer/reference/faults.py::inject" = "bc803ce121a3bf35662d04ca34370d2f1525a44ac1503ab51c6678a39905bc7e"
+"src/dynamisbench_soccer/reference/motion_models.py::MonoExponentialSprint" = "6f5cf86ba81df676877c7e99492f9df0400e35228a59a0f34a1d65bba5e3d493"
+"tests/test_radar_laser_processing.py::test_native_radar_laser_refuse_resampling_dropouts_and_clipping" = "1398cdc3a165ea225dbf9f121c590257beff7cd1cb650806efcee2b322588cf7"
+"tests/test_radar_laser_processing.py::test_small_native_radar_laser_faults_have_predicted_unflagged_effects" = "d67fbd7dbb2b48c408b373d4953d849f4e03aa86ff1ba61809d6b1565f189082"
+
+[[receipt]]
+id = "RCP-radar_laser-laser-K"
+dimension = "K"
+subfamilies = ["radar_laser.laser"]
+implementation = ["src/dynamisbench_soccer/engines/radar_laser.py::process", "src/dynamisbench_soccer/engines/radar_laser_acquisition.py::admit"]
+reference = ["src/dynamisbench_soccer/reference/faults.py::inject", "src/dynamisbench_soccer/reference/motion_models.py::MonoExponentialSprint"]
+tests = ["tests/test_radar_laser_processing.py::test_native_radar_laser_refuse_resampling_dropouts_and_clipping", "tests/test_radar_laser_processing.py::test_small_native_radar_laser_faults_have_predicted_unflagged_effects"]
+reference_kind = "independent_implementation"
+independence = "The independent synthetic injector supplies named deterministic faults; the expected effects follow from direct range or velocity changes and the independent derivative stencil."
+check_kind = "numeric"
+claim = "Native laser processing exercises all six declared continuous fault classes, including expected transfer of small biases and noise and refusal of clipping, dropout and explicit resampling."
+tolerance_basis = "At 100 Hz compare each changed result to the clean path under native unfiltered processing. A 0.08 m range offset cancels, a 0.04 m/s linear range drift gives a constant 0.04 m/s speed change, and PCG64 seed 823, 1 micrometre SD gives the independent five-point derivative of the drawn noise on interior samples. An 8 m clipped range produces a negative reconstructed speed and refuses. Stride-five drops refuse timestamp gaps; stride-two decimation with updated 50 Hz metadata refuses when identified by provenance or source format. Plain decimation alone cannot authorize the opaque manufacturer route. Numeric comparisons use absolute 1e-11 m/s and zero relative tolerance for floating-point arithmetic. Verdicts are categorical."
+tolerance_unit = "m/s (absolute); exact refusal classes"
+tolerance = 1e-11
+issue = "RES-669"
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/radar_laser.py::process" = "996a6a3856d6e132735e4646379f0370b7671f205c3008afe30ae3c2fb381567"
+"src/dynamisbench_soccer/engines/radar_laser_acquisition.py::admit" = "95ff2fdddef883bb4b37f95d80bdbec59a11c0e8d50ee9dfe7187af85bd697d2"
+"src/dynamisbench_soccer/reference/faults.py::inject" = "bc803ce121a3bf35662d04ca34370d2f1525a44ac1503ab51c6678a39905bc7e"
+"src/dynamisbench_soccer/reference/motion_models.py::MonoExponentialSprint" = "6f5cf86ba81df676877c7e99492f9df0400e35228a59a0f34a1d65bba5e3d493"
+"tests/test_radar_laser_processing.py::test_native_radar_laser_refuse_resampling_dropouts_and_clipping" = "1398cdc3a165ea225dbf9f121c590257beff7cd1cb650806efcee2b322588cf7"
+"tests/test_radar_laser_processing.py::test_small_native_radar_laser_faults_have_predicted_unflagged_effects" = "d67fbd7dbb2b48c408b373d4953d849f4e03aa86ff1ba61809d6b1565f189082"

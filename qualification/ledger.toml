@@ -129,7 +129,7 @@ paradigm = "continuous_signal"
 issue = "RES-699"
 engine_id = "radar"
 methods = ["filter", "start_detection"]
-ratings = { A = "verified", B = "specified", C = "verified", D = "verified", E = "partial", F = "verified", G = "verified", H = "verified", I = "verified", J = "verified", K = "partial", L = "partial", M = "partial", N = "absent", O = "partial" }
+ratings = { A = "verified", B = "specified", C = "verified", D = "verified", E = "partial", F = "verified", G = "verified", H = "verified", I = "verified", J = "verified", K = "verified", L = "partial", M = "partial", N = "absent", O = "partial" }
 empirical_gaps = ["Engine verified on analytical sprint controls (RES-699); no raw radar validity or latency study (RES-694)", "Doppler versus positional/gate agreement is analytical only (RES-703)"]
 blockers = []
 
@@ -141,7 +141,7 @@ paradigm = "continuous_signal"
 issue = "RES-699"
 engine_id = "laser"
 methods = ["differentiate", "filter"]
-ratings = { A = "specified", B = "specified", C = "verified", D = "partial", E = "partial", F = "verified", G = "partial", H = "partial", I = "partial", J = "partial", K = "partial", L = "verified", M = "partial", N = "absent", O = "partial" }
+ratings = { A = "specified", B = "specified", C = "verified", D = "partial", E = "partial", F = "verified", G = "partial", H = "partial", I = "partial", J = "partial", K = "verified", L = "verified", M = "partial", N = "absent", O = "partial" }
 empirical_gaps = ["Engine verified on analytical sprint controls (RES-699); no raw laser validity or range-noise study (RES-694)", "Range-rate versus Doppler agreement is analytical only (RES-703)"]
 blockers = []
 
@@ -4763,3 +4763,19 @@ kind = "independent_test"
 issue = "RES-672"
 ref = "repo:tests/test_hip_policy_a.py"
 rationale = "Unilateral hip squeeze distinguishes peak cuff force, unnormalized declared-lever torque, contiguous maximum mean force, and arithmetic mean of repetition peaks."
+
+[[evidence]]
+subfamily = "radar_laser.radar"
+dimension = "K"
+kind = "independent_test"
+issue = "RES-669"
+ref = "repo:tests/test_radar_laser_processing.py"
+rationale = "Native radar processing exercises all six declared continuous fault classes, including expected transfer of small biases and noise and refusal of clipping, dropout and explicit resampling."
+
+[[evidence]]
+subfamily = "radar_laser.laser"
+dimension = "K"
+kind = "independent_test"
+issue = "RES-669"
+ref = "repo:tests/test_radar_laser_processing.py"
+rationale = "Native laser processing exercises all six declared continuous fault classes, including expected transfer of small biases and noise and refusal of clipping, dropout and explicit resampling."

@@ -277,3 +277,78 @@ def test_radar_start_and_filter_sensitivity_against_exponential_velocity() -> No
         "UNSUPPORTED: start perturbation outside observed clock"
     )
     assert "los_velocity_at_1s_baseline_m_s" not in no_window.sensitivity
+
+
+@pytest.mark.parametrize(
+    ("kind", "channel", "rail"), [("radar", "velocity", 3.0), ("laser", "distance", 8.0)]
+)
+def test_native_radar_laser_refuse_resampling_dropouts_and_clipping(
+    kind: str, channel: str, rail: float
+) -> None:
+    observation = export_case(f"radar_laser.{kind}", hz=100).observation
+    assert process(observation, _native()).peak_velocity_m_s > 8
+    clipped = inject(
+        observation, ContinuousFault(ContinuousKind.CLIPPING, (channel,), magnitude=rail)
+    )
+    reason = "flat rail" if kind == "radar" else "negative reconstructed"
+    with pytest.raises(AcquisitionRefusal, match=reason):
+        process(clipped, _native())
+    dropped = inject(observation, ContinuousFault(ContinuousKind.DROP, (channel,), stride=5))
+    with pytest.raises(AcquisitionRefusal, match="timestamp gap"):
+        process(dropped, _native())
+    decimated = inject(observation, ContinuousFault(ContinuousKind.RESAMPLE, (channel,), stride=2))
+    assert decimated.meta.sampling is not None and decimated.meta.sampling.nominal_hz == 50
+    with pytest.raises(AcquisitionRefusal, match="processed/resampled"):
+        process(decimated, _native())
+
+    # An explicitly decimated source format must suffice even if the original
+    # transform list was not retained. Local decimation is not vendor authority.
+    metadata = decimated.meta.model_dump()
+    metadata["provenance"]["transforms"] = []
+    metadata["acquisition"]["sources"][0]["raw_format"] = "Decimated source export"
+    tagged = SignalBundle(BundleMeta.model_validate(metadata), decimated.data)
+    with pytest.raises(AcquisitionRefusal, match="processed/resampled"):
+        process(tagged, _native())
+    processed = ProcessingOptions(channel_stage=ChannelStage.MANUFACTURER_PROCESSED)
+    with pytest.raises(AcquisitionRefusal, match="matching source processing provenance"):
+        process(tagged, processed)
+    metadata["acquisition"]["sources"][0]["raw_format"] = "manufacturer_processed"
+    labeled = SignalBundle(BundleMeta.model_validate(metadata), decimated.data)
+    assert process(labeled, processed).source_stage == "manufacturer_processed"
+
+
+@pytest.mark.parametrize(("kind", "channel"), [("radar", "velocity"), ("laser", "distance")])
+@pytest.mark.parametrize(
+    "fault", [ContinuousKind.OFFSET, ContinuousKind.DRIFT, ContinuousKind.NOISE]
+)
+def test_small_native_radar_laser_faults_have_predicted_unflagged_effects(
+    kind: str, channel: str, fault: ContinuousKind
+) -> None:
+    hz = 100
+    observation = export_case(f"radar_laser.{kind}", hz=hz).observation
+    original = process(observation, _native())
+    t = np.arange(observation.meta.n_rows) / hz
+    if fault is ContinuousKind.OFFSET:
+        magnitude = 0.08
+        expected = np.full_like(t, magnitude if kind == "radar" else 0)
+    elif fault is ContinuousKind.DRIFT:
+        magnitude = 0.04
+        expected = magnitude * t if kind == "radar" else np.full_like(t, magnitude)
+    else:
+        magnitude = 0.002 if kind == "radar" else 1e-6
+        perturbation = np.random.default_rng(823).normal(0, magnitude, len(t))
+        if kind == "radar":
+            expected = perturbation
+        else:
+            expected = (
+                perturbation[:-4]
+                - 8 * perturbation[1:-3]
+                + 8 * perturbation[3:-1]
+                - perturbation[4:]
+            ) * (hz / 12)
+    altered = inject(observation, ContinuousFault(fault, (channel,), magnitude=magnitude, seed=823))
+    result = process(altered, _native())
+    measured = np.asarray(result.velocity_m_s) - original.velocity_m_s
+    if kind == "laser" and fault is ContinuousKind.NOISE:
+        measured = measured[2:-2]
+    np.testing.assert_allclose(measured, expected, rtol=0, atol=1e-11)
