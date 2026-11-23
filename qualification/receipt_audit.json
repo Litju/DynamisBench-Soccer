@@ -1147,6 +1147,16 @@
    "reason": "Force versus contact flight time agrees within 0.004 and 0.002 of the truth, with the engine-to-engine evidence context asserted and no interchangeability claims.",
    "verdict": "SUPPORTED"
   },
+  "RCP-timing_contact-contact-M": {
+   "bound_digest": "40cd646bee2485282bafabd1a02c91ce6a1c105760836c5824ae8997a86f54f7",
+   "evidence_head": "1dca44448b6a43e92a5d5fce90ac6933c471fe68",
+   "fix": "",
+   "prior_fix": "",
+   "prior_reason": "",
+   "prior_verdict": "NO_DRAFT",
+   "reason": "Successful contact CLI processing binds verified event samples, canonical validated metadata and the exact nominal and sensitivity policy bytes. Exact deterministic replay of two independent observation exports and the complete report. Compare each SHA-256 with a direct file hash on canonical fixtures. A 2 ms event change changes Parquet and metadata hashes and metrics. A metadata-only identifier change changes canonical metadata and retains the Parquet hash. A policy whitespace change changes only the byte-level policy identity. Malformed metadata and tampered Parquet refuse.",
+   "verdict": "SUPPORTED"
+  },
   "RCP-timing_contact-gates-A": {
    "bound_digest": "80b887711cd6b089a3ab9cee058de6b38ddff578950e51ee2a3bd977857549fc",
    "fix": "",
@@ -1165,14 +1175,24 @@
    "verdict": "SUPPORTED"
   },
   "RCP-timing_contact-gates-E": {
-   "fix": "Record the numeric tolerance and add trigger and fixed_offset start variants against the truth time.",
-   "reason": "Dual- and multi-beam variants are compared with the spherical_gate_trigger_s reference, but the check is labelled categorical while it uses pytest.approx's default rel 1e-6. The start-mode variants (trigger, fixed_offset) are not compared with the reference in E.",
-   "verdict": "PARTIAL"
+   "bound_digest": "fc6a3db633cd8f4e2963e009f00efb172ef817111509369eac33080488bc450d",
+   "evidence_head": "1dca44448b6a43e92a5d5fce90ac6933c471fe68",
+   "fix": "",
+   "prior_fix": "Record the numeric tolerance and add trigger and fixed_offset start variants against the truth time.",
+   "prior_reason": "Dual- and multi-beam variants are compared with the spherical_gate_trigger_s reference, but the check is labelled categorical while it uses pytest.approx's default rel 1e-6. The start-mode variants (trigger, fixed_offset) are not compared with the reference in E.",
+   "prior_verdict": "PARTIAL",
+   "reason": "Gate start definitions, beam voting and refractory handling preserve their independently expected event and speed results. With the 5, 10, 20 and 30 m beam route, first-gate start subtracts the independently known first crossing. Fixed-offset, pressure-pad and sound-cue modes recover absolute elapsed times. All later segment speeds are distance over elapsed time. The 10 m earliest/latest multi-beam events are 2.089668101741136 and 2.0950545483728 s, the discarded early arm occurred at 2.0218908916394556 s, and the added definition error widens only the high endpoint by 0.002 s. Refractory removal preserves the clean split exactly and competing crossings refuse. Compare with absolute 1e-12 s and 1e-11 m/s, zero relative allowance for arithmetic roundoff.",
+   "verdict": "SUPPORTED"
   },
   "RCP-timing_contact-gates-F": {
-   "fix": "Set the tolerance to rel 1e-6, or tighten the engine assertions.",
-   "reason": "Splits and segment averages match the truth after an affine clock and a file round-trip, but only at pytest.approx's default rel 1e-6. The recorded 1e-11 comes from the reference self-test test_sprint_model_and_numerical_gate_inverse.",
-   "verdict": "PARTIAL"
+   "bound_digest": "fa321fe233dc5271a07cb5b1e9bf44187c03aae9c1c9c262ce424e8e7f24387e",
+   "evidence_head": "1dca44448b6a43e92a5d5fce90ac6933c471fe68",
+   "fix": "",
+   "prior_fix": "Set the tolerance to rel 1e-6, or tighten the engine assertions.",
+   "prior_reason": "Splits and segment averages match the truth after an affine clock and a file round-trip, but only at pytest.approx's default rel 1e-6. The recorded 1e-11 comes from the reference self-test test_sprint_model_and_numerical_gate_inverse.",
+   "prior_verdict": "PARTIAL",
+   "reason": "Canonical single-beam gate events recover strict crossing, cumulative and split times and segment-average speed after a Parquet round trip. Apply 0.32 s clock offset, 812 ppm clock drift and declared 18 ms edge latency in the independent fixture. Spherical beam crossings are 1.357188162923845, 2.089668101741136, 3.3367088662775366 and 4.493856065170741 s. Segment averages are 6.826125515564725, 8.018984049585256 and 8.641942882949435 m/s. Time values use absolute 1e-12 s and speeds 1e-11 m/s, zero relative allowance for arithmetic roundoff. There is no initial segment speed.",
+   "verdict": "SUPPORTED"
   },
   "RCP-timing_contact-gates-G": {
    "fix": "Record the numeric tolerance, and feed engine splits into assess_gates.",
@@ -1214,6 +1234,16 @@
    "bound_digest": "b78404a9c8a24dcda31bca428b84064a1b536e2ac239935a968a698c6b4dc940",
    "fix": "",
    "reason": "Gates versus radar timing agree with a bias within 2e-4, and the gate velocity versus radar comparison is a definition mismatch derived in closed form. The global test forbids interchangeability claims.",
+   "verdict": "SUPPORTED"
+  },
+  "RCP-timing_contact-gates-M": {
+   "bound_digest": "2f1946bca1ace6f97313914411d7d0b329d7ae309618f9b5c559657f86c1d12a",
+   "evidence_head": "1dca44448b6a43e92a5d5fce90ac6933c471fe68",
+   "fix": "",
+   "prior_fix": "",
+   "prior_reason": "",
+   "prior_verdict": "NO_DRAFT",
+   "reason": "Successful gates CLI processing binds verified event samples, canonical validated metadata and the exact nominal and sensitivity policy bytes. Exact deterministic replay of two independent observation exports and the complete report. Compare each SHA-256 with a direct file hash on canonical fixtures. A 2 ms event change changes Parquet and metadata hashes and metrics. A metadata-only identifier change changes canonical metadata and retains the Parquet hash. A policy whitespace change changes only the byte-level policy identity. Malformed metadata and tampered Parquet refuse.",
    "verdict": "SUPPORTED"
   }
  }
