@@ -44,6 +44,8 @@ class ReviewedSlice(Schema):
     evidence: dict[str, ReceiptBinding]
     implementations: tuple[Text, ...] = Field(min_length=1)
     oracle: tuple[Text, ...] = Field(min_length=1)
+    shared_infrastructure: tuple[Text, ...] = ()
+    additional_files: tuple[Text, ...] = ()
     files: dict[str, Sha256]
     answer: AnswerLocation
     reviewer: Text
@@ -157,7 +159,11 @@ def evaluate(
         rows = receipts.load(root / "qualification/receipts.toml")
         counts = Counter(row.id for row in rows)
         inventory = {row.id: row for row in rows}
-        audit = json.loads(_read(root, "qualification/receipt_audit.json"))["receipts"]
+        audit_document = json.loads(_read(root, "qualification/receipt_audit.json"))
+        if not isinstance(audit_document, dict) or not isinstance(
+            audit := audit_document.get("receipts"), dict
+        ):
+            return decision("REFUSED", "invalid Policy A audit map")
         implementations: set[str] = set()
         oracles: set[str] = set()
         for role, binding in sorted(review.evidence.items()):
@@ -177,7 +183,11 @@ def evaluate(
             if current != binding.sha256:
                 return decision("REFUSED", f"receipt changed since task review: {identifier}")
             record = audit.get(identifier, {})
-            if record.get("verdict") != "SUPPORTED" or record.get("bound_digest") != current:
+            if (
+                not isinstance(record, dict)
+                or record.get("verdict") != "SUPPORTED"
+                or record.get("bound_digest") != current
+            ):
                 return decision("REFUSED", f"review absent or stale: {identifier}")
             errors = receipts.verify(row, root, set(row.subfamilies))
             if errors:
@@ -191,13 +201,20 @@ def evaluate(
         oracle = _closure(root, set(review.oracle))
         production_entries = {ref.split("::", 1)[0] for ref in implementations}
         oracle_entries = {ref.split("::", 1)[0] for ref in oracles}
-        if production_entries & oracle.keys() or oracle_entries & production.keys():
+        shared = production.keys() & oracle.keys()
+        if (
+            production_entries & oracle.keys()
+            or oracle_entries & production.keys()
+            or shared != set(review.shared_infrastructure)
+        ):
             return decision("REFUSED", "reference and implementation are circular")
+        # Test helpers may be selected dynamically by pytest, so bind the whole test tree.
         bound_files = {
-            ref.split("::", 1)[0]
-            for rid in evidence
-            for ref in (*inventory[rid].tests, *inventory[rid].reference)
-        } | {"uv.lock"}
+            path.relative_to(root).as_posix()
+            for path in (root / "tests").rglob("*")
+            if path.is_file() and "__pycache__" not in path.parts
+        } | {"uv.lock", "pyproject.toml", *review.additional_files}
+        bound_files.update(ref.split("::", 1)[0] for ref in oracles if not ref.startswith(SOURCE))
         actual_files = (
             production | oracle | {path: digest(_read(root, path)) for path in bound_files}
         )
