@@ -327,14 +327,18 @@
    "verdict": "SUPPORTED"
   },
   "RCP-gnss_lps-lps-H": {
-   "fix": "Add an LPS-specific estimand and registry-binding assertion.",
-   "reason": "LPS estimand separation and execution are exact. test_doppler_and_positional_speed_are_different_traces is GNSS-only. No registry binding is tested, and registry claims are absent (RES-694).",
-   "verdict": "PARTIAL"
+   "bound_digest": "dedcd3359ef339d1714d57ce559eb082e6fe3f6e1715432b417314a3e8ab7a97",
+   "evidence_head": "cf78f6aae0c47b12547ee6757e50b6d59193a2c2",
+   "fix": "",
+   "reason": "Independent GPT-6.2 Astra review verified the native unfiltered fixed-grid interior horizontal norm and exclusion of vertical motion. DEV-005 supports the source distinction only.",
+   "verdict": "SUPPORTED"
   },
   "RCP-gnss_lps-lps-I": {
-   "fix": "Compare the propagated noise-to-derivative \u03c3 with the closed-form finite-difference variance.",
-   "reason": "The cited tests assert only that sensitivity fields exist and that filtered acceleration < native. Neither compares the declared uncertainty with an independent analytical result.",
-   "verdict": "UNSUPPORTED"
+   "bound_digest": "f7c0e9da8a162acaf092b7d86cac6a13ef0ae62ba115512b1641a56cbed982e4",
+   "evidence_head": "cf78f6aae0c47b12547ee6757e50b6d59193a2c2",
+   "fix": "",
+   "reason": "Independent GPT-6.2 Astra review verified conditional propagation by the reverse triangle inequality and attainment with opposite endpoint errors along the motion; no physical metrology claim.",
+   "verdict": "SUPPORTED"
   },
   "RCP-gnss_lps-lps-J": {
    "bound_digest": "00b3e06dc4c69f1a1228a8a2e91732a39749f8ee5e8467a76b86bcd78332c4e3",
