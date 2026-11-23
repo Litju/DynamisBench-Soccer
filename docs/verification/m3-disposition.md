@@ -6,7 +6,7 @@ Computed from `qualification/ledger.toml`, `receipts.toml` and `empirical.toml` 
 
 **M3 FAIL: 0 of 15 subfamilies are `ENGINEERING_VERIFIED`.** Both `dbs qualification gate --stage M3` and `dbs qualification states` exit 1. The RES-675 gate remains open and blocks RES-676.
 
-97 of 210 A–M/O cells have supported and content-bound receipts. The 113 open cells below still block computational readiness.
+98 of 210 A–M/O cells have supported and content-bound receipts. The 112 open cells below still block computational readiness.
 
 ## 1. Computational-reference status (15 subfamilies)
 
@@ -21,14 +21,14 @@ Computed from `qualification/ledger.toml`, `receipts.toml` and `empirical.toml` 
 | load_cell_isometric.load_cell | SPECIFIED | A, B, D, F, G, J, L, M, O | C, E, H, I, K |
 | lpt_encoder.encoder | SPECIFIED | B, M | A, C, D, E, F, G, H, I, J, K, L, O |
 | lpt_encoder.lpt | SPECIFIED | C, F, I, J, M | A, B, D, E, G, H, K, L, O |
-| nordic_hip.hip | SPECIFIED | B, J | A, C, D, E, F, G, H, I, K, L, M, O |
+| nordic_hip.hip | SPECIFIED | B, H, J | A, C, D, E, F, G, I, K, L, M, O |
 | nordic_hip.nordic | SPECIFIED | F, G, H, J, L | A, B, C, D, E, I, K, M, O |
 | radar_laser.laser | SPECIFIED | C, F, L | A, B, D, E, G, H, I, J, K, M, O |
 | radar_laser.radar | SPECIFIED | A, C, D, F, G, H, I, J | B, E, K, L, M, O |
 | timing_contact.contact | SPECIFIED | A, D, E, F, H, I, J, K, L, M | B, C, G, O |
 | timing_contact.gates | SPECIFIED | A, D, E, F, H, I, K, L, M | B, C, G, J, O |
 
-Verified cells: 97 of 210.
+Verified cells: 98 of 210.
 
 ## 2. Empirical device-validity status (15 subfamilies)
 
@@ -56,7 +56,7 @@ The previous per-subfamily `blockers` text is preserved verbatim as `empirical_g
 
 ## 3. Open computational work, from the independent audit
 
-Prior drafts were PARTIAL, UNSUPPORTED or NOT_AUDITED. The other open cells have no draft receipt. The [evidence gap inventory](m3-evidence-gaps.md) identifies ownership and evidence gaps for the 147 baseline open cells. 34 of those cells now have supported receipts. The [receipt audit](m3-receipt-audit.md) records current verdicts and the evidence still needed.
+Prior drafts were PARTIAL, UNSUPPORTED or NOT_AUDITED. The other open cells have no draft receipt. The [evidence gap inventory](m3-evidence-gaps.md) identifies ownership and evidence gaps for the 147 baseline open cells. 35 of those cells now have supported receipts. The [receipt audit](m3-receipt-audit.md) records current verdicts and the evidence still needed.
 
 Recurring gaps (each is concrete engineering, owned by the existing issue for that engine):
 

@@ -12,7 +12,7 @@ Only SUPPORTED receipts are committed in `qualification/receipts.toml` and
 rated verified. `scripts/bind_audit.py --check` verifies their receipt bindings.
 These are model-based independent engineering checks. Radar L has no verdict.
 
-Verdicts: {'PARTIAL': 76, 'SUPPORTED': 97, 'UNSUPPORTED': 7, 'NOT_AUDITED': 1}
+Verdicts: {'PARTIAL': 76, 'SUPPORTED': 98, 'UNSUPPORTED': 6, 'NOT_AUDITED': 1}
 
 ## SUPPORTED
 
@@ -79,6 +79,7 @@ Verdicts: {'PARTIAL': 76, 'SUPPORTED': 97, 'UNSUPPORTED': 7, 'NOT_AUDITED': 1}
 | RCP-lpt_encoder-lpt-J | Fixed-line and dual LPT outcomes agree with the independent kinematic expressions under the absolute F bounds, and the source import-boundary check passes. |  |
 | RCP-lpt_encoder-lpt-M | bundle_id and data_sha256 equal the file hash, and the result reproduces exactly and changes when the input is mutated. |  |
 | RCP-nordic_hip-hip-B | The hip affine calibration recovers 2500 N and 1000 N·m within the stated bound. Negative controls refuse conflicting trial, source or configured geometry and missing/double calibration. |  |
+| RCP-nordic_hip-hip-H | Unilateral hip squeeze distinguishes peak cuff force, unnormalized declared-lever torque, contiguous maximum mean force, and arithmetic mean of repetition peaks. At 1000 Hz the ramp yields 2500 N peak, 1000 N·m from the 0.40 m lever, and 2339.2875 N maximum mean over 1000 consecutive samples. The 500-sample window over separated 200-sample holds gives 1000 N, whereas an invalid noncontiguous top-sample average would give 1800 N. Peaks of 2500, 1750 and 2250 N give arithmetic mean 6500/3 N. Numerics use absolute 1e-8 N or N·m and zero relative allowance for floating-point accumulation. Estimand labels and bilateral withholding are exact. Existing registry HG-004 sources the geometry and repetition context; the sampled-window average is the repository's own declared method. |  |
 | RCP-nordic_hip-hip-J | The corrected source-geometry gate preserves independent hip force, torque and impulse agreement on the sample-aligned ramp at 1e-8 absolute in each metric's unit. |  |
 | RCP-nordic_hip-nordic-F | The source-geometry gate preserves Nordic eccentric force, impulse, torque, work and asymmetry agreement with the existing closed-form fixture. |  |
 | RCP-nordic_hip-nordic-G | The Nordic measured kinematic break-angle test asserts 0.5° absolute, and controlled-descent and no-angle cases verify refusal. The hip repetition fixture is excluded. |  |
@@ -206,7 +207,6 @@ Verdicts: {'PARTIAL': 76, 'SUPPORTED': 97, 'UNSUPPORTED': 7, 'NOT_AUDITED': 1}
 | RCP-gnss_lps-lps-I | The cited tests assert only that sensitivity fields exist and that filtered acceleration < native. Neither compares the declared uncertainty with an independent analytical result. | Compare the propagated noise-to-derivative σ with the closed-form finite-difference variance. |
 | RCP-load_cell_isometric-isometric_rig-K | For isometric_rig the only coverage is injection determinism (test_faults_cover_all_subfamilies). The verdict test test_unzeroed_saturated... injects into load_cell 'voltage' and RawRecord, so no isometric_rig engine verdict is asserted. | Inject offset, clipping and units faults into the isometric_rig force channel and assert the LC-* verdicts. |
 | RCP-lpt_encoder-encoder-A | test_signed_encoder_affine_calibration_and_count_jump has no refusal. The admission refusals in test_source_and_reference_columns run on the LPT _dual() fixture. No encoder bundle is refused (non-integer counts, units, duplicates). | Encoder-fixture refusal tests (duplicate timestamps, bad count calibration units, analytical truth input). |
-| RCP-nordic_hip-hip-H | All four cited tests run nordic bilateral data. The hip metrics (unilateral peak, max_mean_force_n window, mean_peak) are not in the H list. | Cite or add hip tests that execute max-mean window definitions and unilateral estimand naming on the hip export. |
 | RCP-radar_laser-laser-I | The filter test asserts only sensitivity>0. The start-offset test is radar-only. The noisy-fit 3·SE test is a generic synthetic radar trace. Laser uncertainty is never compared with an analytical expectation. | Check the laser five-point noise amplification (sqrt(130)/12·σ·fs) against the engine's reported uncertainty. |
 
 ## NOT_AUDITED

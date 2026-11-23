@@ -1742,7 +1742,6 @@
         "E: every processing method variant is compared with an independent reference with stated sensitivity bounds (owner RES-697; rated partial)",
         "F: reconstructed quantities agree with an independent analytical truth within tolerance (owner RES-697; rated partial)",
         "G: protocol events are recovered against analytically known event times, with eligibility refusals (owner RES-672; rated partial)",
-        "H: metric definitions are bound to sourced registry claims and executable exactly (owner RES-672; rated partial)",
         "I: declared uncertainty propagation is checked against an independent analytical result (owner RES-697; rated partial)",
         "K: synthetic fault fixtures cover the declared fault classes with expected verdicts (owner RES-669; rated partial)",
         "L: analytical cross-device studies are executed and classified, never read as interchangeability (owner RES-703; rated partial)",
@@ -3233,6 +3232,7 @@
     {
       "analytical_only_dimensions": [
         "B",
+        "H",
         "J"
       ],
       "blockers": [
@@ -3242,7 +3242,6 @@
         "E: every processing method variant is compared with an independent reference with stated sensitivity bounds (owner RES-697; rated partial)",
         "F: reconstructed quantities agree with an independent analytical truth within tolerance (owner RES-697; rated partial)",
         "G: protocol events are recovered against analytically known event times, with eligibility refusals (owner RES-672; rated partial)",
-        "H: metric definitions are bound to sourced registry claims and executable exactly (owner RES-672; rated partial)",
         "I: declared uncertainty propagation is checked against an independent analytical result (owner RES-697; rated partial)",
         "K: synthetic fault fixtures cover the declared fault classes with expected verdicts (owner RES-669; rated partial)",
         "L: analytical cross-device studies are executed and classified, never read as interchangeability (owner RES-703; rated partial)",
@@ -3300,7 +3299,7 @@
         "E": "partial",
         "F": "partial",
         "G": "partial",
-        "H": "partial",
+        "H": "verified",
         "I": "partial",
         "J": "verified",
         "K": "partial",
@@ -3313,6 +3312,9 @@
         "B": [
           "RCP-nordic_hip-hip-B"
         ],
+        "H": [
+          "RCP-nordic_hip-hip-H"
+        ],
         "J": [
           "RCP-nordic_hip-hip-J"
         ]
@@ -3324,7 +3326,6 @@
         "E": "every processing method variant is compared with an independent reference with stated sensitivity bounds",
         "F": "reconstructed quantities agree with an independent analytical truth within tolerance",
         "G": "protocol events are recovered against analytically known event times, with eligibility refusals",
-        "H": "metric definitions are bound to sourced registry claims and executable exactly",
         "I": "declared uncertainty propagation is checked against an independent analytical result",
         "K": "synthetic fault fixtures cover the declared fault classes with expected verdicts",
         "L": "analytical cross-device studies are executed and classified, never read as interchangeability",
@@ -3340,7 +3341,6 @@
         "E",
         "F",
         "G",
-        "H",
         "I",
         "K",
         "L",
@@ -3349,6 +3349,7 @@
       ],
       "verified_m3": [
         "B",
+        "H",
         "J"
       ]
     },
