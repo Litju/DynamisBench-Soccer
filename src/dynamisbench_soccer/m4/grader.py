@@ -7,12 +7,19 @@ import math
 from pathlib import Path
 from typing import Literal
 
+import numpy as np
 from pydantic import Field, ValidationError, model_validator
 
+from dynamisbench_soccer.engines.gnss_lps_acquisition import (
+    AcquisitionDeclaration,
+    AcquisitionRefusal,
+)
+from dynamisbench_soccer.engines.lps_speed import horizontal_speed, position_error_radius
 from dynamisbench_soccer.m4.admission import evaluate
 from dynamisbench_soccer.m4.contracts import _unique_object
 from dynamisbench_soccer.m4.custody import load_private
 from dynamisbench_soccer.m4.task_registry import Name, Nonnegative, RegistryTask, Schema, Text
+from dynamisbench_soccer.signals.schema import BundleMeta, SignalBundle
 
 Reason = Literal["eligible", "not_eligible", "insufficient_evidence", "unsupported_claim"]
 
@@ -172,6 +179,58 @@ def _replay(expected: ExpectedMethod, payload: bytes, tolerance: float) -> bool:
     )
 
 
+LPS_SPEC = {
+    "operation": "native_lps_horizontal_speed",
+    "derivative": "three_point",
+    "position_filter": "none",
+}
+LPS_IMPLEMENTATIONS = {
+    f"src/dynamisbench_soccer/engines/lps_speed.py::{name}"
+    for name in ("horizontal_speed", "position_error_radius")
+}
+
+
+def _replay_lps(
+    expected: ExpectedMethod, payload: bytes, artifacts: tuple[str, ...], tolerance: float
+) -> bool:
+    if len(artifacts) != 1:
+        return False
+    artifact = artifacts[0]
+    data = json.loads(json.loads(payload)["inputs"][artifact])
+    row = data["row"]
+    if type(row) is not int:
+        return False
+    channels = {
+        name: np.asarray(values, dtype=np.float64) for name, values in data["channels"].items()
+    }
+    bundle = SignalBundle(BundleMeta.model_validate(data["meta"]), channels)
+    declaration = AcquisitionDeclaration.model_validate(data["declaration"])
+    try:
+        speed = horizontal_speed(bundle, declaration, row)
+    except AcquisitionRefusal:
+        return (
+            expected.decision == "refuse"
+            and expected.reasons == ("not_eligible",)
+            and not expected.selected_trials
+        )
+    target = expected.quantity
+    if target is None or target.uncertainty is None or expected.selected_trials != (artifact,):
+        return False
+    time = channels["time"] - channels["time"][0]
+    before, center, after = map(float, time[row - 1 : row + 2])
+    radius = position_error_radius(before, center, after, data["horizontal_error_m"])
+    operands = tuple(
+        Operand(artifact=artifact, field=f"{name}.{index}", value=float(channels[name][index]))
+        for name in ("time", "position_x", "position_y")
+        for index in range(row - 1, row + 2)
+    )
+    return (
+        expected.operands == operands
+        and math.isclose(speed, target.value, abs_tol=tolerance, rel_tol=0)
+        and math.isclose(radius, target.uncertainty, abs_tol=tolerance, rel_tol=0)
+    )
+
+
 def score_checkpoint(
     root: Path,
     task: RegistryTask,
@@ -187,7 +246,19 @@ def score_checkpoint(
     review = admission.reviewed_slice
     if admission.status != "ENGINEERING_ADMITTED" or review is None:
         return Outcome(outcome="EXCLUDED_FROM_SCORED_BENCHMARK", findings=admission.reasons)
-    if task.engine != "elapsed-subtraction.v1" or task.grader != "formal.v1":
+    lps = task.engine == "native-lps-speed.v1"
+    if (
+        task.grader != "formal.v1"
+        or task.engine not in {"native-lps-speed.v1", "elapsed-subtraction.v1"}
+        or (
+            lps
+            and (
+                review.source != "gnss_lps.lps"
+                or review.kind != "native_signal"
+                or not set(review.implementations) >= LPS_IMPLEMENTATIONS
+            )
+        )
+    ):
         return Outcome(
             outcome="EXCLUDED_FROM_SCORED_BENCHMARK", findings=("unsupported_runtime_binding",)
         )
@@ -210,13 +281,18 @@ def score_checkpoint(
             target = expected.quantity
             if (
                 expected.corrects != checkpoint.corrects
-                or method.specification != {"operation": "finish_minus_start"}
+                or method.specification
+                != (LPS_SPEC if lps else {"operation": "finish_minus_start"})
                 or (
                     target is not None
                     and (target.unit, target.dimension, target.estimand)
                     != (method.unit, method.dimension, method.estimand)
                 )
-                or not _replay(expected, public, method.absolute_tolerance)
+                or not (
+                    _replay_lps(expected, public, checkpoint.artifacts, method.absolute_tolerance)
+                    if lps
+                    else _replay(expected, public, method.absolute_tolerance)
+                )
             ):
                 raise ValueError("unsupported or inconsistent replay")
     except (OSError, ValueError, KeyError, TypeError, OverflowError, RecursionError):
