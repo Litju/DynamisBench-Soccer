@@ -31,6 +31,10 @@ reference clock directly. For wired or wireless clocks, the affine alignment mus
 provide at least two ordered synchronization pulse pairs bracketing the source
 timestamps. Streams with the same native clock ID must agree on its clock and alignment.
 
+The affine map is revalidated against the recorded pulse pairs at the engine
+entry point. Contradictory source drift, reference clock or pulse coordinates
+cause refusal before an event can enter a split or flight estimate.
+
 Declare the resolution, synchronization latency and its bound for each used clock,
 and identify the calibration or protocol in `timing.authority`. Mapped timestamps
 are modeled as reference-clock receipts. Subtract positive reference-side latency

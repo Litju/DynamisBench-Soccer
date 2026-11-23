@@ -7,7 +7,7 @@ Engineering calculations only; no scientific qualification of any device or metr
 
 ## 1. M3 gate (computed)
 
-* **M3 gate passed: False.** 0/15 subfamilies are ENGINEERING_VERIFIED. State counts: {"SPECIFIED": 15}.
+* **M3 gate passed: False.** 2/15 subfamilies are ENGINEERING_VERIFIED. State counts: {"ENGINEERING_VERIFIED": 2, "SPECIFIED": 13}.
 * Ledger structural problems: 0.
 * Policy A: ENGINEERING_VERIFIED means computational-reference readiness. It requires A-M
   and O verified by substantive independent receipts, an independent reference and no
@@ -21,8 +21,8 @@ Engineering calculations only; no scientific qualification of any device or metr
 | -- | -- | -- | -- |
 | force_platform.dual | SPECIFIED | yes | 8 of 14 |
 | force_platform.single | SPECIFIED | yes | 8 of 14 |
-| gnss_lps.gnss | SPECIFIED | yes | 4 of 14 |
-| gnss_lps.lps | SPECIFIED | yes | 3 of 14 |
+| gnss_lps.gnss | ENGINEERING_VERIFIED | yes | 0 of 14 |
+| gnss_lps.lps | ENGINEERING_VERIFIED | yes | 0 of 14 |
 | imu.inertial | SPECIFIED | yes | 6 of 14 |
 | load_cell_isometric.isometric_rig | SPECIFIED | yes | 11 of 14 |
 | load_cell_isometric.load_cell | SPECIFIED | yes | 5 of 14 |
@@ -32,8 +32,8 @@ Engineering calculations only; no scientific qualification of any device or metr
 | nordic_hip.nordic | SPECIFIED | yes | 9 of 14 |
 | radar_laser.laser | SPECIFIED | yes | 10 of 14 |
 | radar_laser.radar | SPECIFIED | yes | 5 of 14 |
-| timing_contact.contact | SPECIFIED | yes | 4 of 14 |
-| timing_contact.gates | SPECIFIED | yes | 5 of 14 |
+| timing_contact.contact | SPECIFIED | yes | 2 of 14 |
+| timing_contact.gates | SPECIFIED | yes | 3 of 14 |
 
 ### Blockers and the experiment that would clear them
 
@@ -73,23 +73,9 @@ Engineering calculations only; no scientific qualification of any device or metr
 * H - owner RES-671: metric definitions are bound to sourced registry claims and executable exactly
 * C - owner RES-693: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused
 
-**gnss_lps.gnss** (SPECIFIED)
-* computational blocker: B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-700; rated specified)
-* computational blocker: E: every processing method variant is compared with an independent reference with stated sensitivity bounds (owner RES-700; rated partial)
-* computational blocker: H: metric definitions are bound to sourced registry claims and executable exactly (owner RES-673; rated partial)
-* computational blocker: I: declared uncertainty propagation is checked against an independent analytical result (owner RES-700; rated partial)
-* H - owner RES-673: metric definitions are bound to sourced registry claims and executable exactly
-* B - owner RES-700: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused
-* I - owner RES-700: declared uncertainty propagation is checked against an independent analytical result
-* E - owner RES-700: every processing method variant is compared with an independent reference with stated sensitivity bounds
+**gnss_lps.gnss** (ENGINEERING_VERIFIED)
 
-**gnss_lps.lps** (SPECIFIED)
-* computational blocker: H: metric definitions are bound to sourced registry claims and executable exactly (owner RES-673; rated partial)
-* computational blocker: I: declared uncertainty propagation is checked against an independent analytical result (owner RES-700; rated partial)
-* computational blocker: L: analytical cross-device studies are executed and classified, never read as interchangeability (owner RES-703; rated partial)
-* H - owner RES-673: metric definitions are bound to sourced registry claims and executable exactly
-* I - owner RES-700: declared uncertainty propagation is checked against an independent analytical result
-* L - owner RES-703: analytical cross-device studies are executed and classified, never read as interchangeability
+**gnss_lps.lps** (ENGINEERING_VERIFIED)
 
 **imu.inertial** (SPECIFIED)
 * computational blocker: A: executable admission contract: native/vendor stage, units and integrity refusals tested (owner RES-693; rated specified)
@@ -267,23 +253,15 @@ Engineering calculations only; no scientific qualification of any device or metr
 
 **timing_contact.contact** (SPECIFIED)
 * computational blocker: B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-698; rated specified)
-* computational blocker: C: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused (owner RES-693; rated specified)
-* computational blocker: G: protocol events are recovered against analytically known event times, with eligibility refusals (owner RES-671; rated partial)
 * computational blocker: O: limitation statements are sourced and emitted with every result (owner RES-698; rated partial)
-* G - owner RES-671: protocol events are recovered against analytically known event times, with eligibility refusals
-* C - owner RES-693: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused
 * B - owner RES-698: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused
 * O - owner RES-698: limitation statements are sourced and emitted with every result
 
 **timing_contact.gates** (SPECIFIED)
 * computational blocker: B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-698; rated specified)
-* computational blocker: C: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused (owner RES-693; rated specified)
-* computational blocker: G: protocol events are recovered against analytically known event times, with eligibility refusals (owner RES-671; rated partial)
 * computational blocker: J: an independent reference implementation or closed form that shares no code with the engine (owner RES-669; rated partial)
 * computational blocker: O: limitation statements are sourced and emitted with every result (owner RES-698; rated partial)
 * J - owner RES-669: an independent reference implementation or closed form that shares no code with the engine
-* G - owner RES-671: protocol events are recovered against analytically known event times, with eligibility refusals
-* C - owner RES-693: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused
 * B - owner RES-698: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused
 * O - owner RES-698: limitation statements are sourced and emitted with every result
 
@@ -390,8 +368,8 @@ Open empirical requirements (what only physical measurement can close):
 | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- |
 | force_platform.dual | s | s | V | V | p | V | p | p | V | V | p | p | V | - | p |
 | force_platform.single | s | s | s | p | p | V | V | p | V | V | p | V | V | - | p |
-| gnss_lps.gnss | V | s | V | V | p | V | V | p | p | V | V | V | V | - | V |
-| gnss_lps.lps | V | V | V | V | V | V | V | p | p | V | V | p | V | - | V |
+| gnss_lps.gnss | V | V | V | V | V | V | V | V | V | V | V | V | V | - | V |
+| gnss_lps.lps | V | V | V | V | V | V | V | V | V | V | V | V | V | - | V |
 | imu.inertial | s | V | s | V | V | V | p | p | V | V | V | p | p | - | V |
 | load_cell_isometric.isometric_rig | V | s | s | p | p | p | p | p | p | p | p | p | V | - | V |
 | load_cell_isometric.load_cell | V | V | s | V | p | V | V | p | p | V | p | V | V | - | V |
@@ -401,8 +379,8 @@ Open empirical requirements (what only physical measurement can close):
 | nordic_hip.nordic | s | s | s | p | p | V | V | V | p | V | p | V | p | - | p |
 | radar_laser.laser | s | s | V | p | p | V | p | p | p | p | V | V | p | - | p |
 | radar_laser.radar | V | s | V | V | p | V | V | V | V | V | V | p | p | - | p |
-| timing_contact.contact | V | s | s | V | V | V | p | V | V | V | V | V | V | - | p |
-| timing_contact.gates | V | s | s | V | V | V | p | V | V | p | V | V | V | - | p |
+| timing_contact.contact | V | s | V | V | V | V | V | V | V | V | V | V | V | - | p |
+| timing_contact.gates | V | s | V | V | V | V | V | V | V | p | V | V | V | - | p |
 
 `-` absent, `p` partial (implemented, checked against analytical references), `s` specified, `V` verified.
 

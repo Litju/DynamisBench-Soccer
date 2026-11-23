@@ -718,6 +718,18 @@ def export_case(
             for c in channels
             if c.quantity is not Quantity.TIME
         ]
+    if device is DeviceClass.GNSS:
+        frames = [
+            *frames,
+            Frame(
+                id="wgs84",
+                kind="geodetic",
+                definition="WGS84 latitude, longitude and ellipsoidal height",
+            ),
+        ]
+        for channel in channels:
+            if channel.name in {"latitude", "longitude", "height"}:
+                channel.frame = "wgs84"
     observation_bundle = _bundle(
         subfamily,
         "observation",
