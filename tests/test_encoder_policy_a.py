@@ -160,3 +160,27 @@ def test_encoder_cli_replays_verified_artifacts_and_detects_mutation(tmp_path: P
     parquet.write_bytes(parquet.read_bytes() + b"altered")
     assert main(args) == 2
     assert json.loads(out.read_bytes()) == new
+
+
+@pytest.mark.parametrize(
+    "protected_name", ["observation.parquet", "observation.json", "config.json"]
+)
+def test_encoder_cli_refuses_output_hard_link_to_input(
+    protected_name: str, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    stem = tmp_path / "observation"
+    config = tmp_path / "config.json"
+    alias = tmp_path / "output.json"
+    io.write(export_case("lpt_encoder.encoder", MOTION, test_id="cmj", hz=100).observation, stem)
+    config.write_text(
+        json.dumps({"cables": [CABLE.model_dump()], "geometry": GEOMETRY.model_dump()})
+    )
+    protected = tmp_path / protected_name
+    original = protected.read_bytes()
+    alias.hardlink_to(protected)
+    assert (
+        main(["lpt-encoder", "process", str(stem), "--config", str(config), "--out", str(alias)])
+        == 2
+    )
+    assert "output path must not overwrite" in capsys.readouterr().err
+    assert protected.read_bytes() == original

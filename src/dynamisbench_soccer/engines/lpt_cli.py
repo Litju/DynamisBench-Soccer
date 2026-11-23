@@ -31,10 +31,13 @@ class RunConfig(BaseModel):
 
 def _process(args: argparse.Namespace) -> int:
     protected = [args.input, *io.paths_for(args.input), args.config]
-    if args.out is not None and args.out.resolve() in {p.resolve() for p in protected}:
-        print("FAIL output path must not overwrite inputs or configuration", file=sys.stderr)
-        return 2
     try:
+        if args.out is not None and any(
+            args.out.resolve() == path.resolve()
+            or (args.out.exists() and path.exists() and args.out.samefile(path))
+            for path in protected
+        ):
+            raise ValueError("output path must not overwrite inputs or configuration")
         config = RunConfig.model_validate_json(args.config.read_text(encoding="utf-8"))
         report = process(io.read(args.input), **dict(config))
         output = json.dumps(report, indent=2, sort_keys=True, allow_nan=False) + "\n"
