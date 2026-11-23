@@ -453,9 +453,14 @@
    "verdict": "SUPPORTED"
   },
   "RCP-imu-inertial-K": {
-   "fix": "Cite test_static_gyro_bias_and_slip_are_flagged and add a misalignment verdict.",
-   "reason": "Inject bias, misalignment and saturation are verified exactly. But engine verdicts are asserted only for saturation (and for gaps via manual slicing). Misalignment and bias fixtures get no engine verdict in the cited tests.",
-   "verdict": "PARTIAL"
+   "bound_digest": "46d6567f0a67b9d0d6e058e193bb8383d29a09c068845bf2129b3be8660a557c",
+   "evidence_head": "ce56a07632abb17ba98a11b18874acb104494842",
+   "fix": "",
+   "prior_fix": "Cite test_static_gyro_bias_and_slip_are_flagged and add a misalignment verdict.",
+   "prior_reason": "Inject bias, misalignment and saturation are verified exactly. But engine verdicts are asserted only for saturation (and for gaps via manual slicing). Misalignment and bias fixtures get no engine verdict in the cited tests.",
+   "prior_verdict": "PARTIAL",
+   "reason": "Native IMU fault controls verify declared-axis bias flags, rail rejection, and the known effect of fixed accelerometer misalignment with and without declared calibration. At 100 Hz on a stationary rigid body, injected 0.2 rad fixed accelerometer tilt is accepted with the slip check passing, while free acceleration is biased by [0, \u22121.9482805928413869, \u22120.19548009441318778] m/s\u00b2. With declared calibration the nominal zero acceleration is recovered. Unclipped 0.1 rad/s gyro bias is accepted with a gyro-bias flag. Under a declared 0.05 rad/s rail, clipping rejects with 201 channel samples at rail and marks the report diagnostic-only. A declared 5 m/s\u00b2 accelerometer rail also rejects. Absolute 1e-12 m/s\u00b2 and rad/s with zero relative allowance cover arithmetic rounding; status and counts are exact.",
+   "verdict": "SUPPORTED"
   },
   "RCP-imu-inertial-L": {
    "fix": "Record tolerance 0.006 s.",
