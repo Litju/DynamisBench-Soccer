@@ -25,6 +25,13 @@ def test_ellipsoid_normal_becomes_local_up(latitude, longitude):
     assert result.frame_id == "local_enu"
 
 
+def _equator_circle(angle):
+    radius = 6378137.0
+    return np.column_stack(
+        (radius * np.sin(angle), np.zeros_like(angle), -2 * radius * np.sin(angle / 2) ** 2)
+    )
+
+
 def test_equator_direction_and_invalid_geometry():
     case, declaration = track_case("gnss", hz=18, latency=0, drift=0)
     bundle = case.observation
@@ -36,13 +43,7 @@ def test_equator_direction_and_invalid_geometry():
     bundle["height"][:] = 0
     origin = EnuOrigin(latitude_deg=0, longitude_deg=0, ellipsoidal_height_m=0)
     declaration = declaration.model_copy(update={"enu_origin": origin})
-    expected = np.column_stack(
-        (
-            earth_radius * np.sin(delta),
-            np.zeros_like(delta),
-            -2 * earth_radius * np.sin(delta / 2) ** 2,
-        )
-    )
+    expected = _equator_circle(delta)
     np.testing.assert_allclose(admit(bundle, declaration).position_m, expected, atol=5e-9, rtol=0)
     with pytest.raises(AcquisitionRefusal, match="explicit ENU origin"):
         admit(bundle, declaration.model_copy(update={"enu_origin": None}))

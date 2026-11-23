@@ -2421,3 +2421,48 @@ issue = "RES-700"
 "src/dynamisbench_soccer/reference/lps_speed.py::exact_grid_extreme_speed" = "35ca59411bad9aa71dc02b65c13c2a33245986ce998ee152c7faf09d9f27ca7f"
 "tests/test_lps_speed_slice.py::test_lps_speed_refuses_unverified_clock_and_signal" = "9304fad18d72cea14cfd29c3df475274f2508f93bbbab9f6ffe1dc9d6e746d80"
 "tests/test_lps_speed_slice.py::test_position_only_radius_contains_and_attains_analytical_extreme" = "504cd18b6b3579ef19442ffb842a27bf469e2626053fee6aa8a4fb1d498fc615"
+
+[[receipt]]
+id = "RCP-gnss_lps-gnss-B"
+dimension = "B"
+subfamilies = ["gnss_lps.gnss"]
+implementation = ["src/dynamisbench_soccer/engines/gnss_lps_acquisition.py::admit"]
+reference = ["tests/test_gnss_geometry_policy_a.py::_equator_circle"]
+tests = ["tests/test_gnss_geometry_policy_a.py::test_ellipsoid_normal_becomes_local_up", "tests/test_gnss_geometry_policy_a.py::test_equator_direction_and_invalid_geometry", "tests/test_gnss_lps_acquisition.py::test_enu_longitude_wrap_and_height_with_closed_form_equator", "tests/test_gnss_lps_acquisition.py::test_contradictory_acquisition_declarations_refuse"]
+reference_kind = "closed_form"
+independence = "WGS-84 equator geometry reduces to a circle and the reference computes east and up from the chord, without geodetic-to-ECEF engine code; ellipsoid normal height increments are exactly local up."
+claim = "Native GNSS WGS-84 fixes in declared local ENU recover axis direction, height offsets and date-line wrap, and refuse missing origin, out-of-domain position or contradictory acquisition declarations."
+tolerance_basis = "WGS-84 local east, north and up agree at 5e-9 m absolute with zero relative tolerance in the analytic circle and height controls. The datum, source and rate refusals are exact."
+tolerance = 5e-9
+tolerance_unit = "m (absolute)"
+issue = "RES-700"
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/gnss_lps_acquisition.py::admit" = "9debfad0fb7859e175ed2ce9f125e59c7ed7f18719af7fdef075a99b79ee1a3b"
+"tests/test_gnss_geometry_policy_a.py::_equator_circle" = "202f7cf9a44b998978144990d425eee5d2d8ddd7dabe0021b6dd241e20c1c33d"
+"tests/test_gnss_geometry_policy_a.py::test_ellipsoid_normal_becomes_local_up" = "e647e5d6e3a9a21640ee8b9b5033e026eee262c45f8af1f25246a3fe4ce7536f"
+"tests/test_gnss_geometry_policy_a.py::test_equator_direction_and_invalid_geometry" = "5117688e56c1e80b4756dfbc3b7cf28b01c526aef658bc4898954207c599b539"
+"tests/test_gnss_lps_acquisition.py::test_contradictory_acquisition_declarations_refuse" = "12aa06ea47c8a18eb294d4d41410d5ddc254d578f35bcff947abce7393229dba"
+"tests/test_gnss_lps_acquisition.py::test_enu_longitude_wrap_and_height_with_closed_form_equator" = "f63ed834c1fcf2307cbad5d5f72cc02aa518d4def11fa05786f2231f6707c88f"
+
+[[receipt]]
+id = "RCP-gnss_lps-gnss-E"
+dimension = "E"
+subfamilies = ["gnss_lps.gnss"]
+implementation = ["src/dynamisbench_soccer/engines/gnss_lps.py::process", "src/dynamisbench_soccer/engines/filtering.py::smooth_samples"]
+reference = ["tests/test_gnss_processing_policy_a.py::_expected"]
+tests = ["tests/test_gnss_processing_policy_a.py::test_gnss_variants_and_peaks_match_independent_polynomials", "tests/test_gnss_processing_policy_a.py::test_gnss_jitter_and_missing_doppler_processing_refuse"]
+reference_kind = "closed_form"
+independence = "The oracle evaluates filter weights and boundary extrapolation directly and obtains derivatives by solving a local polynomial interpolation system, without numpy.gradient, convolutions or any production engine."
+claim = "All native GNSS position and Doppler filter combinations and both derivative stencils agree on a nonlinear affine-clock control. Native, alternate-filter and half-rate results use a common interval, and unavailable methods refuse."
+tolerance_basis = "Position 1e-8 m, positional speed 1e-7 m/s, acceleration 1e-6 m/s², Doppler speed 1e-12 m/s, Doppler change 1e-10 m/s², peak rates 1e-9 Hz. All absolute with zero relative tolerance."
+tolerance = 1e-6
+tolerance_unit = "m/s² (absolute); quantity-specific limits in the cited tests"
+issue = "RES-700"
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/filtering.py::smooth_samples" = "b2ffd93eb709412659ad6937412b30f488b61d8b6bb4632f1dff11d112ccf6b5"
+"src/dynamisbench_soccer/engines/gnss_lps.py::process" = "47dad0be73c8de9a93699c8954df13d3b313b97a249e7ff27f8bfae4ee58edf9"
+"tests/test_gnss_processing_policy_a.py::_expected" = "f1e72223ebc999dae39b3bc4fbc3b52e8f41edfb989192e9e65cd03314f90520"
+"tests/test_gnss_processing_policy_a.py::test_gnss_jitter_and_missing_doppler_processing_refuse" = "72710151abe0d34423afeea1af79331425b17bf591925e3b0b824656a349107a"
+"tests/test_gnss_processing_policy_a.py::test_gnss_variants_and_peaks_match_independent_polynomials" = "7eb5a0626845902742321ec324937ecd3729fc3fdb5324ddd309283920b1af00"
