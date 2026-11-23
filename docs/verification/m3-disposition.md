@@ -4,7 +4,7 @@ Computed from `qualification/ledger.toml`, `receipts.toml` and `empirical.toml` 
 
 ## Result
 
-**M3 FAIL: 0 of 15 subfamilies are `ENGINEERING_VERIFIED`.** Both `dbs qualification gate --stage M3` and `dbs qualification states` exit 1. The RES-675 gate remains open and blocks RES-676.
+**M3 FAIL: 0 of 15 subfamilies are `ENGINEERING_VERIFIED`.** Both `dbs qualification gate --stage M3` and `dbs qualification states` exit 1. The RES-675 gate remains open.
 
 100 of 210 A–M/O cells have supported and content-bound receipts. The 110 open cells below still block computational readiness.
 
@@ -73,4 +73,4 @@ Dimension L is verified only where the analytical study was executed and classif
 
 ## 5. Roadmap consequence
 
-M4 stays BLOCKED: RES-676 is blocked by RES-675, which does not pass. The RES-737 development-only prototype is unchanged and unqualified.
+M4 is complete under staged Option B. Its engineering qualification covers the admitted native LPS reference in the [M4 report](graders-v0.1.md). M5 can proceed on individually admitted references under its existing issues. Full M3 remains a prerequisite for full-scope M8/M9 qualification and frozen release.
