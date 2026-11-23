@@ -104,6 +104,45 @@ class GatePolicy(Policy):
         return self
 
 
+_GATE_LIMITATIONS = (
+    "A timestamp represents beam interruption by the triggering body part at the configured "
+    "height. A limb may interrupt the beam before the torso.",
+    "DEV-004: The studied single- and dual-beam methods give different timing observations. "
+    "Beam height, trigger and voting settings have no universal correction.",
+    "Declared link and trigger delays, clock alignment and nearest-tick resolution condition "
+    "the reported timing bounds.",
+    "Split speed is surveyed segment distance divided by elapsed beam time. "
+    "Instantaneous speed and radar-derived speed have different definitions.",
+    "Missing stations, ambiguous beam groups and unresolved event order cause refusal. "
+    "Timing bounds are conditional on the selected beam group.",
+    "Analytical verification concerns declared event geometry and computation. "
+    "Hardware accuracy, course calibration and empirical interchangeability need "
+    "measured evidence.",
+)
+
+
+def gate_limitations(policy: GatePolicy | None) -> tuple[str, ...]:
+    if policy is None:
+        return _GATE_LIMITATIONS
+    start = {
+        "first_gate": "The first gate defines elapsed time zero; motion before it is unobserved.",
+        "fixed_offset": "A declared offset estimates the start-to-first-gate time.",
+        "pressure_pad": "Elapsed time starts from the measured and corrected pressure-pad release.",
+        "sound_cue": "Elapsed time starts from the measured and corrected sound cue.",
+    }[policy.start.mode]
+    voting = (
+        "Multi-beam voting selects the quorum edge within a declared coincidence window."
+        if any(g.beam_type != "single" for g in policy.gates)
+        else "Single-beam stations accept one resolved interruption per station."
+    )
+    refractory = (
+        "The declared refractory window can suppress repeated interruptions on the same beam."
+        if policy.debounce_s
+        else "Zero refractory window applies no beam-repeat suppression."
+    )
+    return (*_GATE_LIMITATIONS, start, voting, refractory)
+
+
 @dataclass(frozen=True)
 class Split:
     gate_id: int
@@ -121,6 +160,7 @@ class Sprint:
     start_event: Event | None
     splits: tuple[Split, ...]
     discarded: tuple[Discard, ...]
+    limitations: tuple[str, ...]
 
 
 def _crossing(
@@ -307,4 +347,5 @@ def sprint(bundles: Sequence[SignalBundle], policy: GatePolicy) -> Sprint:
         origin,
         tuple(splits),
         tuple(discarded),
+        gate_limitations(policy),
     )

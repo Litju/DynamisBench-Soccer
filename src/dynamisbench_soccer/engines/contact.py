@@ -62,6 +62,47 @@ class ContactPolicy(Policy):
         return self
 
 
+_CONTACT_LIMITATIONS = (
+    "Switch edges depend on the declared actuator and its switching threshold. "
+    "They describe contact-system events rather than mechanical takeoff or touchdown.",
+    "Clock resolution assumes nearest-tick timestamps. Bounds depend on the declared affine clock, "
+    "link and ON/OFF delays, and the selected edge pairs.",
+    "A plausible false switch or missed transition can evade event-integrity checks. "
+    "Incomplete or unresolved phases are refused.",
+    "Flight-time height uses ballistic flight with equal centre-of-mass height at takeoff and "
+    "touchdown. The switch stream cannot establish that condition.",
+    "DEV-003: The tested mat's drop-jump contact times showed condition-dependent bias "
+    "against force plate measurements. This comparison does not establish accuracy "
+    "for other systems or metrics.",
+    "Analytical verification concerns the computation under declared conditions. Hardware accuracy "
+    "and empirical interchangeability need "
+    "measured evidence.",
+)
+
+
+def contact_limitations(policy: ContactPolicy | None) -> tuple[str, ...]:
+    if policy is None:
+        return _CONTACT_LIMITATIONS
+    actuator = {
+        "contact_mat": "Mat contact is defined by the configured switch response.",
+        "pressure_pad": "Pad contact is defined by the configured pressure switch response.",
+        "optical_contact_bar": (
+            "Optical contact is defined by interruption of the configured light path."
+        ),
+    }[policy.system]
+    refractory = (
+        "A positive refractory window can discard real transitions near bounce or repeat edges."
+        if policy.debounce_s
+        else "Zero refractory window retains no bounce suppression and refuses same-state repeats."
+    )
+    posture = (
+        "Equal centre-of-mass height is an explicit protocol assumption for the reported height."
+        if policy.ballistic_equal_com_height
+        else "Flight-time height and height-based RSI are withheld without the posture assumption."
+    )
+    return (*_CONTACT_LIMITATIONS, actuator, refractory, posture)
+
+
 @dataclass(frozen=True)
 class Flight:
     takeoff: Event
@@ -83,6 +124,7 @@ class ContactResult:
     initial_event: Event
     flights: tuple[Flight, ...]
     discarded: tuple[Discard, ...]
+    limitations: tuple[str, ...]
 
 
 def _stable_rows(
@@ -246,4 +288,5 @@ def contact(bundle: SignalBundle, policy: ContactPolicy) -> ContactResult:
         initial,
         tuple(flights),
         tuple(discarded),
+        contact_limitations(policy),
     )

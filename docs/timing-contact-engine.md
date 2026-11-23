@@ -170,7 +170,10 @@ kinematic detection. Both have distinct event definitions from contact switching
 
 Use repeatable `--sensitivity` policies to rerun the same native rows under a
 different start offset, switching latency, debounce window, or beam quorum. Each
-result includes its policy, metrics and discarded rows, or its refusal reason.
+successful result includes its policy, metrics, applicable limitations and discarded
+rows. A structured sensitivity refusal carries the reason and applicable limitations.
+Invalid policy files carry the general limitations for their engine because their
+method choices cannot be determined.
 For body-part and beam-height uncertainty, provide per-beam `definition_error_s`
 from calibration or observations. Compare beam votes when the underlying stream
 contains the corresponding beams. A physical change in setup requires observations
@@ -184,8 +187,15 @@ out-of-order native rows, a false arm break, asymmetric switching delays,
 a plausible biased wireless split, an extra plausible flight, and early drop
 censoring. Linux CI also runs the timing tests from the installed wheel.
 
-Timing and contact remain in progress in the qualification ledger. Empirical
-trigger geometry, switching thresholds, clock and latency calibration, assessment
-validation, and cross-device agreement remain open under RES-694, RES-671,
-RES-673 and RES-703. An isolated plausible false edge or a physically different
-landing posture can require another instrument or a protocol observation to detect.
+See the [computed M3 disposition](verification/m3-disposition.md) for engineering
+status. Trigger geometry, hardware switching thresholds and latency still require
+empirical calibration when interpreting measured device data. A plausible false edge
+or a different landing posture can require another instrument or protocol observation.
+
+The emitted DEV-003 statement comes from [Tenelsen et al. (2019)](https://doi.org/10.3390/sports7050114)
+and is limited to the tested drop-jump contact-time comparison. DEV-004 comes from
+[Haugen et al. (2014)](https://doi.org/10.1519/JSC.0000000000000415) and distinguishes
+the tested single- and dual-beam methods. Timing bounds, refractory rules, beam
+voting and the ballistic posture requirement describe the repository model.
+Segment averages and radar-derived speed follow separate measurement definitions
+in NE-007 in the [M3 architecture](m3-architecture.md).
