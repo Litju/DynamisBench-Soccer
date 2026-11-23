@@ -2421,3 +2421,47 @@ issue = "RES-700"
 "src/dynamisbench_soccer/reference/lps_speed.py::exact_grid_extreme_speed" = "35ca59411bad9aa71dc02b65c13c2a33245986ce998ee152c7faf09d9f27ca7f"
 "tests/test_lps_speed_slice.py::test_lps_speed_refuses_unverified_clock_and_signal" = "9304fad18d72cea14cfd29c3df475274f2508f93bbbab9f6ffe1dc9d6e746d80"
 "tests/test_lps_speed_slice.py::test_position_only_radius_contains_and_attains_analytical_extreme" = "504cd18b6b3579ef19442ffb842a27bf469e2626053fee6aa8a4fb1d498fc615"
+
+[[receipt]]
+id = "RCP-gnss_lps-lps-H-native-assessment"
+dimension = "H"
+subfamilies = ["gnss_lps.lps"]
+implementation = ["src/dynamisbench_soccer/engines/gnss_lps.py::process", "src/dynamisbench_soccer/assessment/handoff.py::load_speed_report", "src/dynamisbench_soccer/assessment/sprint.py::milestones"]
+reference = ["src/dynamisbench_soccer/reference/coordinates.py::ecef_geodetic"]
+tests = ["tests/test_position_estimands_policy_a.py::test_native_metric_definitions_and_assessment_handoff"]
+reference_kind = "closed_form"
+independence = "A prescribed quadratic planar trajectory has exact speed 5+t, acceleration 1, path 5t+t²/2 and an independently invertible integrated milestone. GNSS fixes use independent inverse geodetic conversion; tagged Doppler follows a different analytic line."
+claim = "Native LPS positional speed, acceleration, chord distance and threshold-qualified distance have explicit units and whole-interval semantics. Source-labelled assessment preserves the positional trace and separates it from any Doppler estimand under DEV-005."
+tolerance_basis = "Absolute bounds on horizontal speed and path are 1e-7 m/s and m, acceleration 1e-5 m/s², and milestone 1e-7 s, with zero relative tolerance for array checks. Whole-interval selection and source or basis refusals are categorical."
+tolerance = 1e-5
+tolerance_unit = "m/s² (absolute); quantity-specific bounds in cited tests"
+issue = "RES-673"
+
+[receipt.digests]
+"src/dynamisbench_soccer/assessment/handoff.py::load_speed_report" = "49e0d26ed0eeca0f0a94dda0821c7581e59cbfc2903ddd42945b3bfac879d1ef"
+"src/dynamisbench_soccer/assessment/sprint.py::milestones" = "13d728b0eb0ea039b61834bac4b1054cf6df96ebcc3e2079655eb0a185d3fb84"
+"src/dynamisbench_soccer/engines/gnss_lps.py::process" = "47dad0be73c8de9a93699c8954df13d3b313b97a249e7ff27f8bfae4ee58edf9"
+"src/dynamisbench_soccer/reference/coordinates.py::ecef_geodetic" = "6d912d014fa54d5ffa5f0c949fcaddabc33ebd20b3f91188d86257274b4c7095"
+"tests/test_position_estimands_policy_a.py::test_native_metric_definitions_and_assessment_handoff" = "6d071d24ea97f83b34d264f9df4f5d600bb8d0437b8f18eccb5e8da7d33ed38a"
+
+[[receipt]]
+id = "RCP-gnss_lps-gnss-H-native-assessment"
+dimension = "H"
+subfamilies = ["gnss_lps.gnss"]
+implementation = ["src/dynamisbench_soccer/engines/gnss_lps.py::process", "src/dynamisbench_soccer/assessment/handoff.py::load_speed_report", "src/dynamisbench_soccer/assessment/sprint.py::milestones"]
+reference = ["src/dynamisbench_soccer/reference/coordinates.py::ecef_geodetic"]
+tests = ["tests/test_position_estimands_policy_a.py::test_native_metric_definitions_and_assessment_handoff"]
+reference_kind = "closed_form"
+independence = "A prescribed quadratic planar trajectory has exact speed 5+t, acceleration 1, path 5t+t²/2 and an independently invertible integrated milestone. GNSS fixes use independent inverse geodetic conversion; tagged Doppler follows a different analytic line."
+claim = "Native GNSS positional speed, acceleration, chord distance and threshold-qualified distance have explicit units and whole-interval semantics. Source-labelled assessment preserves the positional trace and separates it from any Doppler estimand under DEV-005."
+tolerance_basis = "Absolute bounds on horizontal speed and path are 1e-7 m/s and m, acceleration 1e-5 m/s², and milestone 1e-7 s, with zero relative tolerance for array checks. Whole-interval selection and source or basis refusals are categorical."
+tolerance = 1e-5
+tolerance_unit = "m/s² (absolute); quantity-specific bounds in cited tests"
+issue = "RES-673"
+
+[receipt.digests]
+"src/dynamisbench_soccer/assessment/handoff.py::load_speed_report" = "49e0d26ed0eeca0f0a94dda0821c7581e59cbfc2903ddd42945b3bfac879d1ef"
+"src/dynamisbench_soccer/assessment/sprint.py::milestones" = "13d728b0eb0ea039b61834bac4b1054cf6df96ebcc3e2079655eb0a185d3fb84"
+"src/dynamisbench_soccer/engines/gnss_lps.py::process" = "47dad0be73c8de9a93699c8954df13d3b313b97a249e7ff27f8bfae4ee58edf9"
+"src/dynamisbench_soccer/reference/coordinates.py::ecef_geodetic" = "6d912d014fa54d5ffa5f0c949fcaddabc33ebd20b3f91188d86257274b4c7095"
+"tests/test_position_estimands_policy_a.py::test_native_metric_definitions_and_assessment_handoff" = "6d071d24ea97f83b34d264f9df4f5d600bb8d0437b8f18eccb5e8da7d33ed38a"
