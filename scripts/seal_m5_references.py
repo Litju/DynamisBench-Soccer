@@ -24,7 +24,7 @@ from dynamisbench_soccer.m4.custody import AnswerEnvelope, AnswerLocation
 from dynamisbench_soccer.m4.grader import MeasurementSubmission
 from dynamisbench_soccer.m4.key_store import digest
 from dynamisbench_soccer.m4.measurement import ENGINE, PROCEDURES
-from dynamisbench_soccer.m4.task_registry import fingerprint, load_registry
+from dynamisbench_soccer.m4.task_registry import RegistryTask, fingerprint, load_registry
 from dynamisbench_soccer.qualification.receipts import load
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -45,6 +45,14 @@ def _read_private(directory: Path, name: str) -> bytes:
 def _write_private(path: Path, raw: bytes) -> None:
     with os.fdopen(os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600), "wb") as stream:
         stream.write(raw)
+
+
+def _custody_family(task: RegistryTask) -> str:
+    return {
+        "protocol_assessment": "timing",
+        "native_signal": "position",
+        "cross_device": "paired",
+    }[PROCEDURES[task.methods[0].id].kind]
 
 
 def _expected(task, family, directory, approval):
@@ -112,19 +120,21 @@ def main() -> None:
             continue
         method = task.methods[0]
         procedure = PROCEDURES[method.id]
-        family = "timing" if procedure.kind == "protocol_assessment" else "position"
+        family = _custody_family(task)
         selected = {}
         inapplicable = {}
         for role in sorted(DIMENSIONS):
             if role not in REQUIRED[procedure.kind]:
                 inapplicable[role] = {
-                    "G": "The interior-row operation recovers no protocol event.",
+                    "G": "The fixed sample or paired fixed samples recover no protocol event.",
                     "L": "This single-source slice refuses equivalence without a paired study.",
                 }[role]
                 continue
             suffix = {"H": "-native-assessment", "I": "-native-bounds"}.get(role, "")
             if family == "timing":
                 suffix = ""
+            elif family == "paired" and role in {"L", "I"}:
+                suffix = "-paired-speed"
             selected[role] = receipts[f"RCP-{procedure.source.replace('.', '-')}-{role}{suffix}"]
         production = {item for r in selected.values() for item in r.implementation}
         oracle = {item for r in selected.values() for item in r.reference}

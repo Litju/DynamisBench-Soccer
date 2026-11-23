@@ -13,7 +13,7 @@ from collections import Counter
 from dataclasses import asdict
 from pathlib import Path
 
-from seal_m5_references import _read_private
+from seal_m5_references import _custody_family, _read_private
 
 from dynamisbench_soccer.m4.admission import Catalog, evaluate
 from dynamisbench_soccer.m4.grader import score_checkpoint
@@ -223,6 +223,102 @@ def _controls(score, task, answers: dict, inputs: dict):
         scenarios.append(
             ("ignore_affine_clock", key, candidate | {"quantity": observed_clock}, ("value",))
         )
+    elif method == "paired-speed-bias":
+        biased_id = task.checkpoints[1].id
+        biased = answers[biased_id]
+        signed = biased["quantity"]
+        spread_id = task.checkpoints[2].id
+        spread = answers[spread_id]
+        scenarios.extend(
+            [
+                (
+                    "reversed_bias_sign",
+                    biased_id,
+                    biased | {"quantity": signed | {"value": -signed["value"]}},
+                    ("value",),
+                ),
+                (
+                    "omitted_common_offset_uncertainty",
+                    biased_id,
+                    biased | {"quantity": signed | {"uncertainty": None}},
+                    ("uncertainty",),
+                ),
+                (
+                    "shrink_common_offset_by_pair_count",
+                    biased_id,
+                    biased
+                    | {
+                        "quantity": signed
+                        | {
+                            "uncertainty": signed["uncertainty"]
+                            / (len(biased["selected_trials"]) ** 0.5)
+                        }
+                    },
+                    ("uncertainty",),
+                ),
+                (
+                    "bias_only_tolerance",
+                    spread_id,
+                    spread
+                    | {
+                        "claims": [
+                            "limits_within_tolerance"
+                            if claim == "limits_exceed_tolerance"
+                            else claim
+                            for claim in spread["claims"]
+                        ]
+                    },
+                    ("interpretation_boundary",),
+                ),
+                (
+                    "wrong_coordinate_frame",
+                    biased_id,
+                    biased | {"claims": biased["claims"] + ["sensor_frame_speed"]},
+                    ("interpretation_boundary",),
+                ),
+                (
+                    "wrong_pair_identity",
+                    biased_id,
+                    biased
+                    | {"selected_trials": [*biased["selected_trials"][:-1], "unmatched-run"]},
+                    ("trial_selection",),
+                ),
+                (
+                    "wrong_acquisition_source",
+                    biased_id,
+                    biased
+                    | {
+                        "operands": [
+                            biased["operands"][0] | {"artifact": "unmatched-source"},
+                            *biased["operands"][1:],
+                        ]
+                    },
+                    ("derivation",),
+                ),
+                (
+                    "copied_radial_value",
+                    biased_id,
+                    biased | {"quantity": signed | {"value": biased["operands"][0]["value"] * 0.6}},
+                    ("value",),
+                ),
+                (
+                    "te_or_change_inferred_from_paired_devices",
+                    biased_id,
+                    biased
+                    | {
+                        "claims": biased["claims"]
+                        + ["test_retest_typical_error_known", "individual_change_is_real"]
+                    },
+                    ("interpretation_boundary",),
+                ),
+                (
+                    "compute_after_definition_mismatch",
+                    refuse_id,
+                    positive,
+                    ("eligibility_or_refusal",),
+                ),
+            ]
+        )
     else:
         scenarios.append(
             (
@@ -272,6 +368,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("custody", type=Path)
     parser.add_argument("catalog_sha256")
+    parser.add_argument("--task", help="limit the campaign to this reviewed measurement task ID")
     args = parser.parse_args()
     private = args.custody.resolve(strict=True)
     if (
@@ -296,22 +393,25 @@ def main() -> None:
         mode="w", encoding="utf-8", dir=private, prefix="trials-", suffix=".jsonl", delete=False
     ) as receipt:
         for task in registry.values():
-            if task.engine != ENGINE:
+            if (
+                task.engine != ENGINE
+                or task.reference_profile not in reviewed.slices
+                or (args.task and task.task.id != args.task)
+            ):
                 continue
             key = f"{task.task.id}@{task.task.revision}"
             inputs = {
                 artifact.name: (ROOT / artifact.path).read_bytes() for artifact in task.artifacts
             }
-            family = "timing" if task.task.source.startswith("timing_contact.") else "position"
-            profile = reviewed.slices.get(task.reference_profile)
-            baselines = STUBS | {"naive": (ROOT / "scripts/m5_controls/naive.py").read_bytes()}
-            if profile is not None:
-                oracle_source = _read_private(private, f"{family}-oracle.py")
-                if digest(oracle_source) != profile.private_inputs_sha256.get("oracle"):
-                    parser.error("oracle differs from the reviewed custody digest")
-                baselines["oracle"] = oracle_source
-            else:
-                baselines["oracle"] = STUBS["null"]
+            family = _custody_family(task)
+            profile = reviewed.slices[task.reference_profile]
+            oracle_source = _read_private(private, f"{family}-oracle.py")
+            if digest(oracle_source) != profile.private_inputs_sha256.get("oracle"):
+                parser.error("oracle differs from the reviewed custody digest")
+            baselines = STUBS | {
+                "naive": (ROOT / "scripts/m5_controls/naive.py").read_bytes(),
+                "oracle": oracle_source,
+            }
             rows = {
                 name: run_episode(context, task, name, source, SEED)
                 for name, source in baselines.items()
@@ -385,7 +485,6 @@ def main() -> None:
                 )
 
             checks = _controls(score, task, answers, inputs)
-            assert profile is not None
             isolation = _isolation(task, inputs, private)
             leaked = not (
                 isolation.outcome == "graded"

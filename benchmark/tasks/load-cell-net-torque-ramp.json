@@ -1,0 +1,186 @@
+{
+  "version": "m4.registry-task.v1",
+  "task": {
+    "version": "m4.public-task.v1",
+    "id": "load-cell-net-torque-ramp",
+    "revision": 1,
+    "family": "A",
+    "competencies": [
+      "C1",
+      "C2",
+      "C3",
+      "C4",
+      "C5"
+    ],
+    "coverage_cell": "Calibration, baseline, load geometry, signed force rise and torque uncertainty",
+    "domain": "isometric measurement reasoning",
+    "protocol": "Fixed isometric knee flexion, single right-side distal-shank strap",
+    "source": "load_cell_isometric.load_cell",
+    "convention": "fixed",
+    "allowed_tools": "offline_python_stdlib",
+    "answer_schema": "m5.measurement-answer.v1"
+  },
+  "artifacts": [
+    {
+      "name": "cell-case-01",
+      "path": "benchmark/fixtures/m5-force-development/cell-case-01.json",
+      "sha256": "54c8a1dddc9bbc9599b0893f1df27c2c295baf8a9b33db143f04206163ce1b93",
+      "category": "synthetic",
+      "rights": "Repository-authored synthetic observations, no measured data",
+      "usage": "reference"
+    },
+    {
+      "name": "cell-case-02",
+      "path": "benchmark/fixtures/m5-force-development/cell-case-02.json",
+      "sha256": "18e9e08133b9c2f7f7c1ab2c72c130e77baaf5362bc37a5abefdd524213a7714",
+      "category": "synthetic",
+      "rights": "Repository-authored synthetic observations, no measured data",
+      "usage": "reference"
+    },
+    {
+      "name": "cell-case-03",
+      "path": "benchmark/fixtures/m5-force-development/cell-case-03.json",
+      "sha256": "90ea958552b4c9b962532b8dc53b627ecc1d8f73bb69c6bf681010e880ab8210",
+      "category": "synthetic",
+      "rights": "Repository-authored synthetic observations, no measured data",
+      "usage": "reference"
+    },
+    {
+      "name": "cell-case-04",
+      "path": "benchmark/fixtures/m5-force-development/cell-case-04.json",
+      "sha256": "7171758397f9410baf0d6ee029c06f75d6575a04994c735a41d8d67cb0ff7b5a",
+      "category": "synthetic",
+      "rights": "Repository-authored synthetic observations, no measured data",
+      "usage": "reference"
+    },
+    {
+      "name": "cell-case-05",
+      "path": "benchmark/fixtures/m5-force-development/cell-case-05.json",
+      "sha256": "ad265e367132a8bab8423da25e6aeed40c768982db919e6b07208123fb609436",
+      "category": "synthetic",
+      "rights": "Repository-authored synthetic observations, no measured data",
+      "usage": "reference"
+    },
+    {
+      "name": "cell-case-06",
+      "path": "benchmark/fixtures/m5-force-development/cell-case-06.json",
+      "sha256": "795727877a8aa410f2be46f65c8143e4c8ed2c41987f61a7f5b15e55a2caa02d",
+      "category": "synthetic",
+      "rights": "Repository-authored synthetic observations, no measured data",
+      "usage": "reference"
+    },
+    {
+      "name": "cell-case-07",
+      "path": "benchmark/fixtures/m5-force-development/cell-case-07.json",
+      "sha256": "63b2375bb30486a5d375c655cfd12049c6a40588bae1e6e5fd0d6bf5e3532e50",
+      "category": "synthetic",
+      "rights": "Repository-authored synthetic observations, no measured data",
+      "usage": "reference"
+    },
+    {
+      "name": "cell-case-08",
+      "path": "benchmark/fixtures/m5-force-development/cell-case-08.json",
+      "sha256": "a43cd388b3a05c6ad936ec5385ae39edea69b9b3545667620052656ed4ff0d00",
+      "category": "synthetic",
+      "rights": "Repository-authored synthetic observations, no measured data",
+      "usage": "reference"
+    }
+  ],
+  "checkpoints": [
+    {
+      "id": "c01",
+      "prompt": "Analyze cell-case-01. Use unfiltered-net-peak-torque. Admit the native volts only with compatible V-to-N readout or N-to-V sensitivity calibration. Use the analysis calibration when supplied, otherwise read source calibration. Use both gain and offset and invert the sensitivity record. Assess declared closed ADC rails, side, knee-angle eligibility and moment arm before computing. If inadmissible use not_eligible with missing_calibration, calibration_unit_mismatch, adc_saturation, wrong_limb, protocol_geometry_ineligible or no_resolved_window as appropriate. An undeclared lever/attachment uses insufficient_evidence and moment_arm_unestablished. For an eligible record use the mean of the first baseline_samples, then find the first force excursion strictly above the baseline plus onset_threshold_n beginning at the end of the baseline interval. Backdate one sample. Use the 100 ms endpoint difference divided by duration for RFD and trapezoidal baseline-subtracted impulse. Report peak_external_knee_torque_above_baseline in N*m (dimension torque) as the net peak force times the declared perpendicular lever. Report the maximum absolute excursion over the rectangular net force and lever error ranges. Use operands baseline_n, gross_peak_n, net_peak_n, onset_s, rfd_100ms_n_s, impulse_100ms_n_s, lever_arm_m. Use claims calibrated_cell_force, baseline_net_force and perpendicular_external_joint_torque. Return m5.measurement-answer.v1 JSON with decision, reason, method, selected_trials, citations, claims, quantity and operands. Cite DEV-006 for the instrument boundary. For a computation use reason eligible, select the current artifact name and report the quantity fields value, unit, dimension, estimand and uncertainty. Each operand has artifact, field and value. Round operands to 10 decimal places. For a refusal use the corresponding reason and claims below, with null quantity and empty selected_trials and operands. Read only the current checkpoint artifact for the requested result.",
+      "artifacts": [
+        "cell-case-01"
+      ],
+      "corrects": null
+    },
+    {
+      "id": "c02",
+      "prompt": "Analyze cell-case-02. Use unfiltered-net-peak-torque. Admit the native volts only with compatible V-to-N readout or N-to-V sensitivity calibration. Use the analysis calibration when supplied, otherwise read source calibration. Use both gain and offset and invert the sensitivity record. Assess declared closed ADC rails, side, knee-angle eligibility and moment arm before computing. If inadmissible use not_eligible with missing_calibration, calibration_unit_mismatch, adc_saturation, wrong_limb, protocol_geometry_ineligible or no_resolved_window as appropriate. An undeclared lever/attachment uses insufficient_evidence and moment_arm_unestablished. For an eligible record use the mean of the first baseline_samples, then find the first force excursion strictly above the baseline plus onset_threshold_n beginning at the end of the baseline interval. Backdate one sample. Use the 100 ms endpoint difference divided by duration for RFD and trapezoidal baseline-subtracted impulse. Report peak_external_knee_torque_above_baseline in N*m (dimension torque) as the net peak force times the declared perpendicular lever. Report the maximum absolute excursion over the rectangular net force and lever error ranges. Use operands baseline_n, gross_peak_n, net_peak_n, onset_s, rfd_100ms_n_s, impulse_100ms_n_s, lever_arm_m. Use claims calibrated_cell_force, baseline_net_force and perpendicular_external_joint_torque. Return m5.measurement-answer.v1 JSON with decision, reason, method, selected_trials, citations, claims, quantity and operands. Cite DEV-006 for the instrument boundary. For a computation use reason eligible, select the current artifact name and report the quantity fields value, unit, dimension, estimand and uncertainty. Each operand has artifact, field and value. Round operands to 10 decimal places. For a refusal use the corresponding reason and claims below, with null quantity and empty selected_trials and operands. Read only the current checkpoint artifact for the requested result.",
+      "artifacts": [
+        "cell-case-02"
+      ],
+      "corrects": null
+    },
+    {
+      "id": "c03",
+      "prompt": "Analyze cell-case-03. Use unfiltered-net-peak-torque. Admit the native volts only with compatible V-to-N readout or N-to-V sensitivity calibration. Use the analysis calibration when supplied, otherwise read source calibration. Use both gain and offset and invert the sensitivity record. Assess declared closed ADC rails, side, knee-angle eligibility and moment arm before computing. If inadmissible use not_eligible with missing_calibration, calibration_unit_mismatch, adc_saturation, wrong_limb, protocol_geometry_ineligible or no_resolved_window as appropriate. An undeclared lever/attachment uses insufficient_evidence and moment_arm_unestablished. For an eligible record use the mean of the first baseline_samples, then find the first force excursion strictly above the baseline plus onset_threshold_n beginning at the end of the baseline interval. Backdate one sample. Use the 100 ms endpoint difference divided by duration for RFD and trapezoidal baseline-subtracted impulse. Report peak_external_knee_torque_above_baseline in N*m (dimension torque) as the net peak force times the declared perpendicular lever. Report the maximum absolute excursion over the rectangular net force and lever error ranges. Use operands baseline_n, gross_peak_n, net_peak_n, onset_s, rfd_100ms_n_s, impulse_100ms_n_s, lever_arm_m. Use claims calibrated_cell_force, baseline_net_force and perpendicular_external_joint_torque. Return m5.measurement-answer.v1 JSON with decision, reason, method, selected_trials, citations, claims, quantity and operands. Cite DEV-006 for the instrument boundary. For a computation use reason eligible, select the current artifact name and report the quantity fields value, unit, dimension, estimand and uncertainty. Each operand has artifact, field and value. Round operands to 10 decimal places. For a refusal use the corresponding reason and claims below, with null quantity and empty selected_trials and operands. Read only the current checkpoint artifact for the requested result.",
+      "artifacts": [
+        "cell-case-03"
+      ],
+      "corrects": null
+    },
+    {
+      "id": "c04",
+      "prompt": "Analyze cell-case-04. Use unfiltered-net-peak-torque. Admit the native volts only with compatible V-to-N readout or N-to-V sensitivity calibration. Use the analysis calibration when supplied, otherwise read source calibration. Use both gain and offset and invert the sensitivity record. Assess declared closed ADC rails, side, knee-angle eligibility and moment arm before computing. If inadmissible use not_eligible with missing_calibration, calibration_unit_mismatch, adc_saturation, wrong_limb, protocol_geometry_ineligible or no_resolved_window as appropriate. An undeclared lever/attachment uses insufficient_evidence and moment_arm_unestablished. For an eligible record use the mean of the first baseline_samples, then find the first force excursion strictly above the baseline plus onset_threshold_n beginning at the end of the baseline interval. Backdate one sample. Use the 100 ms endpoint difference divided by duration for RFD and trapezoidal baseline-subtracted impulse. Report peak_external_knee_torque_above_baseline in N*m (dimension torque) as the net peak force times the declared perpendicular lever. Report the maximum absolute excursion over the rectangular net force and lever error ranges. Use operands baseline_n, gross_peak_n, net_peak_n, onset_s, rfd_100ms_n_s, impulse_100ms_n_s, lever_arm_m. Use claims calibrated_cell_force, baseline_net_force and perpendicular_external_joint_torque. Return m5.measurement-answer.v1 JSON with decision, reason, method, selected_trials, citations, claims, quantity and operands. Cite DEV-006 for the instrument boundary. For a computation use reason eligible, select the current artifact name and report the quantity fields value, unit, dimension, estimand and uncertainty. Each operand has artifact, field and value. Round operands to 10 decimal places. For a refusal use the corresponding reason and claims below, with null quantity and empty selected_trials and operands. Read only the current checkpoint artifact for the requested result.",
+      "artifacts": [
+        "cell-case-04"
+      ],
+      "corrects": null
+    },
+    {
+      "id": "c05",
+      "prompt": "Analyze cell-case-05. Use unfiltered-net-peak-torque. Admit the native volts only with compatible V-to-N readout or N-to-V sensitivity calibration. Use the analysis calibration when supplied, otherwise read source calibration. Use both gain and offset and invert the sensitivity record. Assess declared closed ADC rails, side, knee-angle eligibility and moment arm before computing. If inadmissible use not_eligible with missing_calibration, calibration_unit_mismatch, adc_saturation, wrong_limb, protocol_geometry_ineligible or no_resolved_window as appropriate. An undeclared lever/attachment uses insufficient_evidence and moment_arm_unestablished. For an eligible record use the mean of the first baseline_samples, then find the first force excursion strictly above the baseline plus onset_threshold_n beginning at the end of the baseline interval. Backdate one sample. Use the 100 ms endpoint difference divided by duration for RFD and trapezoidal baseline-subtracted impulse. Report peak_external_knee_torque_above_baseline in N*m (dimension torque) as the net peak force times the declared perpendicular lever. Report the maximum absolute excursion over the rectangular net force and lever error ranges. Use operands baseline_n, gross_peak_n, net_peak_n, onset_s, rfd_100ms_n_s, impulse_100ms_n_s, lever_arm_m. Use claims calibrated_cell_force, baseline_net_force and perpendicular_external_joint_torque. Return m5.measurement-answer.v1 JSON with decision, reason, method, selected_trials, citations, claims, quantity and operands. Cite DEV-006 for the instrument boundary. For a computation use reason eligible, select the current artifact name and report the quantity fields value, unit, dimension, estimand and uncertainty. Each operand has artifact, field and value. Round operands to 10 decimal places. For a refusal use the corresponding reason and claims below, with null quantity and empty selected_trials and operands. Read only the current checkpoint artifact for the requested result.",
+      "artifacts": [
+        "cell-case-05"
+      ],
+      "corrects": null
+    },
+    {
+      "id": "c06",
+      "prompt": "Analyze cell-case-06. Use unfiltered-net-peak-torque. Admit the native volts only with compatible V-to-N readout or N-to-V sensitivity calibration. Use the analysis calibration when supplied, otherwise read source calibration. Use both gain and offset and invert the sensitivity record. Assess declared closed ADC rails, side, knee-angle eligibility and moment arm before computing. If inadmissible use not_eligible with missing_calibration, calibration_unit_mismatch, adc_saturation, wrong_limb, protocol_geometry_ineligible or no_resolved_window as appropriate. An undeclared lever/attachment uses insufficient_evidence and moment_arm_unestablished. For an eligible record use the mean of the first baseline_samples, then find the first force excursion strictly above the baseline plus onset_threshold_n beginning at the end of the baseline interval. Backdate one sample. Use the 100 ms endpoint difference divided by duration for RFD and trapezoidal baseline-subtracted impulse. Report peak_external_knee_torque_above_baseline in N*m (dimension torque) as the net peak force times the declared perpendicular lever. Report the maximum absolute excursion over the rectangular net force and lever error ranges. Use operands baseline_n, gross_peak_n, net_peak_n, onset_s, rfd_100ms_n_s, impulse_100ms_n_s, lever_arm_m. Use claims calibrated_cell_force, baseline_net_force and perpendicular_external_joint_torque. Return m5.measurement-answer.v1 JSON with decision, reason, method, selected_trials, citations, claims, quantity and operands. Cite DEV-006 for the instrument boundary. For a computation use reason eligible, select the current artifact name and report the quantity fields value, unit, dimension, estimand and uncertainty. Each operand has artifact, field and value. Round operands to 10 decimal places. For a refusal use the corresponding reason and claims below, with null quantity and empty selected_trials and operands. Read only the current checkpoint artifact for the requested result.",
+      "artifacts": [
+        "cell-case-06"
+      ],
+      "corrects": null
+    },
+    {
+      "id": "c07",
+      "prompt": "Analyze cell-case-07. Use unfiltered-net-peak-torque. Admit the native volts only with compatible V-to-N readout or N-to-V sensitivity calibration. Use the analysis calibration when supplied, otherwise read source calibration. Use both gain and offset and invert the sensitivity record. Assess declared closed ADC rails, side, knee-angle eligibility and moment arm before computing. If inadmissible use not_eligible with missing_calibration, calibration_unit_mismatch, adc_saturation, wrong_limb, protocol_geometry_ineligible or no_resolved_window as appropriate. An undeclared lever/attachment uses insufficient_evidence and moment_arm_unestablished. For an eligible record use the mean of the first baseline_samples, then find the first force excursion strictly above the baseline plus onset_threshold_n beginning at the end of the baseline interval. Backdate one sample. Use the 100 ms endpoint difference divided by duration for RFD and trapezoidal baseline-subtracted impulse. Report peak_external_knee_torque_above_baseline in N*m (dimension torque) as the net peak force times the declared perpendicular lever. Report the maximum absolute excursion over the rectangular net force and lever error ranges. Use operands baseline_n, gross_peak_n, net_peak_n, onset_s, rfd_100ms_n_s, impulse_100ms_n_s, lever_arm_m. Use claims calibrated_cell_force, baseline_net_force and perpendicular_external_joint_torque. Return m5.measurement-answer.v1 JSON with decision, reason, method, selected_trials, citations, claims, quantity and operands. Cite DEV-006 for the instrument boundary. For a computation use reason eligible, select the current artifact name and report the quantity fields value, unit, dimension, estimand and uncertainty. Each operand has artifact, field and value. Round operands to 10 decimal places. For a refusal use the corresponding reason and claims below, with null quantity and empty selected_trials and operands. Read only the current checkpoint artifact for the requested result.",
+      "artifacts": [
+        "cell-case-07"
+      ],
+      "corrects": null
+    },
+    {
+      "id": "c08",
+      "prompt": "Analyze cell-case-08. Use unfiltered-net-peak-torque. Admit the native volts only with compatible V-to-N readout or N-to-V sensitivity calibration. Use the analysis calibration when supplied, otherwise read source calibration. Use both gain and offset and invert the sensitivity record. Assess declared closed ADC rails, side, knee-angle eligibility and moment arm before computing. If inadmissible use not_eligible with missing_calibration, calibration_unit_mismatch, adc_saturation, wrong_limb, protocol_geometry_ineligible or no_resolved_window as appropriate. An undeclared lever/attachment uses insufficient_evidence and moment_arm_unestablished. For an eligible record use the mean of the first baseline_samples, then find the first force excursion strictly above the baseline plus onset_threshold_n beginning at the end of the baseline interval. Backdate one sample. Use the 100 ms endpoint difference divided by duration for RFD and trapezoidal baseline-subtracted impulse. Report peak_external_knee_torque_above_baseline in N*m (dimension torque) as the net peak force times the declared perpendicular lever. Report the maximum absolute excursion over the rectangular net force and lever error ranges. Use operands baseline_n, gross_peak_n, net_peak_n, onset_s, rfd_100ms_n_s, impulse_100ms_n_s, lever_arm_m. Use claims calibrated_cell_force, baseline_net_force and perpendicular_external_joint_torque. Return m5.measurement-answer.v1 JSON with decision, reason, method, selected_trials, citations, claims, quantity and operands. Cite DEV-006 for the instrument boundary. For a computation use reason eligible, select the current artifact name and report the quantity fields value, unit, dimension, estimand and uncertainty. Each operand has artifact, field and value. Round operands to 10 decimal places. For a refusal use the corresponding reason and claims below, with null quantity and empty selected_trials and operands. Read only the current checkpoint artifact for the requested result.",
+      "artifacts": [
+        "cell-case-08"
+      ],
+      "corrects": null
+    }
+  ],
+  "reference_profile": "load-cell-net-torque-ramp",
+  "methods": [
+    {
+      "id": "unfiltered-net-peak-torque",
+      "estimand": "peak_external_knee_torque_above_baseline",
+      "dimension": "torque",
+      "unit": "N*m",
+      "specification": {
+        "operation": "unfiltered_net_peak_force_times_perpendicular_moment_arm",
+        "onset": "absolute_N_one_sample_backdate",
+        "window_ms": 100,
+        "impulse": "baseline_corrected_trapezoid"
+      },
+      "sampling": "Uniform native 1000 Hz; exact on-grid samples; no filtering.",
+      "clock": "One exact nominal clock with native time reconstructed from t0 and sampling.",
+      "geometry": "Fixed right distal-shank strap; documented perpendicular moment arm from joint centre. No gravity or limb weight correction.",
+      "qc": "Raw V calibration units and orientation, rail limits, limb and angle declarations.",
+      "eligibility": "Declared angle range, right-side capture, unloaded baseline and supported onset window.",
+      "uncertainty": "Conditional deterministic rectangular input bounds on net peak and perpendicular lever, including their product term.",
+      "absolute_tolerance": 1e-8,
+      "limitations": [
+        "External torque arm model only. Sagittal geometry, moment arm and rigid attachment are prescribed.",
+        "No inference of internal muscle force or instrument validity. Source DEV-006 concerns a particular IMTP instrument."
+      ],
+      "source_claims": [
+        "DEV-006"
+      ]
+    }
+  ],
+  "engine": "m5-advanced-development.v1",
+  "grader": "measurement.v1"
+}

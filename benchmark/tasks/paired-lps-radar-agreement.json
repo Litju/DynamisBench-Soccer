@@ -1,0 +1,162 @@
+{
+  "version": "m4.registry-task.v1",
+  "task": {
+    "version": "m4.public-task.v1",
+    "id": "paired-lps-radar-agreement",
+    "revision": 1,
+    "family": "A",
+    "competencies": [
+      "C1",
+      "C3",
+      "C4",
+      "C5"
+    ],
+    "coverage_cell": "Paired horizontal speed agreement, estimand compatibility, uncertainty and justified refusal",
+    "domain": "paired analytical comparator and native synthetic LPS",
+    "protocol": "res704.lps.paired-horizontal-speed",
+    "source": "gnss_lps.lps",
+    "convention": "fixed",
+    "answer_schema": "m5.measurement-answer.v1",
+    "allowed_tools": "offline_python_stdlib"
+  },
+  "reference_profile": "paired-lps-radar-agreement",
+  "engine": "m5-measurement.v1",
+  "grader": "measurement.v1",
+  "artifacts": [
+    {
+      "name": "pair-sequence-01",
+      "path": "benchmark/fixtures/m5-paired/pair-sequence-01.json",
+      "sha256": "7bce48bdae3652d198adf67cebe62af3e7beade43c33d382bc9b18256a02e765",
+      "category": "synthetic",
+      "rights": "Repository-authored synthetic tracks and analytical comparator; no participant measurements",
+      "usage": "reference"
+    },
+    {
+      "name": "pair-sequence-02",
+      "path": "benchmark/fixtures/m5-paired/pair-sequence-02.json",
+      "sha256": "c9c50d0d7565ca305fb9c9f61a6620b47292959c6622b9469e32cda739f300ed",
+      "category": "synthetic",
+      "rights": "Repository-authored synthetic tracks and analytical comparator; no participant measurements",
+      "usage": "reference"
+    },
+    {
+      "name": "pair-sequence-03",
+      "path": "benchmark/fixtures/m5-paired/pair-sequence-03.json",
+      "sha256": "cd96169258904f60fd7fab4a516e39c2c281d914db34e15fd5e87fb06489ed68",
+      "category": "synthetic",
+      "rights": "Repository-authored synthetic tracks and analytical comparator; no participant measurements",
+      "usage": "reference"
+    },
+    {
+      "name": "pair-sequence-04",
+      "path": "benchmark/fixtures/m5-paired/pair-sequence-04.json",
+      "sha256": "b301d7baebcf9e63dc441ebcb02967eb38af252086f3f5639ba2a8ec964c9e39",
+      "category": "synthetic",
+      "rights": "Repository-authored synthetic tracks and analytical comparator; no participant measurements",
+      "usage": "reference"
+    },
+    {
+      "name": "pair-sequence-05",
+      "path": "benchmark/fixtures/m5-paired/pair-sequence-05.json",
+      "sha256": "44768f440521152eafea298481d169901c67e9763d3abebb6ca4a29cb6c348a9",
+      "category": "synthetic",
+      "rights": "Repository-authored synthetic tracks and analytical comparator; no participant measurements",
+      "usage": "reference"
+    },
+    {
+      "name": "pair-sequence-06",
+      "path": "benchmark/fixtures/m5-paired/pair-sequence-06.json",
+      "sha256": "0072bfcbba30518d9226e620ff366f3af544c2450d72b51940f6ad952d704857",
+      "category": "synthetic",
+      "rights": "Repository-authored synthetic tracks and analytical comparator; no participant measurements",
+      "usage": "reference"
+    },
+    {
+      "name": "pair-sequence-07",
+      "path": "benchmark/fixtures/m5-paired/pair-sequence-07.json",
+      "sha256": "5c475fb124114cf85b5975e7f70a7d1901044b7639dcb4b506e60249d6d15ed7",
+      "category": "synthetic",
+      "rights": "Repository-authored synthetic tracks and analytical comparator; no participant measurements",
+      "usage": "reference"
+    }
+  ],
+  "checkpoints": [
+    {
+      "id": "p1",
+      "prompt": "Evaluate only the current checkpoint artifact. Each row in trials represents one distinct synthetic run with paired methods at row 5. The declared measurement clock, Cartesian field frame and units apply to each trial. Reject repeated trial IDs with reason not_eligible and claim independent_pairs_required. Reject any failed signal_valid or anchor-visibility flag with reason not_eligible and claim failed_signal_qc. For request agreement, compare matched horizontal tag speeds only. A signed field-x radial velocity with projection radial_only is a different estimand. For that mismatch refuse with reason unsupported_claim and claims definition_mismatch and hardware_interchangeability_unknown. For direction_corrected, divide field-x radial speed by 3/5, the signed travel-direction cosine. Find native LPS horizontal tag speed at row 5 using the unfiltered centered difference of field x and y before taking the vector magnitude. The data include vertical tag motion, which is outside this estimand. Use one pair per distinct trial, in trial order. Compute mean LPS minus corrected radar speed and the sample SD of the differences. Use descriptive 95% Bland\u2013Altman limits, bias \u00b1 the standard-normal 97.5th percentile times the sample SD. Compare the absolute bias and both absolute limits with maximum_discrepancy_m_s. Report the expanded uncertainty of the difference for k=2 using independent LPS and radial standard offsets. Each unknown offset is shared across pairs for its method. Correct the radial standard uncertainty for the same projection. For request reliability, decide if same-method test\u2013retest typical error, smallest worthwhile change or individual change can be inferred from these pairs. If the required design is unavailable, use reason insufficient_evidence and claims repeat_sessions_required and paired_devices_not_retest. Return one JSON object with version m5.measurement-answer.v1, decision, method, reason, selected_trials, citations, claims, quantity, and operands. Always use method paired-speed-bias and cite DEV-005, DEV-008, and ST-004 in that order. For a computation use decision compute, reason eligible, and list the trial IDs in selected_trials in artifact order. Use quantity fields value, uncertainty, unit m/s, dimension speed, and estimand horizontal_tag_speed_paired_bias. Use claims analytical_model_agreement, hardware_interchangeability_unknown, matched_horizontal_tag_speed, descriptive_limits_not_reliability, and either limits_within_tolerance or limits_exceed_tolerance. Each operand has artifact, field and value. Follow each radar.<id> with lps.<id>, then supply n_pairs, sd_difference, lower_limit and upper_limit in that order. Round all operands to 10 decimal places. For a refusal set decision to refuse, quantity to null, and operands and selected_trials to empty arrays. DEV-005 limits GNSS/LPS accuracy results to studied systems and conditions. DEV-008 distinguishes inter-system agreement and inter-trial reliability from validity. ST-004 specifies the paired-difference agreement approach and the interpretative limitation of correlation alone.",
+      "artifacts": [
+        "pair-sequence-01"
+      ]
+    },
+    {
+      "id": "p2",
+      "prompt": "Evaluate only the current checkpoint artifact. Each row in trials represents one distinct synthetic run with paired methods at row 5. The declared measurement clock, Cartesian field frame and units apply to each trial. Reject repeated trial IDs with reason not_eligible and claim independent_pairs_required. Reject any failed signal_valid or anchor-visibility flag with reason not_eligible and claim failed_signal_qc. For request agreement, compare matched horizontal tag speeds only. A signed field-x radial velocity with projection radial_only is a different estimand. For that mismatch refuse with reason unsupported_claim and claims definition_mismatch and hardware_interchangeability_unknown. For direction_corrected, divide field-x radial speed by 3/5, the signed travel-direction cosine. Find native LPS horizontal tag speed at row 5 using the unfiltered centered difference of field x and y before taking the vector magnitude. The data include vertical tag motion, which is outside this estimand. Use one pair per distinct trial, in trial order. Compute mean LPS minus corrected radar speed and the sample SD of the differences. Use descriptive 95% Bland\u2013Altman limits, bias \u00b1 the standard-normal 97.5th percentile times the sample SD. Compare the absolute bias and both absolute limits with maximum_discrepancy_m_s. Report the expanded uncertainty of the difference for k=2 using independent LPS and radial standard offsets. Each unknown offset is shared across pairs for its method. Correct the radial standard uncertainty for the same projection. For request reliability, decide if same-method test\u2013retest typical error, smallest worthwhile change or individual change can be inferred from these pairs. If the required design is unavailable, use reason insufficient_evidence and claims repeat_sessions_required and paired_devices_not_retest. Return one JSON object with version m5.measurement-answer.v1, decision, method, reason, selected_trials, citations, claims, quantity, and operands. Always use method paired-speed-bias and cite DEV-005, DEV-008, and ST-004 in that order. For a computation use decision compute, reason eligible, and list the trial IDs in selected_trials in artifact order. Use quantity fields value, uncertainty, unit m/s, dimension speed, and estimand horizontal_tag_speed_paired_bias. Use claims analytical_model_agreement, hardware_interchangeability_unknown, matched_horizontal_tag_speed, descriptive_limits_not_reliability, and either limits_within_tolerance or limits_exceed_tolerance. Each operand has artifact, field and value. Follow each radar.<id> with lps.<id>, then supply n_pairs, sd_difference, lower_limit and upper_limit in that order. Round all operands to 10 decimal places. For a refusal set decision to refuse, quantity to null, and operands and selected_trials to empty arrays. DEV-005 limits GNSS/LPS accuracy results to studied systems and conditions. DEV-008 distinguishes inter-system agreement and inter-trial reliability from validity. ST-004 specifies the paired-difference agreement approach and the interpretative limitation of correlation alone.",
+      "artifacts": [
+        "pair-sequence-02"
+      ]
+    },
+    {
+      "id": "p3",
+      "prompt": "Evaluate only the current checkpoint artifact. Each row in trials represents one distinct synthetic run with paired methods at row 5. The declared measurement clock, Cartesian field frame and units apply to each trial. Reject repeated trial IDs with reason not_eligible and claim independent_pairs_required. Reject any failed signal_valid or anchor-visibility flag with reason not_eligible and claim failed_signal_qc. For request agreement, compare matched horizontal tag speeds only. A signed field-x radial velocity with projection radial_only is a different estimand. For that mismatch refuse with reason unsupported_claim and claims definition_mismatch and hardware_interchangeability_unknown. For direction_corrected, divide field-x radial speed by 3/5, the signed travel-direction cosine. Find native LPS horizontal tag speed at row 5 using the unfiltered centered difference of field x and y before taking the vector magnitude. The data include vertical tag motion, which is outside this estimand. Use one pair per distinct trial, in trial order. Compute mean LPS minus corrected radar speed and the sample SD of the differences. Use descriptive 95% Bland\u2013Altman limits, bias \u00b1 the standard-normal 97.5th percentile times the sample SD. Compare the absolute bias and both absolute limits with maximum_discrepancy_m_s. Report the expanded uncertainty of the difference for k=2 using independent LPS and radial standard offsets. Each unknown offset is shared across pairs for its method. Correct the radial standard uncertainty for the same projection. For request reliability, decide if same-method test\u2013retest typical error, smallest worthwhile change or individual change can be inferred from these pairs. If the required design is unavailable, use reason insufficient_evidence and claims repeat_sessions_required and paired_devices_not_retest. Return one JSON object with version m5.measurement-answer.v1, decision, method, reason, selected_trials, citations, claims, quantity, and operands. Always use method paired-speed-bias and cite DEV-005, DEV-008, and ST-004 in that order. For a computation use decision compute, reason eligible, and list the trial IDs in selected_trials in artifact order. Use quantity fields value, uncertainty, unit m/s, dimension speed, and estimand horizontal_tag_speed_paired_bias. Use claims analytical_model_agreement, hardware_interchangeability_unknown, matched_horizontal_tag_speed, descriptive_limits_not_reliability, and either limits_within_tolerance or limits_exceed_tolerance. Each operand has artifact, field and value. Follow each radar.<id> with lps.<id>, then supply n_pairs, sd_difference, lower_limit and upper_limit in that order. Round all operands to 10 decimal places. For a refusal set decision to refuse, quantity to null, and operands and selected_trials to empty arrays. DEV-005 limits GNSS/LPS accuracy results to studied systems and conditions. DEV-008 distinguishes inter-system agreement and inter-trial reliability from validity. ST-004 specifies the paired-difference agreement approach and the interpretative limitation of correlation alone.",
+      "artifacts": [
+        "pair-sequence-03"
+      ]
+    },
+    {
+      "id": "p4",
+      "prompt": "Evaluate only the current checkpoint artifact. Each row in trials represents one distinct synthetic run with paired methods at row 5. The declared measurement clock, Cartesian field frame and units apply to each trial. Reject repeated trial IDs with reason not_eligible and claim independent_pairs_required. Reject any failed signal_valid or anchor-visibility flag with reason not_eligible and claim failed_signal_qc. For request agreement, compare matched horizontal tag speeds only. A signed field-x radial velocity with projection radial_only is a different estimand. For that mismatch refuse with reason unsupported_claim and claims definition_mismatch and hardware_interchangeability_unknown. For direction_corrected, divide field-x radial speed by 3/5, the signed travel-direction cosine. Find native LPS horizontal tag speed at row 5 using the unfiltered centered difference of field x and y before taking the vector magnitude. The data include vertical tag motion, which is outside this estimand. Use one pair per distinct trial, in trial order. Compute mean LPS minus corrected radar speed and the sample SD of the differences. Use descriptive 95% Bland\u2013Altman limits, bias \u00b1 the standard-normal 97.5th percentile times the sample SD. Compare the absolute bias and both absolute limits with maximum_discrepancy_m_s. Report the expanded uncertainty of the difference for k=2 using independent LPS and radial standard offsets. Each unknown offset is shared across pairs for its method. Correct the radial standard uncertainty for the same projection. For request reliability, decide if same-method test\u2013retest typical error, smallest worthwhile change or individual change can be inferred from these pairs. If the required design is unavailable, use reason insufficient_evidence and claims repeat_sessions_required and paired_devices_not_retest. Return one JSON object with version m5.measurement-answer.v1, decision, method, reason, selected_trials, citations, claims, quantity, and operands. Always use method paired-speed-bias and cite DEV-005, DEV-008, and ST-004 in that order. For a computation use decision compute, reason eligible, and list the trial IDs in selected_trials in artifact order. Use quantity fields value, uncertainty, unit m/s, dimension speed, and estimand horizontal_tag_speed_paired_bias. Use claims analytical_model_agreement, hardware_interchangeability_unknown, matched_horizontal_tag_speed, descriptive_limits_not_reliability, and either limits_within_tolerance or limits_exceed_tolerance. Each operand has artifact, field and value. Follow each radar.<id> with lps.<id>, then supply n_pairs, sd_difference, lower_limit and upper_limit in that order. Round all operands to 10 decimal places. For a refusal set decision to refuse, quantity to null, and operands and selected_trials to empty arrays. DEV-005 limits GNSS/LPS accuracy results to studied systems and conditions. DEV-008 distinguishes inter-system agreement and inter-trial reliability from validity. ST-004 specifies the paired-difference agreement approach and the interpretative limitation of correlation alone.",
+      "artifacts": [
+        "pair-sequence-04"
+      ]
+    },
+    {
+      "id": "p5",
+      "prompt": "Evaluate only the current checkpoint artifact. Each row in trials represents one distinct synthetic run with paired methods at row 5. The declared measurement clock, Cartesian field frame and units apply to each trial. Reject repeated trial IDs with reason not_eligible and claim independent_pairs_required. Reject any failed signal_valid or anchor-visibility flag with reason not_eligible and claim failed_signal_qc. For request agreement, compare matched horizontal tag speeds only. A signed field-x radial velocity with projection radial_only is a different estimand. For that mismatch refuse with reason unsupported_claim and claims definition_mismatch and hardware_interchangeability_unknown. For direction_corrected, divide field-x radial speed by 3/5, the signed travel-direction cosine. Find native LPS horizontal tag speed at row 5 using the unfiltered centered difference of field x and y before taking the vector magnitude. The data include vertical tag motion, which is outside this estimand. Use one pair per distinct trial, in trial order. Compute mean LPS minus corrected radar speed and the sample SD of the differences. Use descriptive 95% Bland\u2013Altman limits, bias \u00b1 the standard-normal 97.5th percentile times the sample SD. Compare the absolute bias and both absolute limits with maximum_discrepancy_m_s. Report the expanded uncertainty of the difference for k=2 using independent LPS and radial standard offsets. Each unknown offset is shared across pairs for its method. Correct the radial standard uncertainty for the same projection. For request reliability, decide if same-method test\u2013retest typical error, smallest worthwhile change or individual change can be inferred from these pairs. If the required design is unavailable, use reason insufficient_evidence and claims repeat_sessions_required and paired_devices_not_retest. Return one JSON object with version m5.measurement-answer.v1, decision, method, reason, selected_trials, citations, claims, quantity, and operands. Always use method paired-speed-bias and cite DEV-005, DEV-008, and ST-004 in that order. For a computation use decision compute, reason eligible, and list the trial IDs in selected_trials in artifact order. Use quantity fields value, uncertainty, unit m/s, dimension speed, and estimand horizontal_tag_speed_paired_bias. Use claims analytical_model_agreement, hardware_interchangeability_unknown, matched_horizontal_tag_speed, descriptive_limits_not_reliability, and either limits_within_tolerance or limits_exceed_tolerance. Each operand has artifact, field and value. Follow each radar.<id> with lps.<id>, then supply n_pairs, sd_difference, lower_limit and upper_limit in that order. Round all operands to 10 decimal places. For a refusal set decision to refuse, quantity to null, and operands and selected_trials to empty arrays. DEV-005 limits GNSS/LPS accuracy results to studied systems and conditions. DEV-008 distinguishes inter-system agreement and inter-trial reliability from validity. ST-004 specifies the paired-difference agreement approach and the interpretative limitation of correlation alone.",
+      "artifacts": [
+        "pair-sequence-05"
+      ]
+    },
+    {
+      "id": "p6",
+      "prompt": "Evaluate only the current checkpoint artifact. Each row in trials represents one distinct synthetic run with paired methods at row 5. The declared measurement clock, Cartesian field frame and units apply to each trial. Reject repeated trial IDs with reason not_eligible and claim independent_pairs_required. Reject any failed signal_valid or anchor-visibility flag with reason not_eligible and claim failed_signal_qc. For request agreement, compare matched horizontal tag speeds only. A signed field-x radial velocity with projection radial_only is a different estimand. For that mismatch refuse with reason unsupported_claim and claims definition_mismatch and hardware_interchangeability_unknown. For direction_corrected, divide field-x radial speed by 3/5, the signed travel-direction cosine. Find native LPS horizontal tag speed at row 5 using the unfiltered centered difference of field x and y before taking the vector magnitude. The data include vertical tag motion, which is outside this estimand. Use one pair per distinct trial, in trial order. Compute mean LPS minus corrected radar speed and the sample SD of the differences. Use descriptive 95% Bland\u2013Altman limits, bias \u00b1 the standard-normal 97.5th percentile times the sample SD. Compare the absolute bias and both absolute limits with maximum_discrepancy_m_s. Report the expanded uncertainty of the difference for k=2 using independent LPS and radial standard offsets. Each unknown offset is shared across pairs for its method. Correct the radial standard uncertainty for the same projection. For request reliability, decide if same-method test\u2013retest typical error, smallest worthwhile change or individual change can be inferred from these pairs. If the required design is unavailable, use reason insufficient_evidence and claims repeat_sessions_required and paired_devices_not_retest. Return one JSON object with version m5.measurement-answer.v1, decision, method, reason, selected_trials, citations, claims, quantity, and operands. Always use method paired-speed-bias and cite DEV-005, DEV-008, and ST-004 in that order. For a computation use decision compute, reason eligible, and list the trial IDs in selected_trials in artifact order. Use quantity fields value, uncertainty, unit m/s, dimension speed, and estimand horizontal_tag_speed_paired_bias. Use claims analytical_model_agreement, hardware_interchangeability_unknown, matched_horizontal_tag_speed, descriptive_limits_not_reliability, and either limits_within_tolerance or limits_exceed_tolerance. Each operand has artifact, field and value. Follow each radar.<id> with lps.<id>, then supply n_pairs, sd_difference, lower_limit and upper_limit in that order. Round all operands to 10 decimal places. For a refusal set decision to refuse, quantity to null, and operands and selected_trials to empty arrays. DEV-005 limits GNSS/LPS accuracy results to studied systems and conditions. DEV-008 distinguishes inter-system agreement and inter-trial reliability from validity. ST-004 specifies the paired-difference agreement approach and the interpretative limitation of correlation alone.",
+      "artifacts": [
+        "pair-sequence-06"
+      ]
+    },
+    {
+      "id": "p7",
+      "prompt": "Evaluate only the current checkpoint artifact. Each row in trials represents one distinct synthetic run with paired methods at row 5. The declared measurement clock, Cartesian field frame and units apply to each trial. Reject repeated trial IDs with reason not_eligible and claim independent_pairs_required. Reject any failed signal_valid or anchor-visibility flag with reason not_eligible and claim failed_signal_qc. For request agreement, compare matched horizontal tag speeds only. A signed field-x radial velocity with projection radial_only is a different estimand. For that mismatch refuse with reason unsupported_claim and claims definition_mismatch and hardware_interchangeability_unknown. For direction_corrected, divide field-x radial speed by 3/5, the signed travel-direction cosine. Find native LPS horizontal tag speed at row 5 using the unfiltered centered difference of field x and y before taking the vector magnitude. The data include vertical tag motion, which is outside this estimand. Use one pair per distinct trial, in trial order. Compute mean LPS minus corrected radar speed and the sample SD of the differences. Use descriptive 95% Bland\u2013Altman limits, bias \u00b1 the standard-normal 97.5th percentile times the sample SD. Compare the absolute bias and both absolute limits with maximum_discrepancy_m_s. Report the expanded uncertainty of the difference for k=2 using independent LPS and radial standard offsets. Each unknown offset is shared across pairs for its method. Correct the radial standard uncertainty for the same projection. For request reliability, decide if same-method test\u2013retest typical error, smallest worthwhile change or individual change can be inferred from these pairs. If the required design is unavailable, use reason insufficient_evidence and claims repeat_sessions_required and paired_devices_not_retest. Return one JSON object with version m5.measurement-answer.v1, decision, method, reason, selected_trials, citations, claims, quantity, and operands. Always use method paired-speed-bias and cite DEV-005, DEV-008, and ST-004 in that order. For a computation use decision compute, reason eligible, and list the trial IDs in selected_trials in artifact order. Use quantity fields value, uncertainty, unit m/s, dimension speed, and estimand horizontal_tag_speed_paired_bias. Use claims analytical_model_agreement, hardware_interchangeability_unknown, matched_horizontal_tag_speed, descriptive_limits_not_reliability, and either limits_within_tolerance or limits_exceed_tolerance. Each operand has artifact, field and value. Follow each radar.<id> with lps.<id>, then supply n_pairs, sd_difference, lower_limit and upper_limit in that order. Round all operands to 10 decimal places. For a refusal set decision to refuse, quantity to null, and operands and selected_trials to empty arrays. DEV-005 limits GNSS/LPS accuracy results to studied systems and conditions. DEV-008 distinguishes inter-system agreement and inter-trial reliability from validity. ST-004 specifies the paired-difference agreement approach and the interpretative limitation of correlation alone.",
+      "artifacts": [
+        "pair-sequence-07"
+      ]
+    }
+  ],
+  "methods": [
+    {
+      "id": "paired-speed-bias",
+      "estimand": "horizontal_tag_speed_paired_bias",
+      "dimension": "speed",
+      "unit": "m/s",
+      "specification": {
+        "operation": "paired-speed-bias"
+      },
+      "sampling": "Synthetic native LPS positions at a uniform 25 Hz, 11 rows per run, unfiltered three-point derivative at interior row 5. One speed pair per distinct synthetic run.",
+      "clock": "One declared exact measurement grid and simultaneous analytical radar comparator at the selected sample. Zero latency and drift.",
+      "geometry": "Cartesian field x downfield, y across, z up. Radar beam in the positive field x direction and known signed horizontal travel cosine 3/5. Compare horizontal tag-point speeds.",
+      "qc": "Native stage, complete admitted track and valid signal and anchor visibility. Unique pair IDs. Fixed-direction constant horizontal speed.",
+      "eligibility": "Compute agreement only with projection-corrected radar speed under matched definitions and independent synthetic runs. Report mismatches or missing repeated same-method sessions.",
+      "uncertainty": "Conditional k=2 expanded bias uncertainty combines method offsets independently across methods, with each offset common across pairs. Radar radial uncertainty scales by the inverse direction cosine. Descriptive normal-theory limits of the manufactured pair differences are separate.",
+      "absolute_tolerance": 1e-09,
+      "limitations": [
+        "Analytical fixed-direction radar projection paired with synthetic LPS. The radar comparator is calculated, with no native radar acquisition, athlete observations or device calibration experiment.",
+        "Numerical model agreement does not establish measurement validity, real-device interchangeability, or hardware error distributions.",
+        "Descriptive agreement limits from one pair per run are not test\u2013retest reliability, population limits, confidence intervals or individual change thresholds."
+      ],
+      "source_claims": [
+        "DEV-005",
+        "DEV-008",
+        "ST-004"
+      ]
+    }
+  ]
+}

@@ -2808,3 +2808,49 @@ issue = "RES-698"
 "tests/test_timing_limits_policy_a.py::test_cli_roundtrip_preserves_exact_limits_on_success_and_refusal" = "c9290fb4991cd8743dd7f75f4459141cdc78aa31914d7ce034c00a2ae1e9bce1"
 "tests/test_timing_limits_policy_a.py::test_gate_limits_follow_the_executed_start_definition" = "653f2812f6e12036cbe214810017b07d2a5a255c20f8a6bbc9b8157d21caec4b"
 "tests/test_timing_limits_policy_a.py::test_gate_limits_identify_voting_and_refractory_variant" = "0432f89619b9afde15cba35647f0a512e0f850675fc7a66aff5c96b959f25724"
+
+[[receipt]]
+id = "RCP-gnss_lps-lps-L-paired-speed"
+dimension = "L"
+claim = "Native synthetic LPS and an ideal direction-corrected radar comparator provide one matched horizontal tag-speed pair per prescribed trial. Signed bias and descriptive limits match an independent endpoint reference. Radial-only speed and repeated or invalid trials do not enter scored agreement."
+issue = "RES-704"
+reference_kind = "closed_form"
+independence = "The oracle uses the endpoint chord of the prescribed straight constant track and Python sample statistics. It never imports the LPS or production agreement calculation."
+check_kind = "numeric"
+tolerance_unit = "m/s absolute"
+tolerance_basis = "Independent endpoint, sample standard deviation and normal-quantile references match bias and both limits within 1e-10 m/s with zero relative tolerance. Exact classifications and tolerance verdicts are asserted for clean and negative cases."
+tolerance = 1e-10
+subfamilies = ["gnss_lps.lps"]
+implementation = ["src/dynamisbench_soccer/agreement/paired_speed.py::compare", "src/dynamisbench_soccer/engines/gnss_lps.py::process"]
+reference = ["tests/test_m5_paired.py::_paired_truth"]
+tests = ["tests/test_m5_paired.py::test_paired_agreement_matches_independent_endpoint_and_statistics", "tests/test_m5_paired.py::test_incompatible_or_invalid_designs_withhold_agreement", "tests/test_m5_paired.py::test_a_relabelled_pair_cannot_increase_the_paired_sample", "tests/test_m5_paired.py::test_source_hash_and_frame_are_enforced"]
+
+[receipt.digests]
+"src/dynamisbench_soccer/agreement/paired_speed.py::compare" = "0a7fb9d8701cc7a385dc44e6d00e6f93c9a68e1a97973395503471e3ddebc576"
+"src/dynamisbench_soccer/engines/gnss_lps.py::process" = "47dad0be73c8de9a93699c8954df13d3b313b97a249e7ff27f8bfae4ee58edf9"
+"tests/test_m5_paired.py::_paired_truth" = "5708b25df0b83b6480ccde1a510f05246b8ebb40bb19714a90a33c184b9dc311"
+"tests/test_m5_paired.py::test_a_relabelled_pair_cannot_increase_the_paired_sample" = "b789b89d0f6b8a27e7f812ae71bf435ce52faeb56d402db62263154c78e0c708"
+"tests/test_m5_paired.py::test_incompatible_or_invalid_designs_withhold_agreement" = "9062fa2c76006d3d79444cfa4edcec7d001422cffa8f88a65e34452c14590525"
+"tests/test_m5_paired.py::test_paired_agreement_matches_independent_endpoint_and_statistics" = "3d784a4a52f349474834d61704e2ba8ec919106cedf8585cbb830b4ac8ba8a20"
+"tests/test_m5_paired.py::test_source_hash_and_frame_are_enforced" = "949491ba82de36aee673fe85c8416c8eb42a45166eb4686d8818b01877d33485"
+
+[[receipt]]
+id = "RCP-gnss_lps-lps-I-paired-speed"
+dimension = "I"
+claim = "The conditional k=2 bias uncertainty propagates the two independent offsets common to all pairs, including radial projection of the comparator's standard uncertainty. A changed offset budget alters uncertainty while leaving the paired descriptive limits fixed."
+issue = "RES-704"
+reference_kind = "closed_form"
+independence = "The reference enumerates the four independent method-level sign combinations and calculates their variance; it uses neither the LPS implementation nor the production quadrature."
+check_kind = "numeric"
+tolerance_unit = "m/s absolute"
+tolerance_basis = "The four-case population standard deviation times two matches the expanded uncertainty at absolute 1e-10 m/s, zero relative tolerance, for nominal and varied standard offsets."
+tolerance = 1e-10
+subfamilies = ["gnss_lps.lps"]
+implementation = ["src/dynamisbench_soccer/agreement/paired_speed.py::compare"]
+reference = ["tests/test_m5_paired.py::_common_offset_truth"]
+tests = ["tests/test_m5_paired.py::test_common_calibration_uncertainty_is_separate_from_loa"]
+
+[receipt.digests]
+"src/dynamisbench_soccer/agreement/paired_speed.py::compare" = "0a7fb9d8701cc7a385dc44e6d00e6f93c9a68e1a97973395503471e3ddebc576"
+"tests/test_m5_paired.py::_common_offset_truth" = "316b48381b7031d558b82f71dd3242ebaf1c333b97ed36afd8490666d3e0dc5d"
+"tests/test_m5_paired.py::test_common_calibration_uncertainty_is_separate_from_loa" = "eb9bb5d990f1ecf91b53dca2f4792fff2c2fef02f46e3482e916a3d97ecf0465"

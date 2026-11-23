@@ -2531,7 +2531,8 @@
         ],
         "I": [
           "RCP-gnss_lps-lps-I",
-          "RCP-gnss_lps-lps-I-native-bounds"
+          "RCP-gnss_lps-lps-I-native-bounds",
+          "RCP-gnss_lps-lps-I-paired-speed"
         ],
         "J": [
           "RCP-gnss_lps-lps-J"
@@ -2540,7 +2541,8 @@
           "RCP-gnss_lps-lps-K"
         ],
         "L": [
-          "RCP-gnss_lps-lps-L"
+          "RCP-gnss_lps-lps-L",
+          "RCP-gnss_lps-lps-L-paired-speed"
         ],
         "M": [
           "RCP-gnss_lps-lps-M"

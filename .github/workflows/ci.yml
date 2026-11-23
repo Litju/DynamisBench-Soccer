@@ -94,7 +94,10 @@ jobs:
           wheel_bin="$RUNNER_TEMP/wheel-venv/bin"
           cd "$RUNNER_TEMP"
           "$wheel_bin/python" -I -c 'import sys; from pathlib import Path; from dynamisbench_soccer.m4 import measurement; assert Path(measurement.__file__).is_relative_to(sys.prefix)'
-          "$wheel_bin/python" -m pytest "$GITHUB_WORKSPACE/tests/test_m5_measurement.py"
+          "$wheel_bin/python" -m pytest \
+            "$GITHUB_WORKSPACE/tests/test_m5_measurement.py" "$GITHUB_WORKSPACE/tests/test_m5_paired.py" \
+            "$GITHUB_WORKSPACE/tests/test_m5_motion_development.py" "$GITHUB_WORKSPACE/tests/test_m5_force_development.py" \
+            "$GITHUB_WORKSPACE/tests/test_m5_repeat_session_development.py"
       - name: RES-737 offline development-only installed-wheel smoke
         run: |
           wheel_bin="$RUNNER_TEMP/wheel-venv/bin"

@@ -249,6 +249,12 @@ def _replay_lps(
 def _measurement_binding(task: RegistryTask, review: ReviewedSlice) -> bool:
     method = task.methods[0]
     procedure = measurement.PROCEDURES.get(method.id)
+    if method.id == "paired-speed-bias" and any(
+        role not in review.evidence
+        or review.evidence[role].id != f"RCP-gnss_lps-lps-{role}-paired-speed"
+        for role in ("I", "L")
+    ):
+        return False
     return (
         task.grader == measurement.GRADER
         and task.task.answer_schema == measurement.ANSWER_VERSION
@@ -262,7 +268,7 @@ def _measurement_binding(task: RegistryTask, review: ReviewedSlice) -> bool:
         == (procedure.estimand, procedure.dimension, procedure.unit)
         and method.source_claims == procedure.claims
         and all(
-            f"src/dynamisbench_soccer/engines/{dependency}" in review.implementations
+            f"src/dynamisbench_soccer/{dependency}" in review.implementations
             for dependency in procedure.dependencies
         )
     )
@@ -295,7 +301,7 @@ def _replay_measurement(
         decision="compute" if computed else "refuse",
         method=method.id,
         reason=reading.reason,
-        selected_trials=(artifact,) if computed else (),
+        selected_trials=(reading.selected_trials or (artifact,)) if computed else (),
         claims=reading.claims,
         citations=method.source_claims,
         quantity=quantity,

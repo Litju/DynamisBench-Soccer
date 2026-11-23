@@ -2,11 +2,13 @@
 
 from __future__ import annotations
 
+import json
 from dataclasses import dataclass
 from typing import Literal
 
 import numpy as np
 
+from dynamisbench_soccer.agreement.paired_speed import PairedInput, compare
 from dynamisbench_soccer.data.manifest import DataCategory
 from dynamisbench_soccer.engines.contact import ContactPolicy, contact
 from dynamisbench_soccer.engines.event_time import Estimate, EventRefusal
@@ -45,7 +47,7 @@ PROCEDURES = {
         "speed",
         "m/s",
         ("DEV-004",),
-        ("timing_gates.py::sprint",),
+        ("engines/timing_gates.py::sprint",),
     ),
     "switch-flight-height": Procedure(
         "timing_contact.contact",
@@ -54,7 +56,7 @@ PROCEDURES = {
         "length",
         "m",
         ("DEV-003",),
-        ("contact.py::contact",),
+        ("engines/contact.py::contact",),
     ),
     "enu-positional-speed": Procedure(
         "gnss_lps.gnss",
@@ -63,7 +65,7 @@ PROCEDURES = {
         "speed",
         "m/s",
         ("DEV-005", "CX-003"),
-        ("gnss_lps.py::process", "position_clock_bounds.py::input_error_radii"),
+        ("engines/gnss_lps.py::process", "engines/position_clock_bounds.py::input_error_radii"),
     ),
     "lps-filter-sensitivity": Procedure(
         "gnss_lps.lps",
@@ -72,7 +74,16 @@ PROCEDURES = {
         "acceleration",
         "m/s^2",
         ("DEV-005", "CX-003"),
-        ("gnss_lps.py::process", "position_clock_bounds.py::input_error_radii"),
+        ("engines/gnss_lps.py::process", "engines/position_clock_bounds.py::input_error_radii"),
+    ),
+    "paired-speed-bias": Procedure(
+        "gnss_lps.lps",
+        "cross_device",
+        "horizontal_tag_speed_paired_bias",
+        "speed",
+        "m/s",
+        ("DEV-005", "DEV-008", "ST-004"),
+        ("agreement/paired_speed.py::compare", "engines/gnss_lps.py::process"),
     ),
 }
 
@@ -84,6 +95,7 @@ class Reading:
     value: float | None = None
     radius: float | None = None
     operands: tuple[tuple[str, float], ...] = ()
+    selected_trials: tuple[str, ...] = ()
 
 
 def _estimate(estimate: Estimate, claims: tuple[str, ...], **operands: float) -> Reading:
@@ -244,7 +256,51 @@ def _position(
     )
 
 
+def _paired(data: dict[str, object]) -> Reading:
+    result = compare(PairedInput.model_validate_json(json.dumps(data)))
+    classification = result.classification
+    if classification == "definition_mismatch":
+        return Reading("unsupported_claim", (classification, "hardware_interchangeability_unknown"))
+    if classification == "repeat_sessions_required":
+        return Reading("insufficient_evidence", (classification, "paired_devices_not_retest"))
+    if classification in {"independent_pairs_required", "failed_signal_qc"}:
+        return Reading("not_eligible", (classification,))
+    agreement = result.agreement
+    if agreement is None or result.expanded_uncertainty is None:
+        raise ValueError("paired computation lacks statistics or uncertainty")
+    evidence = [
+        (f"{method}.{trial}", round(value, 10))
+        for trial, radar, lps in result.pairs
+        for method, value in (("radar", radar), ("lps", lps))
+    ]
+    lower, upper = agreement.limits
+    evidence.extend(
+        (
+            ("n_pairs", float(agreement.n_pairs)),
+            ("sd_difference", round(agreement.sd_difference, 10)),
+            ("lower_limit", round(lower, 10)),
+            ("upper_limit", round(upper, 10)),
+        )
+    )
+    return Reading(
+        "eligible",
+        (
+            classification,
+            "hardware_interchangeability_unknown",
+            "matched_horizontal_tag_speed",
+            "limits_within_tolerance" if result.within_tolerance else "limits_exceed_tolerance",
+            "descriptive_limits_not_reliability",
+        ),
+        agreement.bias,
+        result.expanded_uncertainty,
+        tuple(evidence),
+        tuple(trial for trial, _, _ in result.pairs),
+    )
+
+
 def replay(operation: str, data: dict[str, object]) -> Reading:
+    if operation == "paired-speed-bias":
+        return _paired(data)
     request = data["request"]
     if not isinstance(request, str) or request not in ("compute", "equivalence"):
         raise ValueError("unknown measurement request")

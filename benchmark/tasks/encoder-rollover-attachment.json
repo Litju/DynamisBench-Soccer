@@ -1,0 +1,127 @@
+{
+  "artifacts": [
+    {
+      "category": "synthetic",
+      "name": "encoder-rollover-attachment-01",
+      "path": "benchmark/fixtures/m5-motion/encoder-rollover-attachment-01.json",
+      "rights": "Repository-authored synthetic sensor observation",
+      "sha256": "0a5c45d5ec77173f6b8cfd445ce7c933e7a06baecbd7b76b325dc12ebc9421ba",
+      "usage": "reference"
+    },
+    {
+      "category": "synthetic",
+      "name": "encoder-rollover-attachment-02",
+      "path": "benchmark/fixtures/m5-motion/encoder-rollover-attachment-02.json",
+      "rights": "Repository-authored synthetic sensor observation",
+      "sha256": "6e93e3c24ce51da309da053e074904d8053d17c6e4e1df8c880e7aa2e0372fc2",
+      "usage": "reference"
+    },
+    {
+      "category": "synthetic",
+      "name": "encoder-rollover-attachment-03",
+      "path": "benchmark/fixtures/m5-motion/encoder-rollover-attachment-03.json",
+      "rights": "Repository-authored synthetic sensor observation",
+      "sha256": "ec75b20756566509488b9bba5271c9a5727e370e9c8462c2f24ba983069f0669",
+      "usage": "reference"
+    },
+    {
+      "category": "synthetic",
+      "name": "encoder-rollover-attachment-04",
+      "path": "benchmark/fixtures/m5-motion/encoder-rollover-attachment-04.json",
+      "rights": "Repository-authored synthetic sensor observation",
+      "sha256": "42b25a69d8a967ad9b65a3239022d78d5ef954aa82e2db0b17c5fb3ebdc40c7f",
+      "usage": "reference"
+    },
+    {
+      "category": "synthetic",
+      "name": "encoder-rollover-attachment-05",
+      "path": "benchmark/fixtures/m5-motion/encoder-rollover-attachment-05.json",
+      "rights": "Repository-authored synthetic sensor observation",
+      "sha256": "6d92a2110566da2f799181118237577faf7a14c343362dbd2167b1cf2c7f215f",
+      "usage": "reference"
+    }
+  ],
+  "checkpoints": [
+    {
+      "artifacts": [
+        "encoder-rollover-attachment-01"
+      ],
+      "id": "c01",
+      "prompt": "Use method modular-attachment-change and cite DEV-001. Recover signed start-to-end vertical attachment displacement as signed_vertical_attachment_change (length, m) and mean velocity. Use the unique signed modular increment only after checking that the maximum physical advance plus one count in every native interval is strictly below half a turn. Reject individual increments outside that allowance. Apply the declared encoder direction and counts per metre and the effective tether-angle projection. Include signed_count_change, elapsed_s, cable_displacement_m, and mean_vertical_velocity_m_s operands. Report a conditional displacement error bound from two half-count endpoint errors. Use the source attachment identity and do not infer whole-body COM displacement. Return JSON with version m5.measurement-answer.v1, method, decision, reason, citations, claims, selected_trials, quantity, operands, and corrects set to null. Use compute with eligible, or refuse with not_eligible (invalid acquisition), insufficient_evidence (required declaration absent), or unsupported_claim. Computations use one selected artifact and quantity fields value, uncertainty, estimand, dimension, and unit. Each operand names artifact, field, and value. Refusals use null quantity and empty operands and selected_trials. Cite the prescribed registry claim and state the relevant reasoning in claims as short snake_case identifiers."
+    },
+    {
+      "artifacts": [
+        "encoder-rollover-attachment-02"
+      ],
+      "id": "c02",
+      "prompt": "Use method modular-attachment-change and cite DEV-001. Recover signed start-to-end vertical attachment displacement as signed_vertical_attachment_change (length, m) and mean velocity. Use the unique signed modular increment only after checking that the maximum physical advance plus one count in every native interval is strictly below half a turn. Reject individual increments outside that allowance. Apply the declared encoder direction and counts per metre and the effective tether-angle projection. Include signed_count_change, elapsed_s, cable_displacement_m, and mean_vertical_velocity_m_s operands. Report a conditional displacement error bound from two half-count endpoint errors. Use the source attachment identity and do not infer whole-body COM displacement. Return JSON with version m5.measurement-answer.v1, method, decision, reason, citations, claims, selected_trials, quantity, operands, and corrects set to null. Use compute with eligible, or refuse with not_eligible (invalid acquisition), insufficient_evidence (required declaration absent), or unsupported_claim. Computations use one selected artifact and quantity fields value, uncertainty, estimand, dimension, and unit. Each operand names artifact, field, and value. Refusals use null quantity and empty operands and selected_trials. Cite the prescribed registry claim and state the relevant reasoning in claims as short snake_case identifiers."
+    },
+    {
+      "artifacts": [
+        "encoder-rollover-attachment-03"
+      ],
+      "id": "c03",
+      "prompt": "Use method modular-attachment-change and cite DEV-001. Recover signed start-to-end vertical attachment displacement as signed_vertical_attachment_change (length, m) and mean velocity. Use the unique signed modular increment only after checking that the maximum physical advance plus one count in every native interval is strictly below half a turn. Reject individual increments outside that allowance. Apply the declared encoder direction and counts per metre and the effective tether-angle projection. Include signed_count_change, elapsed_s, cable_displacement_m, and mean_vertical_velocity_m_s operands. Report a conditional displacement error bound from two half-count endpoint errors. Use the source attachment identity and do not infer whole-body COM displacement. Return JSON with version m5.measurement-answer.v1, method, decision, reason, citations, claims, selected_trials, quantity, operands, and corrects set to null. Use compute with eligible, or refuse with not_eligible (invalid acquisition), insufficient_evidence (required declaration absent), or unsupported_claim. Computations use one selected artifact and quantity fields value, uncertainty, estimand, dimension, and unit. Each operand names artifact, field, and value. Refusals use null quantity and empty operands and selected_trials. Cite the prescribed registry claim and state the relevant reasoning in claims as short snake_case identifiers."
+    },
+    {
+      "artifacts": [
+        "encoder-rollover-attachment-04"
+      ],
+      "id": "c04",
+      "prompt": "Use method modular-attachment-change and cite DEV-001. Recover signed start-to-end vertical attachment displacement as signed_vertical_attachment_change (length, m) and mean velocity. Use the unique signed modular increment only after checking that the maximum physical advance plus one count in every native interval is strictly below half a turn. Reject individual increments outside that allowance. Apply the declared encoder direction and counts per metre and the effective tether-angle projection. Include signed_count_change, elapsed_s, cable_displacement_m, and mean_vertical_velocity_m_s operands. Report a conditional displacement error bound from two half-count endpoint errors. Use the source attachment identity and do not infer whole-body COM displacement. Return JSON with version m5.measurement-answer.v1, method, decision, reason, citations, claims, selected_trials, quantity, operands, and corrects set to null. Use compute with eligible, or refuse with not_eligible (invalid acquisition), insufficient_evidence (required declaration absent), or unsupported_claim. Computations use one selected artifact and quantity fields value, uncertainty, estimand, dimension, and unit. Each operand names artifact, field, and value. Refusals use null quantity and empty operands and selected_trials. Cite the prescribed registry claim and state the relevant reasoning in claims as short snake_case identifiers."
+    },
+    {
+      "artifacts": [
+        "encoder-rollover-attachment-05"
+      ],
+      "id": "c05",
+      "prompt": "Use method modular-attachment-change and cite DEV-001. Recover signed start-to-end vertical attachment displacement as signed_vertical_attachment_change (length, m) and mean velocity. Use the unique signed modular increment only after checking that the maximum physical advance plus one count in every native interval is strictly below half a turn. Reject individual increments outside that allowance. Apply the declared encoder direction and counts per metre and the effective tether-angle projection. Include signed_count_change, elapsed_s, cable_displacement_m, and mean_vertical_velocity_m_s operands. Report a conditional displacement error bound from two half-count endpoint errors. Use the source attachment identity and do not infer whole-body COM displacement. Return JSON with version m5.measurement-answer.v1, method, decision, reason, citations, claims, selected_trials, quantity, operands, and corrects set to null. Use compute with eligible, or refuse with not_eligible (invalid acquisition), insufficient_evidence (required declaration absent), or unsupported_claim. Computations use one selected artifact and quantity fields value, uncertainty, estimand, dimension, and unit. Each operand names artifact, field, and value. Refusals use null quantity and empty operands and selected_trials. Cite the prescribed registry claim and state the relevant reasoning in claims as short snake_case identifiers."
+    }
+  ],
+  "engine": "m5-advanced-development.v1",
+  "grader": "development-diagnostic.v1",
+  "methods": [
+    {
+      "absolute_tolerance": 1e-09,
+      "clock": "Exact common native elapsed time. No interpolation.",
+      "dimension": "length",
+      "eligibility": "Calibrated integer counter with a uniquely identifiable wrap and signed motion convention.",
+      "estimand": "signed_vertical_attachment_change",
+      "geometry": "Bar attachment and declared tether angle.",
+      "id": "modular-attachment-change",
+      "limitations": [
+        "The device follows the attachment point.",
+        "Quantization bound excludes slip, timing and unmodelled geometry."
+      ],
+      "qc": "Refuse missing scale, ambiguous modulus, out-of-limit increments and missing vertical geometry.",
+      "sampling": "Analytical relative tether path sampled at 50 Hz.",
+      "source_claims": [
+        "DEV-001"
+      ],
+      "specification": {
+        "operation": "modular-attachment-change"
+      },
+      "uncertainty": "One count propagated through scale and angle is a deterministic endpoint displacement bound.",
+      "unit": "m"
+    }
+  ],
+  "reference_profile": "encoder-rollover-attachment",
+  "task": {
+    "answer_schema": "m5.measurement-answer.v1",
+    "competencies": [
+      "C1",
+      "C3",
+      "C4",
+      "C5"
+    ],
+    "convention": "fixed",
+    "coverage_cell": "Direction, rollover, quantization and attachment motion",
+    "domain": "synthetic motion reconstruction",
+    "family": "A",
+    "id": "encoder-rollover-attachment",
+    "protocol": "Calibrated integer counter with a uniquely identifiable wrap and signed motion convention.",
+    "revision": 1,
+    "source": "lpt_encoder.encoder"
+  },
+  "version": "m4.registry-task.v1"
+}
