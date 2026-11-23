@@ -429,3 +429,32 @@ def test_position_reports_retain_sourced_limits_across_native_methods(
         "decimation of the supplied record, with no independent lower-rate measurement.",
     )
     assert (result.kinematics.doppler_speed_m_s is not None) is doppler
+
+
+@pytest.mark.parametrize("kind", ["gnss", "lps"])
+def test_position_cli_preserves_the_operating_limitations(kind: str, tmp_path: Path) -> None:
+    case, declaration = track_case(kind, hz=25)
+    case.write(tmp_path)
+    declared = tmp_path / "declaration.json"
+    declared.write_text(declaration.model_dump_json())
+    path = tmp_path / "result.json"
+    assert (
+        main(
+            [
+                "gnss-lps",
+                "process",
+                str(tmp_path / "observation"),
+                "--declaration",
+                str(declared),
+                "--derivative",
+                "five_point",
+                "--out",
+                str(path),
+            ]
+        )
+        == 0
+    )
+    result = process(
+        io.read(tmp_path / "observation"), declaration, ProcessingOptions(derivative="five_point")
+    )
+    assert json.loads(path.read_text())["limitations"] == list(result.limitations)
