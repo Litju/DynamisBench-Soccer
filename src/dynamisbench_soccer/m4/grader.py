@@ -203,7 +203,10 @@ def _replay_lps(
     channels = {
         name: np.asarray(values, dtype=np.float64) for name, values in data["channels"].items()
     }
-    bundle = SignalBundle(BundleMeta.model_validate(data["meta"]), channels)
+    meta = BundleMeta.model_validate(data["meta"])
+    if set(channels) != {channel.name for channel in meta.channels}:
+        return False
+    bundle = SignalBundle(meta, {channel.name: channels[channel.name] for channel in meta.channels})
     declaration = AcquisitionDeclaration.model_validate(data["declaration"])
     try:
         speed = horizontal_speed(bundle, declaration, row)
