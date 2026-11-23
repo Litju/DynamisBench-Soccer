@@ -75,3 +75,26 @@ def test_negative_controls(path: str, value: object, finding: str) -> None:
 
 def test_duplicate_json_keys_fail() -> None:
     assert check_control(b'{"answer":1,"answer":2}', EXPECTED, 1e-9) == ("invalid_submission",)
+
+
+def test_excludes_development_tasks_without_reading_private_store(tmp_path) -> None:
+    from pathlib import Path
+
+    from dynamisbench_soccer.m4.grader import score_checkpoint
+    from dynamisbench_soccer.m4.key_store import digest
+    from dynamisbench_soccer.m4.task_registry import load_registry
+
+    root = Path(__file__).resolve().parents[1]
+    task = load_registry(root / "benchmark/tasks")["elapsed-demo", 1]
+    catalog = (root / "benchmark/reviewed-slices.json").read_bytes()
+    outcome = score_checkpoint(
+        root,
+        task,
+        catalog,
+        digest(catalog),
+        tmp_path / "absent",
+        "initial",
+        {},
+        json.dumps(ANSWER).encode(),
+    )
+    assert outcome.outcome == "EXCLUDED_FROM_SCORED_BENCHMARK"
