@@ -1,12 +1,18 @@
 """Encoder-specific observation admission and counter reconstruction (RES-695)."""
 
+import hashlib
+import json
+from pathlib import Path
+
 import numpy as np
 import pytest
 
+from dynamisbench_soccer.cli import main
 from dynamisbench_soccer.engines.lpt import process
 from dynamisbench_soccer.engines.lpt_acquisition import CableSpec, GeometrySpec, acquire
 from dynamisbench_soccer.reference.exporters import export_case
 from dynamisbench_soccer.reference.kinematics import Phase, Trajectory
+from dynamisbench_soccer.signals import io
 from dynamisbench_soccer.signals.schema import BundleMeta, SignalBundle
 
 CABLE = CableSpec(source="instrument", channel="counts", max_speed_m_s=4)
@@ -123,3 +129,34 @@ def test_encoder_count_allowance_survives_large_counter_origin(hz: int) -> None:
     )
     cable = acquire(observation, (declared,), GEOMETRY).cables[0]
     assert cable.faults == {}
+
+
+def test_encoder_cli_replays_verified_artifacts_and_detects_mutation(tmp_path: Path) -> None:
+    stem, config, out = tmp_path / "observation", tmp_path / "config.json", tmp_path / "result.json"
+    args = ["lpt-encoder", "process", str(stem), "--config", str(config), "--out", str(out)]
+    config.write_text(
+        json.dumps({"cables": [CABLE.model_dump()], "geometry": GEOMETRY.model_dump()})
+    )
+
+    artifacts = []
+    for _ in range(2):
+        case = export_case("lpt_encoder.encoder", MOTION, test_id="cmj", hz=100)
+        parquet, sidecar = io.write(case.observation, stem)
+        assert main(args) == 0
+        raw = parquet.read_bytes()
+        reported = json.loads(out.read_bytes())
+        assert reported["data_sha256"] == hashlib.sha256(raw).hexdigest()
+        assert reported["bundle_id"] == case.observation.meta.bundle_id
+        assert reported["cables"][0]["spec"] == CABLE.model_dump()
+        artifacts.append((raw, sidecar.read_bytes(), out.read_bytes()))
+    assert artifacts[0] == artifacts[1]
+
+    case.observation["counts"][7] += 1
+    io.write(case.observation, stem)
+    assert main(args) == 0
+    new = json.loads(out.read_bytes())
+    assert new["data_sha256"] == hashlib.sha256(parquet.read_bytes()).hexdigest()
+    assert new["data_sha256"] != reported["data_sha256"]
+    parquet.write_bytes(parquet.read_bytes() + b"altered")
+    assert main(args) == 2
+    assert json.loads(out.read_bytes()) == new
