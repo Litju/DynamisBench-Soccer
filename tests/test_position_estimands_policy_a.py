@@ -19,10 +19,14 @@ from dynamisbench_soccer.registry.models import load
 ROOT = Path(__file__).resolve().parents[1]
 
 
+def _planar_metrics(t):
+    return 5 + t, 5 * t + 0.5 * t**2
+
+
 def _quadratic(kind):
     case, declaration = track_case(kind, hz=25, drift=320, latency=0.02)
     bundle, t = case.observation, case.truth["time"]
-    arc = 5 * t + 0.5 * t**2
+    _, arc = _planar_metrics(t)
     x, y, z = 0.6 * arc, -0.8 * arc, 2 + t + 0.3 * t**2
     if kind == "gnss":
         fixes = np.array([ecef_geodetic(row) for row in np.column_stack((6378137 + z, x, y))])
@@ -56,7 +60,8 @@ def test_native_metric_definitions_and_assessment_handoff(kind, method, tmp_path
         ),
     )
     k = result.kinematics
-    np.testing.assert_allclose(k.horizontal_positional_speed_m_s, 5 + t, rtol=0, atol=1e-7)
+    speed, _ = _planar_metrics(t)
+    np.testing.assert_allclose(k.horizontal_positional_speed_m_s, speed, rtol=0, atol=1e-7)
     np.testing.assert_allclose(k.horizontal_positional_acceleration_m_s2, 1, rtol=0, atol=1e-5)
     np.testing.assert_allclose(k.accumulated_horizontal_distance_m, arc, rtol=0, atol=1e-7)
     first = next(i for i, stamp in enumerate(t) if stamp + 5 >= threshold)
@@ -105,3 +110,46 @@ def test_native_metric_definitions_and_assessment_handoff(kind, method, tmp_path
             load_speed_report(path, declared_source="gnss_doppler")
     claim = next(c for c in load(ROOT / "registry").claims if c.id == "DEV-005")
     assert "linke2018" in claim.sources and "Doppler" in claim.statement
+
+
+def _circle_stencil_gain(step, method):
+    if method == "five_point":
+        return (8 * np.sin(step) - np.sin(2 * step)) / (6 * step)
+    return np.sin(step) / step
+
+
+@pytest.mark.parametrize("kind", ["gnss", "lps"])
+@pytest.mark.parametrize("method", ["three_point", "five_point"])
+def test_turn_acceleration_and_chord_are_distinct_from_speed_change(kind, method):
+    bundle, declaration, t, _ = _quadratic(kind)
+    radius = 2
+    xy = np.column_stack((radius * np.cos(t), radius * np.sin(t)))
+    if kind == "gnss":
+        fixes = np.array(
+            [ecef_geodetic(row) for row in np.column_stack((np.full(len(t), 6378137.0), xy))]
+        )
+        for index, name in enumerate(("latitude", "longitude", "height")):
+            bundle[name][:] = fixes[:, index]
+    else:
+        bundle["position_x"][:] = xy[:, 0]
+        bundle["position_y"][:] = xy[:, 1]
+    k = process(
+        bundle,
+        declaration,
+        ProcessingOptions(
+            derivative=method,
+            thresholds=(),
+        ),
+    ).kinematics
+    step = float(t[1] - t[0])
+    gain = _circle_stencil_gain(step, method)
+    np.testing.assert_allclose(
+        k.horizontal_positional_speed_m_s[4:-4], radius * gain, atol=1e-7, rtol=0
+    )
+    np.testing.assert_allclose(
+        k.horizontal_positional_acceleration_m_s2[4:-4], radius * gain**2, atol=1e-5, rtol=0
+    )
+    chord = 2 * radius * np.sin(step / 2)
+    np.testing.assert_allclose(
+        k.accumulated_horizontal_distance_m, np.arange(len(t)) * chord, atol=1e-7, rtol=0
+    )
