@@ -21,8 +21,8 @@ Engineering calculations only; no scientific qualification of any device or metr
 | -- | -- | -- | -- |
 | force_platform.dual | SPECIFIED | yes | 8 of 14 |
 | force_platform.single | SPECIFIED | yes | 8 of 14 |
-| gnss_lps.gnss | SPECIFIED | yes | 5 of 14 |
-| gnss_lps.lps | SPECIFIED | yes | 4 of 14 |
+| gnss_lps.gnss | SPECIFIED | yes | 4 of 14 |
+| gnss_lps.lps | SPECIFIED | yes | 3 of 14 |
 | imu.inertial | SPECIFIED | yes | 8 of 14 |
 | load_cell_isometric.isometric_rig | SPECIFIED | yes | 11 of 14 |
 | load_cell_isometric.load_cell | SPECIFIED | yes | 5 of 14 |
@@ -78,21 +78,17 @@ Engineering calculations only; no scientific qualification of any device or metr
 * computational blocker: E: every processing method variant is compared with an independent reference with stated sensitivity bounds (owner RES-700; rated partial)
 * computational blocker: H: metric definitions are bound to sourced registry claims and executable exactly (owner RES-673; rated partial)
 * computational blocker: I: declared uncertainty propagation is checked against an independent analytical result (owner RES-700; rated partial)
-* computational blocker: O: limitation statements are sourced and emitted with every result (owner RES-700; rated partial)
 * H - owner RES-673: metric definitions are bound to sourced registry claims and executable exactly
 * B - owner RES-700: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused
 * I - owner RES-700: declared uncertainty propagation is checked against an independent analytical result
 * E - owner RES-700: every processing method variant is compared with an independent reference with stated sensitivity bounds
-* O - owner RES-700: limitation statements are sourced and emitted with every result
 
 **gnss_lps.lps** (SPECIFIED)
 * computational blocker: H: metric definitions are bound to sourced registry claims and executable exactly (owner RES-673; rated partial)
 * computational blocker: I: declared uncertainty propagation is checked against an independent analytical result (owner RES-700; rated partial)
 * computational blocker: L: analytical cross-device studies are executed and classified, never read as interchangeability (owner RES-703; rated partial)
-* computational blocker: O: limitation statements are sourced and emitted with every result (owner RES-700; rated partial)
 * H - owner RES-673: metric definitions are bound to sourced registry claims and executable exactly
 * I - owner RES-700: declared uncertainty propagation is checked against an independent analytical result
-* O - owner RES-700: limitation statements are sourced and emitted with every result
 * L - owner RES-703: analytical cross-device studies are executed and classified, never read as interchangeability
 
 **imu.inertial** (SPECIFIED)
@@ -416,8 +412,8 @@ Open empirical requirements (what only physical measurement can close):
 | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- |
 | force_platform.dual | s | s | V | V | p | V | p | p | V | V | p | p | V | - | p |
 | force_platform.single | s | s | s | p | p | V | V | p | V | V | p | V | V | - | p |
-| gnss_lps.gnss | V | s | V | V | p | V | V | p | p | V | V | V | V | - | p |
-| gnss_lps.lps | V | V | V | V | V | V | V | p | p | V | V | p | V | - | p |
+| gnss_lps.gnss | V | s | V | V | p | V | V | p | p | V | V | V | V | - | V |
+| gnss_lps.lps | V | V | V | V | V | V | V | p | p | V | V | p | V | - | V |
 | imu.inertial | s | V | s | V | V | V | p | p | V | V | p | p | p | - | p |
 | load_cell_isometric.isometric_rig | V | s | s | p | p | p | p | p | p | p | p | p | V | - | V |
 | load_cell_isometric.load_cell | V | V | s | V | p | V | V | p | p | V | p | V | V | - | V |

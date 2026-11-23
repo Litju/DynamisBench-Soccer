@@ -2064,3 +2064,51 @@ issue = "RES-699"
 "tests/test_radar_laser_processing.py::test_radar_cosine_sensitivity_includes_the_closest_angle_to_zero" = "19cb0dd6c4285a778c73755ad70701534c4f0c413ff52b011607694d317b12fa"
 "tests/test_radar_laser_processing.py::test_radar_projection_uncertainty_refuses_ill_conditioned_perturbations" = "67c15915a1619ef0d0f7e7b49de824ae4bea1a6c8ae78bd3b8d1c6f396be6f7a"
 "tests/test_radar_laser_processing.py::test_radar_start_and_filter_sensitivity_against_exponential_velocity" = "e00a16f82a94bcd38241a4ab0a115e4ce6e00368082288c0ff28b387070fbe15"
+
+[[receipt]]
+id = "RCP-gnss_lps-gnss-O"
+dimension = "O"
+subfamilies = ["gnss_lps.gnss"]
+implementation = ["src/dynamisbench_soccer/engines/gnss_lps.py::process", "src/dynamisbench_soccer/engines/gnss_lps_cli.py::_process", "src/dynamisbench_soccer/engines/gnss_lps_acquisition.py::admit"]
+reference = ["src/dynamisbench_soccer/reference/spatial.py::RigidBody"]
+tests = ["tests/test_gnss_lps_processing.py::test_position_reports_retain_sourced_limits_across_native_methods", "tests/test_gnss_lps_processing.py::test_position_cli_preserves_the_operating_limitations"]
+reference_kind = "independent_implementation"
+independence = "The rigid-body reference defines the tracked offset point without consulting the engine. The expected limitation statements come from the sourced method specification and are asserted literally."
+claim = "Every successful GNSS result carries the declared native-position and processing limitations, and the CLI preserves them."
+tolerance_basis = "Exact five-statement tuple and identical JSON list: tracked antenna/tag point; producer-solved LPS positions without range residuals, covariance or survey validation; conditional affine-clock and latency assumptions; whole sampled intervals and differentiation dependence; and offline stride-two sensitivity without independent lower-rate data. The direct 25 Hz controls cover three position filters, both differentiation methods and native GNSS with/without Doppler or LPS without Doppler. Provenance for the limits is the acquisition and processing specification, independent rigid-body offset motion, and existing registry claims DEV-005 (Linke et al.) for both modalities and CX-003 (Malone et al.) for GPS context."
+check_kind = "categorical"
+tolerance_unit = ""
+tolerance = 0
+issue = "RES-700"
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/gnss_lps.py::process" = "47dad0be73c8de9a93699c8954df13d3b313b97a249e7ff27f8bfae4ee58edf9"
+"src/dynamisbench_soccer/engines/gnss_lps_acquisition.py::admit" = "9debfad0fb7859e175ed2ce9f125e59c7ed7f18719af7fdef075a99b79ee1a3b"
+"src/dynamisbench_soccer/engines/gnss_lps_cli.py::_process" = "76187160dfe3f6ad1cc0627549854624f15e934723823293d4b90b082f40fd06"
+"src/dynamisbench_soccer/reference/spatial.py::RigidBody" = "3f6ce7c7d3d600665ad4e580bff84c581243abbb2cad1dc11c92c8e51ab42fe7"
+"tests/test_gnss_lps_processing.py::test_position_cli_preserves_the_operating_limitations" = "f66fc2cea8634f74e971b9b4ea398cb9b85387aab93f0c1b99e443b23a25e63d"
+"tests/test_gnss_lps_processing.py::test_position_reports_retain_sourced_limits_across_native_methods" = "6115e469060f0796137eb19b75caeaad029462065e63169dd8801ac93d7d4c75"
+
+[[receipt]]
+id = "RCP-gnss_lps-lps-O"
+dimension = "O"
+subfamilies = ["gnss_lps.lps"]
+implementation = ["src/dynamisbench_soccer/engines/gnss_lps.py::process", "src/dynamisbench_soccer/engines/gnss_lps_cli.py::_process", "src/dynamisbench_soccer/engines/gnss_lps_acquisition.py::admit"]
+reference = ["src/dynamisbench_soccer/reference/spatial.py::RigidBody"]
+tests = ["tests/test_gnss_lps_processing.py::test_position_reports_retain_sourced_limits_across_native_methods", "tests/test_gnss_lps_processing.py::test_position_cli_preserves_the_operating_limitations"]
+reference_kind = "independent_implementation"
+independence = "The rigid-body reference defines the tracked offset point without consulting the engine. The expected limitation statements come from the sourced method specification and are asserted literally."
+claim = "Every successful LPS result carries the declared native-position and processing limitations, and the CLI preserves them."
+tolerance_basis = "Exact five-statement tuple and identical JSON list: tracked antenna/tag point; producer-solved LPS positions without range residuals, covariance or survey validation; conditional affine-clock and latency assumptions; whole sampled intervals and differentiation dependence; and offline stride-two sensitivity without independent lower-rate data. The direct 25 Hz controls cover three position filters, both differentiation methods and native GNSS with/without Doppler or LPS without Doppler. Provenance for the limits is the acquisition and processing specification, independent rigid-body offset motion, and existing registry claims DEV-005 (Linke et al.) for both modalities and CX-003 (Malone et al.) for GPS context."
+check_kind = "categorical"
+tolerance_unit = ""
+tolerance = 0
+issue = "RES-700"
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/gnss_lps.py::process" = "47dad0be73c8de9a93699c8954df13d3b313b97a249e7ff27f8bfae4ee58edf9"
+"src/dynamisbench_soccer/engines/gnss_lps_acquisition.py::admit" = "9debfad0fb7859e175ed2ce9f125e59c7ed7f18719af7fdef075a99b79ee1a3b"
+"src/dynamisbench_soccer/engines/gnss_lps_cli.py::_process" = "76187160dfe3f6ad1cc0627549854624f15e934723823293d4b90b082f40fd06"
+"src/dynamisbench_soccer/reference/spatial.py::RigidBody" = "3f6ce7c7d3d600665ad4e580bff84c581243abbb2cad1dc11c92c8e51ab42fe7"
+"tests/test_gnss_lps_processing.py::test_position_cli_preserves_the_operating_limitations" = "f66fc2cea8634f74e971b9b4ea398cb9b85387aab93f0c1b99e443b23a25e63d"
+"tests/test_gnss_lps_processing.py::test_position_reports_retain_sourced_limits_across_native_methods" = "6115e469060f0796137eb19b75caeaad029462065e63169dd8801ac93d7d4c75"

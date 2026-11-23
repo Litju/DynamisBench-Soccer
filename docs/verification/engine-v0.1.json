@@ -1675,14 +1675,12 @@
         "B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-700; rated specified)",
         "E: every processing method variant is compared with an independent reference with stated sensitivity bounds (owner RES-700; rated partial)",
         "H: metric definitions are bound to sourced registry claims and executable exactly (owner RES-673; rated partial)",
-        "I: declared uncertainty propagation is checked against an independent analytical result (owner RES-700; rated partial)",
-        "O: limitation statements are sourced and emitted with every result (owner RES-700; rated partial)"
+        "I: declared uncertainty propagation is checked against an independent analytical result (owner RES-700; rated partial)"
       ],
       "gnss_lps.lps": [
         "H: metric definitions are bound to sourced registry claims and executable exactly (owner RES-673; rated partial)",
         "I: declared uncertainty propagation is checked against an independent analytical result (owner RES-700; rated partial)",
-        "L: analytical cross-device studies are executed and classified, never read as interchangeability (owner RES-703; rated partial)",
-        "O: limitation statements are sourced and emitted with every result (owner RES-700; rated partial)"
+        "L: analytical cross-device studies are executed and classified, never read as interchangeability (owner RES-703; rated partial)"
       ],
       "imu.inertial": [
         "A: executable admission contract: native/vendor stage, units and integrity refusals tested (owner RES-693; rated specified)",
@@ -2328,14 +2326,14 @@
         "J",
         "K",
         "L",
-        "M"
+        "M",
+        "O"
       ],
       "blockers": [
         "B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-700; rated specified)",
         "E: every processing method variant is compared with an independent reference with stated sensitivity bounds (owner RES-700; rated partial)",
         "H: metric definitions are bound to sourced registry claims and executable exactly (owner RES-673; rated partial)",
-        "I: declared uncertainty propagation is checked against an independent analytical result (owner RES-700; rated partial)",
-        "O: limitation statements are sourced and emitted with every result (owner RES-700; rated partial)"
+        "I: declared uncertainty propagation is checked against an independent analytical result (owner RES-700; rated partial)"
       ],
       "empirical_dimensions_covered": [],
       "empirical_gaps": [
@@ -2395,7 +2393,7 @@
         "L": "verified",
         "M": "verified",
         "N": "absent",
-        "O": "partial"
+        "O": "verified"
       },
       "receipts": {
         "A": [
@@ -2424,14 +2422,16 @@
         ],
         "M": [
           "RCP-gnss_lps-gnss-M"
+        ],
+        "O": [
+          "RCP-gnss_lps-gnss-O"
         ]
       },
       "required_computational": {
         "B": "declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused",
         "E": "every processing method variant is compared with an independent reference with stated sensitivity bounds",
         "H": "metric definitions are bound to sourced registry claims and executable exactly",
-        "I": "declared uncertainty propagation is checked against an independent analytical result",
-        "O": "limitation statements are sourced and emitted with every result"
+        "I": "declared uncertainty propagation is checked against an independent analytical result"
       },
       "state": "SPECIFIED",
       "subfamily": "gnss_lps.gnss",
@@ -2439,8 +2439,7 @@
         "B",
         "E",
         "H",
-        "I",
-        "O"
+        "I"
       ],
       "verified_m3": [
         "A",
@@ -2451,7 +2450,8 @@
         "J",
         "K",
         "L",
-        "M"
+        "M",
+        "O"
       ]
     },
     {
@@ -2465,13 +2465,13 @@
         "G",
         "J",
         "K",
-        "M"
+        "M",
+        "O"
       ],
       "blockers": [
         "H: metric definitions are bound to sourced registry claims and executable exactly (owner RES-673; rated partial)",
         "I: declared uncertainty propagation is checked against an independent analytical result (owner RES-700; rated partial)",
-        "L: analytical cross-device studies are executed and classified, never read as interchangeability (owner RES-703; rated partial)",
-        "O: limitation statements are sourced and emitted with every result (owner RES-700; rated partial)"
+        "L: analytical cross-device studies are executed and classified, never read as interchangeability (owner RES-703; rated partial)"
       ],
       "empirical_dimensions_covered": [],
       "empirical_gaps": [
@@ -2531,7 +2531,7 @@
         "L": "partial",
         "M": "verified",
         "N": "absent",
-        "O": "partial"
+        "O": "verified"
       },
       "receipts": {
         "A": [
@@ -2563,21 +2563,22 @@
         ],
         "M": [
           "RCP-gnss_lps-lps-M"
+        ],
+        "O": [
+          "RCP-gnss_lps-lps-O"
         ]
       },
       "required_computational": {
         "H": "metric definitions are bound to sourced registry claims and executable exactly",
         "I": "declared uncertainty propagation is checked against an independent analytical result",
-        "L": "analytical cross-device studies are executed and classified, never read as interchangeability",
-        "O": "limitation statements are sourced and emitted with every result"
+        "L": "analytical cross-device studies are executed and classified, never read as interchangeability"
       },
       "state": "SPECIFIED",
       "subfamily": "gnss_lps.lps",
       "unverified_m3": [
         "H",
         "I",
-        "L",
-        "O"
+        "L"
       ],
       "verified_m3": [
         "A",
@@ -2589,7 +2590,8 @@
         "G",
         "J",
         "K",
-        "M"
+        "M",
+        "O"
       ]
     },
     {
