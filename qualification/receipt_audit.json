@@ -80,8 +80,10 @@
    "verdict": "PARTIAL"
   },
   "RCP-force_platform-dual-M": {
-   "bound_digest": "e0b796427f2c8349a17fb7f879f771c692b157c9d24fbaf6e6aec3da4fcac3f1",
+   "bound_digest": "1c8902e2dc4b2091807863bab7bc2eae00f67befd3ec3b135728bbf9ca0dc73e",
    "fix": "",
+   "fixture_rebind_head": "79a4c382135e34f34b67647e0b9f77e1f53e742f",
+   "fixture_rebind_reason": "Independent review confirmed the two corrected GNSS JSON metadata artifacts and unchanged numerical Parquet and truth hashes.",
    "reason": "The same provenance test is parametrized for dual (2 plates, two input digests), with change detection on fz_left. The 'source sha == [x] or len==plates' assertion is slightly loose.",
    "verdict": "SUPPORTED"
   },
@@ -163,8 +165,10 @@
    "verdict": "SUPPORTED"
   },
   "RCP-force_platform-single-M": {
-   "bound_digest": "9a53ccfdef4835faa93f5754ed017d214201daff52acee680e6bdb3eb9a1e9eb",
+   "bound_digest": "02a68d81de619030e39392810ba9d33a9fa2c8768e7926d3a1a86fc6055d4890",
    "fix": "",
+   "fixture_rebind_head": "79a4c382135e34f34b67647e0b9f77e1f53e742f",
+   "fixture_rebind_reason": "Independent review confirmed the two corrected GNSS JSON metadata artifacts and unchanged numerical Parquet and truth hashes.",
    "reason": "The test round-trips a file and checks that the report reproduces exactly, records the source sha, input digests and QC-rules hash, and changes digest when the input changes. Exporter determinism and tamper rejection are also cited.",
    "verdict": "SUPPORTED"
   },
@@ -600,8 +604,10 @@
    "verdict": "UNSUPPORTED"
   },
   "RCP-load_cell_isometric-isometric_rig-M": {
-   "bound_digest": "804b41c7a7be3d138e3c9ec7fe382c97e105f1f8e19880144d3981ea3e823dab",
+   "bound_digest": "68ee04663b050bd643e57d384637195c20a5a2c2f2d8c230dcdfbb16c6d2a25e",
    "fix": "",
+   "fixture_rebind_head": "79a4c382135e34f34b67647e0b9f77e1f53e742f",
+   "fixture_rebind_reason": "Independent review confirmed the two corrected GNSS JSON metadata artifacts and unchanged numerical Parquet and truth hashes.",
    "reason": "The same provenance test, parametrized for isometric_rig, binds the file hash and detects input changes.",
    "verdict": "SUPPORTED"
   },
@@ -679,8 +685,10 @@
    "verdict": "SUPPORTED"
   },
   "RCP-load_cell_isometric-load_cell-M": {
-   "bound_digest": "4d0bb778eb0788485208ac31346a4e49f3b8fe644887370e11bc95a9d0236f4d",
+   "bound_digest": "61b84bc19e92e92fb388a6c0012916e581391118cc14521d1e0c0656ec556b1c",
    "fix": "",
+   "fixture_rebind_head": "79a4c382135e34f34b67647e0b9f77e1f53e742f",
+   "fixture_rebind_reason": "Independent review confirmed the two corrected GNSS JSON metadata artifacts and unchanged numerical Parquet and truth hashes.",
    "reason": "The test asserts source_file_sha256 == meta sha == file hash and exact reproduction, and that the input digest changes on mutation, plus deterministic exports.",
    "verdict": "SUPPORTED"
   },
@@ -808,8 +816,10 @@
    "verdict": "PARTIAL"
   },
   "RCP-lpt_encoder-lpt-M": {
-   "bound_digest": "2a071a28cccf564bfa4c09d34d5ce117a642364b8b370bbd9f4475a7093535a5",
+   "bound_digest": "199c6d0591a9ca0c5c37b53549735ed90aa99561d10e774bec32e75519bece90",
    "fix": "",
+   "fixture_rebind_head": "79a4c382135e34f34b67647e0b9f77e1f53e742f",
+   "fixture_rebind_reason": "Independent review confirmed the two corrected GNSS JSON metadata artifacts and unchanged numerical Parquet and truth hashes.",
    "reason": "bundle_id and data_sha256 equal the file hash, and the result reproduces exactly and changes when the input is mutated.",
    "verdict": "SUPPORTED"
   },

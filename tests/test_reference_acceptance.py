@@ -19,14 +19,20 @@ ROOT = Path(__file__).resolve().parents[1]
 
 def test_frozen_seeded_v2_artifact_bytes(tmp_path: Path) -> None:
     expected = json.loads((ROOT / "tests/fixtures/reference/seeded-v1.json").read_text())
+    revision = json.loads((ROOT / "tests/fixtures/reference/seeded-v2-gnss-frame.json").read_text())
+    assert set(revision["sha256"]) == {"observation.json", "corrupted.json"}
     case = export_case("gnss_lps.gnss", hz=10)
+    assert all(
+        case.observation.meta.channel(n).frame == "wgs84"
+        for n in ("latitude", "longitude", "height")
+    )
     fault = PositionFault(
         PositionKind.NOISE, index=0, count=case.observation.meta.n_rows, noise_sd_m=0.03, seed=17
     )
     corrupted = inject(case.observation, fault)
     case.write(tmp_path)
     io.write(corrupted, tmp_path / "corrupted")
-    for name, digest in expected["sha256"].items():
+    for name, digest in (expected["sha256"] | revision["sha256"]).items():
         assert hashlib.sha256((tmp_path / name).read_bytes()).hexdigest() == digest, name
 
 

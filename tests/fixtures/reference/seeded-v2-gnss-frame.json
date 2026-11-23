@@ -1,0 +1,7 @@
+{
+  "description": "RES-700 explicit WGS84 frame metadata on GNSS observation and its corrupted child; numeric arrays and independent truth retain seeded-v1 hashes.",
+  "sha256": {
+    "corrupted.json": "dea1e062009bc4f79ff0731e0ad3848b2c2a30d9422eff7f386e092c829b29e0",
+    "observation.json": "c562dff2bf355e66df669042bdab672e684cea044a32ac2a7afdf45b2bdaa814"
+  }
+}
