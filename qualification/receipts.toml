@@ -2687,3 +2687,27 @@ issue = "RES-671"
 "tests/test_timing_assessment_policy_a.py::test_native_gate_course_to_declared_path_assessment" = "424b5b91c77378eb7df6d635fa5cb8fb4d1b2ab12bc9162495648752b73f58e5"
 "tests/test_timing_gates.py::test_gate_start_methods_match_independent_absolute_and_elapsed_times" = "07e281951212c8cf12c01eb7508041d07ac1986ea56554bc87aaa8d918329373"
 "tests/test_timing_gates.py::test_impossible_route_even_with_monotonic_rows_and_plausible_total" = "454cdc7c3853d4cb55e63ceb74bbf48d64ae03eff60e678b736b8de6b532becb"
+
+[[receipt]]
+id = "RCP-timing_contact-gates-J"
+dimension = "J"
+subfamilies = ["timing_contact.gates"]
+implementation = ["src/dynamisbench_soccer/engines/timing_gates.py::sprint", "src/dynamisbench_soccer/engines/event_time.py::EventStream"]
+reference = ["src/dynamisbench_soccer/reference/observations.py::spherical_gate_trigger_s", "src/dynamisbench_soccer/reference/motion_models.py::MonoExponentialSprint"]
+tests = ["tests/test_gate_oracle_policy_a.py::test_gate_oracle_and_engine_agree_on_independent_beam_geometry", "tests/test_gate_oracle_policy_a.py::test_gate_oracle_has_no_engine_dependency_and_refuses_incompatible_marker", "tests/test_timing_gates.py::test_gate_start_methods_match_independent_absolute_and_elapsed_times"]
+reference_kind = "closed_form"
+independence = "The spherical marker model computes first beam interruption by analytic displacement and independent inversion. The geometry's computed positions are checked with an independently written exponential expression, and the oracle modules have no engine or assessment imports."
+claim = "Native gate crossing, start and split outputs agree with an independent observation oracle under ideal spherical marker geometry and correctly declared affine clock and edge delay."
+tolerance_basis = "Absolute crossing and elapsed time agree within 1e-12 s, geometry within 1e-11 m and segment speed within 1e-11 m/s, with zero relative tolerance. Incompatible beam height or marker geometry is refused."
+tolerance = 1e-12
+tolerance_unit = "s (absolute; distance and speed bounds in the tests)"
+issue = "RES-669"
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/event_time.py::EventStream" = "669395a6a88eeea41f518bb3ad4b153603c0cd3824d37d6044f6652f8a53e528"
+"src/dynamisbench_soccer/engines/timing_gates.py::sprint" = "0f0ee5d59d56329cfd6011e471c2107e25c210a8a22f578d4109d13ab85a8cac"
+"src/dynamisbench_soccer/reference/motion_models.py::MonoExponentialSprint" = "6f5cf86ba81df676877c7e99492f9df0400e35228a59a0f34a1d65bba5e3d493"
+"src/dynamisbench_soccer/reference/observations.py::spherical_gate_trigger_s" = "a3beced3dd0b05c5e5653e5dce37c3a6d8fdd83d71ef99ecf4a130e9baccbff5"
+"tests/test_gate_oracle_policy_a.py::test_gate_oracle_and_engine_agree_on_independent_beam_geometry" = "58d75c40f22a51cd7204ab92be82e5ce2444cbef5deac184a14f883c1ff94f9b"
+"tests/test_gate_oracle_policy_a.py::test_gate_oracle_has_no_engine_dependency_and_refuses_incompatible_marker" = "1b5d793f4e7939c4354e5437b0a8a4229a97cac25b791faf0343490619ced688"
+"tests/test_timing_gates.py::test_gate_start_methods_match_independent_absolute_and_elapsed_times" = "07e281951212c8cf12c01eb7508041d07ac1986ea56554bc87aaa8d918329373"
