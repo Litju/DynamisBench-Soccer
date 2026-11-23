@@ -44,8 +44,36 @@ def main() -> None:
     legacy = evaluate_controls(Controls.model_validate_json(controls_path.read_bytes()))
     catalog = (private / "catalog.json").read_bytes()
     context = TrialContext(root, catalog, args.catalog_sha256, private)
-    task = load_registry(root / "benchmark/tasks")["native-lps-speed", 2]
+    registry = load_registry(root / "benchmark/tasks")
+    task = registry["native-lps-speed", 2]
     inputs = {a.name: (root / a.path).read_bytes() for a in task.artifacts}
+    clean_data = json.loads(inputs["lps-observation"])
+    fault_data = json.loads(inputs["lps-invalid"])
+    raw_channels = ("time", "position_x", "position_y", "position_z")
+    raw_source = digest(
+        json.dumps(
+            {name: clean_data["channels"][name] for name in raw_channels},
+            sort_keys=True,
+            separators=(",", ":"),
+        ).encode()
+    )
+    source_lineage = (
+        all(
+            meta["provenance"]["source_sha256"] == raw_source
+            and meta["acquisition"]["sources"][0]["source_sha256"] == raw_source
+            for meta in (clean_data["meta"], fault_data["meta"])
+        )
+        and fault_data["meta"]["provenance"]["parents"]
+        == [
+            {
+                "bundle_id": clean_data["meta"]["bundle_id"],
+                "sha256": digest(inputs["lps-observation"]),
+            }
+        ]
+        and all(
+            clean_data["channels"][name] == fault_data["channels"][name] for name in raw_channels
+        )
+    )
     source = (root / "scripts/m4_controls/lps_oracle.py").read_bytes()
     oracle = run_oracle_control(context, task, source, seed=17)
     baselines = {"oracle": oracle}
@@ -173,6 +201,7 @@ def main() -> None:
         (root, tampered, catalog, args.catalog_sha256),
         (root, task, stale_catalog, digest(stale_catalog)),
         (root, task, catalog, "0" * 64),
+        (root, registry["native-lps-speed", 1], catalog, args.catalog_sha256),
     )
     rejections = [evaluate(*parameters) for parameters in rejected_inputs]
     differences += sum(
@@ -211,6 +240,7 @@ def main() -> None:
             for name, report in baselines.items()
         },
         "key_isolation": keys_hidden,
+        "source_lineage": source_lineage,
         "replay_differences": differences,
         "native_controls": counts,
         "diagnostic_controls": legacy,
@@ -221,6 +251,7 @@ def main() -> None:
         and not false_reject
         and oracle_passed
         and keys_hidden
+        and source_lineage
         and not differences
         and all(
             len(cases[key]) >= 2

@@ -40,7 +40,7 @@ and links the injected fault to its clean artifact. Revision 1 is superseded. Th
 | Negative | 0 | 3 | 0/3 | 0/0 |
 | Adversarial | 0 | 2 | 0/2 | 0/0 |
 | Refusal | 1 | 2 | 0/2 | 0/1 |
-| Task admission | 1 | 4 | 0/4 | 0/1 |
+| Task admission | 1 | 5 | 0/5 | 0/1 |
 
 Empty denominators denote classes with no cases of that disposition. Native grader
 controls exercised the correct horizontal estimate and equivalent explanation,
@@ -48,7 +48,7 @@ vertical-axis contamination, wrong units, incomplete derivation, a Doppler estim
 an incompatible method, correct QC refusal, calculation after invalid QC, and
 refusal on the eligible observation. The admission controls rejected a wrong
 subfamily, stale Policy A receipt binding, changed artifact digest, and untrusted
-catalog fingerprint. The key-path sandbox probe passed.
+catalog fingerprint, and the superseded revision. The key-path sandbox probe passed.
 
 The separate GPT-6.2 Astra control author supplied the analytical observation,
 expected results and control design outside the checkout. The prior nine private
