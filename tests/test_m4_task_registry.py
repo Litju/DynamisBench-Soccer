@@ -76,3 +76,39 @@ def test_malformed_custody_error_omits_private_values(tmp_path: Path) -> None:
     with pytest.raises(ValueError, match=r"^invalid private answer envelope$") as error:
         load_private(tmp_path, ROOT, AnswerLocation(id="key", sha256=digest(raw)), "0" * 64)
     assert error.value.__suppress_context__
+
+
+def test_res737_linux_boundary_hides_formal_private_envelope(tmp_path: Path) -> None:
+    from dynamisbench_soccer.m4.contracts import Episode, Task
+    from dynamisbench_soccer.m4.runner import execute
+
+    nonce = secrets.token_hex(32)
+    path = tmp_path / "private.json"
+    raw = (
+        AnswerEnvelope(
+            task_sha256="0" * 64, nonce=nonce, checkpoints={"initial": {"secret": nonce}}
+        )
+        .model_dump_json()
+        .encode()
+    )
+    path.write_bytes(raw)
+    path.chmod(0o600)
+    assert load_private(tmp_path, ROOT, AnswerLocation(id="private", sha256=digest(raw)), "0" * 64)
+    episode = Episode(
+        episode_id="external-custody",
+        seed=0,
+        task=Task(
+            task_id="external-custody",
+            evidence="analytical",
+            prompt="Check that only public files are visible.",
+            inputs={},
+            estimand="elapsed",
+            unit="s",
+            method_spec={},
+            provenance="ephemeral isolation control",
+        ),
+    )
+    program = (
+        f"from pathlib import Path\nassert not Path({str(path)!r}).exists()\nprint('isolated')"
+    )
+    assert execute(episode, program.encode()) == ("graded", b"isolated\n")
