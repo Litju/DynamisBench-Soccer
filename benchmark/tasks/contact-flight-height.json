@@ -1,0 +1,152 @@
+{
+  "version": "m4.registry-task.v1",
+  "task": {
+    "version": "m4.public-task.v1",
+    "id": "contact-flight-height",
+    "revision": 1,
+    "family": "A",
+    "competencies": [
+      "C1",
+      "C2",
+      "C3",
+      "C4",
+      "C5"
+    ],
+    "coverage_cell": "Digital contact, drop-jump eligibility, conditional height and timing uncertainty",
+    "domain": "synthetic native event reconstruction",
+    "protocol": "One drop-jump rebound with an initial touchdown",
+    "source": "timing_contact.contact",
+    "convention": "fixed",
+    "allowed_tools": "offline_python_stdlib",
+    "answer_schema": "m5.measurement-answer.v1"
+  },
+  "artifacts": [
+    {
+      "name": "contact-record-01",
+      "path": "benchmark/fixtures/m5-timing/contact-record-01.json",
+      "sha256": "eb4520c8ae2361660b06d2af1a1139b4533221f90a3a0da78143db5858537a5c",
+      "category": "synthetic",
+      "rights": "Repository-authored synthetic event fixture",
+      "usage": "reference"
+    },
+    {
+      "name": "contact-record-02",
+      "path": "benchmark/fixtures/m5-timing/contact-record-02.json",
+      "sha256": "ffb3546759011bb6691ed9917fa2fcb6cdcfb141d50e3092ce3c5dc2f51327df",
+      "category": "synthetic",
+      "rights": "Repository-authored synthetic event fixture",
+      "usage": "reference"
+    },
+    {
+      "name": "contact-record-03",
+      "path": "benchmark/fixtures/m5-timing/contact-record-03.json",
+      "sha256": "26b81dbfa04fa4a3f7a9769d2e900d87b797d411553348642727c422a3c789cd",
+      "category": "synthetic",
+      "rights": "Repository-authored synthetic event fixture",
+      "usage": "reference"
+    },
+    {
+      "name": "contact-record-04",
+      "path": "benchmark/fixtures/m5-timing/contact-record-04.json",
+      "sha256": "83ca454830be52bf1fa6d08d9c6359950242bf0089f6711a0a028fd4982d0909",
+      "category": "synthetic",
+      "rights": "Repository-authored synthetic event fixture",
+      "usage": "reference"
+    },
+    {
+      "name": "contact-record-05",
+      "path": "benchmark/fixtures/m5-timing/contact-record-05.json",
+      "sha256": "db5615b36e3e5150cb9b646cfa93ddcf683a9596e26aee6121241bc9431c3ee8",
+      "category": "synthetic",
+      "rights": "Repository-authored synthetic event fixture",
+      "usage": "reference"
+    },
+    {
+      "name": "contact-record-06",
+      "path": "benchmark/fixtures/m5-timing/contact-record-06.json",
+      "sha256": "138f2abbad1952b06a0d88bfaefc7d2ee06f5aaa856bf3156e2f2d1b0f3fef6c",
+      "category": "synthetic",
+      "rights": "Repository-authored synthetic event fixture",
+      "usage": "reference"
+    }
+  ],
+  "checkpoints": [
+    {
+      "id": "c01",
+      "prompt": "Use contact-record-01. Determine whether this record supports the requested first-flight height and, when eligible, compute it. Use method switch-flight-height and cite DEV-003. The cited mat's condition-dependent drop-jump ground-contact bias against a plate is evidence limited to those setups and that metric. Interpret native digital states with the declared polarity and remove switching excursions that revert within the debounce period. Subtract the calibrated switch-on or switch-off delay. Endpoint timing error adds half a native tick and the two edge errors. Apply the declared flight and ground-contact eligibility limits before computing. If the required ballistic and equal-height condition is supported, report first-flight contact_flight_time_height (length, m) under g=9.80665 m/s\u00b2 and propagate the timing interval through the same height equation. The ordered operands are takeoff_s, touchdown_s, ground_contact_s, flight_s. Allowed claim identifiers are switch_events, ballistic_equal_com_height, active_high, active_low, bounce_removed, event_integrity, equal_com_height_unestablished, different_estimands, and paired_validation_absent. Return a JSON object using version m5.measurement-answer.v1 and fields decision (compute or refuse), method, reason (eligible, not_eligible, insufficient_evidence, or unsupported_claim), selected_trials (array), citations (array), claims (array), quantity, operands (array), and corrects (null or omitted). A computation selects this artifact alone and reports quantity with value, unit, dimension, estimand, and uncertainty (the greater distance from the nominal result to either interval endpoint). Each operand has artifact, field, and value. Round derived operands to 12 decimal places. A refusal uses empty selected_trials and operands and null quantity. Use the provided claim identifiers as structured reasoning and include no additional fields.",
+      "artifacts": [
+        "contact-record-01"
+      ],
+      "corrects": null
+    },
+    {
+      "id": "c02",
+      "prompt": "Use contact-record-02. Determine whether this record supports the requested first-flight height and, when eligible, compute it. Use method switch-flight-height and cite DEV-003. The cited mat's condition-dependent drop-jump ground-contact bias against a plate is evidence limited to those setups and that metric. Interpret native digital states with the declared polarity and remove switching excursions that revert within the debounce period. Subtract the calibrated switch-on or switch-off delay. Endpoint timing error adds half a native tick and the two edge errors. Apply the declared flight and ground-contact eligibility limits before computing. If the required ballistic and equal-height condition is supported, report first-flight contact_flight_time_height (length, m) under g=9.80665 m/s\u00b2 and propagate the timing interval through the same height equation. The ordered operands are takeoff_s, touchdown_s, ground_contact_s, flight_s. Allowed claim identifiers are switch_events, ballistic_equal_com_height, active_high, active_low, bounce_removed, event_integrity, equal_com_height_unestablished, different_estimands, and paired_validation_absent. Return a JSON object using version m5.measurement-answer.v1 and fields decision (compute or refuse), method, reason (eligible, not_eligible, insufficient_evidence, or unsupported_claim), selected_trials (array), citations (array), claims (array), quantity, operands (array), and corrects (null or omitted). A computation selects this artifact alone and reports quantity with value, unit, dimension, estimand, and uncertainty (the greater distance from the nominal result to either interval endpoint). Each operand has artifact, field, and value. Round derived operands to 12 decimal places. A refusal uses empty selected_trials and operands and null quantity. Use the provided claim identifiers as structured reasoning and include no additional fields.",
+      "artifacts": [
+        "contact-record-02"
+      ],
+      "corrects": null
+    },
+    {
+      "id": "c03",
+      "prompt": "Use contact-record-03. Determine whether this record supports the requested first-flight height and, when eligible, compute it. Use method switch-flight-height and cite DEV-003. The cited mat's condition-dependent drop-jump ground-contact bias against a plate is evidence limited to those setups and that metric. Interpret native digital states with the declared polarity and remove switching excursions that revert within the debounce period. Subtract the calibrated switch-on or switch-off delay. Endpoint timing error adds half a native tick and the two edge errors. Apply the declared flight and ground-contact eligibility limits before computing. If the required ballistic and equal-height condition is supported, report first-flight contact_flight_time_height (length, m) under g=9.80665 m/s\u00b2 and propagate the timing interval through the same height equation. The ordered operands are takeoff_s, touchdown_s, ground_contact_s, flight_s. Allowed claim identifiers are switch_events, ballistic_equal_com_height, active_high, active_low, bounce_removed, event_integrity, equal_com_height_unestablished, different_estimands, and paired_validation_absent. Return a JSON object using version m5.measurement-answer.v1 and fields decision (compute or refuse), method, reason (eligible, not_eligible, insufficient_evidence, or unsupported_claim), selected_trials (array), citations (array), claims (array), quantity, operands (array), and corrects (null or omitted). A computation selects this artifact alone and reports quantity with value, unit, dimension, estimand, and uncertainty (the greater distance from the nominal result to either interval endpoint). Each operand has artifact, field, and value. Round derived operands to 12 decimal places. A refusal uses empty selected_trials and operands and null quantity. Use the provided claim identifiers as structured reasoning and include no additional fields.",
+      "artifacts": [
+        "contact-record-03"
+      ],
+      "corrects": null
+    },
+    {
+      "id": "c04",
+      "prompt": "Use contact-record-04. Determine whether this record supports the requested first-flight height and, when eligible, compute it. Use method switch-flight-height and cite DEV-003. The cited mat's condition-dependent drop-jump ground-contact bias against a plate is evidence limited to those setups and that metric. Interpret native digital states with the declared polarity and remove switching excursions that revert within the debounce period. Subtract the calibrated switch-on or switch-off delay. Endpoint timing error adds half a native tick and the two edge errors. Apply the declared flight and ground-contact eligibility limits before computing. If the required ballistic and equal-height condition is supported, report first-flight contact_flight_time_height (length, m) under g=9.80665 m/s\u00b2 and propagate the timing interval through the same height equation. The ordered operands are takeoff_s, touchdown_s, ground_contact_s, flight_s. Allowed claim identifiers are switch_events, ballistic_equal_com_height, active_high, active_low, bounce_removed, event_integrity, equal_com_height_unestablished, different_estimands, and paired_validation_absent. Return a JSON object using version m5.measurement-answer.v1 and fields decision (compute or refuse), method, reason (eligible, not_eligible, insufficient_evidence, or unsupported_claim), selected_trials (array), citations (array), claims (array), quantity, operands (array), and corrects (null or omitted). A computation selects this artifact alone and reports quantity with value, unit, dimension, estimand, and uncertainty (the greater distance from the nominal result to either interval endpoint). Each operand has artifact, field, and value. Round derived operands to 12 decimal places. A refusal uses empty selected_trials and operands and null quantity. Use the provided claim identifiers as structured reasoning and include no additional fields.",
+      "artifacts": [
+        "contact-record-04"
+      ],
+      "corrects": null
+    },
+    {
+      "id": "c05",
+      "prompt": "Use contact-record-05. Determine whether this record supports the requested first-flight height and, when eligible, compute it. Use method switch-flight-height and cite DEV-003. The cited mat's condition-dependent drop-jump ground-contact bias against a plate is evidence limited to those setups and that metric. Interpret native digital states with the declared polarity and remove switching excursions that revert within the debounce period. Subtract the calibrated switch-on or switch-off delay. Endpoint timing error adds half a native tick and the two edge errors. Apply the declared flight and ground-contact eligibility limits before computing. If the required ballistic and equal-height condition is supported, report first-flight contact_flight_time_height (length, m) under g=9.80665 m/s\u00b2 and propagate the timing interval through the same height equation. The ordered operands are takeoff_s, touchdown_s, ground_contact_s, flight_s. Allowed claim identifiers are switch_events, ballistic_equal_com_height, active_high, active_low, bounce_removed, event_integrity, equal_com_height_unestablished, different_estimands, and paired_validation_absent. Return a JSON object using version m5.measurement-answer.v1 and fields decision (compute or refuse), method, reason (eligible, not_eligible, insufficient_evidence, or unsupported_claim), selected_trials (array), citations (array), claims (array), quantity, operands (array), and corrects (null or omitted). A computation selects this artifact alone and reports quantity with value, unit, dimension, estimand, and uncertainty (the greater distance from the nominal result to either interval endpoint). Each operand has artifact, field, and value. Round derived operands to 12 decimal places. A refusal uses empty selected_trials and operands and null quantity. Use the provided claim identifiers as structured reasoning and include no additional fields.",
+      "artifacts": [
+        "contact-record-05"
+      ],
+      "corrects": null
+    },
+    {
+      "id": "c06",
+      "prompt": "Use contact-record-06. A practitioner proposes substituting this result for vertical force-plate impulse-momentum height as an interchangeable measurement for real athletes. Decide whether the source supports this equivalence. This checkpoint requests a claim decision only. Use method switch-flight-height and cite DEV-003. The cited mat's condition-dependent drop-jump ground-contact bias against a plate is evidence limited to those setups and that metric. Interpret native digital states with the declared polarity and remove switching excursions that revert within the debounce period. Subtract the calibrated switch-on or switch-off delay. Endpoint timing error adds half a native tick and the two edge errors. Apply the declared flight and ground-contact eligibility limits before computing. If the required ballistic and equal-height condition is supported, report first-flight contact_flight_time_height (length, m) under g=9.80665 m/s\u00b2 and propagate the timing interval through the same height equation. The ordered operands are takeoff_s, touchdown_s, ground_contact_s, flight_s. Allowed claim identifiers are switch_events, ballistic_equal_com_height, active_high, active_low, bounce_removed, event_integrity, equal_com_height_unestablished, different_estimands, and paired_validation_absent. Return a JSON object using version m5.measurement-answer.v1 and fields decision (compute or refuse), method, reason (eligible, not_eligible, insufficient_evidence, or unsupported_claim), selected_trials (array), citations (array), claims (array), quantity, operands (array), and corrects (null or omitted). A computation selects this artifact alone and reports quantity with value, unit, dimension, estimand, and uncertainty (the greater distance from the nominal result to either interval endpoint). Each operand has artifact, field, and value. Round derived operands to 12 decimal places. A refusal uses empty selected_trials and operands and null quantity. Use the provided claim identifiers as structured reasoning and include no additional fields.",
+      "artifacts": [
+        "contact-record-06"
+      ],
+      "corrects": null
+    }
+  ],
+  "reference_profile": "contact-flight-height",
+  "methods": [
+    {
+      "id": "switch-flight-height",
+      "estimand": "contact_flight_time_height",
+      "dimension": "length",
+      "unit": "m",
+      "specification": {
+        "operation": "switch-flight-height"
+      },
+      "sampling": "Irregular digital state-transition rows; nearest-millisecond native timestamps.",
+      "clock": "Shared synthetic counter with edge-specific recognition delays and error bounds.",
+      "geometry": "Declared contact-mat actuator and active-high or active-low switch polarity.",
+      "qc": "Native binary contact, declared debounce, intact edges and eligible rebound phases.",
+      "eligibility": "Declared and valid measured touchdown, takeoff and landing; height also requires ballistic equal COM height.",
+      "uncertainty": "Conditional endpoint timing error propagated through the height equation; no posture or hardware uncertainty inferred.",
+      "absolute_tolerance": 1e-10,
+      "limitations": [
+        "Switch-defined contact transitions depend on the contact system and threshold.",
+        "The source cannot verify equal COM height; it must be affirmed by the protocol.",
+        "DEV-003 concerns drop-jump ground-contact bias. Synthetic contact timing supplies no empirical agreement with impulse-momentum height."
+      ],
+      "source_claims": [
+        "DEV-003"
+      ]
+    }
+  ],
+  "engine": "m5-measurement.v1",
+  "grader": "measurement.v1"
+}

@@ -1,0 +1,271 @@
+{
+  "meta": {
+    "bundle_id": "gate-record-03",
+    "kind": "events",
+    "test_id": "sprint_gates",
+    "data_category": "synthetic",
+    "subject": {
+      "pseudonym": "SYNTHETIC"
+    },
+    "session": {
+      "session_id": "RES-704-simulated",
+      "date": "2000-01-01"
+    },
+    "device": {
+      "device_class": "timing_gates",
+      "model": "Prescribed synthetic event detector"
+    },
+    "protocol": {
+      "protocol_id": "res704.gate-route.v1",
+      "start_mode": "standing"
+    },
+    "channels": [
+      {
+        "name": "t_s",
+        "quantity": "time",
+        "unit": "s"
+      },
+      {
+        "name": "distance_m",
+        "quantity": "distance",
+        "unit": "m"
+      },
+      {
+        "name": "gate_id",
+        "quantity": "count",
+        "unit": "1"
+      },
+      {
+        "name": "beam_id",
+        "quantity": "count",
+        "unit": "1"
+      },
+      {
+        "name": "start_kind",
+        "quantity": "count",
+        "unit": "1"
+      }
+    ],
+    "n_rows": 6,
+    "calibration": [
+      {
+        "date": "2000-01-01",
+        "method": "Prescribed identity on the simulated native channel",
+        "channel": "distance_m",
+        "input_unit": "m",
+        "output_unit": "m",
+        "gain": 1,
+        "offset": 0
+      }
+    ],
+    "geometry": {
+      "gate_height_m": 1.02,
+      "beam_type": "dual",
+      "trigger_method": "Interrupted calibrated beam at listed height"
+    },
+    "provenance": {
+      "created_by": "RES-704-synthetic-event-author@1",
+      "source_sha256": "3b8c3f102edd7e300fb99a1f82b8dabf866d0bdac1f9865815336463c69a8087",
+      "parents": [],
+      "transforms": [
+        "Scripted controller event record, no measured athlete or vendor result"
+      ]
+    },
+    "acquisition": {
+      "clocks": [
+        {
+          "id": "reference",
+          "source": "host",
+          "epoch": "Defined scenario clock origin"
+        },
+        {
+          "id": "counter",
+          "source": "device",
+          "epoch": "Prescribed counter origin",
+          "drift_ppm": 250
+        }
+      ],
+      "reference_clock": "reference",
+      "sources": [
+        {
+          "id": "native-events",
+          "device": {
+            "device_class": "timing_gates",
+            "model": "Prescribed synthetic event detector"
+          },
+          "clock": "counter",
+          "channels": [
+            "t_s",
+            "distance_m",
+            "gate_id",
+            "beam_id",
+            "start_kind"
+          ],
+          "geometry": {
+            "gate_height_m": 1.02,
+            "beam_type": "dual",
+            "trigger_method": "Interrupted calibrated beam at listed height"
+          },
+          "calibration": [
+            {
+              "date": "2000-01-01",
+              "method": "Prescribed identity on the simulated native channel",
+              "channel": "distance_m",
+              "input_unit": "m",
+              "output_unit": "m",
+              "gain": 1,
+              "offset": 0
+            }
+          ],
+          "raw_format": "Repository-authored synthetic digital event record",
+          "source_sha256": "3b8c3f102edd7e300fb99a1f82b8dabf866d0bdac1f9865815336463c69a8087"
+        }
+      ],
+      "alignments": [
+        {
+          "clock": "counter",
+          "reference_clock": "reference",
+          "method": "Prescribed affine map from two simulated synchronization pulses",
+          "offset_s": 0.027,
+          "drift_ppm": 250,
+          "origin_s": 0.0,
+          "uncertainty_s": 0.00015,
+          "sync_events": [
+            [
+              0,
+              0.027
+            ],
+            [
+              4,
+              4.028
+            ]
+          ]
+        }
+      ]
+    }
+  },
+  "channels": {
+    "t_s": [
+      0.417,
+      1.083,
+      1.121,
+      1.127,
+      2.296,
+      2.304
+    ],
+    "distance_m": [
+      0,
+      4,
+      4,
+      4,
+      13.5,
+      13.5
+    ],
+    "gate_id": [
+      0,
+      1,
+      1,
+      1,
+      2,
+      2
+    ],
+    "beam_id": [
+      0,
+      1,
+      1,
+      2,
+      1,
+      2
+    ],
+    "start_kind": [
+      1,
+      0,
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  "policy": {
+    "timing": {
+      "clock_model": "wired",
+      "clocks": {
+        "counter": {
+          "resolution_s": 0.001,
+          "sync_latency_s": 0.009,
+          "sync_latency_error_s": 0.0002
+        }
+      },
+      "authority": "Prescribed dual-gate counter alignment and link delay"
+    },
+    "gates": [
+      {
+        "id": 1,
+        "position_m": 4.0,
+        "beam_type": "dual",
+        "beams": [
+          {
+            "id": 1,
+            "height_m": 1.02,
+            "timing": {
+              "latency_s": 0.008,
+              "latency_error_s": 0.0004,
+              "definition_error_s": 0.0002
+            }
+          },
+          {
+            "id": 2,
+            "height_m": 1.11,
+            "timing": {
+              "latency_s": 0.008,
+              "latency_error_s": 0.0004,
+              "definition_error_s": 0.0002
+            }
+          }
+        ],
+        "quorum": 2,
+        "coincidence_s": 0.018
+      },
+      {
+        "id": 2,
+        "position_m": 13.5,
+        "beam_type": "dual",
+        "beams": [
+          {
+            "id": 1,
+            "height_m": 1.02,
+            "timing": {
+              "latency_s": 0.022,
+              "latency_error_s": 0.0006,
+              "definition_error_s": 0.0003
+            }
+          },
+          {
+            "id": 2,
+            "height_m": 1.11,
+            "timing": {
+              "latency_s": 0.022,
+              "latency_error_s": 0.0006,
+              "definition_error_s": 0.0003
+            }
+          }
+        ],
+        "quorum": 2,
+        "coincidence_s": 0.018
+      }
+    ],
+    "start": {
+      "mode": "pressure_pad",
+      "position_m": 0,
+      "timing": {
+        "latency_s": 0.026,
+        "latency_error_s": 0.0008,
+        "definition_error_s": 0.0003
+      }
+    },
+    "start_posture": "standing",
+    "debounce_s": 0,
+    "max_segment_velocity_m_s": 13
+  },
+  "request": "compute"
+}

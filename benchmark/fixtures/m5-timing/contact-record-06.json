@@ -1,0 +1,154 @@
+{
+  "meta": {
+    "bundle_id": "contact-record-06",
+    "kind": "events",
+    "test_id": "dj",
+    "data_category": "synthetic",
+    "subject": {
+      "pseudonym": "SYNTHETIC"
+    },
+    "session": {
+      "session_id": "RES-704-simulated",
+      "date": "2000-01-01"
+    },
+    "device": {
+      "device_class": "contact_mat",
+      "model": "Prescribed synthetic event detector"
+    },
+    "protocol": {
+      "protocol_id": "res704.contact-dj.v1",
+      "arm_swing": "hands_on_hips",
+      "drop_height_m": 0.25
+    },
+    "channels": [
+      {
+        "name": "t_s",
+        "quantity": "time",
+        "unit": "s"
+      },
+      {
+        "name": "contact",
+        "quantity": "dimensionless",
+        "unit": "1"
+      }
+    ],
+    "n_rows": 3,
+    "calibration": [
+      {
+        "date": "2000-01-01",
+        "method": "Prescribed identity on the simulated native channel",
+        "channel": "contact",
+        "input_unit": "1",
+        "output_unit": "1",
+        "gain": 1,
+        "offset": 0
+      }
+    ],
+    "geometry": {
+      "trigger_method": "contact_mat:active_high"
+    },
+    "provenance": {
+      "created_by": "RES-704-synthetic-event-author@1",
+      "source_sha256": "6cb0cd9a9110df1ceed740095655b1675261078ed14a12d7702835a8b482ab6f",
+      "parents": [
+        {
+          "bundle_id": "contact-record-01",
+          "sha256": "eb4520c8ae2361660b06d2af1a1139b4533221f90a3a0da78143db5858537a5c"
+        }
+      ],
+      "transforms": [
+        "Scripted controller event record, no measured athlete or vendor result"
+      ]
+    },
+    "acquisition": {
+      "clocks": [
+        {
+          "id": "reference",
+          "source": "host",
+          "epoch": "Defined scenario clock origin"
+        }
+      ],
+      "reference_clock": "reference",
+      "sources": [
+        {
+          "id": "native-events",
+          "device": {
+            "device_class": "contact_mat",
+            "model": "Prescribed synthetic event detector"
+          },
+          "clock": "reference",
+          "channels": [
+            "t_s",
+            "contact"
+          ],
+          "geometry": {
+            "trigger_method": "contact_mat:active_high"
+          },
+          "calibration": [
+            {
+              "date": "2000-01-01",
+              "method": "Prescribed identity on the simulated native channel",
+              "channel": "contact",
+              "input_unit": "1",
+              "output_unit": "1",
+              "gain": 1,
+              "offset": 0
+            }
+          ],
+          "raw_format": "Repository-authored synthetic digital event record",
+          "source_sha256": "6cb0cd9a9110df1ceed740095655b1675261078ed14a12d7702835a8b482ab6f"
+        }
+      ],
+      "alignments": []
+    }
+  },
+  "channels": {
+    "t_s": [
+      0.112,
+      0.328,
+      0.819
+    ],
+    "contact": [
+      1,
+      0,
+      1
+    ]
+  },
+  "policy": {
+    "timing": {
+      "clock_model": "shared",
+      "clocks": {
+        "reference": {
+          "resolution_s": 0.001,
+          "sync_latency_s": 0.0,
+          "sync_latency_error_s": 0.0
+        }
+      },
+      "authority": "Prescribed shared nearest-millisecond counter"
+    },
+    "system": "contact_mat",
+    "initial_event": "touchdown",
+    "switch_on": {
+      "latency_s": 0.024,
+      "latency_error_s": 0.001,
+      "definition_error_s": 0.0003
+    },
+    "switch_off": {
+      "latency_s": 0.005,
+      "latency_error_s": 0.0005,
+      "definition_error_s": 0.0002
+    },
+    "debounce_s": 0.0,
+    "expected_flights": 1,
+    "flight": {
+      "min_s": 0.2,
+      "max_s": 0.8
+    },
+    "ground_contact": {
+      "min_s": 0.08,
+      "max_s": 0.45
+    },
+    "ballistic_equal_com_height": true
+  },
+  "request": "equivalence"
+}

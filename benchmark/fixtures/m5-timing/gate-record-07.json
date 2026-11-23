@@ -1,0 +1,207 @@
+{
+  "meta": {
+    "bundle_id": "gate-record-07",
+    "kind": "events",
+    "test_id": "sprint_gates",
+    "data_category": "synthetic",
+    "subject": {
+      "pseudonym": "SYNTHETIC"
+    },
+    "session": {
+      "session_id": "RES-704-simulated",
+      "date": "2000-01-01"
+    },
+    "device": {
+      "device_class": "timing_gates",
+      "model": "Prescribed synthetic event detector"
+    },
+    "protocol": {
+      "protocol_id": "res704.gate-route.v1",
+      "start_mode": "standing"
+    },
+    "channels": [
+      {
+        "name": "t_s",
+        "quantity": "time",
+        "unit": "s"
+      },
+      {
+        "name": "distance_m",
+        "quantity": "distance",
+        "unit": "m"
+      },
+      {
+        "name": "gate_id",
+        "quantity": "count",
+        "unit": "1"
+      },
+      {
+        "name": "beam_id",
+        "quantity": "count",
+        "unit": "1"
+      },
+      {
+        "name": "start_kind",
+        "quantity": "count",
+        "unit": "1"
+      }
+    ],
+    "n_rows": 2,
+    "calibration": [
+      {
+        "date": "2000-01-01",
+        "method": "Prescribed identity on the simulated native channel",
+        "channel": "distance_m",
+        "input_unit": "m",
+        "output_unit": "m",
+        "gain": 1,
+        "offset": 0
+      }
+    ],
+    "geometry": {
+      "gate_height_m": 1.02,
+      "beam_type": "single",
+      "trigger_method": "Interrupted calibrated beam at listed height"
+    },
+    "provenance": {
+      "created_by": "RES-704-synthetic-event-author@1",
+      "source_sha256": "23a221933a80a25a34d1239e2f8f5188abd9ccb6f5e0be7f43956b63a46f1299",
+      "parents": [
+        {
+          "bundle_id": "gate-record-01",
+          "sha256": "4149d4f979062864876990089ea415d39afa22b71c30eae040db99a5343bcfff"
+        }
+      ],
+      "transforms": [
+        "Scripted controller event record, no measured athlete or vendor result"
+      ]
+    },
+    "acquisition": {
+      "clocks": [
+        {
+          "id": "reference",
+          "source": "host",
+          "epoch": "Defined scenario clock origin"
+        }
+      ],
+      "reference_clock": "reference",
+      "sources": [
+        {
+          "id": "native-events",
+          "device": {
+            "device_class": "timing_gates",
+            "model": "Prescribed synthetic event detector"
+          },
+          "clock": "reference",
+          "channels": [
+            "t_s",
+            "distance_m",
+            "gate_id",
+            "beam_id",
+            "start_kind"
+          ],
+          "geometry": {
+            "gate_height_m": 1.02,
+            "beam_type": "single",
+            "trigger_method": "Interrupted calibrated beam at listed height"
+          },
+          "calibration": [
+            {
+              "date": "2000-01-01",
+              "method": "Prescribed identity on the simulated native channel",
+              "channel": "distance_m",
+              "input_unit": "m",
+              "output_unit": "m",
+              "gain": 1,
+              "offset": 0
+            }
+          ],
+          "raw_format": "Repository-authored synthetic digital event record",
+          "source_sha256": "23a221933a80a25a34d1239e2f8f5188abd9ccb6f5e0be7f43956b63a46f1299"
+        }
+      ],
+      "alignments": []
+    }
+  },
+  "channels": {
+    "t_s": [
+      1.128,
+      2.452
+    ],
+    "distance_m": [
+      5,
+      16
+    ],
+    "gate_id": [
+      1,
+      2
+    ],
+    "beam_id": [
+      1,
+      1
+    ],
+    "start_kind": [
+      0,
+      0
+    ]
+  },
+  "policy": {
+    "timing": {
+      "clock_model": "shared",
+      "clocks": {
+        "reference": {
+          "resolution_s": 0.001,
+          "sync_latency_s": 0.0,
+          "sync_latency_error_s": 0.0
+        }
+      },
+      "authority": "Prescribed shared nearest-millisecond counter"
+    },
+    "gates": [
+      {
+        "id": 1,
+        "position_m": 5.0,
+        "beam_type": "single",
+        "beams": [
+          {
+            "id": 1,
+            "height_m": 1.02,
+            "timing": {
+              "latency_s": 0.008,
+              "latency_error_s": 0.0004,
+              "definition_error_s": 0.0002
+            }
+          }
+        ],
+        "quorum": 1,
+        "coincidence_s": 0
+      },
+      {
+        "id": 2,
+        "position_m": 16.0,
+        "beam_type": "single",
+        "beams": [
+          {
+            "id": 1,
+            "height_m": 1.02,
+            "timing": {
+              "latency_s": 0.022,
+              "latency_error_s": 0.0006,
+              "definition_error_s": 0.0003
+            }
+          }
+        ],
+        "quorum": 1,
+        "coincidence_s": 0
+      }
+    ],
+    "start": {
+      "mode": "first_gate",
+      "start_position_m": 5
+    },
+    "start_posture": "standing",
+    "debounce_s": 0,
+    "max_segment_velocity_m_s": 13
+  },
+  "request": "equivalence"
+}

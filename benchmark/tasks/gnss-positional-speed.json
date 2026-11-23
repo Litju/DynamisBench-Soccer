@@ -1,0 +1,151 @@
+{
+  "version": "m4.registry-task.v1",
+  "task": {
+    "version": "m4.public-task.v1",
+    "id": "gnss-positional-speed",
+    "revision": 1,
+    "family": "A",
+    "competencies": [
+      "C1",
+      "C3",
+      "C4",
+      "C5"
+    ],
+    "coverage_cell": "Native position inference, acquisition quality, deterministic uncertainty and measurement boundaries",
+    "domain": "native position kinematics",
+    "protocol": "res704.gnss.interior-row",
+    "source": "gnss_lps.gnss",
+    "convention": "fixed",
+    "allowed_tools": "offline_python_stdlib",
+    "answer_schema": "m5.measurement-answer.v1"
+  },
+  "reference_profile": "gnss-positional-speed",
+  "engine": "m5-measurement.v1",
+  "grader": "measurement.v1",
+  "artifacts": [
+    {
+      "name": "position-gnss-01",
+      "path": "benchmark/fixtures/position-gnss-01.json",
+      "sha256": "a9146c840d9b5e9c1b381a2c1bcf116213fc1818666e6f428169334a483fc2da",
+      "category": "synthetic",
+      "rights": "Repository-authored synthetic positions and acquisition metadata",
+      "usage": "reference"
+    },
+    {
+      "name": "position-gnss-02",
+      "path": "benchmark/fixtures/position-gnss-02.json",
+      "sha256": "9368f7d53acd4525f57286ac61fcacae6f5718b3d41dd9be1fceebe98a95a1ec",
+      "category": "synthetic",
+      "rights": "Repository-authored synthetic positions and acquisition metadata",
+      "usage": "reference"
+    },
+    {
+      "name": "position-gnss-03",
+      "path": "benchmark/fixtures/position-gnss-03.json",
+      "sha256": "d9e07b6da5ad5843fa86600643298288f1bfce4b1159388991ab29e68c7bb1d8",
+      "category": "synthetic",
+      "rights": "Repository-authored synthetic positions and acquisition metadata",
+      "usage": "reference"
+    },
+    {
+      "name": "position-gnss-04",
+      "path": "benchmark/fixtures/position-gnss-04.json",
+      "sha256": "ea5f51c4f9255d4b7f3045f2cb3fec9e99cca3a75a43949da1ab435de8c1eee8",
+      "category": "synthetic",
+      "rights": "Repository-authored synthetic positions and acquisition metadata",
+      "usage": "reference"
+    },
+    {
+      "name": "position-gnss-05",
+      "path": "benchmark/fixtures/position-gnss-05.json",
+      "sha256": "ebc5f9b49ebe0c913973a9168d17ec5f0e0ab792c21edce3428c4cfc52fad981",
+      "category": "synthetic",
+      "rights": "Repository-authored synthetic positions and acquisition metadata",
+      "usage": "reference"
+    },
+    {
+      "name": "position-gnss-06",
+      "path": "benchmark/fixtures/position-gnss-06.json",
+      "sha256": "938249d80194842007cc8c014e5fed46ef98e168d4a97acfef47284c79910640",
+      "category": "synthetic",
+      "rights": "Repository-authored synthetic positions and acquisition metadata",
+      "usage": "reference"
+    }
+  ],
+  "checkpoints": [
+    {
+      "id": "p1",
+      "prompt": "Judge eligibility using the single supplied current observation. Earlier checkpoints are independent questions. For an ineligible record, decline with reason not_eligible, no quantity, no operands, no selected trials, and choose the one applicable finding: native_rate_unverified, declared_geometry_required or failed_signal_qc. A processed/interpolated record or disagreement among observed, declared and metadata native rates cannot enter the native method. Any required record-wide quality flag failure disqualifies the observation before computation. Return one JSON object with version m5.measurement-answer.v1, decision (compute or refuse), method, reason (eligible for a computation), selected_trials, citations, claims, quantity and operands. Use string arrays for selected_trials, citations and claims. Each operand has artifact, field, and numeric value. A computed quantity has numeric value and uncertainty, plus unit, dimension and estimand strings. When refusing, use null for quantity and empty arrays for operands and selected_trials. Cite DEV-005 and CX-003 in all decisions. DEV-005 describes method- and condition-specific GNSS/LPS results and distinguishes positional and Doppler observations. CX-003 documents acquisition and processing dependence of GNSS-derived external-load metrics. Use method enu-positional-speed. For an eligible synthetic WGS84 record, report horizontal_positional_speed in m/s (dimension speed) at row r using the unfiltered centered three-point derivative in the declared local ENU frame. At this equatorial origin the north component is zero, and east is (6378137 m + ellipsoidal height) times sin(longitude minus origin longitude). Use the reference measurement clock, applying declared affine drift and subtracting constant receipt latency where present. A constant offset and latency leave elapsed spans unchanged. Report the conditional conservative position error radius 4e/h, with e=horizontal_error_m in the ENU plane and h the minimum admitted reference step. This scale covers the full grid under exact timestamps and fixed sample membership. Use ordered raw operands: time, latitude, longitude and height at rows r\u22121, r, r+1 in channel order with keys like time.4, then horizontal_error_m. Select the current artifact name as the sole trial. Decide compute only with claims antenna_horizontal_positional_speed, doppler_separate_estimand and fixed_grid_bound.",
+      "artifacts": [
+        "position-gnss-01"
+      ],
+      "corrects": null
+    },
+    {
+      "id": "p2",
+      "prompt": "Judge eligibility using the single supplied current observation. Earlier checkpoints are independent questions. For an ineligible record, decline with reason not_eligible, no quantity, no operands, no selected trials, and choose the one applicable finding: native_rate_unverified, declared_geometry_required or failed_signal_qc. A processed/interpolated record or disagreement among observed, declared and metadata native rates cannot enter the native method. Any required record-wide quality flag failure disqualifies the observation before computation. Return one JSON object with version m5.measurement-answer.v1, decision (compute or refuse), method, reason (eligible for a computation), selected_trials, citations, claims, quantity and operands. Use string arrays for selected_trials, citations and claims. Each operand has artifact, field, and numeric value. A computed quantity has numeric value and uncertainty, plus unit, dimension and estimand strings. When refusing, use null for quantity and empty arrays for operands and selected_trials. Cite DEV-005 and CX-003 in all decisions. DEV-005 describes method- and condition-specific GNSS/LPS results and distinguishes positional and Doppler observations. CX-003 documents acquisition and processing dependence of GNSS-derived external-load metrics. Use method enu-positional-speed. For an eligible synthetic WGS84 record, report horizontal_positional_speed in m/s (dimension speed) at row r using the unfiltered centered three-point derivative in the declared local ENU frame. At this equatorial origin the north component is zero, and east is (6378137 m + ellipsoidal height) times sin(longitude minus origin longitude). Use the reference measurement clock, applying declared affine drift and subtracting constant receipt latency where present. A constant offset and latency leave elapsed spans unchanged. Report the conditional conservative position error radius 4e/h, with e=horizontal_error_m in the ENU plane and h the minimum admitted reference step. This scale covers the full grid under exact timestamps and fixed sample membership. Use ordered raw operands: time, latitude, longitude and height at rows r\u22121, r, r+1 in channel order with keys like time.4, then horizontal_error_m. Select the current artifact name as the sole trial. Decide compute only with claims antenna_horizontal_positional_speed, doppler_separate_estimand and fixed_grid_bound.",
+      "artifacts": [
+        "position-gnss-02"
+      ],
+      "corrects": null
+    },
+    {
+      "id": "p3",
+      "prompt": "Judge eligibility using the single supplied current observation. Earlier checkpoints are independent questions. For an ineligible record, decline with reason not_eligible, no quantity, no operands, no selected trials, and choose the one applicable finding: native_rate_unverified, declared_geometry_required or failed_signal_qc. A processed/interpolated record or disagreement among observed, declared and metadata native rates cannot enter the native method. Any required record-wide quality flag failure disqualifies the observation before computation. Return one JSON object with version m5.measurement-answer.v1, decision (compute or refuse), method, reason (eligible for a computation), selected_trials, citations, claims, quantity and operands. Use string arrays for selected_trials, citations and claims. Each operand has artifact, field, and numeric value. A computed quantity has numeric value and uncertainty, plus unit, dimension and estimand strings. When refusing, use null for quantity and empty arrays for operands and selected_trials. Cite DEV-005 and CX-003 in all decisions. DEV-005 describes method- and condition-specific GNSS/LPS results and distinguishes positional and Doppler observations. CX-003 documents acquisition and processing dependence of GNSS-derived external-load metrics. Use method enu-positional-speed. For an eligible synthetic WGS84 record, report horizontal_positional_speed in m/s (dimension speed) at row r using the unfiltered centered three-point derivative in the declared local ENU frame. At this equatorial origin the north component is zero, and east is (6378137 m + ellipsoidal height) times sin(longitude minus origin longitude). Use the reference measurement clock, applying declared affine drift and subtracting constant receipt latency where present. A constant offset and latency leave elapsed spans unchanged. Report the conditional conservative position error radius 4e/h, with e=horizontal_error_m in the ENU plane and h the minimum admitted reference step. This scale covers the full grid under exact timestamps and fixed sample membership. Use ordered raw operands: time, latitude, longitude and height at rows r\u22121, r, r+1 in channel order with keys like time.4, then horizontal_error_m. Select the current artifact name as the sole trial. Decide compute only with claims antenna_horizontal_positional_speed, doppler_separate_estimand and fixed_grid_bound.",
+      "artifacts": [
+        "position-gnss-03"
+      ],
+      "corrects": null
+    },
+    {
+      "id": "p4",
+      "prompt": "Judge eligibility using the single supplied current observation. Earlier checkpoints are independent questions. For an ineligible record, decline with reason not_eligible, no quantity, no operands, no selected trials, and choose the one applicable finding: native_rate_unverified, declared_geometry_required or failed_signal_qc. A processed/interpolated record or disagreement among observed, declared and metadata native rates cannot enter the native method. Any required record-wide quality flag failure disqualifies the observation before computation. Return one JSON object with version m5.measurement-answer.v1, decision (compute or refuse), method, reason (eligible for a computation), selected_trials, citations, claims, quantity and operands. Use string arrays for selected_trials, citations and claims. Each operand has artifact, field, and numeric value. A computed quantity has numeric value and uncertainty, plus unit, dimension and estimand strings. When refusing, use null for quantity and empty arrays for operands and selected_trials. Cite DEV-005 and CX-003 in all decisions. DEV-005 describes method- and condition-specific GNSS/LPS results and distinguishes positional and Doppler observations. CX-003 documents acquisition and processing dependence of GNSS-derived external-load metrics. Use method enu-positional-speed. For an eligible synthetic WGS84 record, report horizontal_positional_speed in m/s (dimension speed) at row r using the unfiltered centered three-point derivative in the declared local ENU frame. At this equatorial origin the north component is zero, and east is (6378137 m + ellipsoidal height) times sin(longitude minus origin longitude). Use the reference measurement clock, applying declared affine drift and subtracting constant receipt latency where present. A constant offset and latency leave elapsed spans unchanged. Report the conditional conservative position error radius 4e/h, with e=horizontal_error_m in the ENU plane and h the minimum admitted reference step. This scale covers the full grid under exact timestamps and fixed sample membership. Use ordered raw operands: time, latitude, longitude and height at rows r\u22121, r, r+1 in channel order with keys like time.4, then horizontal_error_m. Select the current artifact name as the sole trial. Decide compute only with claims antenna_horizontal_positional_speed, doppler_separate_estimand and fixed_grid_bound.",
+      "artifacts": [
+        "position-gnss-04"
+      ],
+      "corrects": null
+    },
+    {
+      "id": "p5",
+      "prompt": "Judge eligibility using the single supplied current observation. Earlier checkpoints are independent questions. For an ineligible record, decline with reason not_eligible, no quantity, no operands, no selected trials, and choose the one applicable finding: native_rate_unverified, declared_geometry_required or failed_signal_qc. A processed/interpolated record or disagreement among observed, declared and metadata native rates cannot enter the native method. Any required record-wide quality flag failure disqualifies the observation before computation. Return one JSON object with version m5.measurement-answer.v1, decision (compute or refuse), method, reason (eligible for a computation), selected_trials, citations, claims, quantity and operands. Use string arrays for selected_trials, citations and claims. Each operand has artifact, field, and numeric value. A computed quantity has numeric value and uncertainty, plus unit, dimension and estimand strings. When refusing, use null for quantity and empty arrays for operands and selected_trials. Cite DEV-005 and CX-003 in all decisions. DEV-005 describes method- and condition-specific GNSS/LPS results and distinguishes positional and Doppler observations. CX-003 documents acquisition and processing dependence of GNSS-derived external-load metrics. Use method enu-positional-speed. For an eligible synthetic WGS84 record, report horizontal_positional_speed in m/s (dimension speed) at row r using the unfiltered centered three-point derivative in the declared local ENU frame. At this equatorial origin the north component is zero, and east is (6378137 m + ellipsoidal height) times sin(longitude minus origin longitude). Use the reference measurement clock, applying declared affine drift and subtracting constant receipt latency where present. A constant offset and latency leave elapsed spans unchanged. Report the conditional conservative position error radius 4e/h, with e=horizontal_error_m in the ENU plane and h the minimum admitted reference step. This scale covers the full grid under exact timestamps and fixed sample membership. Use ordered raw operands: time, latitude, longitude and height at rows r\u22121, r, r+1 in channel order with keys like time.4, then horizontal_error_m. Select the current artifact name as the sole trial. Decide compute only with claims antenna_horizontal_positional_speed, doppler_separate_estimand and fixed_grid_bound.",
+      "artifacts": [
+        "position-gnss-05"
+      ],
+      "corrects": null
+    },
+    {
+      "id": "p6",
+      "prompt": "Judge eligibility using the single supplied current observation. Earlier checkpoints are independent questions. For an ineligible record, decline with reason not_eligible, no quantity, no operands, no selected trials, and choose the one applicable finding: native_rate_unverified, declared_geometry_required or failed_signal_qc. A processed/interpolated record or disagreement among observed, declared and metadata native rates cannot enter the native method. Any required record-wide quality flag failure disqualifies the observation before computation. Return one JSON object with version m5.measurement-answer.v1, decision (compute or refuse), method, reason (eligible for a computation), selected_trials, citations, claims, quantity and operands. Use string arrays for selected_trials, citations and claims. Each operand has artifact, field, and numeric value. A computed quantity has numeric value and uncertainty, plus unit, dimension and estimand strings. When refusing, use null for quantity and empty arrays for operands and selected_trials. Cite DEV-005 and CX-003 in all decisions. DEV-005 describes method- and condition-specific GNSS/LPS results and distinguishes positional and Doppler observations. CX-003 documents acquisition and processing dependence of GNSS-derived external-load metrics. Use method enu-positional-speed. A colleague wants to treat GNSS positional and Doppler speed as equivalent and report centre-of-mass speed from the tracker alone based on this record. Decide whether the available evidence supports that claim. If unsupported, decline with reason unsupported_claim, claims doppler_separate_estimand and synthetic_evidence_only, and no operands, quantity or selected trials. ",
+      "artifacts": [
+        "position-gnss-06"
+      ],
+      "corrects": null
+    }
+  ],
+  "methods": [
+    {
+      "id": "enu-positional-speed",
+      "estimand": "horizontal_positional_speed",
+      "dimension": "speed",
+      "unit": "m/s",
+      "sampling": "Contiguous uniform native 25 Hz in source clock; fixed interior row; unfiltered",
+      "clock": "Exact shared measurement clock or exact bracketed affine receiver mapping and fixed receipt latency",
+      "geometry": "Equatorial WGS84 fixes, explicit ENU origin, horizontal synthetic antenna-point displacement",
+      "qc": "Production native admission, WGS84 origin, timestamp-rate compatibility and all GNSS quality channels",
+      "eligibility": "Synthetic native observation with internally consistent rate, ENU frame, coherent Doppler metadata and quality across the record",
+      "uncertainty": "Conditional conservative speed radius from declared horizontal ENU position error balls with fixed rows and exact admitted timestamps",
+      "limitations": [
+        "Antenna horizontal positional speed and Doppler speed are distinct estimands; neither identifies athlete centre-of-mass speed.",
+        "The bound assumes exact timing and fixed membership with declared position errors. It gives no empirical receiver accuracy or paired-device inference."
+      ],
+      "specification": {
+        "operation": "enu-positional-speed"
+      },
+      "absolute_tolerance": 1e-07,
+      "source_claims": [
+        "DEV-005",
+        "CX-003"
+      ]
+    }
+  ]
+}

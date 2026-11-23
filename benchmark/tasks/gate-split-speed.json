@@ -1,0 +1,168 @@
+{
+  "version": "m4.registry-task.v1",
+  "task": {
+    "version": "m4.public-task.v1",
+    "id": "gate-split-speed",
+    "revision": 1,
+    "family": "A",
+    "competencies": [
+      "C1",
+      "C2",
+      "C3",
+      "C4",
+      "C5"
+    ],
+    "coverage_cell": "Event admission, gate segment velocity, start definitions and measurement boundaries",
+    "domain": "synthetic native event reconstruction",
+    "protocol": "Straight two-station gate sprint",
+    "source": "timing_contact.gates",
+    "convention": "fixed",
+    "allowed_tools": "offline_python_stdlib",
+    "answer_schema": "m5.measurement-answer.v1"
+  },
+  "artifacts": [
+    {
+      "name": "gate-record-01",
+      "path": "benchmark/fixtures/m5-timing/gate-record-01.json",
+      "sha256": "4149d4f979062864876990089ea415d39afa22b71c30eae040db99a5343bcfff",
+      "category": "synthetic",
+      "rights": "Repository-authored synthetic event fixture",
+      "usage": "reference"
+    },
+    {
+      "name": "gate-record-02",
+      "path": "benchmark/fixtures/m5-timing/gate-record-02.json",
+      "sha256": "36fe73424fa595d6d9c9e2a8daeeb32ca570d3999b0b1e883f1a4f19561e7cf7",
+      "category": "synthetic",
+      "rights": "Repository-authored synthetic event fixture",
+      "usage": "reference"
+    },
+    {
+      "name": "gate-record-03",
+      "path": "benchmark/fixtures/m5-timing/gate-record-03.json",
+      "sha256": "a1c142bb7d35fb8c96d6cf5b8b8afc259f70b2d63057194fb10fdd08e64127f2",
+      "category": "synthetic",
+      "rights": "Repository-authored synthetic event fixture",
+      "usage": "reference"
+    },
+    {
+      "name": "gate-record-04",
+      "path": "benchmark/fixtures/m5-timing/gate-record-04.json",
+      "sha256": "ffedf19b3700b45a49eff40327d1f8c1b7744f887b1ecf2c62fa552b883cc4f7",
+      "category": "synthetic",
+      "rights": "Repository-authored synthetic event fixture",
+      "usage": "reference"
+    },
+    {
+      "name": "gate-record-05",
+      "path": "benchmark/fixtures/m5-timing/gate-record-05.json",
+      "sha256": "20497b4ef56927e82dd6c7e4ee71e4617c3b05a7fa70fa982d291c578ea47f23",
+      "category": "synthetic",
+      "rights": "Repository-authored synthetic event fixture",
+      "usage": "reference"
+    },
+    {
+      "name": "gate-record-06",
+      "path": "benchmark/fixtures/m5-timing/gate-record-06.json",
+      "sha256": "432b36039a89066b2d3d32ef868bea5de8a7de49970ab8b48955a2eff71d2da0",
+      "category": "synthetic",
+      "rights": "Repository-authored synthetic event fixture",
+      "usage": "reference"
+    },
+    {
+      "name": "gate-record-07",
+      "path": "benchmark/fixtures/m5-timing/gate-record-07.json",
+      "sha256": "e4b4e09e0b60e97439b378cce7ba19c56f7f4276ee56cf56a56277e0ebc2af4f",
+      "category": "synthetic",
+      "rights": "Repository-authored synthetic event fixture",
+      "usage": "reference"
+    }
+  ],
+  "checkpoints": [
+    {
+      "id": "c01",
+      "prompt": "Use gate-record-01. Determine whether this record supports the requested split and, when eligible, compute it. Use method beam-split and cite DEV-004. That claim reports method differences between single- and dual-beam sprint timing without a universal geometry or start correction. Read the native event channels and declared surveyed course. Gate ID 0 is the independent start when declared (start_kind 1 for pressure pad). Use the declared independent trigger, first gate, or fixed offset for cumulative time. For a dual station the crossing is the quorum edge within the coincidence window after clock and edge correction. A group that fails quorum is not a crossing. Map any aligned native clock to reference time, then subtract declared link and edge latencies. Endpoint timing error adds half a native tick scaled to reference seconds, alignment and link error when applicable, and both edge errors. For a resolved split, propagate the endpoint interval through distance divided by elapsed time. Report the last gate segment as beam_crossing_segment_average_velocity (speed, m/s) with ordered operands segment_distance_m, split_s, cumulative_s. Allowed claim identifiers are beam_crossing, segment_average, start_first_gate, start_fixed_offset, start_pressure_pad, single_beam, dual_beam, event_integrity, different_estimands, and paired_validation_absent. Return a JSON object using version m5.measurement-answer.v1 and fields decision (compute or refuse), method, reason (eligible, not_eligible, insufficient_evidence, or unsupported_claim), selected_trials (array), citations (array), claims (array), quantity, operands (array), and corrects (null or omitted). A computation selects this artifact alone and reports quantity with value, unit, dimension, estimand, and uncertainty (the greater distance from the nominal result to either interval endpoint). Each operand has artifact, field, and value. Round derived operands to 12 decimal places. A refusal uses empty selected_trials and operands and null quantity. Use the provided claim identifiers as structured reasoning and include no additional fields.",
+      "artifacts": [
+        "gate-record-01"
+      ],
+      "corrects": null
+    },
+    {
+      "id": "c02",
+      "prompt": "Use gate-record-02. Determine whether this record supports the requested split and, when eligible, compute it. Use method beam-split and cite DEV-004. That claim reports method differences between single- and dual-beam sprint timing without a universal geometry or start correction. Read the native event channels and declared surveyed course. Gate ID 0 is the independent start when declared (start_kind 1 for pressure pad). Use the declared independent trigger, first gate, or fixed offset for cumulative time. For a dual station the crossing is the quorum edge within the coincidence window after clock and edge correction. A group that fails quorum is not a crossing. Map any aligned native clock to reference time, then subtract declared link and edge latencies. Endpoint timing error adds half a native tick scaled to reference seconds, alignment and link error when applicable, and both edge errors. For a resolved split, propagate the endpoint interval through distance divided by elapsed time. Report the last gate segment as beam_crossing_segment_average_velocity (speed, m/s) with ordered operands segment_distance_m, split_s, cumulative_s. Allowed claim identifiers are beam_crossing, segment_average, start_first_gate, start_fixed_offset, start_pressure_pad, single_beam, dual_beam, event_integrity, different_estimands, and paired_validation_absent. Return a JSON object using version m5.measurement-answer.v1 and fields decision (compute or refuse), method, reason (eligible, not_eligible, insufficient_evidence, or unsupported_claim), selected_trials (array), citations (array), claims (array), quantity, operands (array), and corrects (null or omitted). A computation selects this artifact alone and reports quantity with value, unit, dimension, estimand, and uncertainty (the greater distance from the nominal result to either interval endpoint). Each operand has artifact, field, and value. Round derived operands to 12 decimal places. A refusal uses empty selected_trials and operands and null quantity. Use the provided claim identifiers as structured reasoning and include no additional fields.",
+      "artifacts": [
+        "gate-record-02"
+      ],
+      "corrects": null
+    },
+    {
+      "id": "c03",
+      "prompt": "Use gate-record-03. Determine whether this record supports the requested split and, when eligible, compute it. Use method beam-split and cite DEV-004. That claim reports method differences between single- and dual-beam sprint timing without a universal geometry or start correction. Read the native event channels and declared surveyed course. Gate ID 0 is the independent start when declared (start_kind 1 for pressure pad). Use the declared independent trigger, first gate, or fixed offset for cumulative time. For a dual station the crossing is the quorum edge within the coincidence window after clock and edge correction. A group that fails quorum is not a crossing. Map any aligned native clock to reference time, then subtract declared link and edge latencies. Endpoint timing error adds half a native tick scaled to reference seconds, alignment and link error when applicable, and both edge errors. For a resolved split, propagate the endpoint interval through distance divided by elapsed time. Report the last gate segment as beam_crossing_segment_average_velocity (speed, m/s) with ordered operands segment_distance_m, split_s, cumulative_s. Allowed claim identifiers are beam_crossing, segment_average, start_first_gate, start_fixed_offset, start_pressure_pad, single_beam, dual_beam, event_integrity, different_estimands, and paired_validation_absent. Return a JSON object using version m5.measurement-answer.v1 and fields decision (compute or refuse), method, reason (eligible, not_eligible, insufficient_evidence, or unsupported_claim), selected_trials (array), citations (array), claims (array), quantity, operands (array), and corrects (null or omitted). A computation selects this artifact alone and reports quantity with value, unit, dimension, estimand, and uncertainty (the greater distance from the nominal result to either interval endpoint). Each operand has artifact, field, and value. Round derived operands to 12 decimal places. A refusal uses empty selected_trials and operands and null quantity. Use the provided claim identifiers as structured reasoning and include no additional fields.",
+      "artifacts": [
+        "gate-record-03"
+      ],
+      "corrects": null
+    },
+    {
+      "id": "c04",
+      "prompt": "Use gate-record-04. Determine whether this record supports the requested split and, when eligible, compute it. Use method beam-split and cite DEV-004. That claim reports method differences between single- and dual-beam sprint timing without a universal geometry or start correction. Read the native event channels and declared surveyed course. Gate ID 0 is the independent start when declared (start_kind 1 for pressure pad). Use the declared independent trigger, first gate, or fixed offset for cumulative time. For a dual station the crossing is the quorum edge within the coincidence window after clock and edge correction. A group that fails quorum is not a crossing. Map any aligned native clock to reference time, then subtract declared link and edge latencies. Endpoint timing error adds half a native tick scaled to reference seconds, alignment and link error when applicable, and both edge errors. For a resolved split, propagate the endpoint interval through distance divided by elapsed time. Report the last gate segment as beam_crossing_segment_average_velocity (speed, m/s) with ordered operands segment_distance_m, split_s, cumulative_s. Allowed claim identifiers are beam_crossing, segment_average, start_first_gate, start_fixed_offset, start_pressure_pad, single_beam, dual_beam, event_integrity, different_estimands, and paired_validation_absent. Return a JSON object using version m5.measurement-answer.v1 and fields decision (compute or refuse), method, reason (eligible, not_eligible, insufficient_evidence, or unsupported_claim), selected_trials (array), citations (array), claims (array), quantity, operands (array), and corrects (null or omitted). A computation selects this artifact alone and reports quantity with value, unit, dimension, estimand, and uncertainty (the greater distance from the nominal result to either interval endpoint). Each operand has artifact, field, and value. Round derived operands to 12 decimal places. A refusal uses empty selected_trials and operands and null quantity. Use the provided claim identifiers as structured reasoning and include no additional fields.",
+      "artifacts": [
+        "gate-record-04"
+      ],
+      "corrects": null
+    },
+    {
+      "id": "c05",
+      "prompt": "Use gate-record-05. Determine whether this record supports the requested split and, when eligible, compute it. Use method beam-split and cite DEV-004. That claim reports method differences between single- and dual-beam sprint timing without a universal geometry or start correction. Read the native event channels and declared surveyed course. Gate ID 0 is the independent start when declared (start_kind 1 for pressure pad). Use the declared independent trigger, first gate, or fixed offset for cumulative time. For a dual station the crossing is the quorum edge within the coincidence window after clock and edge correction. A group that fails quorum is not a crossing. Map any aligned native clock to reference time, then subtract declared link and edge latencies. Endpoint timing error adds half a native tick scaled to reference seconds, alignment and link error when applicable, and both edge errors. For a resolved split, propagate the endpoint interval through distance divided by elapsed time. Report the last gate segment as beam_crossing_segment_average_velocity (speed, m/s) with ordered operands segment_distance_m, split_s, cumulative_s. Allowed claim identifiers are beam_crossing, segment_average, start_first_gate, start_fixed_offset, start_pressure_pad, single_beam, dual_beam, event_integrity, different_estimands, and paired_validation_absent. Return a JSON object using version m5.measurement-answer.v1 and fields decision (compute or refuse), method, reason (eligible, not_eligible, insufficient_evidence, or unsupported_claim), selected_trials (array), citations (array), claims (array), quantity, operands (array), and corrects (null or omitted). A computation selects this artifact alone and reports quantity with value, unit, dimension, estimand, and uncertainty (the greater distance from the nominal result to either interval endpoint). Each operand has artifact, field, and value. Round derived operands to 12 decimal places. A refusal uses empty selected_trials and operands and null quantity. Use the provided claim identifiers as structured reasoning and include no additional fields.",
+      "artifacts": [
+        "gate-record-05"
+      ],
+      "corrects": null
+    },
+    {
+      "id": "c06",
+      "prompt": "Use gate-record-06. Determine whether this record supports the requested split and, when eligible, compute it. Use method beam-split and cite DEV-004. That claim reports method differences between single- and dual-beam sprint timing without a universal geometry or start correction. Read the native event channels and declared surveyed course. Gate ID 0 is the independent start when declared (start_kind 1 for pressure pad). Use the declared independent trigger, first gate, or fixed offset for cumulative time. For a dual station the crossing is the quorum edge within the coincidence window after clock and edge correction. A group that fails quorum is not a crossing. Map any aligned native clock to reference time, then subtract declared link and edge latencies. Endpoint timing error adds half a native tick scaled to reference seconds, alignment and link error when applicable, and both edge errors. For a resolved split, propagate the endpoint interval through distance divided by elapsed time. Report the last gate segment as beam_crossing_segment_average_velocity (speed, m/s) with ordered operands segment_distance_m, split_s, cumulative_s. Allowed claim identifiers are beam_crossing, segment_average, start_first_gate, start_fixed_offset, start_pressure_pad, single_beam, dual_beam, event_integrity, different_estimands, and paired_validation_absent. Return a JSON object using version m5.measurement-answer.v1 and fields decision (compute or refuse), method, reason (eligible, not_eligible, insufficient_evidence, or unsupported_claim), selected_trials (array), citations (array), claims (array), quantity, operands (array), and corrects (null or omitted). A computation selects this artifact alone and reports quantity with value, unit, dimension, estimand, and uncertainty (the greater distance from the nominal result to either interval endpoint). Each operand has artifact, field, and value. Round derived operands to 12 decimal places. A refusal uses empty selected_trials and operands and null quantity. Use the provided claim identifiers as structured reasoning and include no additional fields.",
+      "artifacts": [
+        "gate-record-06"
+      ],
+      "corrects": null
+    },
+    {
+      "id": "c07",
+      "prompt": "Use gate-record-07. A practitioner proposes relabeling this gate result as the athlete's COM crossing speed and using it interchangeably with radar-derived instantaneous speed. Decide whether the source supports that equivalence. This checkpoint requests a claim decision only. Use method beam-split and cite DEV-004. That claim reports method differences between single- and dual-beam sprint timing without a universal geometry or start correction. Read the native event channels and declared surveyed course. Gate ID 0 is the independent start when declared (start_kind 1 for pressure pad). Use the declared independent trigger, first gate, or fixed offset for cumulative time. For a dual station the crossing is the quorum edge within the coincidence window after clock and edge correction. A group that fails quorum is not a crossing. Map any aligned native clock to reference time, then subtract declared link and edge latencies. Endpoint timing error adds half a native tick scaled to reference seconds, alignment and link error when applicable, and both edge errors. For a resolved split, propagate the endpoint interval through distance divided by elapsed time. Report the last gate segment as beam_crossing_segment_average_velocity (speed, m/s) with ordered operands segment_distance_m, split_s, cumulative_s. Allowed claim identifiers are beam_crossing, segment_average, start_first_gate, start_fixed_offset, start_pressure_pad, single_beam, dual_beam, event_integrity, different_estimands, and paired_validation_absent. Return a JSON object using version m5.measurement-answer.v1 and fields decision (compute or refuse), method, reason (eligible, not_eligible, insufficient_evidence, or unsupported_claim), selected_trials (array), citations (array), claims (array), quantity, operands (array), and corrects (null or omitted). A computation selects this artifact alone and reports quantity with value, unit, dimension, estimand, and uncertainty (the greater distance from the nominal result to either interval endpoint). Each operand has artifact, field, and value. Round derived operands to 12 decimal places. A refusal uses empty selected_trials and operands and null quantity. Use the provided claim identifiers as structured reasoning and include no additional fields.",
+      "artifacts": [
+        "gate-record-07"
+      ],
+      "corrects": null
+    }
+  ],
+  "reference_profile": "gate-split-speed",
+  "methods": [
+    {
+      "id": "beam-split",
+      "estimand": "beam_crossing_segment_average_velocity",
+      "dimension": "speed",
+      "unit": "m/s",
+      "specification": {
+        "operation": "beam-split"
+      },
+      "sampling": "Irregular event rows; nearest-millisecond native timestamp resolution.",
+      "clock": "Shared clock or affine wired counter with bracketing pulses, link and edge delays.",
+      "geometry": "Surveyed straight two-station path with declared heights, IDs and beam vote.",
+      "qc": "Native event admission, complete route and one resolved quorum per station.",
+      "eligibility": "Valid gate geometry, unique ordered crossings, and a supported start.",
+      "uncertainty": "Conditional worst-case intervals from edge endpoints. The fixed offset affects cumulative timing only.",
+      "absolute_tolerance": 1e-10,
+      "limitations": [
+        "Beam interruption and COM crossing are different event definitions.",
+        "A segment average is distinct from an instantaneous radar velocity.",
+        "DEV-004 describes only the tested beam configurations; the fixtures contain no paired-device study."
+      ],
+      "source_claims": [
+        "DEV-004"
+      ]
+    }
+  ],
+  "engine": "m5-measurement.v1",
+  "grader": "measurement.v1"
+}
