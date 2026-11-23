@@ -615,6 +615,16 @@
    "reason": "Encoder event-fault fixtures are deterministic with exact row/timestamp effects, but no cited test checks an engine verdict. A probe showed acquire refuses DUPLICATE, but this is untested.",
    "verdict": "PARTIAL"
   },
+  "RCP-lpt_encoder-encoder-M": {
+   "bound_digest": "1a81677986978fb0f867612fa0f04ccb1b79a25babfa4000885c0920dad6e5d8",
+   "evidence_head": "9c86485832c6d54f2906817516946bed16d46b3a",
+   "fix": "",
+   "prior_fix": "",
+   "prior_reason": "",
+   "prior_verdict": "NO_DRAFT",
+   "reason": "File-backed encoder processing reproduces independently exported observations, retains the verified input hash and declared settings, and refuses a tampered or aliased artifact. Exact outcomes. Two independently exported 100 Hz count fixtures reproduce Parquet, sidecar and report bytes. Declared finite differences, 350 ppm rate scale, 0.1 s trim, gap factor 4 and cable geometry are retained. The current Parquet SHA-256 matches an independent hash and changes after a one-count alteration. A tampered file reports SHA-256 mismatch and preserves the existing output. Hard-linked output aliases of Parquet, sidecar or configuration are refused and preserve input bytes.",
+   "verdict": "SUPPORTED"
+  },
   "RCP-lpt_encoder-lpt-A": {
    "fix": "Add single-cable unit/calibration-unit refusal and non-finite length refusal tests.",
    "reason": "Analytical-truth input, wrong source and unsynced clocks are refused, but all on the dual _dual() fixture. There is no unit refusal test, although the code refuses non-metre cable calibration (lpt_acquisition.py:133), and no single-cable admission refusal.",
@@ -666,9 +676,14 @@
    "verdict": "PARTIAL"
   },
   "RCP-lpt_encoder-lpt-I": {
-   "fix": "LPT fixture; compare cable-angle/timebase perturbation deltas to closed-form cos/scale derivatives.",
-   "reason": "test_sensitivity_perturbs_angles_cutoff_and_timing asserts only rmse>0 and the sign of peak_delta, with no independent analytical value. It also runs the _sine_encoder (encoder subfamily) fixture.",
-   "verdict": "UNSUPPORTED"
+   "bound_digest": "8da2c938d3dcc6337341f804611c8b103c17798816ab77aa437e97ab42687cbf",
+   "evidence_head": "9c86485832c6d54f2906817516946bed16d46b3a",
+   "fix": "",
+   "prior_fix": "LPT fixture; compare cable-angle/timebase perturbation deltas to closed-form cos/scale derivatives.",
+   "prior_reason": "test_sensitivity_perturbs_angles_cutoff_and_timing asserts only rmse>0 and the sign of peak_delta, with no independent analytical value. It also runs the _sine_encoder (encoder subfamily) fixture.",
+   "prior_verdict": "UNSUPPORTED",
+   "reason": "Native LPT finite-difference motion propagates declared constant-angle and clock-scale perturbations and records inadmissible variants. The 128 Hz polynomial fixture uses z=0.4t+t\u00b2 m, v=0.4+2t m/s, a=2 m/s\u00b2 and P=40(g+a)v W. A \u00b10.1 rad angle variant scales motion by cos(0.45)/cos(0.45\u00b10.1), while \u00b1100000 ppm leaves displacement fixed and rescales v by 1/s and a by 1/s\u00b2. Check the nominal series and RMSE/peak deltas on the 65 rows with 0.25\u2264t\u22640.75 within absolute 1e-8 in m, m/s, m/s\u00b2 and W, zero relative allowance for finite difference roundoff. A singular angle and zero clock scale leave explicit errors in their variant records.",
+   "verdict": "SUPPORTED"
   },
   "RCP-lpt_encoder-lpt-J": {
    "bound_digest": "ba2fe7309686faf60f6dc3ef5f493ba752f0aa0ac16c1b00c025217336a3e7aa",

@@ -33,7 +33,7 @@ paradigm = "continuous_signal"
 issue = "RES-695"
 engine_id = "lpt"
 methods = ["differentiate"]
-ratings = { A = "specified", B = "specified", C = "verified", D = "partial", E = "partial", F = "verified", G = "partial", H = "partial", I = "partial", J = "verified", K = "partial", L = "partial", M = "verified", N = "absent", O = "partial" }
+ratings = { A = "specified", B = "specified", C = "verified", D = "partial", E = "partial", F = "verified", G = "partial", H = "partial", I = "verified", J = "verified", K = "partial", L = "partial", M = "verified", N = "absent", O = "partial" }
 empirical_gaps = ["Engine verified on analytical controls (RES-695); measured cable geometry, calibration and attachment-versus-COM validity remain unqualified (RES-694)", "Cross-device agreement with force plates is analytical only (RES-703)"]
 blockers = []
 
@@ -45,7 +45,7 @@ paradigm = "discrete_event"
 issue = "RES-695"
 engine_id = "encoder"
 methods = ["count_unwrap", "event_rate"]
-ratings = { A = "specified", B = "verified", C = "specified", D = "partial", E = "partial", F = "partial", G = "partial", H = "partial", I = "partial", J = "partial", K = "partial", L = "partial", M = "partial", N = "absent", O = "partial" }
+ratings = { A = "specified", B = "verified", C = "specified", D = "partial", E = "partial", F = "partial", G = "partial", H = "partial", I = "partial", J = "partial", K = "partial", L = "partial", M = "verified", N = "absent", O = "partial" }
 empirical_gaps = ["Engine verified on analytical controls (RES-695); measured counts-per-metre, quantization and attachment validity remain unqualified (RES-694)", "Cross-device agreement is analytical only (RES-703)"]
 blockers = []
 
@@ -4691,3 +4691,19 @@ kind = "independent_test"
 issue = "RES-700"
 ref = "repo:tests/test_gnss_lps_processing.py"
 rationale = "Every successful LPS result carries the declared native-position and processing limitations, and the CLI preserves them."
+
+[[evidence]]
+subfamily = "lpt_encoder.lpt"
+dimension = "I"
+kind = "independent_test"
+issue = "RES-695"
+ref = "repo:tests/test_lpt_engine.py"
+rationale = "Native LPT finite-difference motion propagates declared constant-angle and clock-scale perturbations and records inadmissible variants."
+
+[[evidence]]
+subfamily = "lpt_encoder.encoder"
+dimension = "M"
+kind = "independent_test"
+issue = "RES-695"
+ref = "repo:tests/test_encoder_policy_a.py"
+rationale = "File-backed encoder processing reproduces independently exported observations, retains the verified input hash and declared settings, and refuses a tampered or aliased artifact."

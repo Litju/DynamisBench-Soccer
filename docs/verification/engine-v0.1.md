@@ -26,8 +26,8 @@ Engineering calculations only; no scientific qualification of any device or metr
 | imu.inertial | SPECIFIED | yes | 8 of 14 |
 | load_cell_isometric.isometric_rig | SPECIFIED | yes | 11 of 14 |
 | load_cell_isometric.load_cell | SPECIFIED | yes | 5 of 14 |
-| lpt_encoder.encoder | SPECIFIED | yes | 13 of 14 |
-| lpt_encoder.lpt | SPECIFIED | yes | 10 of 14 |
+| lpt_encoder.encoder | SPECIFIED | yes | 12 of 14 |
+| lpt_encoder.lpt | SPECIFIED | yes | 9 of 14 |
 | nordic_hip.hip | SPECIFIED | yes | 12 of 14 |
 | nordic_hip.nordic | SPECIFIED | yes | 9 of 14 |
 | radar_laser.laser | SPECIFIED | yes | 11 of 14 |
@@ -157,7 +157,6 @@ Engineering calculations only; no scientific qualification of any device or metr
 * computational blocker: J: an independent reference implementation or closed form that shares no code with the engine (owner RES-669; rated partial)
 * computational blocker: K: synthetic fault fixtures cover the declared fault classes with expected verdicts (owner RES-669; rated partial)
 * computational blocker: L: analytical cross-device studies are executed and classified, never read as interchangeability (owner RES-703; rated partial)
-* computational blocker: M: seeded, hash-bound provenance chain for every processing stage, reproduced exactly (owner RES-695; rated partial)
 * computational blocker: O: limitation statements are sourced and emitted with every result (owner RES-695; rated partial)
 * J - owner RES-669: an independent reference implementation or closed form that shares no code with the engine
 * K - owner RES-669: synthetic fault fixtures cover the declared fault classes with expected verdicts
@@ -170,7 +169,6 @@ Engineering calculations only; no scientific qualification of any device or metr
 * D - owner RES-695: integrity and QC checks reject injected faults and pass clean controls
 * O - owner RES-695: limitation statements are sourced and emitted with every result
 * F - owner RES-695: reconstructed quantities agree with an independent analytical truth within tolerance
-* M - owner RES-695: seeded, hash-bound provenance chain for every processing stage, reproduced exactly
 * L - owner RES-703: analytical cross-device studies are executed and classified, never read as interchangeability
 
 **lpt_encoder.lpt** (SPECIFIED)
@@ -180,7 +178,6 @@ Engineering calculations only; no scientific qualification of any device or metr
 * computational blocker: E: every processing method variant is compared with an independent reference with stated sensitivity bounds (owner RES-695; rated partial)
 * computational blocker: G: protocol events are recovered against analytically known event times, with eligibility refusals (owner RES-671; rated partial)
 * computational blocker: H: metric definitions are bound to sourced registry claims and executable exactly (owner RES-671; rated partial)
-* computational blocker: I: declared uncertainty propagation is checked against an independent analytical result (owner RES-695; rated partial)
 * computational blocker: K: synthetic fault fixtures cover the declared fault classes with expected verdicts (owner RES-669; rated partial)
 * computational blocker: L: analytical cross-device studies are executed and classified, never read as interchangeability (owner RES-703; rated partial)
 * computational blocker: O: limitation statements are sourced and emitted with every result (owner RES-695; rated partial)
@@ -189,7 +186,6 @@ Engineering calculations only; no scientific qualification of any device or metr
 * G - owner RES-671: protocol events are recovered against analytically known event times, with eligibility refusals
 * A - owner RES-693: executable admission contract: native/vendor stage, units and integrity refusals tested
 * B - owner RES-695: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused
-* I - owner RES-695: declared uncertainty propagation is checked against an independent analytical result
 * E - owner RES-695: every processing method variant is compared with an independent reference with stated sensitivity bounds
 * D - owner RES-695: integrity and QC checks reject injected faults and pass clean controls
 * O - owner RES-695: limitation statements are sourced and emitted with every result
@@ -417,8 +413,8 @@ Open empirical requirements (what only physical measurement can close):
 | imu.inertial | s | V | s | V | V | V | p | p | V | V | p | p | p | - | p |
 | load_cell_isometric.isometric_rig | V | s | s | p | p | p | p | p | p | p | p | p | V | - | V |
 | load_cell_isometric.load_cell | V | V | s | V | p | V | V | p | p | V | p | V | V | - | V |
-| lpt_encoder.encoder | s | V | s | p | p | p | p | p | p | p | p | p | p | - | p |
-| lpt_encoder.lpt | s | s | V | p | p | V | p | p | p | V | p | p | V | - | p |
+| lpt_encoder.encoder | s | V | s | p | p | p | p | p | p | p | p | p | V | - | p |
+| lpt_encoder.lpt | s | s | V | p | p | V | p | p | V | V | p | p | V | - | p |
 | nordic_hip.hip | s | V | s | p | p | p | p | p | p | V | p | p | p | - | p |
 | nordic_hip.nordic | s | s | s | p | p | V | V | V | p | V | p | V | p | - | p |
 | radar_laser.laser | s | s | V | p | p | V | p | p | p | p | p | V | p | - | p |
