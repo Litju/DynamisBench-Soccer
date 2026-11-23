@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import math
+
 import numpy as np
 
 from dynamisbench_soccer.data.manifest import DataCategory
@@ -34,3 +36,21 @@ def horizontal_speed(bundle: SignalBundle, declaration: AcquisitionDeclaration, 
     ):
         raise AcquisitionRefusal("requires exact aligned 25 Hz measurement timestamps")
     return float(result.kinematics.horizontal_positional_speed_m_s[row])
+
+
+def position_error_radius(
+    before_s: float, center_s: float, after_s: float, bound_m: float
+) -> float:
+    """Deterministic speed-error bound for independent per-row horizontal error balls."""
+    left_step, right_step = center_s - before_s, after_s - center_s
+    if not all(math.isfinite(v) for v in (left_step, right_step, bound_m)) or (
+        min(left_step, right_step) <= 0 or bound_m < 0
+    ):
+        raise AcquisitionRefusal("invalid position bound or derivative support")
+    span = left_step + right_step
+    left_weight = right_step / span / left_step
+    right_weight = left_step / span / right_step
+    radius = 2 * max(left_weight, right_weight) * bound_m
+    if not math.isfinite(radius):
+        raise AcquisitionRefusal("position-error radius exceeds numerical precision")
+    return radius

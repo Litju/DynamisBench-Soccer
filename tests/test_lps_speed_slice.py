@@ -6,8 +6,8 @@ import pytest
 from test_gnss_lps_acquisition import track_case
 
 from dynamisbench_soccer.engines.gnss_lps_acquisition import AcquisitionRefusal
-from dynamisbench_soccer.engines.lps_speed import horizontal_speed
-from dynamisbench_soccer.reference.lps_speed import linear_tag_speed
+from dynamisbench_soccer.engines.lps_speed import horizontal_speed, position_error_radius
+from dynamisbench_soccer.reference.lps_speed import exact_grid_extreme_speed, linear_tag_speed
 from dynamisbench_soccer.registry.models import load
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -45,3 +45,18 @@ def test_lps_speed_refuses_unverified_clock_and_signal() -> None:
     bundle["signal_valid"][4] = 0
     with pytest.raises(AcquisitionRefusal):
         horizontal_speed(bundle, declaration, 4)
+
+
+def test_position_only_radius_contains_and_attains_analytical_extreme() -> None:
+    bundle, declaration = _track()
+    row, bound = 4, 0.012
+    center = horizontal_speed(bundle, declaration, row)
+    t = bundle["time"] - bundle["time"][0]
+    radius = position_error_radius(*t[row - 1 : row + 2], bound)
+    assert radius == pytest.approx(25 * bound, rel=0, abs=1e-12)
+    for axis, component in (("x", -0.6), ("y", 0.8)):
+        bundle[f"position_{axis}"][row - 1] -= component * bound
+        bundle[f"position_{axis}"][row + 1] += component * bound
+    extreme = horizontal_speed(bundle, declaration, row)
+    assert extreme == pytest.approx(exact_grid_extreme_speed(-3, 4, 25, bound), rel=0, abs=1e-12)
+    assert extreme - center == pytest.approx(radius, rel=0, abs=1e-12)
