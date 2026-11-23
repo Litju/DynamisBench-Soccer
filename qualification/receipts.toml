@@ -2467,3 +2467,53 @@ issue = "RES-700"
 "tests/test_gnss_processing_policy_a.py::_expected" = "f1e72223ebc999dae39b3bc4fbc3b52e8f41edfb989192e9e65cd03314f90520"
 "tests/test_gnss_processing_policy_a.py::test_gnss_jitter_and_missing_doppler_processing_refuse" = "72710151abe0d34423afeea1af79331425b17bf591925e3b0b824656a349107a"
 "tests/test_gnss_processing_policy_a.py::test_gnss_variants_and_peaks_match_independent_polynomials" = "7eb5a0626845902742321ec324937ecd3729fc3fdb5324ddd309283920b1af00"
+
+[[receipt]]
+id = "RCP-gnss_lps-lps-I-native-bounds"
+dimension = "I"
+subfamilies = ["gnss_lps.lps"]
+implementation = ["src/dynamisbench_soccer/engines/gnss_lps.py::process", "src/dynamisbench_soccer/engines/position_clock_bounds.py::clock_kinematic_bounds", "src/dynamisbench_soccer/engines/position_clock_bounds.py::input_error_radii"]
+reference = ["tests/test_position_clock_bounds.py::_closed_rates"]
+tests = ["tests/test_position_clock_bounds.py::test_clock_bounds_with_native_processing_variants", "tests/test_position_clock_bounds.py::test_clock_bounds_refuse_unqualified_scale_and_support_jittered_three_point", "tests/test_position_clock_bounds.py::test_bounded_position_perturbation_includes_filter_edges", "tests/test_position_clock_bounds.py::test_unfiltered_boundary_position_and_doppler_bound_is_attained"]
+reference_kind = "closed_form"
+independence = "A prescribed quadratic trajectory and scalar Doppler line have analytical derivatives scaled by the inverse first or second power of clock stretch. Alternating coordinate errors attain the independent three-point forward bound; the remaining injection controls use declared bounded perturbations."
+claim = "Native LPS filtered kinematics propagate declared common affine timing and deterministic fixed-grid input errors, distinguish unavailable channels, and refuse inadmissible bounds."
+tolerance_basis = "Analytical affine speed and acceleration bounds agree within absolute 1e-7 in their respective SI units, signed Doppler speed change within 1e-10 m/s², timestamps within 1e-12 s. Perturbed reconstructed values are checked against the conservative bounds with explicit numerical allowances."
+tolerance = 1e-7
+tolerance_unit = "m/s or m/s² (absolute); source-specific bounds in cited tests"
+issue = "RES-700"
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/gnss_lps.py::process" = "47dad0be73c8de9a93699c8954df13d3b313b97a249e7ff27f8bfae4ee58edf9"
+"src/dynamisbench_soccer/engines/position_clock_bounds.py::clock_kinematic_bounds" = "992ff4b95a1ff4be7c82ecb6efb38f34e5014b89c8a457953aaa27b65fbdef5d"
+"src/dynamisbench_soccer/engines/position_clock_bounds.py::input_error_radii" = "68bc7c08450966b90236e6ac7197fed888dc4220f01a036cac802ca6b4e44b5e"
+"tests/test_position_clock_bounds.py::_closed_rates" = "b39e33a0e18ab4f0cb5ebd9d73b01a9bfa12b37589449316d8e4f7ec9c5f242d"
+"tests/test_position_clock_bounds.py::test_bounded_position_perturbation_includes_filter_edges" = "535eb3fa3f6d9c24d75599056c3a52e94b5935651e44904d9c4aa2bbc3c4534f"
+"tests/test_position_clock_bounds.py::test_clock_bounds_refuse_unqualified_scale_and_support_jittered_three_point" = "ecec025c534bc4fe09a2321691069e6cd99dbb4b40403d40c8827607aa3e1f51"
+"tests/test_position_clock_bounds.py::test_clock_bounds_with_native_processing_variants" = "40dfb83a6c2be2aacbefb93d9c6a2fcbf2e75543d9727eb57a4572e9ee2c5d36"
+"tests/test_position_clock_bounds.py::test_unfiltered_boundary_position_and_doppler_bound_is_attained" = "97912c4f3a544ecd914f18eed57aed6a3ddf171c0bf0ad54a1514799c8015947"
+
+[[receipt]]
+id = "RCP-gnss_lps-gnss-I-native-bounds"
+dimension = "I"
+subfamilies = ["gnss_lps.gnss"]
+implementation = ["src/dynamisbench_soccer/engines/gnss_lps.py::process", "src/dynamisbench_soccer/engines/position_clock_bounds.py::clock_kinematic_bounds", "src/dynamisbench_soccer/engines/position_clock_bounds.py::input_error_radii"]
+reference = ["tests/test_position_clock_bounds.py::_closed_rates"]
+tests = ["tests/test_position_clock_bounds.py::test_clock_bounds_with_native_processing_variants", "tests/test_position_clock_bounds.py::test_clock_bounds_refuse_unqualified_scale_and_support_jittered_three_point", "tests/test_position_clock_bounds.py::test_bounded_position_perturbation_includes_filter_edges", "tests/test_position_clock_bounds.py::test_unfiltered_boundary_position_and_doppler_bound_is_attained"]
+reference_kind = "closed_form"
+independence = "A prescribed quadratic trajectory and scalar Doppler line have analytical derivatives scaled by the inverse first or second power of clock stretch. Alternating coordinate errors attain the independent three-point forward bound; the remaining injection controls use declared bounded perturbations."
+claim = "Native GNSS filtered kinematics propagate declared common affine timing and deterministic fixed-grid input errors, distinguish unavailable channels, and refuse inadmissible bounds."
+tolerance_basis = "Analytical affine speed and acceleration bounds agree within absolute 1e-7 in their respective SI units, signed Doppler speed change within 1e-10 m/s², timestamps within 1e-12 s. Perturbed reconstructed values are checked against the conservative bounds with explicit numerical allowances."
+tolerance = 1e-7
+tolerance_unit = "m/s or m/s² (absolute); source-specific bounds in cited tests"
+issue = "RES-700"
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/gnss_lps.py::process" = "47dad0be73c8de9a93699c8954df13d3b313b97a249e7ff27f8bfae4ee58edf9"
+"src/dynamisbench_soccer/engines/position_clock_bounds.py::clock_kinematic_bounds" = "992ff4b95a1ff4be7c82ecb6efb38f34e5014b89c8a457953aaa27b65fbdef5d"
+"src/dynamisbench_soccer/engines/position_clock_bounds.py::input_error_radii" = "68bc7c08450966b90236e6ac7197fed888dc4220f01a036cac802ca6b4e44b5e"
+"tests/test_position_clock_bounds.py::_closed_rates" = "b39e33a0e18ab4f0cb5ebd9d73b01a9bfa12b37589449316d8e4f7ec9c5f242d"
+"tests/test_position_clock_bounds.py::test_bounded_position_perturbation_includes_filter_edges" = "535eb3fa3f6d9c24d75599056c3a52e94b5935651e44904d9c4aa2bbc3c4534f"
+"tests/test_position_clock_bounds.py::test_clock_bounds_refuse_unqualified_scale_and_support_jittered_three_point" = "ecec025c534bc4fe09a2321691069e6cd99dbb4b40403d40c8827607aa3e1f51"
+"tests/test_position_clock_bounds.py::test_clock_bounds_with_native_processing_variants" = "40dfb83a6c2be2aacbefb93d9c6a2fcbf2e75543d9727eb57a4572e9ee2c5d36"
+"tests/test_position_clock_bounds.py::test_unfiltered_boundary_position_and_doppler_bound_is_attained" = "97912c4f3a544ecd914f18eed57aed6a3ddf171c0bf0ad54a1514799c8015947"
