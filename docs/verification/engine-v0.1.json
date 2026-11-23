@@ -1769,13 +1769,11 @@
       ],
       "timing_contact.contact": [
         "B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-698; rated specified)",
-        "C: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused (owner RES-693; rated specified)",
         "G: protocol events are recovered against analytically known event times, with eligibility refusals (owner RES-671; rated partial)",
         "O: limitation statements are sourced and emitted with every result (owner RES-698; rated partial)"
       ],
       "timing_contact.gates": [
         "B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-698; rated specified)",
-        "C: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused (owner RES-693; rated specified)",
         "G: protocol events are recovered against analytically known event times, with eligibility refusals (owner RES-671; rated partial)",
         "J: an independent reference implementation or closed form that shares no code with the engine (owner RES-669; rated partial)",
         "O: limitation statements are sourced and emitted with every result (owner RES-698; rated partial)"
@@ -3744,6 +3742,7 @@
     {
       "analytical_only_dimensions": [
         "A",
+        "C",
         "D",
         "E",
         "F",
@@ -3756,7 +3755,6 @@
       ],
       "blockers": [
         "B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-698; rated specified)",
-        "C: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused (owner RES-693; rated specified)",
         "G: protocol events are recovered against analytically known event times, with eligibility refusals (owner RES-671; rated partial)",
         "O: limitation statements are sourced and emitted with every result (owner RES-698; rated partial)"
       ],
@@ -3806,7 +3804,7 @@
       "ratings": {
         "A": "verified",
         "B": "specified",
-        "C": "specified",
+        "C": "verified",
         "D": "verified",
         "E": "verified",
         "F": "verified",
@@ -3823,6 +3821,9 @@
       "receipts": {
         "A": [
           "RCP-timing_contact-contact-A"
+        ],
+        "C": [
+          "RCP-timing_contact-contact-C"
         ],
         "D": [
           "RCP-timing_contact-contact-D"
@@ -3854,7 +3855,6 @@
       },
       "required_computational": {
         "B": "declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused",
-        "C": "clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused",
         "G": "protocol events are recovered against analytically known event times, with eligibility refusals",
         "O": "limitation statements are sourced and emitted with every result"
       },
@@ -3862,12 +3862,12 @@
       "subfamily": "timing_contact.contact",
       "unverified_m3": [
         "B",
-        "C",
         "G",
         "O"
       ],
       "verified_m3": [
         "A",
+        "C",
         "D",
         "E",
         "F",
@@ -3882,6 +3882,7 @@
     {
       "analytical_only_dimensions": [
         "A",
+        "C",
         "D",
         "E",
         "F",
@@ -3893,7 +3894,6 @@
       ],
       "blockers": [
         "B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-698; rated specified)",
-        "C: clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused (owner RES-693; rated specified)",
         "G: protocol events are recovered against analytically known event times, with eligibility refusals (owner RES-671; rated partial)",
         "J: an independent reference implementation or closed form that shares no code with the engine (owner RES-669; rated partial)",
         "O: limitation statements are sourced and emitted with every result (owner RES-698; rated partial)"
@@ -3944,7 +3944,7 @@
       "ratings": {
         "A": "verified",
         "B": "specified",
-        "C": "specified",
+        "C": "verified",
         "D": "verified",
         "E": "verified",
         "F": "verified",
@@ -3961,6 +3961,9 @@
       "receipts": {
         "A": [
           "RCP-timing_contact-gates-A"
+        ],
+        "C": [
+          "RCP-timing_contact-gates-C"
         ],
         "D": [
           "RCP-timing_contact-gates-D"
@@ -3989,7 +3992,6 @@
       },
       "required_computational": {
         "B": "declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused",
-        "C": "clock, latency and synchronisation models are declared, applied and propagated, and inconsistent timing is refused",
         "G": "protocol events are recovered against analytically known event times, with eligibility refusals",
         "J": "an independent reference implementation or closed form that shares no code with the engine",
         "O": "limitation statements are sourced and emitted with every result"
@@ -3998,13 +4000,13 @@
       "subfamily": "timing_contact.gates",
       "unverified_m3": [
         "B",
-        "C",
         "G",
         "J",
         "O"
       ],
       "verified_m3": [
         "A",
+        "C",
         "D",
         "E",
         "F",

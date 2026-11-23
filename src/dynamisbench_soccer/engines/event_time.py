@@ -10,7 +10,7 @@ from typing import Annotated, Literal
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from dynamisbench_soccer.data.manifest import DataCategory
-from dynamisbench_soccer.signals.schema import BundleKind, DeviceClass, SignalBundle
+from dynamisbench_soccer.signals.schema import Acquisition, BundleKind, DeviceClass, SignalBundle
 
 Positive = Annotated[float, Field(gt=0)]
 Nonnegative = Annotated[float, Field(ge=0)]
@@ -102,6 +102,10 @@ class EventStream:
             raise EventRefusal("analytical truth is a comparator, not instrument events")
         if acquisition is None:
             raise EventRefusal("missing source-native acquisition and clock authority")
+        try:
+            acquisition = Acquisition.model_validate(acquisition.model_dump())
+        except ValueError as exc:
+            raise EventRefusal(f"contradictory synchronization acquisition: {exc}") from exc
         source = next((s for s in acquisition.sources if "t_s" in s.channels), None)
         if source is None or source.device.device_class is not device:
             raise EventRefusal("timestamp source does not match the event device")
@@ -127,6 +131,13 @@ class EventStream:
         if any(b < a for a, b in pairwise(self.times)):
             raise EventRefusal(f"{meta.bundle_id}: out-of-order native timestamps")
         if self.alignment is not None:
+            if self.alignment.reference_clock != self.reference.id or (
+                self.clock.drift_ppm is not None
+                and not math.isclose(
+                    self.clock.drift_ppm, self.alignment.drift_ppm, rel_tol=0, abs_tol=1e-6
+                )
+            ):
+                raise EventRefusal("synchronization alignment conflicts with clock declarations")
             anchors = self.alignment.sync_events
             if (
                 len(anchors) < 2

@@ -1178,9 +1178,11 @@
    "verdict": "SUPPORTED"
   },
   "RCP-timing_contact-contact-C": {
-   "fix": "Add or cite a timing refusal (missing switching definition or clock authority, unresolved latency) and the affine-clock test.",
-   "reason": "Asymmetric switch latency on a quantized shared clock is checked against the truth (abs 0.001), but no cited C test refuses bad timing, and the affine DeviceClock case (in the standing-jumps test) is not cited.",
-   "verdict": "PARTIAL"
+   "bound_digest": "a0f5f61da8886f0565e763c3c29246921d547311603cde62000f803f1fa81c5e",
+   "evidence_head": "036ec7682da2d0ebca67045af8598a2eb0ca6c97",
+   "fix": "",
+   "reason": "GPT-6.2 Astra independently verified absolute affine timing and native refusal of contradictory pulses, declaration and self-mapping; all six focused cases passed.",
+   "verdict": "SUPPORTED"
   },
   "RCP-timing_contact-contact-D": {
    "bound_digest": "ea258d6e1efbe2d914fff0d50d3da4d35d91c99433fad096a02319d97e02f821",
@@ -1212,13 +1214,15 @@
    "verdict": "SUPPORTED"
   },
   "RCP-timing_contact-contact-I": {
-   "bound_digest": "6ba6d4cc2e80465352d03e60c05b9ad2921c0cbbee5aabb4681d85c8833c0f95",
+   "bound_digest": "3685d5035a8f7f61831e6f0ac5a49cab14dced22bed59031697209a2854c4dcd",
    "evidence_head": "ac49f71f51e3d289488d706388e3d1a7da154b3a",
    "fix": "",
    "prior_fix": "Assert the RSI and flight interval bounds equal the closed-form propagation of the declared on and off latency errors.",
    "prior_reason": "Propagated intervals are only checked to bracket the truth (low < rsi < high), and the CLI checks only a mean shift. The interval width is never compared with the analytic propagation of latency_error_s.",
    "prior_verdict": "PARTIAL",
    "reason": "Contact-system flight, stance, flight-time height and height/contact RSI propagate asymmetric declared switch errors as conservative timing intervals. With a 1 ms shared clock and ideal transitions at 0, 0.25 and 0.75 s, stance and flight centers are 0.25 and 0.5 s and their half-widths are 0.0027 and 0.0042 s in the two trials. Height is 9.80665 times squared flight time divided by eight, with nominal 0.3064578125 m. Nominal RSI is 1.22583125 m/s. RSI endpoint pairs are 1.199671564838989/1.2526344245241106 and 1.1854089099655785/1.267810933332994 m/s. Use absolute 1e-12 s and m and 1e-11 m/s with zero relative tolerance for arithmetic roundoff. Refuse unresolved transitions.",
+   "rebind_evidence_head": "036ec7682da2d0ebca67045af8598a2eb0ca6c97",
+   "rebind_reason": "Independent review verified EventStream acquisition authority tightened without changing valid clock arithmetic or scientific claim scope.",
    "verdict": "SUPPORTED"
   },
   "RCP-timing_contact-contact-J": {
@@ -1228,13 +1232,15 @@
    "verdict": "SUPPORTED"
   },
   "RCP-timing_contact-contact-K": {
-   "bound_digest": "66d649f65242dc07df9bda5dc13d7e360a1a93fce7945051a67edd9f74bbe4ba",
+   "bound_digest": "46d54f581d6c46240ca0052e2c0d4e846fabc21827b2b08f0354bec90fb197a0",
    "evidence_head": "86e1b58e86bc800327e3400698c64060a745db66",
    "fix": "",
    "prior_fix": "Run contact() on the DOUBLE_CONTACT, STEP_OFF and LATENCY fixtures and assert the expected refusal or verdict.",
    "prior_reason": "The MISSING, DUPLICATE and OUT_OF_ORDER faults have engine verdicts. test_contact_protocol_double_contact_and_step_off checks only the injected bytes, with no engine verdict, and the LATENCY fault has no verdict.",
    "prior_verdict": "PARTIAL",
    "reason": "Contact switching exercises missing, duplicate, reordered, latency, double-contact and step-off faults under a single-flight CMJ protocol. Clean switching yields one flight. Missing takeoff or touchdown, duplicate/reordered rows, double contact and step-off have explicit engine refusal outcomes. A 1 s delayed takeoff refuses native order. A 20 ms delayed landing refuses a wired alignment whose pulse span ends before the delayed row. With a declared shared clock the same delay yields 0.5706467550080814 s flight and 0.39917689213045504 m height from gT\u00b2/8. Absolute 1e-12 s and m with zero relative tolerance allow arithmetic roundoff.",
+   "rebind_evidence_head": "036ec7682da2d0ebca67045af8598a2eb0ca6c97",
+   "rebind_reason": "Independent review verified EventStream acquisition authority tightened without changing valid clock arithmetic or scientific claim scope.",
    "verdict": "SUPPORTED"
   },
   "RCP-timing_contact-contact-L": {
@@ -1244,15 +1250,15 @@
    "verdict": "SUPPORTED"
   },
   "RCP-timing_contact-contact-M": {
-   "bound_digest": "a29850b9af47615eae9f2e17335f8d2e2e48ab38077b210e71389b67393422e8",
+   "bound_digest": "a2ab78f0075892c81d652aa260078d50a2d7f6750dd2476d6787dbcf0860afb0",
    "evidence_head": "1dca44448b6a43e92a5d5fce90ac6933c471fe68",
    "fix": "",
    "prior_fix": "",
    "prior_reason": "",
    "prior_verdict": "NO_DRAFT",
    "reason": "Successful contact CLI processing binds verified event samples, canonical validated metadata and the exact nominal and sensitivity policy bytes. Exact deterministic replay of two independent observation exports and the complete report. Compare each SHA-256 with a direct file hash on canonical fixtures. A 2 ms event change changes Parquet and metadata hashes and metrics. A metadata-only identifier change changes canonical metadata and retains the Parquet hash. A policy whitespace change changes only the byte-level policy identity. Malformed metadata and tampered Parquet refuse.",
-   "rebind_evidence_head": "178183e2fd2f56fe6a0e31109022bc0a7f817954",
-   "rebind_reason": "Independent review of the explicit GNSS geodetic-frame guard and exporter binding found the prior claim and tolerance preserved.",
+   "rebind_evidence_head": "036ec7682da2d0ebca67045af8598a2eb0ca6c97",
+   "rebind_reason": "Independent review verified EventStream acquisition authority tightened without changing valid clock arithmetic or scientific claim scope.",
    "verdict": "SUPPORTED"
   },
   "RCP-timing_contact-gates-A": {
@@ -1262,9 +1268,11 @@
    "verdict": "SUPPORTED"
   },
   "RCP-timing_contact-gates-C": {
-   "fix": "Record a tolerance of rel 1e-6, or assert engine splits at abs 1e-11. Also cite the affine-clock round-trip splits test.",
-   "reason": "The wireless sync, latency and refusal coverage is good. The 1e-11 tolerance, however, comes from test_clock_synchronization_inverse_and_gate_geometry, which tests only the reference. Engine timing is asserted at pytest.approx's default rel 1e-6, so the tolerance is overstated.",
-   "verdict": "PARTIAL"
+   "bound_digest": "e8c6e0e1998da46f00759c4cc43330a5d1a1d6fbcfc11c7cc19c0db845a58cfa",
+   "evidence_head": "036ec7682da2d0ebca67045af8598a2eb0ca6c97",
+   "fix": "",
+   "reason": "GPT-6.2 Astra independently verified absolute affine timing and native refusal of contradictory pulses, declaration and self-mapping; all six focused cases passed.",
+   "verdict": "SUPPORTED"
   },
   "RCP-timing_contact-gates-D": {
    "bound_digest": "9b0fe4e578ae348a3b4bddc5b06bf2a9b317956959ea0dd1412ccbee1eb1c3ea",
@@ -1273,23 +1281,27 @@
    "verdict": "SUPPORTED"
   },
   "RCP-timing_contact-gates-E": {
-   "bound_digest": "43df7bd3c213bbe26e0dc783fa723210a8b7edfeaecf80b7c7ed83883f7adb47",
+   "bound_digest": "cfeb5274e222bedb00519ba2b7763ed0fd659930773f66983711b4d4457b736e",
    "evidence_head": "1dca44448b6a43e92a5d5fce90ac6933c471fe68",
    "fix": "",
    "prior_fix": "Record the numeric tolerance and add trigger and fixed_offset start variants against the truth time.",
    "prior_reason": "Dual- and multi-beam variants are compared with the spherical_gate_trigger_s reference, but the check is labelled categorical while it uses pytest.approx's default rel 1e-6. The start-mode variants (trigger, fixed_offset) are not compared with the reference in E.",
    "prior_verdict": "PARTIAL",
    "reason": "Gate start definitions, beam voting and refractory handling preserve their independently expected event and speed results. With the 5, 10, 20 and 30 m beam route, first-gate start subtracts the independently known first crossing. Fixed-offset, pressure-pad and sound-cue modes recover absolute elapsed times. All later segment speeds are distance over elapsed time. The 10 m earliest/latest multi-beam events are 2.089668101741136 and 2.0950545483728 s, the discarded early arm occurred at 2.0218908916394556 s, and the added definition error raises the high endpoint by 0.002 s while preserving the nominal estimate. Refractory removal preserves the clean split exactly and competing crossings refuse. Compare with absolute 1e-12 s and 1e-11 m/s, zero relative allowance for arithmetic roundoff.",
+   "rebind_evidence_head": "036ec7682da2d0ebca67045af8598a2eb0ca6c97",
+   "rebind_reason": "Independent review verified EventStream acquisition authority tightened without changing valid clock arithmetic or scientific claim scope.",
    "verdict": "SUPPORTED"
   },
   "RCP-timing_contact-gates-F": {
-   "bound_digest": "fa321fe233dc5271a07cb5b1e9bf44187c03aae9c1c9c262ce424e8e7f24387e",
+   "bound_digest": "5a1be383fb34e2be5b859ff1a8bb8c78b80d043c3f6ae3aeefb8a5d1e1c5daf6",
    "evidence_head": "1dca44448b6a43e92a5d5fce90ac6933c471fe68",
    "fix": "",
    "prior_fix": "Set the tolerance to rel 1e-6, or tighten the engine assertions.",
    "prior_reason": "Splits and segment averages match the truth after an affine clock and a file round-trip, but only at pytest.approx's default rel 1e-6. The recorded 1e-11 comes from the reference self-test test_sprint_model_and_numerical_gate_inverse.",
    "prior_verdict": "PARTIAL",
    "reason": "Canonical single-beam gate events recover strict crossing, cumulative and split times and segment-average speed after a Parquet round trip. Apply 0.32 s clock offset, 812 ppm clock drift and declared 18 ms edge latency in the independent fixture. Spherical beam crossings are 1.357188162923845, 2.089668101741136, 3.3367088662775366 and 4.493856065170741 s. Segment averages are 6.826125515564725, 8.018984049585256 and 8.641942882949435 m/s. Time values use absolute 1e-12 s and speeds 1e-11 m/s, zero relative allowance for arithmetic roundoff. There is no initial segment speed.",
+   "rebind_evidence_head": "036ec7682da2d0ebca67045af8598a2eb0ca6c97",
+   "rebind_reason": "Independent review verified EventStream acquisition authority tightened without changing valid clock arithmetic or scientific claim scope.",
    "verdict": "SUPPORTED"
   },
   "RCP-timing_contact-gates-G": {
@@ -1304,13 +1316,15 @@
    "verdict": "SUPPORTED"
   },
   "RCP-timing_contact-gates-I": {
-   "bound_digest": "81487224a61725a889f8e4d478bbeb3038eeacd841e81752b7a263351cdb2906",
+   "bound_digest": "71d6ae4166e1cdaf5ab7cc36e93017b79fdd9477b16174669d46ded899ee7516",
    "evidence_head": "ac49f71f51e3d289488d706388e3d1a7da154b3a",
    "fix": "",
    "prior_fix": "Assert the split interval half-width equals the root-sum or linear combination of the declared errors.",
    "prior_reason": "Only the fixed-offset shift (+0.2) and one definition_error widening (+0.002) are checked. The width from latency_error_s and sync_latency_error_s propagation is never compared with an analytic value, and the receipt is labelled categorical despite numeric assertions.",
    "prior_verdict": "PARTIAL",
    "reason": "Wireless gate splits and segment-average speeds propagate declared clock, trigger and event-definition error as conservative elapsed-time endpoint intervals. At 800 ppm and 0.5 ms native resolution, each timing radius includes 0.0002502 s from the clock, 1e-12 s alignment uncertainty, 0 or 0.0015 s synchronization error, 0.0007 s trigger error and 0.0002 s definition error. The two endpoint radii sum to 0.002300400002 or 0.005300400002 s. Split centers are 0.7324799388172911, 1.2470407645364006 and 1.1571471988932043 s, for 5, 10 and 10 m. Speed endpoints are distance divided by the opposite time endpoints. Use absolute 1e-12 s and 1e-11 m/s with zero relative allowance for floating-point arithmetic. Refuse unresolved ordering.",
+   "rebind_evidence_head": "036ec7682da2d0ebca67045af8598a2eb0ca6c97",
+   "rebind_reason": "Independent review verified EventStream acquisition authority tightened without changing valid clock arithmetic or scientific claim scope.",
    "verdict": "SUPPORTED"
   },
   "RCP-timing_contact-gates-J": {
@@ -1319,13 +1333,15 @@
    "verdict": "PARTIAL"
   },
   "RCP-timing_contact-gates-K": {
-   "bound_digest": "746b57c98e17ab004e7f09dc2a25a136cb39e6d158fb7d5171563c4a2727c6de",
+   "bound_digest": "bde6c68d9cc74838e86062ff4230c7d99d9e3312013e4be714afc144593bab68",
    "evidence_head": "86e1b58e86bc800327e3400698c64060a745db66",
    "fix": "",
    "prior_fix": "Add a LATENCY fault case to test_adversarial_reference_faults_are_refused, or an expected detection or bias verdict for it.",
    "prior_reason": "The MISSING, DUPLICATE and OUT_OF_ORDER faults have engine verdicts. The declared EventKind.LATENCY ('trigger_latency') fault has no expected gates-engine verdict in any cited test.",
    "prior_verdict": "PARTIAL",
    "reason": "Native gates exercise missing, duplicate, reordered and latency faults. Moderate unlabelled latency changes the neighboring split estimates, while latency that reorders events is refused. Clean controls complete a four-gate route. Missing gate 2, ambiguous duplicate and reordered native rows refuse. A 20 ms late second crossing biases neighboring splits by +0.02, \u22120.02 and 0 s, giving 0.7524799388172911, 1.2270407645364005 and 1.1571471988932043 s. Segment speeds are 6.644695415878781, 8.149688493664831 and 8.641942882949435 m/s. Use absolute 1e-12 s and 1e-11 m/s with zero relative allowance for arithmetic roundoff. A 2 s injected delay refuses native order.",
+   "rebind_evidence_head": "036ec7682da2d0ebca67045af8598a2eb0ca6c97",
+   "rebind_reason": "Independent review verified EventStream acquisition authority tightened without changing valid clock arithmetic or scientific claim scope.",
    "verdict": "SUPPORTED"
   },
   "RCP-timing_contact-gates-L": {
@@ -1335,15 +1351,15 @@
    "verdict": "SUPPORTED"
   },
   "RCP-timing_contact-gates-M": {
-   "bound_digest": "6dae93b0554b9f39becc40f5c251acac745cd9bf7e60faf7b12dae00c271f735",
+   "bound_digest": "2625eef0b384cdb0652ec9f801d46af88480fec8312bbadc80a337a42df4bf44",
    "evidence_head": "1dca44448b6a43e92a5d5fce90ac6933c471fe68",
    "fix": "",
    "prior_fix": "",
    "prior_reason": "",
    "prior_verdict": "NO_DRAFT",
    "reason": "Successful gates CLI processing binds verified event samples, canonical validated metadata and the exact nominal and sensitivity policy bytes. Exact deterministic replay of two independent observation exports and the complete report. Compare each SHA-256 with a direct file hash on canonical fixtures. A 2 ms event change changes Parquet and metadata hashes and metrics. A metadata-only identifier change changes canonical metadata and retains the Parquet hash. A policy whitespace change changes only the byte-level policy identity. Malformed metadata and tampered Parquet refuse.",
-   "rebind_evidence_head": "178183e2fd2f56fe6a0e31109022bc0a7f817954",
-   "rebind_reason": "Independent review of the explicit GNSS geodetic-frame guard and exporter binding found the prior claim and tolerance preserved.",
+   "rebind_evidence_head": "036ec7682da2d0ebca67045af8598a2eb0ca6c97",
+   "rebind_reason": "Independent review verified EventStream acquisition authority tightened without changing valid clock arithmetic or scientific claim scope.",
    "verdict": "SUPPORTED"
   }
  }
