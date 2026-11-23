@@ -20,7 +20,9 @@ def test_event_cli_replays_source_and_refuses_mutation(command, policy, tmp_path
     stem = tmp_path / "observation"
     config = tmp_path / "policy.json"
     config.write_text(policy.model_dump_json())
-    args = ["timing", command, str(stem), "--policy", str(config)]
+    variant = tmp_path / "variant.json"
+    variant.write_text(policy.model_dump_json(indent=2))
+    args = ["timing", command, str(stem), "--policy", str(config), "--sensitivity", str(variant)]
     evidence = []
     for _ in range(2):
         source = export_case(f"timing_contact.{command}").observation
@@ -34,6 +36,11 @@ def test_event_cli_replays_source_and_refuses_mutation(command, policy, tmp_path
         )
         assert report["policy"] == policy.model_dump(mode="json")
         assert report["policy_sha256"] == hashlib.sha256(config.read_bytes()).hexdigest()
+        [sensitivity] = report["sensitivity"]
+        assert sensitivity["policy"] == report["policy"]
+        assert sensitivity["metrics"] == report["metrics"]
+        assert sensitivity["policy_sha256"] == hashlib.sha256(variant.read_bytes()).hexdigest()
+        assert sensitivity["policy_sha256"] != report["policy_sha256"]
         assert (
             report["sources"][0]["validated_metadata_sha256"]
             == hashlib.sha256(sidecar.read_bytes()).hexdigest()
@@ -62,6 +69,26 @@ def test_event_cli_replays_source_and_refuses_mutation(command, policy, tmp_path
     assert new_policy["policy_sha256"] == hashlib.sha256(config.read_bytes()).hexdigest()
     assert new_policy["policy_sha256"] != revised["policy_sha256"]
 
+    changed_meta = source.meta.model_copy(update={"bundle_id": source.meta.bundle_id + "-metadata"})
+    sidecar.write_text(io.meta_json(changed_meta))
+    assert main(args) == 0
+    metadata_only = json.loads(capsys.readouterr().out)["sources"][0]
+    assert metadata_only["data_sha256"] == new_hash
+    assert metadata_only["bundle_id"] == changed_meta.bundle_id
+    assert (
+        metadata_only["validated_metadata_sha256"]
+        == hashlib.sha256(sidecar.read_bytes()).hexdigest()
+    )
+    assert (
+        metadata_only["validated_metadata_sha256"]
+        != revised["sources"][0]["validated_metadata_sha256"]
+    )
+
+    metadata_bytes = sidecar.read_bytes()
+    sidecar.write_text("{")
+    assert main(args) == 1
+    assert not capsys.readouterr().out
+    sidecar.write_bytes(metadata_bytes)
     parquet.write_bytes(parquet.read_bytes() + b"altered")
     assert main(args) == 1
     refusal = capsys.readouterr()
