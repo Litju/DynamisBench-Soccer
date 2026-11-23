@@ -217,6 +217,13 @@
    "reason": "Doppler and positional estimands are kept separate and executed exactly. But no cited test binds the metrics to sourced registry claims, and the docs say GNSS registry claims are absent (RES-694).",
    "verdict": "PARTIAL"
   },
+  "RCP-gnss_lps-gnss-H-native-assessment": {
+   "bound_digest": "0dfecc127e666a8b10f9dbe7d84cbf22e04c9edc991986d4fff6eab1a5cad28c",
+   "evidence_head": "71c78bd40340542645841553e2cad5f9f586c945",
+   "fix": "",
+   "reason": "Independent GPT-6.2 Astra review verified the sourced observation distinction, exact straight and curved estimands, qualified intervals, basis refusal, and source-labelled milestone handoffs. All eight focused tests passed.",
+   "verdict": "SUPPORTED"
+  },
   "RCP-gnss_lps-gnss-I": {
    "fix": "Propagate a GNSS position \u03c3 to speed and acceleration and compare with the closed-form variance.",
    "reason": "Both cited tests are LPS-only. They check sensitivity inequalities or absence and make no analytical uncertainty comparison.",
@@ -331,6 +338,13 @@
    "evidence_head": "cf78f6aae0c47b12547ee6757e50b6d59193a2c2",
    "fix": "",
    "reason": "Independent GPT-6.2 Astra review verified the native unfiltered fixed-grid interior horizontal norm and exclusion of vertical motion. DEV-005 supports the source distinction only.",
+   "verdict": "SUPPORTED"
+  },
+  "RCP-gnss_lps-lps-H-native-assessment": {
+   "bound_digest": "012ef9045a37c0be261301c5001dd5ccc45be9e228089157422b742fcd692a0a",
+   "evidence_head": "71c78bd40340542645841553e2cad5f9f586c945",
+   "fix": "",
+   "reason": "Independent GPT-6.2 Astra review verified the sourced observation distinction, exact straight and curved estimands, qualified intervals, basis refusal, and source-labelled milestone handoffs. All eight focused tests passed.",
    "verdict": "SUPPORTED"
   },
   "RCP-gnss_lps-lps-I": {

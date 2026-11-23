@@ -1674,11 +1674,9 @@
       "gnss_lps.gnss": [
         "B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-700; rated specified)",
         "E: every processing method variant is compared with an independent reference with stated sensitivity bounds (owner RES-700; rated partial)",
-        "H: metric definitions are bound to sourced registry claims and executable exactly (owner RES-673; rated partial)",
         "I: declared uncertainty propagation is checked against an independent analytical result (owner RES-700; rated partial)"
       ],
       "gnss_lps.lps": [
-        "H: metric definitions are bound to sourced registry claims and executable exactly (owner RES-673; rated partial)",
         "I: declared uncertainty propagation is checked against an independent analytical result (owner RES-700; rated partial)"
       ],
       "imu.inertial": [
@@ -2311,6 +2309,7 @@
         "D",
         "F",
         "G",
+        "H",
         "J",
         "K",
         "L",
@@ -2320,7 +2319,6 @@
       "blockers": [
         "B: declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused (owner RES-700; rated specified)",
         "E: every processing method variant is compared with an independent reference with stated sensitivity bounds (owner RES-700; rated partial)",
-        "H: metric definitions are bound to sourced registry claims and executable exactly (owner RES-673; rated partial)",
         "I: declared uncertainty propagation is checked against an independent analytical result (owner RES-700; rated partial)"
       ],
       "empirical_dimensions_covered": [],
@@ -2374,7 +2372,7 @@
         "E": "partial",
         "F": "verified",
         "G": "verified",
-        "H": "partial",
+        "H": "verified",
         "I": "partial",
         "J": "verified",
         "K": "verified",
@@ -2399,6 +2397,9 @@
         "G": [
           "RCP-gnss_lps-gnss-G"
         ],
+        "H": [
+          "RCP-gnss_lps-gnss-H-native-assessment"
+        ],
         "J": [
           "RCP-gnss_lps-gnss-J"
         ],
@@ -2418,7 +2419,6 @@
       "required_computational": {
         "B": "declared calibration and geometry records are typed, applied by processing, and missing or contradictory records are refused",
         "E": "every processing method variant is compared with an independent reference with stated sensitivity bounds",
-        "H": "metric definitions are bound to sourced registry claims and executable exactly",
         "I": "declared uncertainty propagation is checked against an independent analytical result"
       },
       "state": "SPECIFIED",
@@ -2426,7 +2426,6 @@
       "unverified_m3": [
         "B",
         "E",
-        "H",
         "I"
       ],
       "verified_m3": [
@@ -2435,6 +2434,7 @@
         "D",
         "F",
         "G",
+        "H",
         "J",
         "K",
         "L",
@@ -2451,6 +2451,7 @@
         "E",
         "F",
         "G",
+        "H",
         "J",
         "K",
         "L",
@@ -2458,7 +2459,6 @@
         "O"
       ],
       "blockers": [
-        "H: metric definitions are bound to sourced registry claims and executable exactly (owner RES-673; rated partial)",
         "I: declared uncertainty propagation is checked against an independent analytical result (owner RES-700; rated partial)"
       ],
       "empirical_dimensions_covered": [],
@@ -2512,7 +2512,7 @@
         "E": "verified",
         "F": "verified",
         "G": "verified",
-        "H": "partial",
+        "H": "verified",
         "I": "partial",
         "J": "verified",
         "K": "verified",
@@ -2544,7 +2544,8 @@
           "RCP-gnss_lps-lps-G"
         ],
         "H": [
-          "RCP-gnss_lps-lps-H"
+          "RCP-gnss_lps-lps-H",
+          "RCP-gnss_lps-lps-H-native-assessment"
         ],
         "I": [
           "RCP-gnss_lps-lps-I"
@@ -2566,13 +2567,11 @@
         ]
       },
       "required_computational": {
-        "H": "metric definitions are bound to sourced registry claims and executable exactly",
         "I": "declared uncertainty propagation is checked against an independent analytical result"
       },
       "state": "SPECIFIED",
       "subfamily": "gnss_lps.lps",
       "unverified_m3": [
-        "H",
         "I"
       ],
       "verified_m3": [
@@ -2583,6 +2582,7 @@
         "E",
         "F",
         "G",
+        "H",
         "J",
         "K",
         "L",

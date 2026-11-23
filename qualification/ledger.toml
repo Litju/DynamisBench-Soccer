@@ -153,7 +153,7 @@ paradigm = "position_track"
 issue = "RES-700"
 engine_id = "gnss"
 methods = ["resample", "smooth"]
-ratings = { A = "verified", B = "specified", C = "verified", D = "verified", E = "partial", F = "verified", G = "verified", H = "partial", I = "partial", J = "verified", K = "verified", L = "verified", M = "verified", N = "absent", O = "verified" }
+ratings = { A = "verified", B = "specified", C = "verified", D = "verified", E = "partial", F = "verified", G = "verified", H = "verified", I = "partial", J = "verified", K = "verified", L = "verified", M = "verified", N = "absent", O = "verified" }
 empirical_gaps = ["Engine verified on analytical tracks (RES-700); audited native GNSS data and empirical latency, HDOP and multipath evidence remain open (RES-694)", "Positional versus Doppler/radar agreement is analytical only (RES-703)"]
 blockers = []
 
@@ -165,7 +165,7 @@ paradigm = "position_track"
 issue = "RES-700"
 engine_id = "lps"
 methods = ["resample", "smooth"]
-ratings = { A = "verified", B = "verified", C = "verified", D = "verified", E = "verified", F = "verified", G = "verified", H = "partial", I = "partial", J = "verified", K = "verified", L = "verified", M = "verified", N = "absent", O = "verified" }
+ratings = { A = "verified", B = "verified", C = "verified", D = "verified", E = "verified", F = "verified", G = "verified", H = "verified", I = "partial", J = "verified", K = "verified", L = "verified", M = "verified", N = "absent", O = "verified" }
 empirical_gaps = ["Engine verified on analytical tracks (RES-700); audited native LPS data, anchor survey and latency evidence remain open (RES-694)", "Positional versus radar agreement is analytical only (RES-703)"]
 blockers = []
 
@@ -4787,3 +4787,19 @@ kind = "independent_test"
 issue = "RES-703"
 ref = "repo:tests/test_lps_agreement.py"
 rationale = "Independently reviewed native synthetic LPS and radar projection agree on matched constant planar motion. Radial-only speed is a distinct estimand and invalid input is refused."
+
+[[evidence]]
+subfamily = "gnss_lps.gnss"
+dimension = "H"
+kind = "independent_test"
+issue = "RES-673"
+ref = "repo:tests/test_position_estimands_policy_a.py"
+rationale = "Independent straight and curved analytical controls verify sourced native position and speed definitions and the source-labelled assessment handoff."
+
+[[evidence]]
+subfamily = "gnss_lps.lps"
+dimension = "H"
+kind = "independent_test"
+issue = "RES-673"
+ref = "repo:tests/test_position_estimands_policy_a.py"
+rationale = "Independent straight and curved analytical controls verify sourced native position and speed definitions and the source-labelled assessment handoff."

@@ -2444,3 +2444,51 @@ issue = "RES-703"
 "tests/test_lps_agreement.py::test_matched_lps_radar_control" = "3d1d18f33b286b9f7596697105cfd7e7c3762e59cf9935aad127fe65327d91bc"
 "tests/test_lps_agreement.py::test_radial_component_is_a_mismatch_and_faults_refuse" = "b95089e15ca04e124248e4bb5eb9c1e9c74f26c307ef4f1419d6b920992e3a86"
 "tests/test_lps_agreement.py::test_unmatched_speed_cannot_report_agreement" = "37ca4723be08f6e07f96126874d7a80a428a20a1446c1a82c9d00d2c158053d2"
+
+[[receipt]]
+id = "RCP-gnss_lps-lps-H-native-assessment"
+dimension = "H"
+subfamilies = ["gnss_lps.lps"]
+implementation = ["src/dynamisbench_soccer/engines/gnss_lps.py::process", "src/dynamisbench_soccer/assessment/handoff.py::load_speed_report", "src/dynamisbench_soccer/assessment/sprint.py::milestones"]
+reference = ["tests/test_position_estimands_policy_a.py::_planar_metrics", "tests/test_position_estimands_policy_a.py::_circle_stencil_gain"]
+tests = ["tests/test_position_estimands_policy_a.py::test_native_metric_definitions_and_assessment_handoff", "tests/test_position_estimands_policy_a.py::test_turn_acceleration_and_chord_are_distinct_from_speed_change"]
+reference_kind = "closed_form"
+independence = "A prescribed quadratic planar trajectory has exact speed 5+t, acceleration 1, path 5t+t²/2 and an independently invertible integrated milestone. GNSS fixes use independent inverse geodetic conversion; tagged Doppler follows a different analytic line."
+claim = "Native LPS positional speed, acceleration, chord distance and threshold-qualified distance have explicit units and whole-interval semantics. Source-labelled assessment preserves the positional trace and separates it from any Doppler estimand under DEV-005."
+tolerance_basis = "Absolute bounds on horizontal speed and path are 1e-7 m/s and m, acceleration 1e-5 m/s², and milestone 1e-7 s, with zero relative tolerance for array checks. Whole-interval selection and source or basis refusals are categorical."
+tolerance = 1e-5
+tolerance_unit = "m/s² (absolute); quantity-specific bounds in cited tests"
+issue = "RES-673"
+
+[receipt.digests]
+"src/dynamisbench_soccer/assessment/handoff.py::load_speed_report" = "49e0d26ed0eeca0f0a94dda0821c7581e59cbfc2903ddd42945b3bfac879d1ef"
+"src/dynamisbench_soccer/assessment/sprint.py::milestones" = "13d728b0eb0ea039b61834bac4b1054cf6df96ebcc3e2079655eb0a185d3fb84"
+"src/dynamisbench_soccer/engines/gnss_lps.py::process" = "47dad0be73c8de9a93699c8954df13d3b313b97a249e7ff27f8bfae4ee58edf9"
+"tests/test_position_estimands_policy_a.py::_circle_stencil_gain" = "823e7e8552059c7c4b7c96a3923ef9afdca2a0f974fa11449a2baaa2038c3ef3"
+"tests/test_position_estimands_policy_a.py::_planar_metrics" = "f89cdd84be758f304f70084775ec4383fe25b16dba0e91f88f79017956aec5f6"
+"tests/test_position_estimands_policy_a.py::test_native_metric_definitions_and_assessment_handoff" = "68c434c804488dced2a75f5525fedcfd4f8ef027e75da37289213a40fae247eb"
+"tests/test_position_estimands_policy_a.py::test_turn_acceleration_and_chord_are_distinct_from_speed_change" = "797919301cbf7f606a51b002e79b44d0c728c6eb77245b9eefc58b55f459cfc1"
+
+[[receipt]]
+id = "RCP-gnss_lps-gnss-H-native-assessment"
+dimension = "H"
+subfamilies = ["gnss_lps.gnss"]
+implementation = ["src/dynamisbench_soccer/engines/gnss_lps.py::process", "src/dynamisbench_soccer/assessment/handoff.py::load_speed_report", "src/dynamisbench_soccer/assessment/sprint.py::milestones"]
+reference = ["tests/test_position_estimands_policy_a.py::_planar_metrics", "tests/test_position_estimands_policy_a.py::_circle_stencil_gain"]
+tests = ["tests/test_position_estimands_policy_a.py::test_native_metric_definitions_and_assessment_handoff", "tests/test_position_estimands_policy_a.py::test_turn_acceleration_and_chord_are_distinct_from_speed_change"]
+reference_kind = "closed_form"
+independence = "A prescribed quadratic planar trajectory has exact speed 5+t, acceleration 1, path 5t+t²/2 and an independently invertible integrated milestone. GNSS fixes use independent inverse geodetic conversion; tagged Doppler follows a different analytic line."
+claim = "Native GNSS positional speed, acceleration, chord distance and threshold-qualified distance have explicit units and whole-interval semantics. Source-labelled assessment preserves the positional trace and separates it from any Doppler estimand under DEV-005."
+tolerance_basis = "Absolute bounds on horizontal speed and path are 1e-7 m/s and m, acceleration 1e-5 m/s², and milestone 1e-7 s, with zero relative tolerance for array checks. Whole-interval selection and source or basis refusals are categorical."
+tolerance = 1e-5
+tolerance_unit = "m/s² (absolute); quantity-specific bounds in cited tests"
+issue = "RES-673"
+
+[receipt.digests]
+"src/dynamisbench_soccer/assessment/handoff.py::load_speed_report" = "49e0d26ed0eeca0f0a94dda0821c7581e59cbfc2903ddd42945b3bfac879d1ef"
+"src/dynamisbench_soccer/assessment/sprint.py::milestones" = "13d728b0eb0ea039b61834bac4b1054cf6df96ebcc3e2079655eb0a185d3fb84"
+"src/dynamisbench_soccer/engines/gnss_lps.py::process" = "47dad0be73c8de9a93699c8954df13d3b313b97a249e7ff27f8bfae4ee58edf9"
+"tests/test_position_estimands_policy_a.py::_circle_stencil_gain" = "823e7e8552059c7c4b7c96a3923ef9afdca2a0f974fa11449a2baaa2038c3ef3"
+"tests/test_position_estimands_policy_a.py::_planar_metrics" = "f89cdd84be758f304f70084775ec4383fe25b16dba0e91f88f79017956aec5f6"
+"tests/test_position_estimands_policy_a.py::test_native_metric_definitions_and_assessment_handoff" = "68c434c804488dced2a75f5525fedcfd4f8ef027e75da37289213a40fae247eb"
+"tests/test_position_estimands_policy_a.py::test_turn_acceleration_and_chord_are_distinct_from_speed_change" = "797919301cbf7f606a51b002e79b44d0c728c6eb77245b9eefc58b55f459cfc1"
