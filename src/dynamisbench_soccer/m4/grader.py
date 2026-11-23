@@ -15,13 +15,14 @@ from dynamisbench_soccer.engines.gnss_lps_acquisition import (
     AcquisitionRefusal,
 )
 from dynamisbench_soccer.engines.lps_speed import horizontal_speed, position_error_radius
-from dynamisbench_soccer.m4.admission import evaluate
+from dynamisbench_soccer.m4 import measurement
+from dynamisbench_soccer.m4.admission import ReviewedSlice, evaluate
 from dynamisbench_soccer.m4.contracts import _unique_object
 from dynamisbench_soccer.m4.custody import load_private
 from dynamisbench_soccer.m4.task_registry import Name, Nonnegative, RegistryTask, Schema, Text
 from dynamisbench_soccer.signals.schema import BundleMeta, SignalBundle
 
-Reason = Literal["eligible", "not_eligible", "insufficient_evidence", "unsupported_claim"]
+Reason = measurement.Reason
 
 
 class Quantity(Schema):
@@ -38,12 +39,10 @@ class Operand(Schema):
     value: float
 
 
-class Submission(Schema):
-    version: Literal["m4.formal-answer.v1"]
+class ScientificResponse(Schema):
     decision: Literal["compute", "refuse"]
     method: Name
     reason: Reason
-    explanation: Text
     selected_trials: tuple[Name, ...]
     citations: tuple[Text, ...]
     claims: tuple[Name, ...]
@@ -52,7 +51,7 @@ class Submission(Schema):
     corrects: Name | None = None
 
     @model_validator(mode="after")
-    def decision_matches(self) -> Submission:
+    def decision_matches(self) -> ScientificResponse:
         if (self.decision == "compute") != (self.reason == "eligible"):
             raise ValueError("decision conflicts with eligibility")
         if self.decision == "refuse" and (self.quantity is not None or self.operands):
@@ -60,6 +59,15 @@ class Submission(Schema):
         if self.decision == "compute" and (self.quantity is None or not self.operands):
             raise ValueError("a computation requires a quantity and evidence trail")
         return self
+
+
+class Submission(ScientificResponse):
+    version: Literal["m4.formal-answer.v1"]
+    explanation: Text
+
+
+class MeasurementSubmission(ScientificResponse):
+    version: Literal["m5.measurement-answer.v1"]
 
 
 class ExpectedMethod(Schema):
@@ -96,15 +104,19 @@ class Outcome(Schema):
     findings: tuple[str, ...] = ()
 
 
-def parse_submission(raw: bytes) -> Submission:
+def _check_submission_json(raw: bytes) -> None:
     if len(raw) > 16 * 1024:
         raise ValueError("submission exceeds the size limit")
     json.loads(raw, object_pairs_hook=_unique_object)
+
+
+def parse_submission(raw: bytes) -> Submission:
+    _check_submission_json(raw)
     return Submission.model_validate_json(raw)
 
 
 def _compare(
-    submission: Submission,
+    submission: ScientificResponse,
     expected: ExpectedMethod,
     absolute_tolerance: float,
 ) -> tuple[str, ...]:
@@ -234,6 +246,72 @@ def _replay_lps(
     )
 
 
+def _measurement_binding(task: RegistryTask, review: ReviewedSlice) -> bool:
+    method = task.methods[0]
+    procedure = measurement.PROCEDURES.get(method.id)
+    return (
+        task.grader == measurement.GRADER
+        and task.task.answer_schema == measurement.ANSWER_VERSION
+        and len(task.methods) == 1
+        and procedure is not None
+        and review.source == procedure.source
+        and review.kind == procedure.kind
+        and method.specification == {"operation": method.id}
+        and (method.estimand, method.dimension, method.unit)
+        == (procedure.estimand, procedure.dimension, procedure.unit)
+        and method.source_claims == procedure.claims
+        and all(
+            f"src/dynamisbench_soccer/engines/{dependency}" in review.implementations
+            for dependency in procedure.dependencies
+        )
+    )
+
+
+def _replay_measurement(
+    expected: ExpectedMethod, task: RegistryTask, payload: bytes, artifacts: tuple[str, ...]
+) -> bool:
+    if len(artifacts) != 1:
+        return False
+    artifact = artifacts[0]
+    method = task.methods[0]
+    reading = measurement.replay(method.id, json.loads(json.loads(payload)["inputs"][artifact]))
+    computed = reading.reason == "eligible"
+    if computed and (reading.value is None or reading.radius is None):
+        return False
+    quantity = (
+        Quantity(
+            value=reading.value,
+            unit=method.unit,
+            dimension=method.dimension,
+            estimand=method.estimand,
+            uncertainty=reading.radius,
+        )
+        if reading.value is not None
+        else None
+    )
+    evidence = MeasurementSubmission(
+        version="m5.measurement-answer.v1",
+        decision="compute" if computed else "refuse",
+        method=method.id,
+        reason=reading.reason,
+        selected_trials=(artifact,) if computed else (),
+        claims=reading.claims,
+        citations=method.source_claims,
+        quantity=quantity,
+        operands=tuple(
+            Operand(artifact=artifact, field=field, value=value)
+            for field, value in reading.operands
+        ),
+        corrects=expected.corrects,
+    )
+    return (
+        expected.reasons == (reading.reason,)
+        and set(expected.allowed_claims) == set(expected.required_claims) == set(reading.claims)
+        and expected.allowed_citations == expected.required_citations == method.source_claims
+        and not _compare(evidence, expected, method.absolute_tolerance)
+    )
+
+
 def score_checkpoint(
     root: Path,
     task: RegistryTask,
@@ -250,18 +328,20 @@ def score_checkpoint(
     if admission.status != "ENGINEERING_ADMITTED" or review is None:
         return Outcome(outcome="EXCLUDED_FROM_SCORED_BENCHMARK", findings=admission.reasons)
     lps = task.engine == "native-lps-speed.v1"
-    if (
-        task.grader != "formal.v1"
-        or task.engine not in {"native-lps-speed.v1", "elapsed-subtraction.v1"}
-        or (
-            lps
-            and (
-                review.source != "gnss_lps.lps"
-                or review.kind != "native_signal"
-                or not set(review.implementations) >= LPS_IMPLEMENTATIONS
+    is_measurement = task.engine == measurement.ENGINE
+    legacy = (
+        task.grader == "formal.v1"
+        and task.engine in {"native-lps-speed.v1", "elapsed-subtraction.v1"}
+        and (
+            not lps
+            or (
+                review.source == "gnss_lps.lps"
+                and review.kind == "native_signal"
+                and set(review.implementations) >= LPS_IMPLEMENTATIONS
             )
         )
-    ):
+    )
+    if not (legacy or (is_measurement and _measurement_binding(task, review))):
         return Outcome(
             outcome="EXCLUDED_FROM_SCORED_BENCHMARK", findings=("unsupported_runtime_binding",)
         )
@@ -282,28 +362,35 @@ def score_checkpoint(
         for name, method in methods.items():
             expected = references[name]
             target = expected.quantity
-            if (
-                expected.corrects != checkpoint.corrects
-                or method.specification
-                != (LPS_SPEC if lps else {"operation": "finish_minus_start"})
-                or (
-                    target is not None
-                    and (target.unit, target.dimension, target.estimand)
-                    != (method.unit, method.dimension, method.estimand)
-                )
-                or not (
-                    _replay_lps(expected, public, checkpoint.artifacts, method.absolute_tolerance)
-                    if lps
-                    else _replay(expected, public, method.absolute_tolerance)
-                )
+            if expected.corrects != checkpoint.corrects or (
+                target is not None
+                and (target.unit, target.dimension, target.estimand)
+                != (method.unit, method.dimension, method.estimand)
             ):
+                raise ValueError("inconsistent private target")
+            if is_measurement:
+                replay_matches = _replay_measurement(expected, task, public, checkpoint.artifacts)
+            elif lps:
+                replay_matches = method.specification == LPS_SPEC and _replay_lps(
+                    expected, public, checkpoint.artifacts, method.absolute_tolerance
+                )
+            else:
+                replay_matches = method.specification == {
+                    "operation": "finish_minus_start"
+                } and _replay(expected, public, method.absolute_tolerance)
+            if not replay_matches:
                 raise ValueError("unsupported or inconsistent replay")
     except (OSError, ValueError, KeyError, TypeError, OverflowError, RecursionError):
         return Outcome(
             outcome="EXCLUDED_FROM_SCORED_BENCHMARK", findings=("invalid_private_reference",)
         )
     try:
-        candidate = parse_submission(raw)
+        candidate: ScientificResponse
+        if is_measurement:
+            _check_submission_json(raw)
+            candidate = MeasurementSubmission.model_validate_json(raw)
+        else:
+            candidate = parse_submission(raw)
     except (ValidationError, ValueError, RecursionError):
         return Outcome(outcome="FAIL", findings=("invalid_submission",))
     if candidate.method not in references:

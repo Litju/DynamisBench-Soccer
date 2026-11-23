@@ -89,6 +89,12 @@ jobs:
           "$wheel_bin/python" -m pytest \
             "$GITHUB_WORKSPACE/tests/test_m4_grader.py" \
             "$GITHUB_WORKSPACE/tests/test_m4_execution.py" "$GITHUB_WORKSPACE/tests/test_m4_trials.py"
+      - name: RES-704 M5 task projection and scientific replay from the installed wheel
+        run: |
+          wheel_bin="$RUNNER_TEMP/wheel-venv/bin"
+          cd "$RUNNER_TEMP"
+          "$wheel_bin/python" -I -c 'import sys; from pathlib import Path; from dynamisbench_soccer.m4 import measurement; assert Path(measurement.__file__).is_relative_to(sys.prefix)'
+          "$wheel_bin/python" -m pytest "$GITHUB_WORKSPACE/tests/test_m5_measurement.py"
       - name: RES-737 offline development-only installed-wheel smoke
         run: |
           wheel_bin="$RUNNER_TEMP/wheel-venv/bin"
