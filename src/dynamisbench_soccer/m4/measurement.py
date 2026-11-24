@@ -11,6 +11,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 from dynamisbench_soccer.agreement.paired_speed import PairedInput, compare
 from dynamisbench_soccer.data.manifest import DataCategory
+from dynamisbench_soccer.engines import imu
 from dynamisbench_soccer.engines.contact import ContactPolicy, contact
 from dynamisbench_soccer.engines.event_time import Estimate, EventRefusal
 from dynamisbench_soccer.engines.gnss_lps import ProcessingOptions, process
@@ -23,8 +24,9 @@ from dynamisbench_soccer.engines.load_cell import process as process_load_cell
 from dynamisbench_soccer.engines.load_cell_acquisition import CellSpec, acquire, check_saturation
 from dynamisbench_soccer.engines.position_clock_bounds import input_error_radii
 from dynamisbench_soccer.engines.timing_gates import GatePolicy, sprint
-from dynamisbench_soccer.m4.admission import CELL_TASK, Kind
-from dynamisbench_soccer.m4.task_registry import RegistryTask
+from dynamisbench_soccer.m4.admission import CELL_TASK, IMU_TASK, Kind
+from dynamisbench_soccer.m4.key_store import digest
+from dynamisbench_soccer.m4.task_registry import Method, RegistryTask
 from dynamisbench_soccer.qc.spec import Status
 from dynamisbench_soccer.signals.schema import (
     BundleMeta,
@@ -40,6 +42,9 @@ Reason = Literal["eligible", "not_eligible", "insufficient_evidence", "unsupport
 ENGINE = "m5-measurement.v1"
 GRADER = "measurement.v1"
 ANSWER_VERSION = "m5.measurement-answer.v1"
+IMU_POSITION = "fixed-attitude-sensor-position"
+IMU_SIGNATURE = "specific-force-signature-flight"
+IMU_OPERATIONS = (IMU_POSITION, IMU_SIGNATURE)
 CELL_OPERATION = "unfiltered-net-peak-torque"
 CELL_SPECIFICATION = {
     "operation": "unfiltered_net_peak_force_times_perpendicular_moment_arm",
@@ -106,6 +111,24 @@ PROCEDURES = {
         "m/s",
         ("DEV-005", "DEV-008", "ST-004"),
         ("agreement/paired_speed.py::compare", "engines/gnss_lps.py::process"),
+    ),
+    IMU_POSITION: Procedure(
+        "imu.inertial",
+        "protocol_assessment",
+        "field_x_instrument_point_position",
+        "length",
+        "m",
+        ("DEV-002",),
+        ("engines/imu.py::process", "m4/measurement.py::_imu_position"),
+    ),
+    IMU_SIGNATURE: Procedure(
+        "imu.inertial",
+        "protocol_assessment",
+        "sensor_threshold_signature_duration",
+        "time",
+        "s",
+        ("DEV-002",),
+        ("engines/imu.py::process", "m4/measurement.py::_imu_signature"),
     ),
     CELL_OPERATION: Procedure(
         "load_cell_isometric.load_cell",
@@ -507,15 +530,244 @@ def _load_cell(data: dict[str, object]) -> Reading:
     )
 
 
+def _imu_position(spec: imu.ImuSpec, native: imu.Processed, request: str) -> Reading:
+    if request == "com_position":
+        return Reading("unsupported_claim", ("instrument_point_not_com",))
+    if spec.initial_orientation is None:
+        return Reading(
+            "insufficient_evidence", ("initial_attitude_unestablished", "gravity_norm_not_static")
+        )
+    if spec.initial_velocity_m_s is None:
+        return Reading("insufficient_evidence", ("initial_velocity_unestablished",))
+    if spec.initial_position_m is None:
+        return Reading("insufficient_evidence", ("initial_position_unestablished",))
+
+    gyro = float(np.linalg.norm(native.angular_velocity_rad_s, axis=1).max())
+    acceleration = native.free_acceleration_m_s2
+    if (
+        gyro > 1e-12
+        or acceleration is None
+        or not np.allclose(acceleration, acceleration[0], atol=1e-12, rtol=0)
+    ):
+        return Reading("not_eligible", ("fixed_attitude_model_unavailable",))
+    position, velocity = native.position_m, native.velocity_m_s
+    radius = native.uncertainty["position_error_bound_m"]
+    if position is None or velocity is None or not isinstance(radius, float):
+        raise ValueError("declared integration did not produce instrument-point position")
+    ax, ay, az = map(float, acceleration[0])
+    return Reading(
+        "eligible",
+        ("fixed_attitude", "calibrated_specific_force", "gravity_removed", "instrument_point_only"),
+        float(position[-1, 0]),
+        radius,
+        (
+            ("free_ax_m_s2", ax),
+            ("free_ay_m_s2", ay),
+            ("free_az_m_s2", az),
+            ("terminal_vx_m_s", float(velocity[-1, 0])),
+            ("elapsed_s", float(native.time_s[-1] - native.time_s[0])),
+            ("peak_corrected_gyro_rad_s", gyro),
+        ),
+    )
+
+
+def _imu_signature(native: imu.Processed, threshold: float) -> Reading:
+    low = np.flatnonzero(np.linalg.norm(native.specific_force_m_s2, axis=1) < threshold)
+    time = native.time_s
+    if (
+        len(native.flights) != 1
+        or not len(low)
+        or low[0] == 0
+        or low[-1] == len(time) - 1
+        or np.any(np.diff(low) != 1)
+    ):
+        return Reading("not_eligible", ("incomplete_signature",))
+    (event,) = native.flights
+    start, end = int(low[0]), int(low[-1])
+    if (event.takeoff_s, event.landing_s) != (time[start - 1], time[end + 1]):
+        raise ValueError("native signature disagrees with its complete edge brackets")
+    return Reading(
+        "eligible",
+        (
+            "calibrated_specific_force",
+            "bracketed_threshold_signature",
+            "force_platform_events_unestablished",
+            "whole_body_flight_unestablished",
+        ),
+        event.duration_s,
+        float(time[start] - time[start - 1] + time[end + 1] - time[end]),
+        (
+            ("takeoff_edge_s", event.takeoff_s),
+            ("landing_edge_s", event.landing_s),
+            ("threshold_m_s2", threshold),
+        ),
+    )
+
+
+def _imu(operation: str, data: dict[str, object]) -> Reading:
+    signature = operation == IMU_SIGNATURE
+    request = data["request"]
+    if request not in (
+        ("signature_flight_time",) if signature else ("field_x_position", "com_position")
+    ):
+        raise ValueError("IMU artifact request disagrees with checkpoint method")
+
+    meta = BundleMeta.model_validate(data["meta"])
+    acquisition, sampling = meta.acquisition, meta.sampling
+    if (
+        meta.data_category is not DataCategory.SYNTHETIC
+        or meta.device.device_class is not DeviceClass.IMU
+        or acquisition is None
+        or len(acquisition.sources) != 1
+        or sampling is None
+    ):
+        raise ValueError("reference requires one native synthetic IMU")
+    (source,) = acquisition.sources
+    raw = data["channels"]
+    axes = {
+        f"{quantity}_{axis}": axis
+        for quantity in ("specific_force", "angular_velocity")
+        for axis in "xyz"
+    }
+    names = {"time", *axes}
+    if (
+        source.device.device_class is not DeviceClass.IMU
+        or source.raw_format != "generated native sample values for independent RES-704 control"
+        or not isinstance(raw, dict)
+        or raw.keys() != names
+        or {channel.name for channel in meta.channels} != names
+        or meta.channel("time").quantity is not Quantity.TIME
+        or any(
+            meta.channel(name).axis != axis or meta.channel(name).frame != "sensor"
+            for name, axis in axes.items()
+        )
+    ):
+        raise ValueError("reference requires native timestamps and canonical sensor axes")
+    if {source.source_sha256, meta.provenance.source_sha256} != {
+        digest((json.dumps(raw, indent=2, sort_keys=True, allow_nan=False) + "\n").encode())
+    }:
+        raise ValueError("IMU source channels disagree with provenance digests")
+    bundle = SignalBundle(
+        meta,
+        {
+            channel.name: np.asarray(raw[channel.name], dtype=np.float64)
+            for channel in meta.channels
+        },
+    )
+    if (
+        sampling.nominal_hz != 20
+        or sampling.measured_hz != 20
+        or sampling.irregular
+        or len(acquisition.clocks) != 2
+        or len(acquisition.alignments) != 1
+    ):
+        return Reading("not_eligible", ("native_clock_gap",))
+    (alignment,) = acquisition.alignments
+    if (
+        alignment.clock != source.clock
+        or alignment.offset_s != 0
+        or alignment.drift_ppm != 0
+        or alignment.uncertainty_s > 1e-12
+        or len(alignment.sync_events) != 2
+        or any(left != right for left, right in alignment.sync_events)
+        or not alignment.sync_events[0][0]
+        <= bundle["time"][0]
+        <= bundle["time"][-1]
+        <= alignment.sync_events[-1][0]
+        or alignment.sync_events[0][0] >= alignment.sync_events[-1][0]
+    ):
+        return Reading("not_eligible", ("native_clock_gap",))
+
+    try:
+        spec = imu.ImuSpec.model_validate(data["spec"])
+    except ValueError:
+        return Reading("not_eligible", ("invalid_calibration",))
+    if (
+        not spec.calibration_declared
+        or spec.accel_range_m_s2 is None
+        or spec.gyro_range_rad_s is None
+        or not {"accel_scale", "accel_bias_m_s2", "accel_misalignment", "gyro_bias_rad_s"}
+        <= spec.model_fields_set
+        or len(source.calibration) != 1
+        or (not signature and data["gravity_m_s2"] != imu.GRAVITY_M_S2)
+    ):
+        return Reading("not_eligible", ("invalid_calibration",))
+    if (
+        spec.placement != "rigid tag on moving platform"
+        or spec.placement != source.geometry.sensor_placement
+        or spec.placement != meta.geometry.sensor_placement
+        or spec.mounting_rotation is not None
+        or spec.sensor_offset_m is not None
+        or {frame.id: (frame.kind, frame.parent) for frame in acquisition.frames}
+        != {"field": ("field", None), "sensor": ("sensor", "field")}
+        or any(frame.rotation_to_parent is not None for frame in acquisition.frames)
+        or spec.static_window_s is not None
+    ):
+        return Reading("not_eligible", ("mounting_or_frame_unestablished",))
+
+    if spec.sync_uncertainty_s > 1e-12 or not np.allclose(
+        bundle["time"], sampling.t0_s + np.arange(meta.n_rows) / 20, atol=1e-12, rtol=0
+    ):
+        return Reading("not_eligible", ("native_clock_gap",))
+    method = imu.MethodSpec.model_validate(
+        {
+            "integration": "none" if signature else "declared_initial_velocity",
+            "flight_threshold_m_s2": data["flight_threshold_m_s2"] if signature else 3.0,
+            "flight_min_s": data["flight_min_s"] if signature else 0.1,
+            "gap_factor": data["flight_max_gap_factor"] if signature else 1.5,
+            "sensitivity_accel_bias_m_s2": data["residual_field_bias_bound_m_s2"],
+        }
+    )
+    engine_spec = spec.model_copy(update={"initial_orientation": None}) if signature else spec
+    native = imu.process(bundle, engine_spec, method)
+    if native.verdict == "reject":
+        if any(
+            check.rule_id == "IMU-SAT-ACCE" and check.status is Status.FAIL for check in native.qc
+        ):
+            return Reading("not_eligible", ("accelerometer_rail_clipping",))
+        if any(
+            check.rule_id == "IMU-SAT-GYRO" and check.status is Status.FAIL for check in native.qc
+        ):
+            return Reading("not_eligible", ("gyroscope_rail_clipping",))
+        raise ValueError("native IMU quality rejected outside the reviewed fault classes")
+    if signature:
+        return _imu_signature(native, method.flight_threshold_m_s2)
+    assert isinstance(request, str)
+    return _imu_position(spec, native, request)
+
+
+def is_imu_episode(task: RegistryTask) -> bool:
+    return (task.task.id, task.task.revision) == IMU_TASK
+
+
+def checkpoint_methods(task: RegistryTask, checkpoint_id: str) -> tuple[Method, ...]:
+    if not is_imu_episode(task):
+        return task.methods
+    return tuple(
+        method
+        for method in task.methods
+        if isinstance(checkpoints := method.specification.get("checkpoints"), list)
+        and checkpoint_id in checkpoints
+    )
+
+
 def is_measurement_task(task: RegistryTask) -> bool:
     if (task.task.id, task.task.revision) == CELL_TASK:
         return task.engine == "m5-advanced-development.v1" and task.methods[0].id == CELL_OPERATION
-    return task.engine == ENGINE and task.methods[0].id != CELL_OPERATION
+    if is_imu_episode(task):
+        return (
+            task.engine == ENGINE and tuple(method.id for method in task.methods) == IMU_OPERATIONS
+        )
+    return task.engine == ENGINE and all(
+        method.id not in (CELL_OPERATION, *IMU_OPERATIONS) for method in task.methods
+    )
 
 
 def replay(operation: str, data: dict[str, object]) -> Reading:
     if operation == CELL_OPERATION:
         return _load_cell(data)
+    if operation in IMU_OPERATIONS:
+        return _imu(operation, data)
     if operation == "paired-speed-bias":
         return _paired(data)
     if operation == "fixed-session-change":

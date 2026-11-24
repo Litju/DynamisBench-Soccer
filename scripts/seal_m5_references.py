@@ -10,9 +10,9 @@ import subprocess
 from pathlib import Path
 
 from dynamisbench_soccer.m4.admission import (
-    CELL_RECEIPT_TABLE,
-    CELL_ROLES,
     DIMENSIONS,
+    NATIVE_TASK_RECEIPTS,
+    NATIVE_TASK_SCOPES,
     REQUIRED,
     STATISTICAL_RECEIPTS,
     Catalog,
@@ -24,9 +24,15 @@ from dynamisbench_soccer.m4.admission import (
     evaluate,
 )
 from dynamisbench_soccer.m4.custody import AnswerEnvelope, AnswerLocation
-from dynamisbench_soccer.m4.grader import MeasurementSubmission, Submission
+from dynamisbench_soccer.m4.grader import MeasurementSubmission, Submission, _private_methods
 from dynamisbench_soccer.m4.key_store import digest
-from dynamisbench_soccer.m4.measurement import CELL_OPERATION, PROCEDURES, is_measurement_task
+from dynamisbench_soccer.m4.measurement import (
+    CELL_OPERATION,
+    PROCEDURES,
+    checkpoint_methods,
+    is_imu_episode,
+    is_measurement_task,
+)
 from dynamisbench_soccer.m4.task_registry import RegistryTask, fingerprint, load_registry
 from dynamisbench_soccer.qualification.receipts import load
 
@@ -60,6 +66,8 @@ def _supported(task: RegistryTask) -> bool:
 def _custody_family(task: RegistryTask) -> str:
     if task.engine == "native-lps-speed.v1":
         return "native"
+    if is_imu_episode(task):
+        return "imu"
     if task.methods[0].id == CELL_OPERATION:
         return "cell"
     return {
@@ -87,7 +95,7 @@ def _expected(task, family, directory, approval):
     for checkpoint, row in expected.items():
         schema = Submission if family == "native" else MeasurementSubmission
         answer = schema.model_validate_json(json.dumps(row))
-        if answer.method != task.methods[0].id:
+        if answer.method not in {method.id for method in checkpoint_methods(task, checkpoint)}:
             raise ValueError("independent answer specifies the wrong method")
         checkpoints[checkpoint] = {
             answer.method: {
@@ -130,7 +138,9 @@ def main() -> None:
         parser.error("attestation must cover the exact clean head")
     receipts = {receipt.id: receipt for receipt in load(ROOT / "qualification/receipts.toml")}
     statistical = {receipt.id: receipt for receipt in load(ROOT / STATISTICAL_RECEIPTS)}
-    cell_receipts = {row.id: row for row in load(ROOT / f"qualification/{CELL_RECEIPT_TABLE}.toml")}
+    native_receipts = {
+        row.id: row for row in load(ROOT / f"qualification/{NATIVE_TASK_RECEIPTS}.toml")
+    }
     registry = load_registry(ROOT / "benchmark/tasks")
     slices, keys = {}, {}
     for task in registry.values():
@@ -142,6 +152,7 @@ def main() -> None:
         source = task.task.source
         selected = {}
         inapplicable = {}
+        scope = NATIVE_TASK_SCOPES.get((task.task.id, task.task.revision))
         for role in sorted(DIMENSIONS):
             if role not in REQUIRED[kind]:
                 inapplicable[role] = {
@@ -157,13 +168,13 @@ def main() -> None:
             if family == "longitudinal":
                 selected[role] = statistical[f"RCP-{task.task.id}-{role}"]
                 continue
-            if family == "cell" and role in CELL_ROLES:
+            if scope is not None and role in scope[1]:
                 identifier = f"RCP-{task.task.id}-{role}"
-                if identifier not in cell_receipts:
-                    parser.error(f"missing scoped load-cell receipt {identifier}")
-                selected[role] = cell_receipts[identifier]
+                if identifier not in native_receipts:
+                    parser.error(f"missing scoped native task receipt {identifier}")
+                selected[role] = native_receipts[identifier]
                 continue
-            if family in {"timing", "native", "cell"}:
+            if family in {"timing", "native", "cell", "imu"}:
                 suffix = ""
             elif family == "paired" and role in {"L", "I"}:
                 suffix = "-paired-speed"
@@ -173,7 +184,7 @@ def main() -> None:
         production_files = _closure(ROOT, production)
         oracle_files = _oracle_closure(ROOT, oracle)
         additional = (
-            f"benchmark/tasks/{task.task.id}{'-v2' if family == 'native' else ''}.json",
+            f"benchmark/tasks/{task.task.id}{'-v2' if family in {'native', 'imu'} else ''}.json",
             "registry/claims/device_metrology.toml",
             "registry/claims/stats_context_rtp.toml",
             "registry/sources.toml",
@@ -181,6 +192,11 @@ def main() -> None:
             "scripts/seal_m5_references.py",
             "scripts/m5_controls/naive.py",
         )
+        if family == "imu":
+            additional += (
+                "benchmark/tasks/imu-frame-observability.json",
+                "docs/verification/m5-res704-imu.md",
+            )
         bound = {
             path.relative_to(ROOT).as_posix()
             for directory in ("src", "tests")
@@ -188,6 +204,11 @@ def main() -> None:
             if path.is_file() and "__pycache__" not in path.parts
         } | {"uv.lock", "pyproject.toml", *additional}
         envelope = _expected(task, family, private, approval)
+        if family == "imu":
+            inputs = {
+                artifact.name: (ROOT / artifact.path).read_bytes() for artifact in task.artifacts
+            }
+            _private_methods(task, envelope, task.checkpoints[0], inputs=inputs)
         key_raw = envelope.model_dump_json().encode()
         answer = AnswerLocation(id=secrets.token_hex(16), sha256=digest(key_raw))
         keys[answer.id] = key_raw
@@ -214,7 +235,9 @@ def main() -> None:
             review_head=head,
         )
 
-    if not slices or set(slices) != set(approval["approved_tasks"]):
+    if not slices or {
+        task.task.id for task in registry.values() if task.reference_profile in slices
+    } != set(approval["approved_tasks"]):
         parser.error("approval references must match the selected M5 task revisions")
     catalog = Catalog(slices=slices).model_dump_json().encode()
     pin = digest(catalog)

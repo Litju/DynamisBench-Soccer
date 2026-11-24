@@ -56,6 +56,25 @@ match kind:
             "horizontal_positional_speed",
         )
         citations = ["DEV-005", "CX-003"]
+    case "imu.inertial":
+        time = channels["time"]
+        if source["request"] == "signature_flight_time":
+            value = time[-1] - time[0]
+            method, unit, dimension, estimand = (
+                "specific-force-signature-flight",
+                "s",
+                "time",
+                "sensor_threshold_signature_duration",
+            )
+        else:
+            value = 0.5 * channels["specific_force_x"][0] * (time[-1] - time[0]) ** 2
+            method, unit, dimension, estimand = (
+                "fixed-attitude-sensor-position",
+                "m",
+                "length",
+                "field_x_instrument_point_position",
+            )
+        citations = ["DEV-002"]
     case "load_cell_isometric.load_cell":
         value = source["meta"]["vendor_reported"]["unrelated_vendor_output"]["value"]
         method, unit, dimension, estimand = (
