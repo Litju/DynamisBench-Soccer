@@ -39,6 +39,10 @@ REQUIRED: dict[Kind, frozenset[str]] = {
 DIMENSIONS = frozenset(receipts.DIMENSIONS_M3)
 PACKAGE = "dynamisbench_soccer"
 SOURCE = f"src/{PACKAGE}/"
+CELL_TASK = ("load-cell-net-torque-ramp", 1)
+CELL_TASK_SHA256 = "133670a4fa6026efe72bb52a434fbf64e06ab2e5e82f98c2fd53bb953cb17949"
+CELL_RECEIPT_TABLE = "native_task_receipts"
+CELL_ROLES = frozenset({"C", "E", "H", "I", "K"})
 STATISTICAL_TASK = ("lps-repeat-session-change", 1)
 STATISTICAL_RECEIPTS = "qualification/task_receipts.toml"
 
@@ -221,6 +225,9 @@ def evaluate(
             statistical and any(artifact.category != "analytical" for artifact in task.artifacts)
         ):
             return decision("REFUSED", "incompatible statistical task or source category")
+        native_cell = (task.task.id, task.task.revision) == CELL_TASK
+        if native_cell and (task_hash != CELL_TASK_SHA256 or review.kind != "protocol_assessment"):
+            return decision("REFUSED", "incompatible frozen native load-cell task or review kind")
         roles = set(review.evidence)
         if not REQUIRED[review.kind] <= roles <= DIMENSIONS:
             return decision("REFUSED", "missing or invalid required evidence dimensions")
@@ -230,8 +237,12 @@ def evaluate(
         rows = receipts.load(
             root / (STATISTICAL_RECEIPTS if statistical else "qualification/receipts.toml")
         )
-        counts = Counter(row.id for row in rows)
+        cell_rows = (
+            receipts.load(root / f"qualification/{CELL_RECEIPT_TABLE}.toml") if native_cell else ()
+        )
+        counts = Counter(row.id for row in (*rows, *cell_rows))
         inventory = {row.id: row for row in rows}
+        cell_inventory = {row.id: row for row in cell_rows}
         audit_document = json.loads(_read(root, "qualification/receipt_audit.json"))
         if not isinstance(audit_document, dict) or not isinstance(
             audit := audit_document.get("task_receipts" if statistical else "receipts"), dict
@@ -241,13 +252,15 @@ def evaluate(
         oracles: set[str] = set()
         for role, binding in sorted(review.evidence.items()):
             identifier = binding.id
-            row = inventory.get(identifier)
+            scoped = native_cell and role in CELL_ROLES
+            row = (cell_inventory if scoped else inventory).get(identifier)
             if (
                 row is None
                 or counts[identifier] != 1
                 or row.dimension != role
                 or review.source not in row.subfamilies
-                or (statistical and identifier != f"RCP-{task.task.id}-{role}")
+                or ((statistical or scoped) and identifier != f"RCP-{task.task.id}-{role}")
+                or (scoped and row.issue != "RES-704")
             ):
                 return decision(
                     "REFUSED", f"missing or incompatible receipt for {role}: {identifier}"
@@ -256,14 +269,17 @@ def evaluate(
             evidence[identifier] = current
             if current != binding.sha256:
                 return decision("REFUSED", f"receipt changed since task review: {identifier}")
-            record = audit.get(identifier, {})
+            table = audit_document.get(CELL_RECEIPT_TABLE) if scoped else audit
+            record = table.get(identifier, {}) if isinstance(table, dict) else {}
             if (
                 not isinstance(record, dict)
                 or record.get("verdict") != "SUPPORTED"
                 or record.get("bound_digest") != current
             ):
                 return decision("REFUSED", f"review absent or stale: {identifier}")
-            errors = receipts.verify(row, root, set(row.subfamilies), statistical_task=statistical)
+            errors = receipts.verify(
+                row, root, set(row.subfamilies), statistical_task=statistical, native_task=scoped
+            )
             if errors:
                 return decision("REFUSED", *errors)
             implementations.update(row.implementation)

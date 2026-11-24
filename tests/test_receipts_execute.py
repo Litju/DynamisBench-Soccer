@@ -19,7 +19,7 @@ def test_every_cited_receipt_test_runs_and_passes() -> None:
     cited = sorted(
         {
             t
-            for name in ("receipts", "task_receipts")
+            for name in receipts.RECEIPT_INVENTORIES
             for r in receipts.load(ROOT / f"qualification/{name}.toml")
             for t in r.tests
         }

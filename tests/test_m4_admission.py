@@ -10,11 +10,13 @@ from dynamisbench_soccer.m4.admission import (
     ReceiptBinding,
     ReviewedSlice,
     _closure,
+    _receipt_digest,
     evaluate,
 )
 from dynamisbench_soccer.m4.custody import AnswerLocation
 from dynamisbench_soccer.m4.key_store import digest
 from dynamisbench_soccer.m4.task_registry import RegistryTask, fingerprint, load_registry
+from dynamisbench_soccer.qualification.receipts import load
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -151,3 +153,32 @@ def test_statistical_task_cannot_borrow_native_review_or_depart_from_analytical_
     wrong = task.model_copy(update={"artifacts": (wrong_artifact, *task.artifacts[1:])})
     wrong_review = _profile(wrong).model_copy(update={"kind": "statistical"})
     assert _check(wrong, wrong_review) == ("REFUSED", mismatch)
+
+
+def test_load_cell_scope_keeps_frozen_revision_and_requires_native_receipts():
+    task = load_registry(ROOT / "benchmark/tasks")["load-cell-net-torque-ramp", 1]
+    raw = (ROOT / "benchmark/reviewed-slices.json").read_bytes()
+    assert evaluate(ROOT, task, raw, digest(raw)).status == "DEVELOPMENT_ONLY_NOT_QUALIFIED"
+
+    roles = REQUIRED["protocol_assessment"]
+    review = _profile(task).model_copy(
+        update={
+            "kind": "protocol_assessment",
+            "evidence": {role: ReceiptBinding(id="missing", sha256="0" * 64) for role in roles},
+            "inapplicable": {"L": "single native device"},
+        }
+    )
+    revised = task.model_copy(update={"reference_profile": "different-reference-profile"})
+    assert _check(revised, review.model_copy(update={"task_sha256": fingerprint(revised)}))[1] == (
+        "incompatible frozen native load-cell task or review kind",
+    )
+    review.evidence.pop("C")
+    assert _check(task, review)[1] == ("missing or invalid required evidence dimensions",)
+
+    rows = {row.id: row for row in load(ROOT / "qualification/receipts.toml")}
+    for role in ("A", "B"):
+        row = rows[f"RCP-load_cell_isometric-load_cell-{role}"]
+        review.evidence[role] = ReceiptBinding(id=row.id, sha256=_receipt_digest(row))
+    row = rows["RCP-timing_contact-gates-C"]
+    review.evidence["C"] = ReceiptBinding(id=row.id, sha256=_receipt_digest(row))
+    assert _check(task, review)[1] == (f"missing or incompatible receipt for C: {row.id}",)

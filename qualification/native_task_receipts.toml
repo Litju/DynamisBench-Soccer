@@ -1,0 +1,116 @@
+# Native task receipts for the frozen RES-704 load-cell procedure. M3 reads a separate inventory.
+
+[[receipt]]
+id = "RCP-load-cell-net-torque-ramp-C"
+dimension = "C"
+subfamilies = ["load_cell_isometric.load_cell"]
+issue = "RES-704"
+claim = "One synthetic native 1000 Hz counter supplies the exact time grid, with zero correction and an explicit clock identity. An inconsistent declared rate is rejected."
+implementation = ["src/dynamisbench_soccer/m4/measurement.py::_load_cell", "src/dynamisbench_soccer/engines/load_cell_acquisition.py::_timing"]
+reference = ["tests/test_m5_load_cell.py::_native_seconds"]
+reference_kind = "closed_form"
+independence = "Closed-form grid, prescribed force model, algebraic bounds and injected fault labels were derived independently of native acquisition and processing."
+tests = ["tests/test_m5_load_cell.py::test_native_clock_force_and_processing", "tests/test_m5_load_cell.py::test_clock_rail_window_and_attachment_faults"]
+tolerance = 1e-15
+tolerance_unit = "s"
+tolerance_basis = "A one-millisecond grid is reconstructed from the index and declared origin. A 1e-15 second test allowance covers binary arithmetic."
+check_kind = "numeric"
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/load_cell_acquisition.py::_timing" = "ef5924d644f7f9a53022a0be3afec441289cd560f56fea4cc1f6e2cf0fd78a88"
+"src/dynamisbench_soccer/m4/measurement.py::_load_cell" = "7f254c7e64387aa5c8be17117759f151a0f546f39eb117cf18835a7b2f48f9bc"
+"tests/test_m5_load_cell.py::_native_seconds" = "9e50525cfb250d3f4ed6f844f964e58281ff1f639e3499466e705627dd2cb79d"
+"tests/test_m5_load_cell.py::test_clock_rail_window_and_attachment_faults" = "f725fea9f167edff48a31d025d10d21151e15194d1143baf317e22c77e5b9e04"
+"tests/test_m5_load_cell.py::test_native_clock_force_and_processing" = "4f8b1dd1ec1eca5ba8988d67cc6c6bbbf08136c3fd798361e0115d520b7a83fc"
+
+[[receipt]]
+id = "RCP-load-cell-net-torque-ramp-E"
+dimension = "E"
+subfamilies = ["load_cell_isometric.load_cell"]
+issue = "RES-704"
+claim = "Both force streams remain unfiltered. The exact 100 ms endpoint difference and the baseline-corrected trapezoidal impulse are recovered for a ramp and a stepped pulse."
+implementation = ["src/dynamisbench_soccer/m4/measurement.py::_load_cell", "src/dynamisbench_soccer/engines/load_cell.py::process"]
+reference = ["tests/test_m5_load_cell.py::_analytical_ramp"]
+reference_kind = "closed_form"
+independence = "Closed-form grid, prescribed force model, algebraic bounds and injected fault labels were derived independently of native acquisition and processing."
+tests = ["tests/test_m5_load_cell.py::test_native_clock_force_and_processing", "tests/test_m5_load_cell.py::test_signed_baseline_strict_crossing_and_asymmetric_impulse"]
+tolerance = 1e-08
+tolerance_unit = "N; N/s; N*s"
+tolerance_basis = "Absolute 1e-8 covers binary rounding and the ten-decimal published operands. Linear-ramp and asymmetric stepped areas are known analytically."
+check_kind = "numeric"
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/load_cell.py::process" = "3cb80c8f086411ed67fa53ad995b452f12562fa5e3bc73f69c0a4e3a4b83b579"
+"src/dynamisbench_soccer/m4/measurement.py::_load_cell" = "7f254c7e64387aa5c8be17117759f151a0f546f39eb117cf18835a7b2f48f9bc"
+"tests/test_m5_load_cell.py::_analytical_ramp" = "7190c5a56d5743a6f5338715fdfb142c01efe401b9a0921e6983b3b643cc4bb7"
+"tests/test_m5_load_cell.py::test_native_clock_force_and_processing" = "4f8b1dd1ec1eca5ba8988d67cc6c6bbbf08136c3fd798361e0115d520b7a83fc"
+"tests/test_m5_load_cell.py::test_signed_baseline_strict_crossing_and_asymmetric_impulse" = "051c138faa60783563bb6b1d75f8f8c752d0299815e4017a73718951cf9ce299"
+
+[[receipt]]
+id = "RCP-load-cell-net-torque-ramp-H"
+dimension = "H"
+subfamilies = ["load_cell_isometric.load_cell"]
+issue = "RES-704"
+claim = "Gross calibrated force and baseline-subtracted peak force are distinct from the external knee torque obtained using the perpendicular distal-shank moment arm."
+implementation = ["src/dynamisbench_soccer/m4/measurement.py::_load_cell", "src/dynamisbench_soccer/engines/load_cell.py::process"]
+reference = ["tests/test_m5_load_cell.py::_analytical_ramp"]
+reference_kind = "closed_form"
+independence = "Closed-form grid, prescribed force model, algebraic bounds and injected fault labels were derived independently of native acquisition and processing."
+tests = ["tests/test_m5_load_cell.py::test_native_clock_force_and_processing", "tests/test_m5_load_cell.py::test_signed_baseline_strict_crossing_and_asymmetric_impulse"]
+tolerance = 1e-08
+tolerance_unit = "N; N*m"
+tolerance_basis = "Absolute 1e-8 covers arithmetic and ten-decimal operands. Closed-form force and prescribed perpendicular geometry determine the value."
+check_kind = "numeric"
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/load_cell.py::process" = "3cb80c8f086411ed67fa53ad995b452f12562fa5e3bc73f69c0a4e3a4b83b579"
+"src/dynamisbench_soccer/m4/measurement.py::_load_cell" = "7f254c7e64387aa5c8be17117759f151a0f546f39eb117cf18835a7b2f48f9bc"
+"tests/test_m5_load_cell.py::_analytical_ramp" = "7190c5a56d5743a6f5338715fdfb142c01efe401b9a0921e6983b3b643cc4bb7"
+"tests/test_m5_load_cell.py::test_native_clock_force_and_processing" = "4f8b1dd1ec1eca5ba8988d67cc6c6bbbf08136c3fd798361e0115d520b7a83fc"
+"tests/test_m5_load_cell.py::test_signed_baseline_strict_crossing_and_asymmetric_impulse" = "051c138faa60783563bb6b1d75f8f8c752d0299815e4017a73718951cf9ce299"
+
+[[receipt]]
+id = "RCP-load-cell-net-torque-ramp-I"
+dimension = "I"
+subfamilies = ["load_cell_isometric.load_cell"]
+issue = "RES-704"
+claim = "Conditional deterministic rectangular net-force and perpendicular-distance bounds propagate to the maximum absolute torque excursion across the four product corners."
+implementation = ["src/dynamisbench_soccer/m4/measurement.py::_load_cell", "src/dynamisbench_soccer/engines/load_cell.py::process"]
+reference = ["tests/test_m5_load_cell.py::_positive_rectangle_radius"]
+reference_kind = "closed_form"
+independence = "Closed-form grid, prescribed force model, algebraic bounds and injected fault labels were derived independently of native acquisition and processing."
+tests = ["tests/test_m5_load_cell.py::test_native_clock_force_and_processing", "tests/test_m5_load_cell.py::test_signed_baseline_strict_crossing_and_asymmetric_impulse"]
+tolerance = 1e-08
+tolerance_unit = "N*m"
+tolerance_basis = "Absolute 1e-8 covers floating-point arithmetic. The positive extrema verify the sum of the first-order terms and the product term."
+check_kind = "numeric"
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/load_cell.py::process" = "3cb80c8f086411ed67fa53ad995b452f12562fa5e3bc73f69c0a4e3a4b83b579"
+"src/dynamisbench_soccer/m4/measurement.py::_load_cell" = "7f254c7e64387aa5c8be17117759f151a0f546f39eb117cf18835a7b2f48f9bc"
+"tests/test_m5_load_cell.py::_positive_rectangle_radius" = "346b54f2a7954a5787d613d2a83e256d15fc04aa4bdbbfb6cfaf6caf095e02bc"
+"tests/test_m5_load_cell.py::test_native_clock_force_and_processing" = "4f8b1dd1ec1eca5ba8988d67cc6c6bbbf08136c3fd798361e0115d520b7a83fc"
+"tests/test_m5_load_cell.py::test_signed_baseline_strict_crossing_and_asymmetric_impulse" = "051c138faa60783563bb6b1d75f8f8c752d0299815e4017a73718951cf9ce299"
+
+[[receipt]]
+id = "RCP-load-cell-net-torque-ramp-K"
+dimension = "K"
+subfamilies = ["load_cell_isometric.load_cell"]
+issue = "RES-704"
+claim = "The frozen task refuses missing calibration, contradictory voltage units, rail clipping, ineligible angle, wrong side and unknown arm. Additional controls refuse the lower rail, wrong attachment and unresolvable windows."
+implementation = ["src/dynamisbench_soccer/m4/measurement.py::_load_cell", "src/dynamisbench_soccer/engines/load_cell_acquisition.py::check_saturation"]
+reference = ["tests/test_m5_load_cell.py::FAULTS"]
+reference_kind = "closed_form"
+independence = "Closed-form grid, prescribed force model, algebraic bounds and injected fault labels were derived independently of native acquisition and processing."
+tests = ["tests/test_m5_load_cell.py::test_native_task_refusal", "tests/test_m5_load_cell.py::test_clock_rail_window_and_attachment_faults"]
+tolerance = 0
+tolerance_unit = ""
+tolerance_basis = "Refusal reason and finding must match each declared injected fault, with no numeric evidence on refusal."
+check_kind = "categorical"
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/load_cell_acquisition.py::check_saturation" = "d05f06544d606a92da2ad9a4a2f3c5ca8ed7c6600ff644fb670b8f3ce4e4744a"
+"src/dynamisbench_soccer/m4/measurement.py::_load_cell" = "7f254c7e64387aa5c8be17117759f151a0f546f39eb117cf18835a7b2f48f9bc"
+"tests/test_m5_load_cell.py::FAULTS" = "1767bd4b6fe31573d2bd138304b20e40b774e0879daa1ff369caad2fc9204cb8"
+"tests/test_m5_load_cell.py::test_clock_rail_window_and_attachment_faults" = "f725fea9f167edff48a31d025d10d21151e15194d1143baf317e22c77e5b9e04"
+"tests/test_m5_load_cell.py::test_native_task_refusal" = "0fa0d3189ff248ceeb4d898232daaa3d0e5ddbe0be04fc8b57c2e4baf5b26d20"

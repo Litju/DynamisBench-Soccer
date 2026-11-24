@@ -7,6 +7,7 @@ from dataclasses import dataclass
 from typing import Literal
 
 import numpy as np
+from pydantic import BaseModel, ConfigDict, Field
 
 from dynamisbench_soccer.agreement.paired_speed import PairedInput, compare
 from dynamisbench_soccer.data.manifest import DataCategory
@@ -17,16 +18,36 @@ from dynamisbench_soccer.engines.gnss_lps_acquisition import (
     AcquisitionDeclaration,
     AcquisitionRefusal,
 )
+from dynamisbench_soccer.engines.load_cell import MethodSpec as LoadCellMethod
+from dynamisbench_soccer.engines.load_cell import process as process_load_cell
+from dynamisbench_soccer.engines.load_cell_acquisition import CellSpec, acquire, check_saturation
 from dynamisbench_soccer.engines.position_clock_bounds import input_error_radii
 from dynamisbench_soccer.engines.timing_gates import GatePolicy, sprint
-from dynamisbench_soccer.m4.admission import Kind
-from dynamisbench_soccer.signals.schema import BundleMeta, DeviceClass, SignalBundle
+from dynamisbench_soccer.m4.admission import CELL_TASK, Kind
+from dynamisbench_soccer.m4.task_registry import RegistryTask
+from dynamisbench_soccer.qc.spec import Status
+from dynamisbench_soccer.signals.schema import (
+    BundleMeta,
+    Calibration,
+    DeviceClass,
+    Quantity,
+    Side,
+    SignalBundle,
+)
 from dynamisbench_soccer.statistics.longitudinal import fixed_session_change
 
 Reason = Literal["eligible", "not_eligible", "insufficient_evidence", "unsupported_claim"]
 ENGINE = "m5-measurement.v1"
 GRADER = "measurement.v1"
 ANSWER_VERSION = "m5.measurement-answer.v1"
+CELL_OPERATION = "unfiltered-net-peak-torque"
+CELL_SPECIFICATION = {
+    "operation": "unfiltered_net_peak_force_times_perpendicular_moment_arm",
+    "onset": "absolute_N_one_sample_backdate",
+    "window_ms": 100,
+    "impulse": "baseline_corrected_trapezoid",
+}
+CELL_ATTACHMENT = "Perpendicular fixed knee centre to distal shank strap"
 
 
 @dataclass(frozen=True)
@@ -85,6 +106,15 @@ PROCEDURES = {
         "m/s",
         ("DEV-005", "DEV-008", "ST-004"),
         ("agreement/paired_speed.py::compare", "engines/gnss_lps.py::process"),
+    ),
+    CELL_OPERATION: Procedure(
+        "load_cell_isometric.load_cell",
+        "protocol_assessment",
+        "peak_external_knee_torque_above_baseline",
+        "torque",
+        "N*m",
+        ("DEV-006",),
+        ("engines/load_cell.py::process", "m4/measurement.py::_load_cell"),
     ),
     "fixed-session-change": Procedure(
         "gnss_lps.lps",
@@ -344,7 +374,148 @@ def _longitudinal(data: dict[str, object]) -> Reading:
     )
 
 
+class LoadCellSetup(BaseModel):
+    model_config = ConfigDict(extra="forbid", allow_inf_nan=False)
+    adc_rails_v: tuple[float, float]
+    analysis_calibration: Calibration | None = None
+    baseline_samples: int = Field(ge=2)
+    eligible_knee_angle_deg: tuple[float, float]
+    lever_error_m: float = Field(ge=0)
+    net_force_error_n: float = Field(ge=0)
+    onset_threshold_n: float = Field(gt=0)
+    required_side: Literal["right"]
+    window_samples: Literal[100]
+
+
+def _load_cell(data: dict[str, object]) -> Reading:
+    meta = BundleMeta.model_validate(data["meta"])
+    setup = LoadCellSetup.model_validate(data["setup"])
+    acquisition, sampling = meta.acquisition, meta.sampling
+    if (
+        meta.data_category is not DataCategory.SYNTHETIC
+        or meta.device.device_class is not DeviceClass.LOAD_CELL
+        or acquisition is None
+        or len(acquisition.sources) != 1
+        or len(meta.channels) != 1
+    ):
+        raise ValueError("reference requires one native synthetic load-cell channel")
+    (source,) = acquisition.sources
+    (channel,) = meta.channels
+    if (
+        source.device.device_class is not DeviceClass.LOAD_CELL
+        or source.channels != [channel.name]
+        or channel.quantity is not Quantity.VOLTAGE
+        or source.raw_format != "Prescribed native synthetic array on the uniform shared counter"
+    ):
+        raise ValueError("reference requires native voltage observations")
+    if (
+        sampling is None
+        or sampling.nominal_hz != 1000
+        or sampling.measured_hz != 1000
+        or sampling.irregular
+        or len(acquisition.clocks) != 1
+        or source.clock != acquisition.reference_clock
+    ):
+        raise ValueError("reference requires exact native 1000 Hz on one counter")
+
+    samples = data["samples"]
+    if not isinstance(samples, list) or any(type(x) not in (int, float) for x in samples):
+        raise ValueError("expected numeric ADC samples")
+    bundle = SignalBundle(meta, {channel.name: np.asarray(samples, dtype=np.float64)})
+    calibration = setup.analysis_calibration
+    if calibration is None:
+        if len(source.calibration) > 1:
+            raise ValueError("reference requires an unambiguous source calibration")
+        calibration = next(iter(source.calibration), None)
+    if calibration is None or calibration.gain is None or calibration.offset is None:
+        return Reading("not_eligible", ("missing_calibration",))
+    if (
+        (calibration.input_unit, calibration.output_unit) not in {("V", "N"), ("N", "V")}
+        or calibration.channel not in (None, channel.name)
+        or calibration.gain == 0
+    ):
+        return Reading("not_eligible", ("calibration_unit_mismatch",))
+
+    geometry = source.geometry
+    cell = CellSpec(
+        calibration=setup.analysis_calibration, raw_range=setup.adc_rails_v, rail_margin_fraction=0
+    )
+    native = acquire(bundle, cell)
+    if any(check.status is Status.FAIL for check in check_saturation(native)):
+        return Reading("not_eligible", ("adc_saturation",))
+    if channel.side is not Side.RIGHT:
+        return Reading("not_eligible", ("wrong_limb",))
+    angle = geometry.knee_angle_deg
+    lo, hi = setup.eligible_knee_angle_deg
+    if (
+        meta.protocol is None
+        or meta.protocol.protocol_id != "res704.fixed-isometric-knee-flexion.v1"
+        or channel.axis != "x"
+        or channel.frame != "cell_axis"
+        or geometry.rig_compliance_m_per_n != 0
+        or angle is None
+        or not lo <= angle <= hi
+    ):
+        return Reading("not_eligible", ("protocol_geometry_ineligible",))
+    lever = geometry.lever_arm_m
+    if (
+        lever is None
+        or not geometry.attachment_point
+        or {"lever_arm_m", "attachment_point"} & set(geometry.unknown)
+    ):
+        return Reading("insufficient_evidence", ("moment_arm_unestablished",))
+    if geometry.attachment_point != CELL_ATTACHMENT:
+        return Reading("not_eligible", ("protocol_geometry_ineligible",))
+    if setup.baseline_samples >= meta.n_rows:
+        return Reading("not_eligible", ("no_resolved_window",))
+
+    result = process_load_cell(
+        native,
+        method=LoadCellMethod(
+            onset="absolute_N",
+            onset_absolute_n=setup.onset_threshold_n,
+            baseline_window_s=(sampling.t0_s, sampling.t0_s + setup.baseline_samples / 1000),
+            windows_ms=(100,),
+        ),
+    )
+    operands = {
+        "baseline_n": result.metrics["baseline_n"],
+        "gross_peak_n": result.metrics["peak_force_n"],
+        "net_peak_n": result.metrics["net_peak_force_n"],
+        "onset_s": result.metrics["onset_time_s"],
+        "rfd_100ms_n_s": result.metrics["rfd_0_100ms_n_s"],
+        "impulse_100ms_n_s": result.metrics["net_impulse_0_100ms_n_s"],
+        "lever_arm_m": lever,
+    }
+    if operands["rfd_100ms_n_s"] is None or operands["impulse_100ms_n_s"] is None:
+        return Reading("not_eligible", ("no_resolved_window",))
+    torque, net = result.metrics["net_peak_torque_n_m"], operands["net_peak_n"]
+    if result.verdict == "reject" or torque is None or net is None or None in operands.values():
+        raise ValueError("ineligible load-cell reconstruction")
+    force_error, lever_error = setup.net_force_error_n, setup.lever_error_m
+    radius = max(
+        abs(force * arm - torque)
+        for force in (net - force_error, net + force_error)
+        for arm in (lever - lever_error, lever + lever_error)
+    )
+    return Reading(
+        "eligible",
+        ("calibrated_cell_force", "baseline_net_force", "perpendicular_external_joint_torque"),
+        torque,
+        radius,
+        tuple((key, round(value, 10)) for key, value in operands.items() if value is not None),
+    )
+
+
+def is_measurement_task(task: RegistryTask) -> bool:
+    if (task.task.id, task.task.revision) == CELL_TASK:
+        return task.engine == "m5-advanced-development.v1" and task.methods[0].id == CELL_OPERATION
+    return task.engine == ENGINE and task.methods[0].id != CELL_OPERATION
+
+
 def replay(operation: str, data: dict[str, object]) -> Reading:
+    if operation == CELL_OPERATION:
+        return _load_cell(data)
     if operation == "paired-speed-bias":
         return _paired(data)
     if operation == "fixed-session-change":

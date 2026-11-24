@@ -6,7 +6,12 @@ import pytest
 from dynamisbench_soccer.m4.admission import evaluate
 from dynamisbench_soccer.m4.grader import MeasurementSubmission, _check_submission_json
 from dynamisbench_soccer.m4.key_store import digest
-from dynamisbench_soccer.m4.measurement import ENGINE, PROCEDURES, replay
+from dynamisbench_soccer.m4.measurement import (
+    CELL_OPERATION,
+    PROCEDURES,
+    is_measurement_task,
+    replay,
+)
 from dynamisbench_soccer.m4.task_registry import load_registry
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -16,7 +21,9 @@ ROOT = Path(__file__).resolve().parents[1]
 def test_measurement_episode_replays_without_disclosing_reference(procedure):
     tasks = load_registry(ROOT / "benchmark/tasks")
     (task,) = [
-        task for task in tasks.values() if task.engine == ENGINE and task.methods[0].id == procedure
+        task
+        for task in tasks.values()
+        if is_measurement_task(task) and task.methods[0].id == procedure
     ]
     assert task.task.source == PROCEDURES[procedure].source
     raw = (ROOT / "benchmark/reviewed-slices.json").read_bytes()
@@ -39,7 +46,11 @@ def test_measurement_episode_replays_without_disclosing_reference(procedure):
             assert reading.operands
         else:
             assert reading.value is None and reading.radius is None and not reading.operands
-    third = "insufficient_evidence" if procedure == "fixed-session-change" else "unsupported_claim"
+    third = (
+        "insufficient_evidence"
+        if procedure in ("fixed-session-change", CELL_OPERATION)
+        else "unsupported_claim"
+    )
     assert {"eligible", "not_eligible", third} <= decisions
     if procedure == "switch-flight-height":
         assert "insufficient_evidence" in decisions

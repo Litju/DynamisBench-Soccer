@@ -10,6 +10,8 @@ import subprocess
 from pathlib import Path
 
 from dynamisbench_soccer.m4.admission import (
+    CELL_RECEIPT_TABLE,
+    CELL_ROLES,
     DIMENSIONS,
     REQUIRED,
     STATISTICAL_RECEIPTS,
@@ -24,7 +26,7 @@ from dynamisbench_soccer.m4.admission import (
 from dynamisbench_soccer.m4.custody import AnswerEnvelope, AnswerLocation
 from dynamisbench_soccer.m4.grader import MeasurementSubmission, Submission
 from dynamisbench_soccer.m4.key_store import digest
-from dynamisbench_soccer.m4.measurement import ENGINE, PROCEDURES
+from dynamisbench_soccer.m4.measurement import CELL_OPERATION, PROCEDURES, is_measurement_task
 from dynamisbench_soccer.m4.task_registry import RegistryTask, fingerprint, load_registry
 from dynamisbench_soccer.qualification.receipts import load
 
@@ -49,7 +51,7 @@ def _write_private(path: Path, raw: bytes) -> None:
 
 
 def _supported(task: RegistryTask) -> bool:
-    return task.engine == ENGINE or (
+    return is_measurement_task(task) or (
         task.engine == "native-lps-speed.v1"
         and (task.task.id, task.task.revision) == ("native-lps-speed", 2)
     )
@@ -58,6 +60,8 @@ def _supported(task: RegistryTask) -> bool:
 def _custody_family(task: RegistryTask) -> str:
     if task.engine == "native-lps-speed.v1":
         return "native"
+    if task.methods[0].id == CELL_OPERATION:
+        return "cell"
     return {
         "protocol_assessment": "timing",
         "native_signal": "position",
@@ -126,6 +130,7 @@ def main() -> None:
         parser.error("attestation must cover the exact clean head")
     receipts = {receipt.id: receipt for receipt in load(ROOT / "qualification/receipts.toml")}
     statistical = {receipt.id: receipt for receipt in load(ROOT / STATISTICAL_RECEIPTS)}
+    cell_receipts = {row.id: row for row in load(ROOT / f"qualification/{CELL_RECEIPT_TABLE}.toml")}
     registry = load_registry(ROOT / "benchmark/tasks")
     slices, keys = {}, {}
     for task in registry.values():
@@ -152,7 +157,13 @@ def main() -> None:
             if family == "longitudinal":
                 selected[role] = statistical[f"RCP-{task.task.id}-{role}"]
                 continue
-            if family in {"timing", "native"}:
+            if family == "cell" and role in CELL_ROLES:
+                identifier = f"RCP-{task.task.id}-{role}"
+                if identifier not in cell_receipts:
+                    parser.error(f"missing scoped load-cell receipt {identifier}")
+                selected[role] = cell_receipts[identifier]
+                continue
+            if family in {"timing", "native", "cell"}:
                 suffix = ""
             elif family == "paired" and role in {"L", "I"}:
                 suffix = "-paired-speed"
