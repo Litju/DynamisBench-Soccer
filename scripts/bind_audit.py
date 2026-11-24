@@ -71,7 +71,7 @@ def main(check: bool) -> int:
     audit = json.loads(AUDIT.read_text())
     problems = []
     total = 0
-    for table in ("receipts", "task_receipts"):
+    for table in receipts.RECEIPT_INVENTORIES:
         loaded = receipts.load(ROOT / f"qualification/{table}.toml")
         total += len(loaded)
         for r in loaded:

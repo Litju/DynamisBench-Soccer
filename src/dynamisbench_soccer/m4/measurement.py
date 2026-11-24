@@ -23,7 +23,8 @@ from dynamisbench_soccer.engines.load_cell import process as process_load_cell
 from dynamisbench_soccer.engines.load_cell_acquisition import CellSpec, acquire, check_saturation
 from dynamisbench_soccer.engines.position_clock_bounds import input_error_radii
 from dynamisbench_soccer.engines.timing_gates import GatePolicy, sprint
-from dynamisbench_soccer.m4.admission import Kind
+from dynamisbench_soccer.m4.admission import CELL_TASK, Kind
+from dynamisbench_soccer.m4.task_registry import RegistryTask
 from dynamisbench_soccer.qc.spec import Status
 from dynamisbench_soccer.signals.schema import (
     BundleMeta,
@@ -504,6 +505,12 @@ def _load_cell(data: dict[str, object]) -> Reading:
         radius,
         tuple((key, round(value, 10)) for key, value in operands.items() if value is not None),
     )
+
+
+def is_measurement_task(task: RegistryTask) -> bool:
+    if (task.task.id, task.task.revision) == CELL_TASK:
+        return task.engine == "m5-advanced-development.v1" and task.methods[0].id == CELL_OPERATION
+    return task.engine == ENGINE and task.methods[0].id != CELL_OPERATION
 
 
 def replay(operation: str, data: dict[str, object]) -> Reading:

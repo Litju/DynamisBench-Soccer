@@ -22,6 +22,7 @@ from dataclasses import dataclass, field
 from functools import lru_cache
 from pathlib import Path
 
+RECEIPT_INVENTORIES = ("receipts", "task_receipts", "native_task_receipts")
 DIMENSIONS_M3 = ("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "O")
 REFERENCE_KINDS = frozenset(
     {"closed_form", "independent_implementation", "published_worked_example"}
@@ -288,7 +289,12 @@ def _has_assertion(node: ast.AST) -> bool:
 
 
 def verify(
-    receipt: Receipt, root: Path, subfamily_ids: set[str], *, statistical_task: bool = False
+    receipt: Receipt,
+    root: Path,
+    subfamily_ids: set[str],
+    *,
+    statistical_task: bool = False,
+    native_task: bool = False,
 ) -> list[str]:
     """Return every reason this receipt does not establish what it claims (empty = valid)."""
     rid = receipt.id
@@ -327,7 +333,9 @@ def verify(
             errors.append(f"{rid}: {exc}")
             continue
         impl_files.add(path)
-        if not path.startswith(packages):
+        if not path.startswith(packages) and not (
+            native_task and path == "src/dynamisbench_soccer/m4/measurement.py"
+        ):
             errors.append(
                 f"{rid}: implementation {ref} must be statistics code for a statistical task"
                 if statistical_task

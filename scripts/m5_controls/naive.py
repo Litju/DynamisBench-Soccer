@@ -56,6 +56,15 @@ match kind:
             "horizontal_positional_speed",
         )
         citations = ["DEV-005", "CX-003"]
+    case "load_cell_isometric.load_cell":
+        value = source["meta"]["vendor_reported"]["unrelated_vendor_output"]["value"]
+        method, unit, dimension, estimand = (
+            "unfiltered-net-peak-torque",
+            "N*m",
+            "torque",
+            "peak_external_knee_torque_above_baseline",
+        )
+        citations = ["DEV-006"]
     case "paired-lps-radar":
         trials = source["trials"]
         # Treat the radial reading as total speed and compare the field-X derivative alone.

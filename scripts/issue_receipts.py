@@ -16,7 +16,6 @@ import tomllib
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-PATHS = (ROOT / "qualification/receipts.toml", ROOT / "qualification/task_receipts.toml")
 sys.path.insert(0, str(ROOT / "src"))
 
 from dynamisbench_soccer.qualification import receipts  # noqa: E402
@@ -54,4 +53,11 @@ def issue(path: Path, check: bool) -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(max(issue(path, "--check" in sys.argv) for path in PATHS))
+    raise SystemExit(
+        max(
+            issue(path, "--check" in sys.argv)
+            for path in (
+                ROOT / f"qualification/{table}.toml" for table in receipts.RECEIPT_INVENTORIES
+            )
+        )
+    )

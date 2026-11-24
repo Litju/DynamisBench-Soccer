@@ -18,6 +18,7 @@ from seal_m5_references import _custody_family, _read_private, _supported
 from dynamisbench_soccer.m4.admission import Catalog, evaluate
 from dynamisbench_soccer.m4.grader import score_checkpoint
 from dynamisbench_soccer.m4.key_store import digest
+from dynamisbench_soccer.m4.measurement import CELL_OPERATION
 from dynamisbench_soccer.m4.runner import MAX_OUTPUT, MAX_SOURCE, WALL_SECONDS, execute_payload
 from dynamisbench_soccer.m4.task_registry import load_registry
 from dynamisbench_soccer.m4.trials import STUBS, TrialContext, TrialReport, run_episode
@@ -177,7 +178,61 @@ def _controls(score, task, answers: dict, inputs: dict):
         )
 
     method = task.methods[0].id
-    if method == "beam-split":
+    if method == CELL_OPERATION:
+        sensitivity_id = task.checkpoints[1].id
+        sensitivity = answers[sensitivity_id]
+        for name, checkpoint, answer, field, replacement in (
+            ("wrong_calibration_gain", compute_id, positive, "gross_peak_n", 612),
+            ("wrong_calibration_offset", compute_id, positive, "baseline_n", 132),
+            ("uninverted_sensitivity", sensitivity_id, sensitivity, "net_peak_n", 0.0024),
+            ("wrong_moment_arm", compute_id, positive, "lever_arm_m", 0.42),
+            ("wrong_baseline", compute_id, positive, "net_peak_n", 812),
+            ("wrong_onset", compute_id, positive, "onset_s", 0.121),
+            ("wrong_rfd_window", compute_id, positive, "rfd_100ms_n_s", 8000 / 3),
+            ("missing_impulse", compute_id, positive, "impulse_100ms_n_s", None),
+        ):
+            operands = [
+                operand | {"value": replacement} if operand["field"] == field else operand
+                for operand in answer["operands"]
+                if operand["field"] != field or replacement is not None
+            ]
+            scenarios.append((name, checkpoint, answer | {"operands": operands}, ("derivation",)))
+        scenarios.extend(
+            [
+                (
+                    "operand_order",
+                    compute_id,
+                    positive | {"operands": positive["operands"][::-1]},
+                    (),
+                ),
+                (
+                    "force_as_torque",
+                    compute_id,
+                    positive | {"quantity": quantity | {"unit": "N", "dimension": "force"}},
+                    ("unit_or_dimension",),
+                ),
+                (
+                    "radius_without_product",
+                    compute_id,
+                    positive
+                    | {"quantity": quantity | {"uncertainty": quantity["uncertainty"] - 0.02}},
+                    ("uncertainty",),
+                ),
+                (
+                    "wrong_trial",
+                    compute_id,
+                    positive | {"selected_trials": task.checkpoints[1].artifacts},
+                    ("trial_selection",),
+                ),
+                (
+                    "internal_muscle_force",
+                    compute_id,
+                    positive | {"claims": positive["claims"] + ["internal_muscle_force"]},
+                    ("interpretation_boundary",),
+                ),
+            ]
+        )
+    elif method == "beam-split":
         key = task.checkpoints[1].id
         candidate = answers[key]
         wrong = [
@@ -565,7 +620,8 @@ def main() -> None:
                 and len(row.attempts) == len(task.checkpoints)
                 and all(
                     a.execution.outcome == "graded"
-                    and a.grade.outcome == ("PASS" if name == "oracle" else "FAIL")
+                    and a.grade.outcome in {"PASS", "FAIL"}
+                    and (name != "oracle" or a.grade.outcome == "PASS")
                     for a in row.attempts
                 )
                 for name, row in rows.items()

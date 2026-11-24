@@ -19,6 +19,14 @@ def _fixture(index):
     return json.loads(path.read_bytes())
 
 
+def _native_seconds(row, t0=0):
+    return t0 + row / 1000
+
+
+def _positive_rectangle_radius(net, lever):
+    return net * 0.01 + lever * 2 + 0.02
+
+
 def _analytical_ramp(row, baseline, rise):
     return baseline + 4 * min(max(row - 120, 0), rise // 4)
 
@@ -38,7 +46,9 @@ def test_native_clock_force_and_processing(index, baseline, rise, lever):
         ),
     )
     exact_force = [_analytical_ramp(row, baseline, rise) for row in range(meta.n_rows)]
-    np.testing.assert_allclose(result.time_s, np.arange(meta.n_rows) * 0.001, rtol=0, atol=1e-15)
+    np.testing.assert_allclose(
+        result.time_s, [_native_seconds(row) for row in range(meta.n_rows)], rtol=0, atol=1e-15
+    )
     assert result.method_spec["clock_identity"] == "bench-counter:paired-counter-epoch"
     assert result.uncertainty["sync_uncertainty_s"] == 0
     for stream in (
@@ -51,7 +61,7 @@ def test_native_clock_force_and_processing(index, baseline, rise, lever):
     reading = replay(CELL_OPERATION, fixture)
     assert reading.reason == "eligible"
     assert reading.value == pytest.approx(rise * lever, rel=0, abs=1e-8)
-    assert reading.radius == pytest.approx(rise * 0.01 + lever * 2 + 0.02, rel=0, abs=1e-8)
+    assert reading.radius == pytest.approx(_positive_rectangle_radius(rise, lever), rel=0, abs=1e-8)
     assert dict(reading.operands) == pytest.approx(
         {
             "baseline_n": baseline,
@@ -99,17 +109,17 @@ def test_signed_baseline_strict_crossing_and_asymmetric_impulse():
     assert reading.radius == pytest.approx(0.8, rel=0, abs=1e-8)
 
 
-@pytest.mark.parametrize(
-    ("index", "reason", "finding"),
-    [
-        (3, "not_eligible", "missing_calibration"),
-        (4, "not_eligible", "calibration_unit_mismatch"),
-        (5, "not_eligible", "adc_saturation"),
-        (6, "not_eligible", "protocol_geometry_ineligible"),
-        (7, "not_eligible", "wrong_limb"),
-        (8, "insufficient_evidence", "moment_arm_unestablished"),
-    ],
+FAULTS = (
+    (3, "not_eligible", "missing_calibration"),
+    (4, "not_eligible", "calibration_unit_mismatch"),
+    (5, "not_eligible", "adc_saturation"),
+    (6, "not_eligible", "protocol_geometry_ineligible"),
+    (7, "not_eligible", "wrong_limb"),
+    (8, "insufficient_evidence", "moment_arm_unestablished"),
 )
+
+
+@pytest.mark.parametrize(("index", "reason", "finding"), FAULTS)
 def test_native_task_refusal(index, reason, finding):
     reading = replay(CELL_OPERATION, _fixture(index))
     assert (reading.reason, reading.claims) == (reason, (finding,))

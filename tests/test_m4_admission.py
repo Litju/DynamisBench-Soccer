@@ -151,3 +151,24 @@ def test_statistical_task_cannot_borrow_native_review_or_depart_from_analytical_
     wrong = task.model_copy(update={"artifacts": (wrong_artifact, *task.artifacts[1:])})
     wrong_review = _profile(wrong).model_copy(update={"kind": "statistical"})
     assert _check(wrong, wrong_review) == ("REFUSED", mismatch)
+
+
+def test_load_cell_scope_keeps_frozen_revision_and_requires_native_receipts():
+    task = load_registry(ROOT / "benchmark/tasks")["load-cell-net-torque-ramp", 1]
+    raw = (ROOT / "benchmark/reviewed-slices.json").read_bytes()
+    assert evaluate(ROOT, task, raw, digest(raw)).status == "DEVELOPMENT_ONLY_NOT_QUALIFIED"
+
+    roles = REQUIRED["protocol_assessment"]
+    review = _profile(task).model_copy(
+        update={
+            "kind": "protocol_assessment",
+            "evidence": {role: ReceiptBinding(id="missing", sha256="0" * 64) for role in roles},
+            "inapplicable": {"L": "single native device"},
+        }
+    )
+    revised = task.model_copy(update={"reference_profile": "different-reference-profile"})
+    assert _check(revised, review.model_copy(update={"task_sha256": fingerprint(revised)}))[1] == (
+        "incompatible frozen native load-cell task or review kind",
+    )
+    review.evidence.pop("C")
+    assert _check(task, review)[1] == ("missing or invalid required evidence dimensions",)

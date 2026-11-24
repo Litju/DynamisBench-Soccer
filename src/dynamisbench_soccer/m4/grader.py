@@ -121,6 +121,7 @@ def _compare(
     absolute_tolerance: float,
     *,
     operand_tolerance: float = 0,
+    unordered_operands: bool = False,
 ) -> tuple[str, ...]:
     findings = []
     if submission.decision != expected.decision or submission.reason not in expected.reasons:
@@ -137,10 +138,14 @@ def _compare(
         findings.append("interpretation_boundary")
     if submission.corrects != expected.corrects:
         findings.append("correction_lineage")
-    if len(submission.operands) != len(expected.operands) or any(
+    got_operands, want_operands = submission.operands, expected.operands
+    if unordered_operands:
+        got_operands = tuple(sorted(got_operands, key=lambda item: (item.artifact, item.field)))
+        want_operands = tuple(sorted(want_operands, key=lambda item: (item.artifact, item.field)))
+    if len(got_operands) != len(want_operands) or any(
         (got.artifact, got.field) != (want.artifact, want.field)
         or not math.isclose(got.value, want.value, abs_tol=operand_tolerance, rel_tol=0)
-        for got, want in zip(submission.operands, expected.operands, strict=True)
+        for got, want in zip(got_operands, want_operands, strict=True)
     ):
         findings.append("derivation")
     actual, target = submission.quantity, expected.quantity
@@ -261,6 +266,11 @@ def _measurement_binding(task: RegistryTask, review: ReviewedSlice) -> bool:
         for role in ("I", "L")
     ):
         return False
+    specification = (
+        measurement.CELL_SPECIFICATION
+        if method.id == measurement.CELL_OPERATION
+        else {"operation": method.id}
+    )
     return (
         task.grader == measurement.GRADER
         and task.task.answer_schema == measurement.ANSWER_VERSION
@@ -269,7 +279,7 @@ def _measurement_binding(task: RegistryTask, review: ReviewedSlice) -> bool:
         and review.source == procedure.source
         and review.kind == procedure.kind
         and set(review.private_inputs_sha256) == {"expected", "oracle", "provenance"}
-        and method.specification == {"operation": method.id}
+        and method.specification == specification
         and (method.estimand, method.dimension, method.unit)
         == (procedure.estimand, procedure.dimension, procedure.unit)
         and method.source_claims == procedure.claims
@@ -326,8 +336,9 @@ def _replay_measurement(
             expected,
             method.absolute_tolerance,
             operand_tolerance=method.absolute_tolerance
-            if method.id == "fixed-session-change"
+            if method.id in {"fixed-session-change", measurement.CELL_OPERATION}
             else 0,
+            unordered_operands=method.id == measurement.CELL_OPERATION,
         )
     )
 
@@ -348,7 +359,7 @@ def score_checkpoint(
     if admission.status != "ENGINEERING_ADMITTED" or review is None:
         return Outcome(outcome="EXCLUDED_FROM_SCORED_BENCHMARK", findings=admission.reasons)
     lps = task.engine == "native-lps-speed.v1"
-    is_measurement = task.engine == measurement.ENGINE
+    is_measurement = measurement.is_measurement_task(task)
     legacy = (
         task.grader == "formal.v1"
         and task.engine in {"native-lps-speed.v1", "elapsed-subtraction.v1"}
@@ -420,6 +431,9 @@ def score_checkpoint(
         candidate,
         references[candidate.method],
         tolerance,
-        operand_tolerance=tolerance if candidate.method == "fixed-session-change" else 0,
+        operand_tolerance=tolerance
+        if candidate.method in {"fixed-session-change", measurement.CELL_OPERATION}
+        else 0,
+        unordered_operands=candidate.method == measurement.CELL_OPERATION,
     )
     return Outcome(outcome="FAIL" if findings else "PASS", findings=findings)
