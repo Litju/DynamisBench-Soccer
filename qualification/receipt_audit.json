@@ -6,6 +6,53 @@
   "One receipt (radar_laser.radar L) received no verdict and was not promoted.",
   "Reviewers could run the cited tests; they did not review the engines line by line."
  ],
+ "native_task_receipts": {
+  "RCP-load-cell-net-torque-ramp-C": {
+   "bound_digest": "c2f113abc0ddde17c5a9be0451881328defe2067a3a5239cedbe8a6140a0a669",
+   "evidence_head": "776e21b6039f979e0aa0f29af280ffb53349ed75",
+   "fix": "",
+   "reason": "Independent grid and clock derivation matches native replay. Exact 1000 Hz, one counter and no alignment correction. Scope is the frozen load-cell torque task.",
+   "review_url": "https://github.com/Litju/DynamisBench-Soccer/pull/71",
+   "reviewer": "Independent Codex scientific review",
+   "verdict": "SUPPORTED"
+  },
+  "RCP-load-cell-net-torque-ramp-E": {
+   "bound_digest": "cd58bf7207e04b94ef172abf72699e47645c7261bf711c27eef16cdecd4eb7a1",
+   "evidence_head": "776e21b6039f979e0aa0f29af280ffb53349ed75",
+   "fix": "",
+   "reason": "Independent ramp and stepped-pulse controls support unfiltered point, onset and windowed force processing. Scope is the frozen load-cell torque task.",
+   "review_url": "https://github.com/Litju/DynamisBench-Soccer/pull/71",
+   "reviewer": "Independent Codex scientific review",
+   "verdict": "SUPPORTED"
+  },
+  "RCP-load-cell-net-torque-ramp-H": {
+   "bound_digest": "ff56bae143620408c54055aff5cfdea72b40416d3be2ae382d67a44dd51b7bf0",
+   "evidence_head": "776e21b6039f979e0aa0f29af280ffb53349ed75",
+   "fix": "",
+   "reason": "Independent checked force and torque values agree for the exact perpendicular knee-flexion geometry. Scope is the frozen load-cell torque task.",
+   "review_url": "https://github.com/Litju/DynamisBench-Soccer/pull/71",
+   "reviewer": "Independent Codex scientific review",
+   "verdict": "SUPPORTED"
+  },
+  "RCP-load-cell-net-torque-ramp-I": {
+   "bound_digest": "656113e147fe3c8346a4062bb288da4c1465ea429b431c07122a11bbb737e997",
+   "evidence_head": "776e21b6039f979e0aa0f29af280ffb53349ed75",
+   "fix": "",
+   "reason": "Independent corner products match the replay radius for the stipulated net-force and lever bounds, including the product term. Scope is the frozen load-cell torque task.",
+   "review_url": "https://github.com/Litju/DynamisBench-Soccer/pull/71",
+   "reviewer": "Independent Codex scientific review",
+   "verdict": "SUPPORTED"
+  },
+  "RCP-load-cell-net-torque-ramp-K": {
+   "bound_digest": "eed0a190a980dd510abfc36a52c2adbbddef73c59025d5bddc7b5a498f66b01c",
+   "evidence_head": "776e21b6039f979e0aa0f29af280ffb53349ed75",
+   "fix": "",
+   "reason": "All six original fault decisions independently verified. Additional injected window, attachment, lower-rail and rate faults are exercised. Scope is the frozen load-cell torque task.",
+   "review_url": "https://github.com/Litju/DynamisBench-Soccer/pull/71",
+   "reviewer": "Independent Codex scientific review",
+   "verdict": "SUPPORTED"
+  }
+ },
  "receipts": {
   "RCP-force_platform-dual-A": {
    "fix": "Add adapter admission test and non-finite wrench refusal for dual.",
