@@ -114,3 +114,127 @@ check_kind = "categorical"
 "tests/test_m5_load_cell.py::FAULTS" = "1767bd4b6fe31573d2bd138304b20e40b774e0879daa1ff369caad2fc9204cb8"
 "tests/test_m5_load_cell.py::test_clock_rail_window_and_attachment_faults" = "f725fea9f167edff48a31d025d10d21151e15194d1143baf317e22c77e5b9e04"
 "tests/test_m5_load_cell.py::test_native_task_refusal" = "0fa0d3189ff248ceeb4d898232daaa3d0e5ddbe0be04fc8b57c2e4baf5b26d20"
+
+[[receipt]]
+id = "RCP-imu-frame-observability-A"
+dimension = "A"
+subfamilies = ["imu.inertial"]
+issue = "RES-704"
+claim = "Native explicit time, framed XYZ specific force and framed XYZ gyroscope data from one declared IMU are validated before native reconstruction. Scope is imu-frame-observability revision 2, the eight immutable synthetic scenarios on the prescribed native 20 Hz identity alignment."
+implementation = ["src/dynamisbench_soccer/m4/measurement.py::_imu", "src/dynamisbench_soccer/engines/imu.py::_channels"]
+reference = ["tests/test_m5_imu.py::_source_digest", "tests/test_m5_imu.py::_clock_time"]
+reference_kind = "closed_form"
+independence = "Native rates, sample brackets, constant-acceleration position, equivalent raw observations and channel hashes are derived independently from the synthetic declarations."
+tests = ["tests/test_m5_imu.py::test_frozen_scenarios_source_provenance_and_projection", "tests/test_m5_imu.py::test_native_position_calibration_integration_and_bounds", "tests/test_m5_imu.py::test_native_contract_rejects_changed_digest_axis_clock_mount_calibration_and_motion"]
+tolerance = 0
+tolerance_unit = ""
+tolerance_basis = "Exact device/source axis and native-channel relationships; incomplete or contradictory native sources are outside scope."
+check_kind = "categorical"
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/imu.py::_channels" = "fe06adbae39bc03b14b8a3a104098169e7e124c543e4b0727188a23dd3810955"
+"src/dynamisbench_soccer/m4/measurement.py::_imu" = "55d25d7a7d36dd1a096b3e815c47a65f4254657286b3bbcf02f5f559a8c4f4fa"
+"tests/test_m5_imu.py::_clock_time" = "b4171eaf2a3e79fffa6a8b3295d2427b0dcfe31e99266016aec006b4c25a79e2"
+"tests/test_m5_imu.py::_source_digest" = "d5d4e12dca74fb28f8ff16cc64184d83f3376a689126a1aa1e563f0512589714"
+"tests/test_m5_imu.py::test_frozen_scenarios_source_provenance_and_projection" = "ce1414b623f8aca390fa958659141ecee6ca9f8269c5224ab3b217cb81b3b581"
+"tests/test_m5_imu.py::test_native_contract_rejects_changed_digest_axis_clock_mount_calibration_and_motion" = "5a202071ee45ba7549cfc587e6fa78f6fed215c887ccfa069e4b1c4932b3038c"
+"tests/test_m5_imu.py::test_native_position_calibration_integration_and_bounds" = "7904dcd395f2ff183a7b01a87eb0b03ce95041713f455d76e62f4fc3224435ec"
+
+[[receipt]]
+id = "RCP-imu-frame-observability-C"
+dimension = "C"
+subfamilies = ["imu.inertial"]
+issue = "RES-704"
+claim = "The 20 Hz time grid and identity alignment use two ordered exact clock ties; the native sample gap is refused. Scope is imu-frame-observability revision 2, the eight immutable synthetic scenarios on the prescribed native 20 Hz identity alignment."
+implementation = ["src/dynamisbench_soccer/m4/measurement.py::_imu", "src/dynamisbench_soccer/engines/imu.py::process"]
+reference = ["tests/test_m5_imu.py::_clock_time"]
+reference_kind = "closed_form"
+independence = "Native rates, sample brackets, constant-acceleration position, equivalent raw observations and channel hashes are derived independently from the synthetic declarations."
+tests = ["tests/test_m5_imu.py::test_native_position_calibration_integration_and_bounds", "tests/test_m5_imu.py::test_frozen_imu_refusal", "tests/test_m5_imu.py::test_native_contract_rejects_changed_digest_axis_clock_mount_calibration_and_motion"]
+tolerance = 1e-12
+tolerance_unit = "s"
+tolerance_basis = "The expected grid comes from sample index divided by 20. A numerical allowance covers exact-clock representation."
+check_kind = "numeric"
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/imu.py::process" = "79e817e8da6ed0dc308187c5f346f798d9089e3e70ccb514ac601bfccb1dd4a8"
+"src/dynamisbench_soccer/m4/measurement.py::_imu" = "55d25d7a7d36dd1a096b3e815c47a65f4254657286b3bbcf02f5f559a8c4f4fa"
+"tests/test_m5_imu.py::_clock_time" = "b4171eaf2a3e79fffa6a8b3295d2427b0dcfe31e99266016aec006b4c25a79e2"
+"tests/test_m5_imu.py::test_frozen_imu_refusal" = "7eb9fe17652cda08b64f346078b448e95267c638c9f3fd6c223b8dddc944314a"
+"tests/test_m5_imu.py::test_native_contract_rejects_changed_digest_axis_clock_mount_calibration_and_motion" = "5a202071ee45ba7549cfc587e6fa78f6fed215c887ccfa069e4b1c4932b3038c"
+"tests/test_m5_imu.py::test_native_position_calibration_integration_and_bounds" = "7904dcd395f2ff183a7b01a87eb0b03ce95041713f455d76e62f4fc3224435ec"
+
+[[receipt]]
+id = "RCP-imu-frame-observability-G"
+dimension = "G"
+subfamilies = ["imu.inertial"]
+issue = "RES-704"
+claim = "The signature uses one complete below-threshold run with valid outer brackets, minimum duration and the conservative sum of the native edge intervals. Scope is imu-frame-observability revision 2, the eight immutable synthetic scenarios on the prescribed native 20 Hz identity alignment."
+implementation = ["src/dynamisbench_soccer/m4/measurement.py::_imu_signature", "src/dynamisbench_soccer/engines/imu.py::_flights"]
+reference = ["tests/test_m5_imu.py::_signature_span"]
+reference_kind = "closed_form"
+independence = "Native rates, sample brackets, constant-acceleration position, equivalent raw observations and channel hashes are derived independently from the synthetic declarations."
+tests = ["tests/test_m5_imu.py::test_signature_uses_complete_outer_edges_and_conditional_radius", "tests/test_m5_imu.py::test_signature_refuses_missing_bracket_or_second_run", "tests/test_m5_imu.py::test_frozen_imu_refusal"]
+tolerance = 1e-09
+tolerance_unit = "s"
+tolerance_basis = "An independent sample-index interval count provides duration and bound. Bracket and ambiguity refusals must be categorical."
+check_kind = "numeric"
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/imu.py::_flights" = "aa76330083a775f86c38cd52bfa3758b2d3d0eb45c94ed4fc834bb217df88c4d"
+"src/dynamisbench_soccer/m4/measurement.py::_imu_signature" = "83ae741b444b5c1bd0eba22af6610d2e488bdc3044f240786222c602ce9dd289"
+"tests/test_m5_imu.py::_signature_span" = "0466ad1a8ada0573bba0a165589a7268f534a8818ccc2c8c35a3d50a42214694"
+"tests/test_m5_imu.py::test_frozen_imu_refusal" = "7eb9fe17652cda08b64f346078b448e95267c638c9f3fd6c223b8dddc944314a"
+"tests/test_m5_imu.py::test_signature_refuses_missing_bracket_or_second_run" = "15ed484c8153598c1d0b25a7d13fbd8ef49dbd2c58c990a6c468c34cdbe43131"
+"tests/test_m5_imu.py::test_signature_uses_complete_outer_edges_and_conditional_radius" = "6ca3eb560cb0a321c486745c41f33bd70de85369d4d0a4f28c30a633aab58013"
+
+[[receipt]]
+id = "RCP-imu-frame-observability-H"
+dimension = "H"
+subfamilies = ["imu.inertial"]
+issue = "RES-704"
+claim = "Declared attitude and initial states identify field-X instrument position; gravity-norm ambiguity and a COM request are refused. Sensor threshold signature duration is a separate estimand. Scope is imu-frame-observability revision 2, the eight immutable synthetic scenarios on the prescribed native 20 Hz identity alignment."
+implementation = ["src/dynamisbench_soccer/m4/measurement.py::_imu_position", "src/dynamisbench_soccer/m4/measurement.py::_imu_signature", "src/dynamisbench_soccer/engines/imu.py::process"]
+reference = ["tests/test_m5_imu.py::_instrument_x", "tests/test_m5_imu.py::_signature_span", "tests/test_m5_imu.py::_equal_observations"]
+reference_kind = "closed_form"
+independence = "Native rates, sample brackets, constant-acceleration position, equivalent raw observations and channel hashes are derived independently from the synthetic declarations."
+tests = ["tests/test_m5_imu.py::test_native_position_calibration_integration_and_bounds", "tests/test_m5_imu.py::test_signature_uses_complete_outer_edges_and_conditional_radius", "tests/test_m5_imu.py::test_same_observation_allows_distinct_field_acceleration", "tests/test_m5_imu.py::test_frozen_imu_refusal"]
+tolerance = 1e-09
+tolerance_unit = "m; s"
+tolerance_basis = "Independent constant-acceleration, same-observation alternatives and sample bracket derivations fix quantities and categorical limitations."
+check_kind = "numeric"
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/imu.py::process" = "79e817e8da6ed0dc308187c5f346f798d9089e3e70ccb514ac601bfccb1dd4a8"
+"src/dynamisbench_soccer/m4/measurement.py::_imu_position" = "c4ce803c816309797e174c59aeab0c75166f681cd66d933ff6ef320006267bed"
+"src/dynamisbench_soccer/m4/measurement.py::_imu_signature" = "83ae741b444b5c1bd0eba22af6610d2e488bdc3044f240786222c602ce9dd289"
+"tests/test_m5_imu.py::_equal_observations" = "1c799ec31576bde5af3fc08a03362479221a50c81cc74e97caff6deae70cbbb5"
+"tests/test_m5_imu.py::_instrument_x" = "f351364ddcb9675fcc0a466baff6c5023a4548f357fc8a8b886a939491d834b8"
+"tests/test_m5_imu.py::_signature_span" = "0466ad1a8ada0573bba0a165589a7268f534a8818ccc2c8c35a3d50a42214694"
+"tests/test_m5_imu.py::test_frozen_imu_refusal" = "7eb9fe17652cda08b64f346078b448e95267c638c9f3fd6c223b8dddc944314a"
+"tests/test_m5_imu.py::test_native_position_calibration_integration_and_bounds" = "7904dcd395f2ff183a7b01a87eb0b03ce95041713f455d76e62f4fc3224435ec"
+"tests/test_m5_imu.py::test_same_observation_allows_distinct_field_acceleration" = "bfb9c7febcf5d011b913c842114ff71da7c55e8c7f8d12f8c04b0749dfe7700b"
+"tests/test_m5_imu.py::test_signature_uses_complete_outer_edges_and_conditional_radius" = "6ca3eb560cb0a321c486745c41f33bd70de85369d4d0a4f28c30a633aab58013"
+
+[[receipt]]
+id = "RCP-imu-frame-observability-M"
+dimension = "M"
+subfamilies = ["imu.inertial"]
+issue = "RES-704"
+claim = "Source sample bytes, artifact digests, checkpoint order and release are bound to the exact original eight synthetic scenarios and revision-specific method conditions. Scope is imu-frame-observability revision 2, the eight immutable synthetic scenarios on the prescribed native 20 Hz identity alignment."
+implementation = ["src/dynamisbench_soccer/m4/measurement.py::_imu"]
+reference = ["tests/test_m5_imu.py::_source_digest"]
+reference_kind = "closed_form"
+independence = "Native rates, sample brackets, constant-acceleration position, equivalent raw observations and channel hashes are derived independently from the synthetic declarations."
+tests = ["tests/test_m5_imu.py::test_frozen_scenarios_source_provenance_and_projection", "tests/test_m5_imu.py::test_native_contract_rejects_changed_digest_axis_clock_mount_calibration_and_motion", "tests/test_m5_imu.py::test_private_episode_rejects_method_substitution_and_future_incompatible_keys"]
+tolerance = 0
+tolerance_unit = ""
+tolerance_basis = "SHA-256 equality and exact checkpoint identity are categorical. An altered native observation or malformed private method binding is refused."
+check_kind = "categorical"
+
+[receipt.digests]
+"src/dynamisbench_soccer/m4/measurement.py::_imu" = "55d25d7a7d36dd1a096b3e815c47a65f4254657286b3bbcf02f5f559a8c4f4fa"
+"tests/test_m5_imu.py::_source_digest" = "d5d4e12dca74fb28f8ff16cc64184d83f3376a689126a1aa1e563f0512589714"
+"tests/test_m5_imu.py::test_frozen_scenarios_source_provenance_and_projection" = "ce1414b623f8aca390fa958659141ecee6ca9f8269c5224ab3b217cb81b3b581"
+"tests/test_m5_imu.py::test_native_contract_rejects_changed_digest_axis_clock_mount_calibration_and_motion" = "5a202071ee45ba7549cfc587e6fa78f6fed215c887ccfa069e4b1c4932b3038c"
+"tests/test_m5_imu.py::test_private_episode_rejects_method_substitution_and_future_incompatible_keys" = "214d58b645587da6c334dddadf36196d0b35bbfa2de114ba89079445b6e70da5"

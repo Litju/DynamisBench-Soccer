@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import os
 import re
 import secrets
@@ -18,7 +19,7 @@ from seal_m5_references import _custody_family, _read_private, _supported
 from dynamisbench_soccer.m4.admission import Catalog, evaluate
 from dynamisbench_soccer.m4.grader import score_checkpoint
 from dynamisbench_soccer.m4.key_store import digest
-from dynamisbench_soccer.m4.measurement import CELL_OPERATION
+from dynamisbench_soccer.m4.measurement import CELL_OPERATION, IMU_POSITION, IMU_SIGNATURE
 from dynamisbench_soccer.m4.runner import MAX_OUTPUT, MAX_SOURCE, WALL_SECONDS, execute_payload
 from dynamisbench_soccer.m4.task_registry import load_registry
 from dynamisbench_soccer.m4.trials import STUBS, TrialContext, TrialReport, run_episode
@@ -164,10 +165,19 @@ def _controls(score, task, answers: dict, inputs: dict):
     for key, row in answers.items():
         if row["reason"] not in {"not_eligible", "insufficient_evidence"}:
             continue
+        positive_for_method = (
+            next(
+                value
+                for value in answers.values()
+                if value["decision"] == "compute" and value["method"] == row["method"]
+            )
+            if task.methods[0].id == IMU_POSITION
+            else positive
+        )
         scenarios.extend(
             [
                 (f"{key}_correct_qc", key, row, ()),
-                (f"{key}_ignored_qc", key, positive, ("eligibility_or_refusal",)),
+                (f"{key}_ignored_qc", key, positive_for_method, ("eligibility_or_refusal",)),
                 (
                     f"{key}_wrong_qc_finding",
                     key,
@@ -178,7 +188,171 @@ def _controls(score, task, answers: dict, inputs: dict):
         )
 
     method = task.methods[0].id
-    if method == CELL_OPERATION:
+    if method == IMU_POSITION:
+        signature_id, signature = next(
+            (key, row)
+            for key, row in answers.items()
+            if row["method"] == IMU_SIGNATURE and row["decision"] == "compute"
+        )
+        gap = next(row for row in answers.values() if row["claims"] == ["native_clock_gap"])
+        sig_quantity = signature["quantity"]
+        artifact = positive["selected_trials"][0]
+        native_case = json.loads(inputs[artifact])
+        channels = native_case["channels"]
+        spec = native_case["spec"]
+
+        for name, key, answer, field, expected_wrong in (
+            ("specific_force_as_acceleration", compute_id, positive, "free_az_m_s2", 11.00665),
+            ("gravity_wrong_sign", compute_id, positive, "free_az_m_s2", 20.8133),
+            ("wrong_frame", compute_id, positive, "free_ax_m_s2", -1),
+            ("ignored_accel_bias", compute_id, positive, "free_ax_m_s2", 2.2),
+            ("ignored_accel_scale", compute_id, positive, "free_ax_m_s2", 1.78),
+            ("misalignment_not_inverted", compute_id, positive, "free_ay_m_s2", -1.4),
+            ("misalignment_applied_forward", compute_id, positive, "free_ay_m_s2", -1.8),
+            (
+                "gyro_bias_uncorrected",
+                compute_id,
+                positive,
+                "peak_corrected_gyro_rad_s",
+                math.hypot(*spec["gyro_bias_rad_s"]),
+            ),
+            ("missed_velocity_integration", compute_id, positive, "terminal_vx_m_s", 0.3),
+            ("first_low_sample_edge", signature_id, signature, "takeoff_edge_s", 0.1),
+            ("missing_signature_bracket", signature_id, signature, "landing_edge_s", None),
+            ("wrong_threshold", signature_id, signature, "threshold_m_s2", 4),
+        ):
+            operands = [
+                operand | {"value": expected_wrong} if operand["field"] == field else operand
+                for operand in answer["operands"]
+                if operand["field"] != field or expected_wrong is not None
+            ]
+            scenarios.append((name, key, answer | {"operands": operands}, ("derivation",)))
+
+        for name, key, answer, changes, findings in (
+            (
+                "position_operand_order",
+                compute_id,
+                positive,
+                {"operands": positive["operands"][::-1]},
+                (),
+            ),
+            (
+                "position_as_com",
+                compute_id,
+                positive,
+                {"quantity": quantity | {"estimand": "athlete_com_position"}},
+                ("estimand",),
+            ),
+            (
+                "wrong_source_trial",
+                compute_id,
+                positive,
+                {"selected_trials": signature["selected_trials"]},
+                ("trial_selection",),
+            ),
+            (
+                "position_method_substitution",
+                compute_id,
+                positive,
+                {"method": IMU_SIGNATURE},
+                ("unsupported_method",),
+            ),
+            (
+                "attitude_from_gravity_norm",
+                "c02",
+                positive,
+                {"claims": ["attitude_from_gravity_norm"]},
+                ("eligibility_or_refusal",),
+            ),
+            ("signature_positive", signature_id, signature, {}, ()),
+            (
+                "signature_inside_tolerance",
+                signature_id,
+                signature,
+                {"quantity": sig_quantity | {"value": sig_quantity["value"] + 0.5 * tolerance}},
+                (),
+            ),
+            (
+                "signature_operand_order",
+                signature_id,
+                signature,
+                {"operands": signature["operands"][::-1]},
+                (),
+            ),
+            (
+                "signature_wrong_duration",
+                signature_id,
+                signature,
+                {"quantity": sig_quantity | {"value": sig_quantity["value"] - 0.05}},
+                ("value",),
+            ),
+            (
+                "signature_missing_second_edge_uncertainty",
+                signature_id,
+                signature,
+                {"quantity": sig_quantity | {"uncertainty": 0.05}},
+                ("uncertainty",),
+            ),
+            (
+                "signature_wrong_units",
+                signature_id,
+                signature,
+                {"quantity": sig_quantity | {"unit": "ms"}},
+                ("unit_or_dimension",),
+            ),
+            (
+                "signature_wrong_citation",
+                signature_id,
+                signature,
+                {"citations": ["DEV-003"]},
+                ("source_citations",),
+            ),
+            (
+                "signature_as_physical_flight",
+                signature_id,
+                signature,
+                {"quantity": sig_quantity | {"estimand": "physical_flight_time"}},
+                ("estimand",),
+            ),
+            (
+                "signature_force_platform_claim",
+                signature_id,
+                signature,
+                {"claims": signature["claims"] + ["force_platform_events_observed"]},
+                ("interpretation_boundary",),
+            ),
+            (
+                "signature_method_substitution",
+                signature_id,
+                signature,
+                {"method": IMU_POSITION},
+                ("unsupported_method",),
+            ),
+            (
+                "signature_unnecessary_abstention",
+                signature_id,
+                gap,
+                {},
+                ("eligibility_or_refusal",),
+            ),
+            (
+                "position_without_initial_velocity",
+                compute_id,
+                positive,
+                {"quantity": quantity | {"value": 1.66}},
+                ("value",),
+            ),
+            (
+                "native_sensor_axis_shortcut",
+                compute_id,
+                positive,
+                {"quantity": quantity | {"value": channels["specific_force_x"][0]}},
+                ("value",),
+            ),
+            ("calculate_com_on_invalid_case", "c06", positive, {}, ("eligibility_or_refusal",)),
+        ):
+            scenarios.append((name, key, answer | changes, findings))
+    elif method == CELL_OPERATION:
         sensitivity_id = task.checkpoints[1].id
         sensitivity = answers[sensitivity_id]
         for name, checkpoint, answer, field, replacement in (

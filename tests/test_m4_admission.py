@@ -182,3 +182,42 @@ def test_load_cell_scope_keeps_frozen_revision_and_requires_native_receipts():
     row = rows["RCP-timing_contact-gates-C"]
     review.evidence["C"] = ReceiptBinding(id=row.id, sha256=_receipt_digest(row))
     assert _check(task, review)[1] == (f"missing or incompatible receipt for C: {row.id}",)
+
+
+def test_imu_signature_role_required_and_development_revision_excluded():
+    tasks = load_registry(ROOT / "benchmark/tasks")
+    task = tasks["imu-frame-observability", 2]
+    legacy = tasks["imu-frame-observability", 1]
+    catalog = (ROOT / "benchmark/reviewed-slices.json").read_bytes()
+    for version in (task, legacy):
+        assert evaluate(ROOT, version, catalog, digest(catalog)).status == (
+            "DEVELOPMENT_ONLY_NOT_QUALIFIED"
+        )
+
+    roles = REQUIRED["protocol_assessment"]
+    review = _profile(task).model_copy(
+        update={
+            "kind": "protocol_assessment",
+            "evidence": {
+                role: ReceiptBinding(id="missing", sha256="0" * 64) for role in roles - {"G"}
+            },
+            "inapplicable": {"L": "one native device", "G": "omitted event"},
+        }
+    )
+    assert _check(task, review)[1] == ("missing or invalid required evidence dimensions",)
+    assert _check(legacy, review.model_copy(update={"task_sha256": fingerprint(legacy)}))[1] == (
+        "IMU development revision is outside the scored scope",
+    )
+    method = task.methods[0].model_copy(
+        update={"specification": task.methods[0].specification | {"checkpoints": ["c07"]}}
+    )
+    wrong = task.model_copy(update={"methods": (method, task.methods[1])})
+    assert _check(wrong, review.model_copy(update={"task_sha256": fingerprint(wrong)}))[1] == (
+        "incompatible frozen native IMU task or review kind",
+    )
+    rows = {row.id: row for row in load(ROOT / "qualification/receipts.toml")}
+    row = rows["RCP-gnss_lps-lps-A"]
+    review.evidence["A"] = ReceiptBinding(id=row.id, sha256=_receipt_digest(row))
+    review.evidence["G"] = ReceiptBinding(id="missing", sha256="0" * 64)
+    review.inapplicable.pop("G")
+    assert _check(task, review)[1] == (f"missing or incompatible receipt for A: {row.id}",)

@@ -24,9 +24,9 @@ from dynamisbench_soccer.engines.load_cell import process as process_load_cell
 from dynamisbench_soccer.engines.load_cell_acquisition import CellSpec, acquire, check_saturation
 from dynamisbench_soccer.engines.position_clock_bounds import input_error_radii
 from dynamisbench_soccer.engines.timing_gates import GatePolicy, sprint
-from dynamisbench_soccer.m4.admission import CELL_TASK, Kind
+from dynamisbench_soccer.m4.admission import CELL_TASK, IMU_TASK, Kind
 from dynamisbench_soccer.m4.key_store import digest
-from dynamisbench_soccer.m4.task_registry import RegistryTask
+from dynamisbench_soccer.m4.task_registry import Method, RegistryTask
 from dynamisbench_soccer.qc.spec import Status
 from dynamisbench_soccer.signals.schema import (
     BundleMeta,
@@ -700,11 +700,12 @@ def _imu(operation: str, data: dict[str, object]) -> Reading:
         or spec.sensor_offset_m is not None
         or {frame.id: (frame.kind, frame.parent) for frame in acquisition.frames}
         != {"field": ("field", None), "sensor": ("sensor", "field")}
+        or any(frame.rotation_to_parent is not None for frame in acquisition.frames)
         or spec.static_window_s is not None
     ):
         return Reading("not_eligible", ("mounting_or_frame_unestablished",))
 
-    if not np.allclose(
+    if spec.sync_uncertainty_s > 1e-12 or not np.allclose(
         bundle["time"], sampling.t0_s + np.arange(meta.n_rows) / 20, atol=1e-12, rtol=0
     ):
         return Reading("not_eligible", ("native_clock_gap",))
@@ -735,10 +736,31 @@ def _imu(operation: str, data: dict[str, object]) -> Reading:
     return _imu_position(spec, native, request)
 
 
+def is_imu_episode(task: RegistryTask) -> bool:
+    return (task.task.id, task.task.revision) == IMU_TASK
+
+
+def checkpoint_methods(task: RegistryTask, checkpoint_id: str) -> tuple[Method, ...]:
+    if not is_imu_episode(task):
+        return task.methods
+    return tuple(
+        method
+        for method in task.methods
+        if isinstance(checkpoints := method.specification.get("checkpoints"), list)
+        and checkpoint_id in checkpoints
+    )
+
+
 def is_measurement_task(task: RegistryTask) -> bool:
     if (task.task.id, task.task.revision) == CELL_TASK:
         return task.engine == "m5-advanced-development.v1" and task.methods[0].id == CELL_OPERATION
-    return task.engine == ENGINE and task.methods[0].id != CELL_OPERATION
+    if is_imu_episode(task):
+        return (
+            task.engine == ENGINE and tuple(method.id for method in task.methods) == IMU_OPERATIONS
+        )
+    return task.engine == ENGINE and all(
+        method.id not in (CELL_OPERATION, *IMU_OPERATIONS) for method in task.methods
+    )
 
 
 def replay(operation: str, data: dict[str, object]) -> Reading:

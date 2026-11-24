@@ -41,8 +41,13 @@ PACKAGE = "dynamisbench_soccer"
 SOURCE = f"src/{PACKAGE}/"
 CELL_TASK = ("load-cell-net-torque-ramp", 1)
 CELL_TASK_SHA256 = "133670a4fa6026efe72bb52a434fbf64e06ab2e5e82f98c2fd53bb953cb17949"
-CELL_RECEIPT_TABLE = "native_task_receipts"
-CELL_ROLES = frozenset({"C", "E", "H", "I", "K"})
+IMU_TASK = ("imu-frame-observability", 2)
+IMU_TASK_SHA256 = "e78372488e6195411bbef0b89091d1999ad22fa30c6215d7bd54bd2ad8096d06"
+NATIVE_TASK_RECEIPTS = "native_task_receipts"
+NATIVE_TASK_SCOPES = {
+    CELL_TASK: (CELL_TASK_SHA256, frozenset({"C", "E", "H", "I", "K"})),
+    IMU_TASK: (IMU_TASK_SHA256, frozenset({"A", "C", "G", "H", "M"})),
+}
 STATISTICAL_TASK = ("lps-repeat-session-change", 1)
 STATISTICAL_RECEIPTS = "qualification/task_receipts.toml"
 
@@ -225,9 +230,13 @@ def evaluate(
             statistical and any(artifact.category != "analytical" for artifact in task.artifacts)
         ):
             return decision("REFUSED", "incompatible statistical task or source category")
-        native_cell = (task.task.id, task.task.revision) == CELL_TASK
-        if native_cell and (task_hash != CELL_TASK_SHA256 or review.kind != "protocol_assessment"):
-            return decision("REFUSED", "incompatible frozen native load-cell task or review kind")
+        identity = (task.task.id, task.task.revision)
+        scope = NATIVE_TASK_SCOPES.get(identity)
+        if task.task.id == IMU_TASK[0] and identity != IMU_TASK:
+            return decision("REFUSED", "IMU development revision is outside the scored scope")
+        if scope is not None and (task_hash != scope[0] or review.kind != "protocol_assessment"):
+            device = "load-cell" if identity == CELL_TASK else "IMU"
+            return decision("REFUSED", f"incompatible frozen native {device} task or review kind")
         roles = set(review.evidence)
         if not REQUIRED[review.kind] <= roles <= DIMENSIONS:
             return decision("REFUSED", "missing or invalid required evidence dimensions")
@@ -237,12 +246,12 @@ def evaluate(
         rows = receipts.load(
             root / (STATISTICAL_RECEIPTS if statistical else "qualification/receipts.toml")
         )
-        cell_rows = (
-            receipts.load(root / f"qualification/{CELL_RECEIPT_TABLE}.toml") if native_cell else ()
+        native_rows = (
+            receipts.load(root / f"qualification/{NATIVE_TASK_RECEIPTS}.toml") if scope else ()
         )
-        counts = Counter(row.id for row in (*rows, *cell_rows))
+        counts = Counter(row.id for row in (*rows, *native_rows))
         inventory = {row.id: row for row in rows}
-        cell_inventory = {row.id: row for row in cell_rows}
+        native_inventory = {row.id: row for row in native_rows}
         audit_document = json.loads(_read(root, "qualification/receipt_audit.json"))
         if not isinstance(audit_document, dict) or not isinstance(
             audit := audit_document.get("task_receipts" if statistical else "receipts"), dict
@@ -252,8 +261,8 @@ def evaluate(
         oracles: set[str] = set()
         for role, binding in sorted(review.evidence.items()):
             identifier = binding.id
-            scoped = native_cell and role in CELL_ROLES
-            row = (cell_inventory if scoped else inventory).get(identifier)
+            scoped = scope is not None and role in scope[1]
+            row = (native_inventory if scoped else inventory).get(identifier)
             if (
                 row is None
                 or counts[identifier] != 1
@@ -269,7 +278,7 @@ def evaluate(
             evidence[identifier] = current
             if current != binding.sha256:
                 return decision("REFUSED", f"receipt changed since task review: {identifier}")
-            table = audit_document.get(CELL_RECEIPT_TABLE) if scoped else audit
+            table = audit_document.get(NATIVE_TASK_RECEIPTS) if scoped else audit
             record = table.get(identifier, {}) if isinstance(table, dict) else {}
             if (
                 not isinstance(record, dict)

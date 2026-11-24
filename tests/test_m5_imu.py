@@ -2,13 +2,13 @@
 
 import json
 import math
+from hashlib import sha256
 from pathlib import Path
 
 import numpy as np
 import pytest
 
 from dynamisbench_soccer.engines import imu
-from dynamisbench_soccer.m4.key_store import digest
 from dynamisbench_soccer.m4.measurement import IMU_POSITION, IMU_SIGNATURE, replay
 from dynamisbench_soccer.m4.task_registry import load_registry
 from dynamisbench_soccer.signals.schema import BundleMeta, SignalBundle
@@ -35,7 +35,7 @@ def _signature_span():
 
 
 def _source_digest(channels):
-    return digest((json.dumps(channels, sort_keys=True, indent=2) + "\n").encode())
+    return sha256((json.dumps(channels, sort_keys=True, indent=2) + "\n").encode()).hexdigest()
 
 
 def _rehash(data):
@@ -194,3 +194,40 @@ def test_native_contract_rejects_changed_digest_axis_clock_mount_calibration_and
     channels[1]["axis"], channels[2]["axis"] = channels[2]["axis"], channels[1]["axis"]
     with pytest.raises(ValueError, match="canonical sensor axes"):
         replay(IMU_POSITION, data)
+
+
+def test_private_episode_rejects_method_substitution_and_future_incompatible_keys():
+    from dynamisbench_soccer.m4.custody import AnswerEnvelope
+    from dynamisbench_soccer.m4.grader import _private_methods
+    from dynamisbench_soccer.m4.measurement import checkpoint_methods
+    from dynamisbench_soccer.m4.task_registry import fingerprint
+
+    task = load_registry(ROOT / "benchmark/tasks")[TASK, 2]
+    positions, signatures = task.checkpoints[:6], task.checkpoints[6:]
+    assert all(checkpoint_methods(task, row.id)[0].id == IMU_POSITION for row in positions)
+    assert all(checkpoint_methods(task, row.id)[0].id == IMU_SIGNATURE for row in signatures)
+    # A structurally valid refusal serves as a type and domain test without any operator keys.
+    refusal = {
+        "decision": "refuse",
+        "reasons": ["not_eligible"],
+        "selected_trials": [],
+        "required_citations": ["DEV-002"],
+        "allowed_citations": ["DEV-002"],
+        "required_claims": [],
+        "allowed_claims": [],
+        "quantity": None,
+        "operands": [],
+    }
+    keys = {row.id: {checkpoint_methods(task, row.id)[0].id: refusal} for row in task.checkpoints}
+    envelope = AnswerEnvelope(task_sha256=fingerprint(task), nonce="a" * 64, checkpoints=keys)
+    assert tuple(_private_methods(task, envelope, positions[0])) == (IMU_POSITION,)
+    assert tuple(_private_methods(task, envelope, signatures[0])) == (IMU_SIGNATURE,)
+    keys["c07"] = {IMU_POSITION: refusal}
+    with pytest.raises(ValueError, match="methods disagree"):
+        _private_methods(task, envelope.model_copy(update={"checkpoints": keys}), positions[0])
+    keys["c07"] = {IMU_SIGNATURE: refusal, IMU_POSITION: refusal}
+    with pytest.raises(ValueError, match="methods disagree"):
+        _private_methods(task, envelope.model_copy(update={"checkpoints": keys}), positions[0])
+    keys.pop("c07")
+    with pytest.raises(ValueError, match="cover the declared episode"):
+        _private_methods(task, envelope.model_copy(update={"checkpoints": keys}), positions[0])

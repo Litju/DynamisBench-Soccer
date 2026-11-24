@@ -18,8 +18,16 @@ from dynamisbench_soccer.engines.lps_speed import horizontal_speed, position_err
 from dynamisbench_soccer.m4 import measurement
 from dynamisbench_soccer.m4.admission import ReviewedSlice, evaluate
 from dynamisbench_soccer.m4.contracts import _unique_object
-from dynamisbench_soccer.m4.custody import load_private
-from dynamisbench_soccer.m4.task_registry import Name, Nonnegative, RegistryTask, Schema, Text
+from dynamisbench_soccer.m4.custody import AnswerEnvelope, load_private
+from dynamisbench_soccer.m4.task_registry import (
+    Checkpoint,
+    Method,
+    Name,
+    Nonnegative,
+    RegistryTask,
+    Schema,
+    Text,
+)
 from dynamisbench_soccer.signals.schema import BundleMeta, SignalBundle
 
 Reason = measurement.Reason
@@ -258,45 +266,97 @@ def _replay_lps(
 
 
 def _measurement_binding(task: RegistryTask, review: ReviewedSlice) -> bool:
-    method = task.methods[0]
-    procedure = measurement.PROCEDURES.get(method.id)
-    if method.id == "paired-speed-bias" and any(
-        role not in review.evidence
-        or review.evidence[role].id != f"RCP-gnss_lps-lps-{role}-paired-speed"
-        for role in ("I", "L")
-    ):
-        return False
-    specification = (
-        measurement.CELL_SPECIFICATION
-        if method.id == measurement.CELL_OPERATION
-        else {"operation": method.id}
-    )
-    return (
+    if not (
         task.grader == measurement.GRADER
         and task.task.answer_schema == measurement.ANSWER_VERSION
-        and len(task.methods) == 1
-        and procedure is not None
-        and review.source == procedure.source
-        and review.kind == procedure.kind
         and set(review.private_inputs_sha256) == {"expected", "oracle", "provenance"}
-        and method.specification == specification
-        and (method.estimand, method.dimension, method.unit)
-        == (procedure.estimand, procedure.dimension, procedure.unit)
-        and method.source_claims == procedure.claims
-        and all(
-            f"src/dynamisbench_soccer/{dependency}" in review.implementations
-            for dependency in procedure.dependencies
+    ):
+        return False
+    if measurement.is_imu_episode(task):
+        if set(method.id for method in task.methods) != set(measurement.IMU_OPERATIONS) or any(
+            len(measurement.checkpoint_methods(task, checkpoint.id)) != 1
+            for checkpoint in task.checkpoints
+        ):
+            return False
+    elif len(task.methods) != 1:
+        return False
+
+    for method in task.methods:
+        procedure = measurement.PROCEDURES.get(method.id)
+        if procedure is None:
+            return False
+        if method.id == "paired-speed-bias" and any(
+            role not in review.evidence
+            or review.evidence[role].id != f"RCP-gnss_lps-lps-{role}-paired-speed"
+            for role in ("I", "L")
+        ):
+            return False
+        specification: dict[str, object] = (
+            measurement.CELL_SPECIFICATION
+            if method.id == measurement.CELL_OPERATION
+            else {"operation": method.id}
         )
-    )
+        if measurement.is_imu_episode(task):
+            specification = {
+                "operation": method.id,
+                "checkpoints": [
+                    row.id
+                    for row in task.checkpoints
+                    if method in measurement.checkpoint_methods(task, row.id)
+                ],
+            }
+        if (
+            review.source != procedure.source
+            or review.kind != procedure.kind
+            or method.specification != specification
+            or (method.estimand, method.dimension, method.unit)
+            != (procedure.estimand, procedure.dimension, procedure.unit)
+            or method.source_claims != procedure.claims
+            or any(
+                f"src/dynamisbench_soccer/{dependency}" not in review.implementations
+                for dependency in procedure.dependencies
+            )
+        ):
+            return False
+    return True
+
+
+def _private_methods(
+    task: RegistryTask, answer: AnswerEnvelope, checkpoint: Checkpoint
+) -> dict[str, ExpectedMethod]:
+    if set(answer.checkpoints) != {row.id for row in task.checkpoints}:
+        raise ValueError("private answer does not cover the declared episode")
+
+    def parse(row: Checkpoint) -> dict[str, ExpectedMethod]:
+        keys = answer.checkpoints[row.id]
+        methods = measurement.checkpoint_methods(task, row.id)
+        if keys.keys() != {method.id for method in methods} or not methods:
+            raise ValueError("private answer methods disagree with the checkpoint binding")
+        references = {}
+        for method in methods:
+            expected = ExpectedMethod.model_validate_json(json.dumps(keys[method.id]))
+            target = expected.quantity
+            if expected.corrects != row.corrects or (
+                target is not None
+                and (target.unit, target.dimension, target.estimand)
+                != (method.unit, method.dimension, method.estimand)
+            ):
+                raise ValueError("inconsistent private target")
+            references[method.id] = expected
+        return references
+
+    if measurement.is_imu_episode(task):
+        # Validate both method domains before scoring the first checkpoint.
+        return {row.id: parse(row) for row in task.checkpoints}[checkpoint.id]
+    return parse(checkpoint)
 
 
 def _replay_measurement(
-    expected: ExpectedMethod, task: RegistryTask, payload: bytes, artifacts: tuple[str, ...]
+    expected: ExpectedMethod, method: Method, payload: bytes, artifacts: tuple[str, ...]
 ) -> bool:
     if len(artifacts) != 1:
         return False
     artifact = artifacts[0]
-    method = task.methods[0]
     reading = measurement.replay(method.id, json.loads(json.loads(payload)["inputs"][artifact]))
     computed = reading.reason == "eligible"
     if computed and (reading.value is None or reading.radius is None):
@@ -336,9 +396,11 @@ def _replay_measurement(
             expected,
             method.absolute_tolerance,
             operand_tolerance=method.absolute_tolerance
-            if method.id in {"fixed-session-change", measurement.CELL_OPERATION}
+            if method.id
+            in ("fixed-session-change", measurement.CELL_OPERATION, *measurement.IMU_OPERATIONS)
             else 0,
-            unordered_operands=method.id == measurement.CELL_OPERATION,
+            unordered_operands=method.id
+            in (measurement.CELL_OPERATION, *measurement.IMU_OPERATIONS),
         )
     )
 
@@ -380,27 +442,14 @@ def score_checkpoint(
         answer = load_private(custody_root, root, review.answer, admission.task_sha256)
         public = task.candidate_payload(checkpoint_id, inputs, seed=0)
         checkpoint = next(item for item in task.checkpoints if item.id == checkpoint_id)
-        keys = answer.checkpoints[checkpoint_id]
-        methods = {method.id: method for method in task.methods}
-        if keys.keys() != methods.keys() or set(answer.checkpoints) != {
-            item.id for item in task.checkpoints
-        }:
-            raise ValueError("private answer does not cover the declared episode")
-        references = {
-            name: ExpectedMethod.model_validate_json(json.dumps(value))
-            for name, value in keys.items()
+        references = _private_methods(task, answer, checkpoint)
+        methods = {
+            method.id: method for method in measurement.checkpoint_methods(task, checkpoint_id)
         }
         for name, method in methods.items():
             expected = references[name]
-            target = expected.quantity
-            if expected.corrects != checkpoint.corrects or (
-                target is not None
-                and (target.unit, target.dimension, target.estimand)
-                != (method.unit, method.dimension, method.estimand)
-            ):
-                raise ValueError("inconsistent private target")
             if is_measurement:
-                replay_matches = _replay_measurement(expected, task, public, checkpoint.artifacts)
+                replay_matches = _replay_measurement(expected, method, public, checkpoint.artifacts)
             elif lps:
                 replay_matches = method.specification == LPS_SPEC and _replay_lps(
                     expected, public, checkpoint.artifacts, method.absolute_tolerance
@@ -432,8 +481,10 @@ def score_checkpoint(
         references[candidate.method],
         tolerance,
         operand_tolerance=tolerance
-        if candidate.method in {"fixed-session-change", measurement.CELL_OPERATION}
+        if candidate.method
+        in ("fixed-session-change", measurement.CELL_OPERATION, *measurement.IMU_OPERATIONS)
         else 0,
-        unordered_operands=candidate.method == measurement.CELL_OPERATION,
+        unordered_operands=candidate.method
+        in (measurement.CELL_OPERATION, *measurement.IMU_OPERATIONS),
     )
     return Outcome(outcome="FAIL" if findings else "PASS", findings=findings)
