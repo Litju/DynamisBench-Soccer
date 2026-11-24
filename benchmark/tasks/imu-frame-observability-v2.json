@@ -1,0 +1,206 @@
+{
+  "artifacts": [
+    {
+      "category": "synthetic",
+      "name": "imu-frame-observability-01",
+      "path": "benchmark/fixtures/m5-motion/imu-frame-observability-01.json",
+      "rights": "Repository-authored synthetic sensor observation",
+      "sha256": "426378057a178b7aaef1ab0c46030658dd5137fc1cea1fe962a02fc0d0d7edf8",
+      "usage": "reference"
+    },
+    {
+      "category": "synthetic",
+      "name": "imu-frame-observability-02",
+      "path": "benchmark/fixtures/m5-motion/imu-frame-observability-02.json",
+      "rights": "Repository-authored synthetic sensor observation",
+      "sha256": "e65d7b4d09115e4158c5d95699ad5e3c038576980c6fc28eb619692688b92807",
+      "usage": "reference"
+    },
+    {
+      "category": "synthetic",
+      "name": "imu-frame-observability-03",
+      "path": "benchmark/fixtures/m5-motion/imu-frame-observability-03.json",
+      "rights": "Repository-authored synthetic sensor observation",
+      "sha256": "934535c6daf0a02a86f3345a9a99f1dfabf0bcb4a1856092eaef6824359f9e1f",
+      "usage": "reference"
+    },
+    {
+      "category": "synthetic",
+      "name": "imu-frame-observability-04",
+      "path": "benchmark/fixtures/m5-motion/imu-frame-observability-04.json",
+      "rights": "Repository-authored synthetic sensor observation",
+      "sha256": "a1e3dfe463839c8054be552808f541d31886413dad49068728524ef2132e78d6",
+      "usage": "reference"
+    },
+    {
+      "category": "synthetic",
+      "name": "imu-frame-observability-05",
+      "path": "benchmark/fixtures/m5-motion/imu-frame-observability-05.json",
+      "rights": "Repository-authored synthetic sensor observation",
+      "sha256": "42b9d02b24a81f9560418f7b3a25c781fd4c619203cf7ba766027f36d9bac4e7",
+      "usage": "reference"
+    },
+    {
+      "category": "synthetic",
+      "name": "imu-frame-observability-06",
+      "path": "benchmark/fixtures/m5-motion/imu-frame-observability-06.json",
+      "rights": "Repository-authored synthetic sensor observation",
+      "sha256": "d3332145447b5fcbddb86f50b1ec470b30def100f31d029e7cb43de671e91fae",
+      "usage": "reference"
+    },
+    {
+      "category": "synthetic",
+      "name": "imu-frame-observability-07",
+      "path": "benchmark/fixtures/m5-motion/imu-frame-observability-07.json",
+      "rights": "Repository-authored synthetic sensor observation",
+      "sha256": "d4239f5362b9140892d17c89d7b00f2080675b431c22ef447be86a565dcc985f",
+      "usage": "reference"
+    },
+    {
+      "category": "synthetic",
+      "name": "imu-frame-observability-08",
+      "path": "benchmark/fixtures/m5-motion/imu-frame-observability-08.json",
+      "rights": "Repository-authored synthetic sensor observation",
+      "sha256": "60f9ac8d445d6bf96fa525ee04bb63658d9fe49efcc907016afcb1846e55d5a8",
+      "usage": "reference"
+    }
+  ],
+  "checkpoints": [
+    {
+      "artifacts": [
+        "imu-frame-observability-01"
+      ],
+      "id": "c01",
+      "prompt": "Use method fixed-attitude-sensor-position and cite DEV-002. Compute the final field-X position of the instrument point as field_x_instrument_point_position (length, m) only if clock, orientation, acquisition, and initial position and velocity make it observable. Apply the declared calibration order: divide raw accelerometer samples by scale, subtract sensor bias, invert the x-from-y shear, and rotate into the field. Subtract upward g in the field convention. Bias-corrected gyro is zero on eligible records, so attitude stays at the declared initial orientation. Under the constant acceleration model include free_ax_m_s2, free_az_m_s2, terminal_vx_m_s, and elapsed_s operands. Use the declared constant residual field-acceleration bias bound for position uncertainty. A specific-force norm near g alone cannot determine tilt or prove that the sensor is static. Return JSON with version m5.measurement-answer.v1, method, decision, reason, citations, claims, selected_trials, quantity, operands, and corrects set to null. Use compute with eligible, or refuse with not_eligible (invalid acquisition), insufficient_evidence (required declaration absent), or unsupported_claim. Computations use one selected artifact and quantity fields value, uncertainty, estimand, dimension, and unit. Each operand names artifact, field, and value. Refusals use null quantity and empty operands and selected_trials. Cite the prescribed registry claim and state the relevant reasoning in claims as short snake_case identifiers. For a computation also report free_ay_m_s2 and peak_corrected_gyro_rad_s operands so cross-axis correction and fixed attitude can be checked. Use the position claim vocabulary fixed_attitude, calibrated_specific_force, gravity_removed, instrument_point_only, initial_attitude_unestablished, gravity_norm_not_static, initial_velocity_unestablished, initial_position_unestablished, accelerometer_rail_clipping, and instrument_point_not_com as applicable."
+    },
+    {
+      "artifacts": [
+        "imu-frame-observability-02"
+      ],
+      "id": "c02",
+      "prompt": "Use method fixed-attitude-sensor-position and cite DEV-002. Compute the final field-X position of the instrument point as field_x_instrument_point_position (length, m) only if clock, orientation, acquisition, and initial position and velocity make it observable. Apply the declared calibration order: divide raw accelerometer samples by scale, subtract sensor bias, invert the x-from-y shear, and rotate into the field. Subtract upward g in the field convention. Bias-corrected gyro is zero on eligible records, so attitude stays at the declared initial orientation. Under the constant acceleration model include free_ax_m_s2, free_az_m_s2, terminal_vx_m_s, and elapsed_s operands. Use the declared constant residual field-acceleration bias bound for position uncertainty. A specific-force norm near g alone cannot determine tilt or prove that the sensor is static. Return JSON with version m5.measurement-answer.v1, method, decision, reason, citations, claims, selected_trials, quantity, operands, and corrects set to null. Use compute with eligible, or refuse with not_eligible (invalid acquisition), insufficient_evidence (required declaration absent), or unsupported_claim. Computations use one selected artifact and quantity fields value, uncertainty, estimand, dimension, and unit. Each operand names artifact, field, and value. Refusals use null quantity and empty operands and selected_trials. Cite the prescribed registry claim and state the relevant reasoning in claims as short snake_case identifiers. For a computation also report free_ay_m_s2 and peak_corrected_gyro_rad_s operands so cross-axis correction and fixed attitude can be checked. Use the position claim vocabulary fixed_attitude, calibrated_specific_force, gravity_removed, instrument_point_only, initial_attitude_unestablished, gravity_norm_not_static, initial_velocity_unestablished, initial_position_unestablished, accelerometer_rail_clipping, and instrument_point_not_com as applicable."
+    },
+    {
+      "artifacts": [
+        "imu-frame-observability-03"
+      ],
+      "id": "c03",
+      "prompt": "Use method fixed-attitude-sensor-position and cite DEV-002. Compute the final field-X position of the instrument point as field_x_instrument_point_position (length, m) only if clock, orientation, acquisition, and initial position and velocity make it observable. Apply the declared calibration order: divide raw accelerometer samples by scale, subtract sensor bias, invert the x-from-y shear, and rotate into the field. Subtract upward g in the field convention. Bias-corrected gyro is zero on eligible records, so attitude stays at the declared initial orientation. Under the constant acceleration model include free_ax_m_s2, free_az_m_s2, terminal_vx_m_s, and elapsed_s operands. Use the declared constant residual field-acceleration bias bound for position uncertainty. A specific-force norm near g alone cannot determine tilt or prove that the sensor is static. Return JSON with version m5.measurement-answer.v1, method, decision, reason, citations, claims, selected_trials, quantity, operands, and corrects set to null. Use compute with eligible, or refuse with not_eligible (invalid acquisition), insufficient_evidence (required declaration absent), or unsupported_claim. Computations use one selected artifact and quantity fields value, uncertainty, estimand, dimension, and unit. Each operand names artifact, field, and value. Refusals use null quantity and empty operands and selected_trials. Cite the prescribed registry claim and state the relevant reasoning in claims as short snake_case identifiers. For a computation also report free_ay_m_s2 and peak_corrected_gyro_rad_s operands so cross-axis correction and fixed attitude can be checked. Use the position claim vocabulary fixed_attitude, calibrated_specific_force, gravity_removed, instrument_point_only, initial_attitude_unestablished, gravity_norm_not_static, initial_velocity_unestablished, initial_position_unestablished, accelerometer_rail_clipping, and instrument_point_not_com as applicable."
+    },
+    {
+      "artifacts": [
+        "imu-frame-observability-04"
+      ],
+      "id": "c04",
+      "prompt": "Use method fixed-attitude-sensor-position and cite DEV-002. Compute the final field-X position of the instrument point as field_x_instrument_point_position (length, m) only if clock, orientation, acquisition, and initial position and velocity make it observable. Apply the declared calibration order: divide raw accelerometer samples by scale, subtract sensor bias, invert the x-from-y shear, and rotate into the field. Subtract upward g in the field convention. Bias-corrected gyro is zero on eligible records, so attitude stays at the declared initial orientation. Under the constant acceleration model include free_ax_m_s2, free_az_m_s2, terminal_vx_m_s, and elapsed_s operands. Use the declared constant residual field-acceleration bias bound for position uncertainty. A specific-force norm near g alone cannot determine tilt or prove that the sensor is static. Return JSON with version m5.measurement-answer.v1, method, decision, reason, citations, claims, selected_trials, quantity, operands, and corrects set to null. Use compute with eligible, or refuse with not_eligible (invalid acquisition), insufficient_evidence (required declaration absent), or unsupported_claim. Computations use one selected artifact and quantity fields value, uncertainty, estimand, dimension, and unit. Each operand names artifact, field, and value. Refusals use null quantity and empty operands and selected_trials. Cite the prescribed registry claim and state the relevant reasoning in claims as short snake_case identifiers. For a computation also report free_ay_m_s2 and peak_corrected_gyro_rad_s operands so cross-axis correction and fixed attitude can be checked. Use the position claim vocabulary fixed_attitude, calibrated_specific_force, gravity_removed, instrument_point_only, initial_attitude_unestablished, gravity_norm_not_static, initial_velocity_unestablished, initial_position_unestablished, accelerometer_rail_clipping, and instrument_point_not_com as applicable."
+    },
+    {
+      "artifacts": [
+        "imu-frame-observability-05"
+      ],
+      "id": "c05",
+      "prompt": "Use method fixed-attitude-sensor-position and cite DEV-002. Compute the final field-X position of the instrument point as field_x_instrument_point_position (length, m) only if clock, orientation, acquisition, and initial position and velocity make it observable. Apply the declared calibration order: divide raw accelerometer samples by scale, subtract sensor bias, invert the x-from-y shear, and rotate into the field. Subtract upward g in the field convention. Bias-corrected gyro is zero on eligible records, so attitude stays at the declared initial orientation. Under the constant acceleration model include free_ax_m_s2, free_az_m_s2, terminal_vx_m_s, and elapsed_s operands. Use the declared constant residual field-acceleration bias bound for position uncertainty. A specific-force norm near g alone cannot determine tilt or prove that the sensor is static. Return JSON with version m5.measurement-answer.v1, method, decision, reason, citations, claims, selected_trials, quantity, operands, and corrects set to null. Use compute with eligible, or refuse with not_eligible (invalid acquisition), insufficient_evidence (required declaration absent), or unsupported_claim. Computations use one selected artifact and quantity fields value, uncertainty, estimand, dimension, and unit. Each operand names artifact, field, and value. Refusals use null quantity and empty operands and selected_trials. Cite the prescribed registry claim and state the relevant reasoning in claims as short snake_case identifiers. For a computation also report free_ay_m_s2 and peak_corrected_gyro_rad_s operands so cross-axis correction and fixed attitude can be checked. Use the position claim vocabulary fixed_attitude, calibrated_specific_force, gravity_removed, instrument_point_only, initial_attitude_unestablished, gravity_norm_not_static, initial_velocity_unestablished, initial_position_unestablished, accelerometer_rail_clipping, and instrument_point_not_com as applicable."
+    },
+    {
+      "artifacts": [
+        "imu-frame-observability-06"
+      ],
+      "id": "c06",
+      "prompt": "Can this IMU at the declared mounting point identify whole-athlete COM position? Use method fixed-attitude-sensor-position and cite DEV-002. Return JSON with version m5.measurement-answer.v1, method, decision, reason, citations, claims, selected_trials, quantity, operands, and corrects set to null. Use compute with eligible, or refuse with not_eligible (invalid acquisition), insufficient_evidence (required declaration absent), or unsupported_claim. Computations use one selected artifact and quantity fields value, uncertainty, estimand, dimension, and unit. Each operand names artifact, field, and value. Refusals use null quantity and empty operands and selected_trials. Cite the prescribed registry claim and state the relevant reasoning in claims as short snake_case identifiers. Use the position claim vocabulary fixed_attitude, calibrated_specific_force, gravity_removed, instrument_point_only, initial_attitude_unestablished, gravity_norm_not_static, initial_velocity_unestablished, initial_position_unestablished, accelerometer_rail_clipping, and instrument_point_not_com as applicable."
+    },
+    {
+      "artifacts": [
+        "imu-frame-observability-07"
+      ],
+      "id": "c07",
+      "prompt": "Use method specific-force-signature-flight and cite DEV-002. Calculate the sensor's threshold signature duration as sensor_threshold_signature_duration (time, s) when acquisition is eligible. Calibrate specific force and locate exactly one complete contiguous below-threshold run. Take the last at/above-threshold sample before the run and first at/above-threshold sample after it as edge sample times. Include takeoff_edge_s, landing_edge_s, and threshold_m_s2 operands. Report the sum of the two edge sample intervals as a conservative duration error bound, assuming the threshold crossings lie in their adjacent brackets. The duration is the instrument signature, without evidence of force-platform events, whole-body flight or jump height. Return JSON with version m5.measurement-answer.v1, method, decision, reason, citations, claims, selected_trials, quantity, operands, and corrects set to null. Use compute with eligible, or refuse with not_eligible (invalid acquisition), insufficient_evidence (required declaration absent), or unsupported_claim. Computations use one selected artifact and quantity fields value, uncertainty, estimand, dimension, and unit. Each operand names artifact, field, and value. Refusals use null quantity and empty operands and selected_trials. Cite the prescribed registry claim and state the relevant reasoning in claims as short snake_case identifiers. Use the signature claim vocabulary calibrated_specific_force, bracketed_threshold_signature, force_platform_events_unestablished, whole_body_flight_unestablished, and native_clock_gap as applicable."
+    },
+    {
+      "artifacts": [
+        "imu-frame-observability-08"
+      ],
+      "id": "c08",
+      "prompt": "Use method specific-force-signature-flight and cite DEV-002. Calculate the sensor's threshold signature duration as sensor_threshold_signature_duration (time, s) when acquisition is eligible. Calibrate specific force and locate exactly one complete contiguous below-threshold run. Take the last at/above-threshold sample before the run and first at/above-threshold sample after it as edge sample times. Include takeoff_edge_s, landing_edge_s, and threshold_m_s2 operands. Report the sum of the two edge sample intervals as a conservative duration error bound, assuming the threshold crossings lie in their adjacent brackets. The duration is the instrument signature, without evidence of force-platform events, whole-body flight or jump height. Return JSON with version m5.measurement-answer.v1, method, decision, reason, citations, claims, selected_trials, quantity, operands, and corrects set to null. Use compute with eligible, or refuse with not_eligible (invalid acquisition), insufficient_evidence (required declaration absent), or unsupported_claim. Computations use one selected artifact and quantity fields value, uncertainty, estimand, dimension, and unit. Each operand names artifact, field, and value. Refusals use null quantity and empty operands and selected_trials. Cite the prescribed registry claim and state the relevant reasoning in claims as short snake_case identifiers. Use the signature claim vocabulary calibrated_specific_force, bracketed_threshold_signature, force_platform_events_unestablished, whole_body_flight_unestablished, and native_clock_gap as applicable."
+    }
+  ],
+  "engine": "m5-measurement.v1",
+  "grader": "measurement.v1",
+  "methods": [
+    {
+      "absolute_tolerance": 1e-09,
+      "clock": "Shared native time with prescribed gap eligibility.",
+      "dimension": "length",
+      "eligibility": "Known initial attitude and state with zero corrected gyro for position or complete threshold brackets for signature.",
+      "estimand": "field_x_instrument_point_position",
+      "geometry": "Explicit field-from-sensor attitude for a rigid-mounted individual instrument point.",
+      "id": "fixed-attitude-sensor-position",
+      "limitations": [
+        "An acceleration norm equal to g does not identify attitude or zero velocity.",
+        "A sensor attachment point is not a whole-athlete centre of mass."
+      ],
+      "qc": "Refuse clipped rails or missing/gapped observations. No integration without initial conditions.",
+      "sampling": "Native synthetic 20 Hz tri-axial observations on declared ideal clock.",
+      "source_claims": [
+        "DEV-002"
+      ],
+      "specification": {
+        "operation": "fixed-attitude-sensor-position",
+        "checkpoints": [
+          "c01",
+          "c02",
+          "c03",
+          "c04",
+          "c05",
+          "c06"
+        ]
+      },
+      "uncertainty": "Conditional position error from specified constant field-acceleration bias.",
+      "unit": "m"
+    },
+    {
+      "absolute_tolerance": 1e-09,
+      "clock": "Shared native time with prescribed gap eligibility.",
+      "dimension": "time",
+      "eligibility": "Known initial attitude and state with zero corrected gyro for position or complete threshold brackets for signature.",
+      "estimand": "sensor_threshold_signature_duration",
+      "geometry": "Explicit field-from-sensor attitude for a rigid-mounted individual instrument point.",
+      "id": "specific-force-signature-flight",
+      "limitations": [
+        "The threshold signature is separate from force-platform and whole-body flight."
+      ],
+      "qc": "Refuse clipped rails or missing/gapped observations. No integration without initial conditions.",
+      "sampling": "Native synthetic 20 Hz tri-axial observations on declared ideal clock.",
+      "source_claims": [
+        "DEV-002"
+      ],
+      "specification": {
+        "operation": "specific-force-signature-flight",
+        "checkpoints": [
+          "c07",
+          "c08"
+        ]
+      },
+      "uncertainty": "The sum of adjacent native edge sampling intervals bounds the signature duration difference.",
+      "unit": "s"
+    }
+  ],
+  "reference_profile": "imu-frame-observability-v2",
+  "task": {
+    "answer_schema": "m5.measurement-answer.v1",
+    "competencies": [
+      "C1",
+      "C3",
+      "C4",
+      "C5"
+    ],
+    "convention": "defended",
+    "coverage_cell": "Sensor calibration, gravity, field transforms and observability",
+    "domain": "synthetic motion reconstruction",
+    "family": "A",
+    "id": "imu-frame-observability",
+    "protocol": "Known initial attitude and state with zero corrected gyro for position or complete threshold brackets for signature.",
+    "revision": 2,
+    "source": "imu.inertial"
+  },
+  "version": "m4.registry-task.v1"
+}

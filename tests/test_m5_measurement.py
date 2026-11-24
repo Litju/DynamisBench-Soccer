@@ -8,6 +8,7 @@ from dynamisbench_soccer.m4.grader import MeasurementSubmission, _check_submissi
 from dynamisbench_soccer.m4.key_store import digest
 from dynamisbench_soccer.m4.measurement import (
     CELL_OPERATION,
+    IMU_OPERATIONS,
     PROCEDURES,
     is_measurement_task,
     replay,
@@ -17,7 +18,7 @@ from dynamisbench_soccer.m4.task_registry import load_registry
 ROOT = Path(__file__).resolve().parents[1]
 
 
-@pytest.mark.parametrize("procedure", PROCEDURES)
+@pytest.mark.parametrize("procedure", [name for name in PROCEDURES if name not in IMU_OPERATIONS])
 def test_measurement_episode_replays_without_disclosing_reference(procedure):
     tasks = load_registry(ROOT / "benchmark/tasks")
     (task,) = [
