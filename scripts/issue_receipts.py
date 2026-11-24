@@ -16,15 +16,15 @@ import tomllib
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-PATH = ROOT / "qualification/receipts.toml"
+PATHS = (ROOT / "qualification/receipts.toml", ROOT / "qualification/task_receipts.toml")
 sys.path.insert(0, str(ROOT / "src"))
 
 from dynamisbench_soccer.qualification import receipts  # noqa: E402
 
 
-def main(check: bool) -> int:
-    text = PATH.read_text(encoding="utf-8")
-    loaded = receipts.load(PATH)
+def issue(path: Path, check: bool) -> int:
+    text = path.read_text(encoding="utf-8")
+    loaded = receipts.load(path)
     raw = tomllib.loads(text).get("receipt", [])
     blocks = re.split(r"(?m)^(?=\[\[receipt\]\])", text)
     prefix, bodies = blocks[0], [b.split("[receipt.digests]")[0] for b in blocks[1:]]
@@ -48,10 +48,10 @@ def main(check: bool) -> int:
             return 1
         print(f"{len(loaded)} receipts: digests current")
         return 0
-    PATH.write_text("".join(out).rstrip("\n") + "\n", encoding="utf-8")
+    path.write_text("".join(out).rstrip("\n") + "\n", encoding="utf-8")
     print(f"wrote digests for {len(loaded)} receipts ({stale} changed)")
     return 0
 
 
 if __name__ == "__main__":
-    raise SystemExit(main("--check" in sys.argv))
+    raise SystemExit(max(issue(path, "--check" in sys.argv) for path in PATHS))

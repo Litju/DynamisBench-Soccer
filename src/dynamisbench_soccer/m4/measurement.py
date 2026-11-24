@@ -1,4 +1,4 @@
-"""Replay the declared M5 measurement procedures against admitted native inputs."""
+"""Replay the declared M5 measurement procedures against admitted inputs."""
 
 from __future__ import annotations
 
@@ -21,6 +21,7 @@ from dynamisbench_soccer.engines.position_clock_bounds import input_error_radii
 from dynamisbench_soccer.engines.timing_gates import GatePolicy, sprint
 from dynamisbench_soccer.m4.admission import Kind
 from dynamisbench_soccer.signals.schema import BundleMeta, DeviceClass, SignalBundle
+from dynamisbench_soccer.statistics.longitudinal import fixed_session_change
 
 Reason = Literal["eligible", "not_eligible", "insufficient_evidence", "unsupported_claim"]
 ENGINE = "m5-measurement.v1"
@@ -84,6 +85,19 @@ PROCEDURES = {
         "m/s",
         ("DEV-005", "DEV-008", "ST-004"),
         ("agreement/paired_speed.py::compare", "engines/gnss_lps.py::process"),
+    ),
+    "fixed-session-change": Procedure(
+        "gnss_lps.lps",
+        "statistical",
+        "horizontal_tag_speed_session_mean_change",
+        "speed",
+        "m/s",
+        ("ST-001", "ST-005", "ST-006"),
+        (
+            "statistics/longitudinal.py::fixed_session_change",
+            "statistics/reliability.py::paired_reliability",
+            "statistics/change.py::individual_change",
+        ),
     ),
 }
 
@@ -298,9 +312,43 @@ def _paired(data: dict[str, object]) -> Reading:
     )
 
 
+def _longitudinal(data: dict[str, object]) -> Reading:
+    study = fixed_session_change(data)
+    if isinstance(study, str):
+        reason: Reason = (
+            "insufficient_evidence"
+            if study in {"baseline_design_incomplete", "cohort_error_unavailable"}
+            else "not_eligible"
+        )
+        return Reading(reason, (study,))
+    change = study.change
+    return Reading(
+        "eligible",
+        (
+            "conditional_trial_model",
+            "te_estimation_uncertainty_excluded",
+            change.classification,
+            "point_reaches_swc" if study.reaches_swc else "point_below_swc",
+        ),
+        change.change,
+        study.half_width,
+        (
+            ("typical_error", study.reliability.typical_error),
+            ("swc", study.reliability.swc),
+            ("baseline_mean", change.baseline_mean),
+            ("current_mean", change.current_mean),
+            ("change_se", change.change_se),
+            ("interval_lower", change.interval[0]),
+            ("interval_upper", change.interval[1]),
+        ),
+    )
+
+
 def replay(operation: str, data: dict[str, object]) -> Reading:
     if operation == "paired-speed-bias":
         return _paired(data)
+    if operation == "fixed-session-change":
+        return _longitudinal(data)
     request = data["request"]
     if not isinstance(request, str) or request not in ("compute", "equivalence"):
         raise ValueError("unknown measurement request")

@@ -8,10 +8,23 @@ episode = json.load(sys.stdin)
 source = json.loads(episode["inputs"][artifact])
 channels = source.get("channels")
 kind = episode["task"]["source"]
+if episode["task"]["id"] == "lps-repeat-session-change":
+    kind = "repeat-session"
 if episode["task"]["id"] == "paired-lps-radar-agreement":
     kind = "paired-lps-radar"
 
 match kind:
+    case "repeat-session":
+        history = [trial for row in source["baseline"] for trial in row["trials_m_s"]]
+        current = source["current"]["trials_m_s"]
+        value = sum(current) / len(current) - sum(history) / len(history)
+        method, unit, dimension, estimand = (
+            "fixed-session-change",
+            "m/s",
+            "speed",
+            "horizontal_tag_speed_session_mean_change",
+        )
+        citations = ["ST-001", "ST-005", "ST-006"]
     case "timing_contact.gates":
         times = channels["t_s"]
         distances = channels["distance_m"]

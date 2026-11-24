@@ -47,13 +47,15 @@ def diagnose(artifact, data):
     n = len(history)
     contributions = [1 / len(now), *(1 / (len(session) * n**2) for session in history)]
     critical = statistics.NormalDist().inv_cdf((1 + data["confidence"]) / 2)
-    width = critical * error * math.sqrt(sum(contributions))
+    se = error * math.sqrt(sum(contributions))
+    width = critical * se
     low, high = change - width, change + width
     operands = [
         ("typical_error", error),
         ("swc", swc),
         ("baseline_mean", prior_mean),
         ("current_mean", now_mean),
+        ("change_se", se),
         ("interval_lower", low),
         ("interval_upper", high),
     ]
@@ -63,6 +65,7 @@ def diagnose(artifact, data):
         reason="eligible",
         claims=[
             "conditional_trial_model",
+            "te_estimation_uncertainty_excluded",
             "likely_real" if low > 0 or high < 0 else "within_noise",
             "point_reaches_swc" if abs(change) >= swc else "point_below_swc",
         ],

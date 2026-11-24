@@ -19,7 +19,7 @@ def test_repeat_sessions_reconstruct_and_refuse_without_scored_admission(tmp_pat
     catalog = (ROOT / "benchmark/reviewed-slices.json").read_bytes()
     context = TrialContext(ROOT, catalog, digest(catalog), tmp_path)
     task = load_registry(ROOT / "benchmark/tasks")["lps-repeat-session-change", 1]
-    assert task.engine == "m5-advanced-development.v1"
+    assert task.engine == "m5-measurement.v1"
     source = (ROOT / "scripts/m5_controls/repeat_session_development.py").read_bytes()
     report = run_episode(context, task, "independent-summary-diagnostic", source, seed=704)
     replay = run_episode(context, task, "independent-summary-diagnostic", source, seed=704)
@@ -64,6 +64,7 @@ def test_repeat_sessions_reconstruct_and_refuse_without_scored_admission(tmp_pat
                 rel.swc,
                 change.baseline_mean,
                 change.current_mean,
+                change.change_se,
                 *change.interval,
             ],
             abs=1e-10,
@@ -71,6 +72,7 @@ def test_repeat_sessions_reconstruct_and_refuse_without_scored_admission(tmp_pat
         )
         assert set(answer.claims) == {
             "conditional_trial_model",
+            "te_estimation_uncertainty_excluded",
             scope,
             "point_reaches_swc" if index == 0 else "point_below_swc",
         }

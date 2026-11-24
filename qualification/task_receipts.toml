@@ -1,0 +1,182 @@
+# Statistical task-only evidence. The device ratings are outside this file.
+
+[[receipt]]
+id = "RCP-lps-repeat-session-change-D"
+dimension = "D"
+subfamilies = ["gnss_lps.lps"]
+issue = "RES-704"
+claim = "Statistical eligibility refuses missing, duplicated or overlapping identities, incomplete fixed-window observations and incompatible declared trial designs."
+implementation = ["src/dynamisbench_soccer/statistics/longitudinal.py::fixed_session_change"]
+reference = ["tests/test_m5_longitudinal.py::_identity_oracle"]
+reference_kind = "closed_form"
+independence = "The identity oracle uses elementary list counts and does not call production eligibility checks."
+tests = ["tests/test_m5_longitudinal.py::test_identity_and_baseline_design_controls"]
+tolerance = 0
+tolerance_unit = ""
+tolerance_basis = "Exact expected decisions, claims, source coverage or replay equality under the stated analytical design."
+check_kind = "categorical"
+
+[receipt.digests]
+"src/dynamisbench_soccer/statistics/longitudinal.py::fixed_session_change" = "5fe372844d419557aebb592a75cb6aaa873567b25fb36fb46f118a8471a2f238"
+"tests/test_m5_longitudinal.py::_identity_oracle" = "5103df10c8ecfa91a529494cc4b9430d70782e5af34c126e56831f7ef6aeaf0d"
+"tests/test_m5_longitudinal.py::test_identity_and_baseline_design_controls" = "4cbe0212a6c4282c95d50c5a198bdd07a6156df008d255047e33d26fff3427c1"
+
+[[receipt]]
+id = "RCP-lps-repeat-session-change-E"
+dimension = "E"
+subfamilies = ["gnss_lps.lps"]
+issue = "RES-704"
+claim = "The declared fixed-window rule uses equal session means before difference and omits rows beyond the original window, without backfilling an incomplete fixed baseline."
+implementation = ["src/dynamisbench_soccer/statistics/longitudinal.py::fixed_session_change", "src/dynamisbench_soccer/statistics/reliability.py::paired_reliability", "src/dynamisbench_soccer/statistics/change.py::individual_change"]
+reference = ["tests/test_m5_longitudinal.py::_contrast_oracle"]
+reference_kind = "closed_form"
+independence = "The reference uses rational contrast weights, pairwise squared differences and a standard-library normal quantile, independent of the production statistics routines."
+tests = ["tests/test_m5_longitudinal.py::test_fixed_window_uses_equal_session_weights_and_preserves_direction", "tests/test_m5_longitudinal.py::test_identity_and_baseline_design_controls"]
+tolerance = 1e-10
+tolerance_unit = "m/s absolute"
+tolerance_basis = "Absolute 1e-10 m/s with zero relative tolerance for the fixed decimal inputs and float64 arithmetic; categorical outcomes are checked exactly."
+check_kind = "numeric"
+
+[receipt.digests]
+"src/dynamisbench_soccer/statistics/change.py::individual_change" = "19f99cf61f320521cd87048ec0c468024c664fe623ab96a4672b836bd5f39e02"
+"src/dynamisbench_soccer/statistics/longitudinal.py::fixed_session_change" = "5fe372844d419557aebb592a75cb6aaa873567b25fb36fb46f118a8471a2f238"
+"src/dynamisbench_soccer/statistics/reliability.py::paired_reliability" = "18b208a76aad4bc125f021ac9a4eb53be9f11d91e79f4bc164d56f66c47ac1e1"
+"tests/test_m5_longitudinal.py::_contrast_oracle" = "a0781862c41dabe12b1793d43d41eeb8e2cf2dcc7df070b09d9c7d803eb3e1cc"
+"tests/test_m5_longitudinal.py::test_fixed_window_uses_equal_session_weights_and_preserves_direction" = "a9ddc19294a3a5be5e05d02dec6b3ce0c7de6816a5b6d90879834eb0ce471954"
+"tests/test_m5_longitudinal.py::test_identity_and_baseline_design_controls" = "4cbe0212a6c4282c95d50c5a198bdd07a6156df008d255047e33d26fff3427c1"
+
+[[receipt]]
+id = "RCP-lps-repeat-session-change-F"
+dimension = "F"
+subfamilies = ["gnss_lps.lps"]
+issue = "RES-704"
+claim = "Paired single-trial typical error and baseline between-subject SWC match a rational contrast calculation on prescribed analytical summaries."
+implementation = ["src/dynamisbench_soccer/statistics/longitudinal.py::fixed_session_change", "src/dynamisbench_soccer/statistics/reliability.py::paired_reliability", "src/dynamisbench_soccer/statistics/change.py::individual_change"]
+reference = ["tests/test_m5_longitudinal.py::_contrast_oracle"]
+reference_kind = "closed_form"
+independence = "The reference uses rational contrast weights, pairwise squared differences and a standard-library normal quantile, independent of the production statistics routines."
+tests = ["tests/test_m5_longitudinal.py::test_longitudinal_matches_independent_contrast"]
+tolerance = 1e-10
+tolerance_unit = "m/s absolute"
+tolerance_basis = "Absolute 1e-10 m/s with zero relative tolerance for the fixed decimal inputs and float64 arithmetic; categorical outcomes are checked exactly."
+check_kind = "numeric"
+
+[receipt.digests]
+"src/dynamisbench_soccer/statistics/change.py::individual_change" = "19f99cf61f320521cd87048ec0c468024c664fe623ab96a4672b836bd5f39e02"
+"src/dynamisbench_soccer/statistics/longitudinal.py::fixed_session_change" = "5fe372844d419557aebb592a75cb6aaa873567b25fb36fb46f118a8471a2f238"
+"src/dynamisbench_soccer/statistics/reliability.py::paired_reliability" = "18b208a76aad4bc125f021ac9a4eb53be9f11d91e79f4bc164d56f66c47ac1e1"
+"tests/test_m5_longitudinal.py::_contrast_oracle" = "a0781862c41dabe12b1793d43d41eeb8e2cf2dcc7df070b09d9c7d803eb3e1cc"
+"tests/test_m5_longitudinal.py::test_longitudinal_matches_independent_contrast" = "5647bb204a2897ec92b0823fb98949a49c7e9c2d139a04e7d734d3ff04a782c6"
+
+[[receipt]]
+id = "RCP-lps-repeat-session-change-H"
+dimension = "H"
+subfamilies = ["gnss_lps.lps"]
+issue = "RES-704"
+claim = "The fixed-session speed estimand is the signed current mean minus the mean of individual baseline session means, with SWC judged separately from the interval classification."
+implementation = ["src/dynamisbench_soccer/statistics/longitudinal.py::fixed_session_change", "src/dynamisbench_soccer/statistics/reliability.py::paired_reliability", "src/dynamisbench_soccer/statistics/change.py::individual_change"]
+reference = ["tests/test_m5_longitudinal.py::_contrast_oracle"]
+reference_kind = "closed_form"
+independence = "The reference uses rational contrast weights, pairwise squared differences and a standard-library normal quantile, independent of the production statistics routines."
+tests = ["tests/test_m5_longitudinal.py::test_longitudinal_matches_independent_contrast", "tests/test_m5_longitudinal.py::test_fixed_window_uses_equal_session_weights_and_preserves_direction"]
+tolerance = 1e-10
+tolerance_unit = "m/s absolute"
+tolerance_basis = "Absolute 1e-10 m/s with zero relative tolerance for the fixed decimal inputs and float64 arithmetic; categorical outcomes are checked exactly."
+check_kind = "numeric"
+
+[receipt.digests]
+"src/dynamisbench_soccer/statistics/change.py::individual_change" = "19f99cf61f320521cd87048ec0c468024c664fe623ab96a4672b836bd5f39e02"
+"src/dynamisbench_soccer/statistics/longitudinal.py::fixed_session_change" = "5fe372844d419557aebb592a75cb6aaa873567b25fb36fb46f118a8471a2f238"
+"src/dynamisbench_soccer/statistics/reliability.py::paired_reliability" = "18b208a76aad4bc125f021ac9a4eb53be9f11d91e79f4bc164d56f66c47ac1e1"
+"tests/test_m5_longitudinal.py::_contrast_oracle" = "a0781862c41dabe12b1793d43d41eeb8e2cf2dcc7df070b09d9c7d803eb3e1cc"
+"tests/test_m5_longitudinal.py::test_fixed_window_uses_equal_session_weights_and_preserves_direction" = "a9ddc19294a3a5be5e05d02dec6b3ce0c7de6816a5b6d90879834eb0ce471954"
+"tests/test_m5_longitudinal.py::test_longitudinal_matches_independent_contrast" = "5647bb204a2897ec92b0823fb98949a49c7e9c2d139a04e7d734d3ff04a782c6"
+
+[[receipt]]
+id = "RCP-lps-repeat-session-change-I"
+dimension = "I"
+subfamilies = ["gnss_lps.lps"]
+issue = "RES-704"
+claim = "A normal interval propagates the trial-level plug-in error by squared contrast coefficients for unequal trial counts. The interval conditions on the cohort typical error."
+implementation = ["src/dynamisbench_soccer/statistics/longitudinal.py::fixed_session_change", "src/dynamisbench_soccer/statistics/reliability.py::paired_reliability", "src/dynamisbench_soccer/statistics/change.py::individual_change"]
+reference = ["tests/test_m5_longitudinal.py::_contrast_oracle"]
+reference_kind = "closed_form"
+independence = "The reference uses rational contrast weights, pairwise squared differences and a standard-library normal quantile, independent of the production statistics routines."
+tests = ["tests/test_m5_longitudinal.py::test_longitudinal_matches_independent_contrast"]
+tolerance = 1e-10
+tolerance_unit = "m/s absolute"
+tolerance_basis = "Absolute 1e-10 m/s with zero relative tolerance for the fixed decimal inputs and float64 arithmetic; categorical outcomes are checked exactly."
+check_kind = "numeric"
+
+[receipt.digests]
+"src/dynamisbench_soccer/statistics/change.py::individual_change" = "19f99cf61f320521cd87048ec0c468024c664fe623ab96a4672b836bd5f39e02"
+"src/dynamisbench_soccer/statistics/longitudinal.py::fixed_session_change" = "5fe372844d419557aebb592a75cb6aaa873567b25fb36fb46f118a8471a2f238"
+"src/dynamisbench_soccer/statistics/reliability.py::paired_reliability" = "18b208a76aad4bc125f021ac9a4eb53be9f11d91e79f4bc164d56f66c47ac1e1"
+"tests/test_m5_longitudinal.py::_contrast_oracle" = "a0781862c41dabe12b1793d43d41eeb8e2cf2dcc7df070b09d9c7d803eb3e1cc"
+"tests/test_m5_longitudinal.py::test_longitudinal_matches_independent_contrast" = "5647bb204a2897ec92b0823fb98949a49c7e9c2d139a04e7d734d3ff04a782c6"
+
+[[receipt]]
+id = "RCP-lps-repeat-session-change-J"
+dimension = "J"
+subfamilies = ["gnss_lps.lps"]
+issue = "RES-704"
+claim = "The analytical task reproduces an independently written rational coefficient contrast and sample-variance calculation without the production statistical functions."
+implementation = ["src/dynamisbench_soccer/statistics/longitudinal.py::fixed_session_change", "src/dynamisbench_soccer/statistics/reliability.py::paired_reliability", "src/dynamisbench_soccer/statistics/change.py::individual_change"]
+reference = ["tests/test_m5_longitudinal.py::_contrast_oracle"]
+reference_kind = "closed_form"
+independence = "The reference uses rational contrast weights, pairwise squared differences and a standard-library normal quantile, independent of the production statistics routines."
+tests = ["tests/test_m5_longitudinal.py::test_longitudinal_matches_independent_contrast", "tests/test_m5_longitudinal.py::test_fixed_window_uses_equal_session_weights_and_preserves_direction"]
+tolerance = 1e-10
+tolerance_unit = "m/s absolute"
+tolerance_basis = "Absolute 1e-10 m/s with zero relative tolerance for the fixed decimal inputs and float64 arithmetic; categorical outcomes are checked exactly."
+check_kind = "numeric"
+
+[receipt.digests]
+"src/dynamisbench_soccer/statistics/change.py::individual_change" = "19f99cf61f320521cd87048ec0c468024c664fe623ab96a4672b836bd5f39e02"
+"src/dynamisbench_soccer/statistics/longitudinal.py::fixed_session_change" = "5fe372844d419557aebb592a75cb6aaa873567b25fb36fb46f118a8471a2f238"
+"src/dynamisbench_soccer/statistics/reliability.py::paired_reliability" = "18b208a76aad4bc125f021ac9a4eb53be9f11d91e79f4bc164d56f66c47ac1e1"
+"tests/test_m5_longitudinal.py::_contrast_oracle" = "a0781862c41dabe12b1793d43d41eeb8e2cf2dcc7df070b09d9c7d803eb3e1cc"
+"tests/test_m5_longitudinal.py::test_fixed_window_uses_equal_session_weights_and_preserves_direction" = "a9ddc19294a3a5be5e05d02dec6b3ce0c7de6816a5b6d90879834eb0ce471954"
+"tests/test_m5_longitudinal.py::test_longitudinal_matches_independent_contrast" = "5647bb204a2897ec92b0823fb98949a49c7e9c2d139a04e7d734d3ff04a782c6"
+
+[[receipt]]
+id = "RCP-lps-repeat-session-change-M"
+dimension = "M"
+subfamilies = ["gnss_lps.lps"]
+issue = "RES-704"
+claim = "The existing four task checkpoint artifacts are input-digest bound and released in order, and the statistical outcomes replay deterministically."
+implementation = ["src/dynamisbench_soccer/statistics/longitudinal.py::fixed_session_change"]
+reference = ["tests/test_m5_longitudinal.py::_contrast_oracle"]
+reference_kind = "closed_form"
+independence = "The reference uses rational contrast weights, pairwise squared differences and a standard-library normal quantile, independent of the production statistics routines."
+tests = ["tests/test_m5_longitudinal.py::test_declared_sources_and_conditional_replay_are_bound"]
+tolerance = 0
+tolerance_unit = ""
+tolerance_basis = "Exact expected decisions, claims, source coverage or replay equality under the stated analytical design."
+check_kind = "categorical"
+
+[receipt.digests]
+"src/dynamisbench_soccer/statistics/longitudinal.py::fixed_session_change" = "5fe372844d419557aebb592a75cb6aaa873567b25fb36fb46f118a8471a2f238"
+"tests/test_m5_longitudinal.py::_contrast_oracle" = "a0781862c41dabe12b1793d43d41eeb8e2cf2dcc7df070b09d9c7d803eb3e1cc"
+"tests/test_m5_longitudinal.py::test_declared_sources_and_conditional_replay_are_bound" = "e16e03247729db0e3206dc27b5a0d98fe919921da31db3e46b063603b7c838e1"
+
+[[receipt]]
+id = "RCP-lps-repeat-session-change-O"
+dimension = "O"
+subfamilies = ["gnss_lps.lps"]
+issue = "RES-704"
+claim = "The answer records conditional trial-model assumptions and excludes uncertainty in estimating the plug-in typical error and claims of empirical device reliability."
+implementation = ["src/dynamisbench_soccer/statistics/longitudinal.py::fixed_session_change"]
+reference = ["tests/test_m5_longitudinal.py::_contrast_oracle"]
+reference_kind = "closed_form"
+independence = "The reference uses rational contrast weights, pairwise squared differences and a standard-library normal quantile, independent of the production statistics routines."
+tests = ["tests/test_m5_longitudinal.py::test_declared_sources_and_conditional_replay_are_bound"]
+tolerance = 0
+tolerance_unit = ""
+tolerance_basis = "Exact expected decisions, claims, source coverage or replay equality under the stated analytical design."
+check_kind = "categorical"
+
+[receipt.digests]
+"src/dynamisbench_soccer/statistics/longitudinal.py::fixed_session_change" = "5fe372844d419557aebb592a75cb6aaa873567b25fb36fb46f118a8471a2f238"
+"tests/test_m5_longitudinal.py::_contrast_oracle" = "a0781862c41dabe12b1793d43d41eeb8e2cf2dcc7df070b09d9c7d803eb3e1cc"
+"tests/test_m5_longitudinal.py::test_declared_sources_and_conditional_replay_are_bound" = "e16e03247729db0e3206dc27b5a0d98fe919921da31db3e46b063603b7c838e1"
