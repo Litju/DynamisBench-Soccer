@@ -7,6 +7,51 @@
   "Reviewers could run the cited tests; they did not review the engines line by line."
  ],
  "native_task_receipts": {
+  "RCP-imu-frame-observability-A": {
+   "bound_digest": "68002d085bd88be7d2e9538a41f1f0b5f9da1c46592f91d017b35e82812c6c00",
+   "evidence_head": "aff82fd52a7607da8048bde591fa0c646753bf43",
+   "fix": "",
+   "reason": "Independent canonical channel and source-hash verification, native descriptor validation and fault tests support the eight synthetic IMU artifacts. Support is scoped to imu-frame-observability revision 2.",
+   "review_url": "https://github.com/Litju/DynamisBench-Soccer/pull/72",
+   "reviewer": "Independent Codex scientific review",
+   "verdict": "SUPPORTED"
+  },
+  "RCP-imu-frame-observability-C": {
+   "bound_digest": "11ab410a1bd1e88ea95321963ba3b9e77775e7e92017bde8f396c9effffb3547",
+   "evidence_head": "aff82fd52a7607da8048bde591fa0c646753bf43",
+   "fix": "",
+   "reason": "Independent 20 Hz sample-index derivation and declared clock-tie inspection support exact identity alignment and gap refusal. Support is scoped to imu-frame-observability revision 2.",
+   "review_url": "https://github.com/Litju/DynamisBench-Soccer/pull/72",
+   "reviewer": "Independent Codex scientific review",
+   "verdict": "SUPPORTED"
+  },
+  "RCP-imu-frame-observability-G": {
+   "bound_digest": "a1ea51dfdf71ae34461946720a87fd09846d75b311057ee45e8c2c2ca4b5be01",
+   "evidence_head": "aff82fd52a7607da8048bde591fa0c646753bf43",
+   "fix": "",
+   "reason": "Independent edge indices and two adjacent intervals support the 0.25 s signature and 0.10 s conditional radius, with complete and ambiguous bracket controls. Support is scoped to imu-frame-observability revision 2.",
+   "review_url": "https://github.com/Litju/DynamisBench-Soccer/pull/72",
+   "reviewer": "Independent Codex scientific review",
+   "verdict": "SUPPORTED"
+  },
+  "RCP-imu-frame-observability-H": {
+   "bound_digest": "431022e4630dabf59b08fc3e58c5c875a3ade73d8e683c20317a7f31a7d79e14",
+   "evidence_head": "aff82fd52a7607da8048bde591fa0c646753bf43",
+   "fix": "",
+   "reason": "Closed-form position and distinct signature agree with native replay. Matched raw observations under distinct orientations prove field-X ambiguity without initial attitude. Support is scoped to imu-frame-observability revision 2.",
+   "review_url": "https://github.com/Litju/DynamisBench-Soccer/pull/72",
+   "reviewer": "Independent Codex scientific review",
+   "verdict": "SUPPORTED"
+  },
+  "RCP-imu-frame-observability-M": {
+   "bound_digest": "d97f85f6513da590d7f73053107a630ea674a43c83ccfb411460b6e4ea91fe0e",
+   "evidence_head": "fb473304100d60ece3342477c826e3c337234931",
+   "fix": "",
+   "reason": "All artifact and source hashes and method assignments match. Semantic preflight rejects a well-formed wrong later signature duration during position grading. Support is scoped to imu-frame-observability revision 2.",
+   "review_url": "https://github.com/Litju/DynamisBench-Soccer/pull/72",
+   "reviewer": "Independent Codex scientific review",
+   "verdict": "SUPPORTED"
+  },
   "RCP-load-cell-net-torque-ramp-C": {
    "bound_digest": "c2f113abc0ddde17c5a9be0451881328defe2067a3a5239cedbe8a6140a0a669",
    "evidence_head": "776e21b6039f979e0aa0f29af280ffb53349ed75",
