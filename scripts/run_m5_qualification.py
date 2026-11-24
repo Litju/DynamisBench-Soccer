@@ -19,7 +19,12 @@ from seal_m5_references import _custody_family, _read_private, _supported
 from dynamisbench_soccer.m4.admission import Catalog, evaluate
 from dynamisbench_soccer.m4.grader import score_checkpoint
 from dynamisbench_soccer.m4.key_store import digest
-from dynamisbench_soccer.m4.measurement import CELL_OPERATION, IMU_POSITION, IMU_SIGNATURE
+from dynamisbench_soccer.m4.measurement import (
+    CELL_OPERATION,
+    IMU_POSITION,
+    IMU_SIGNATURE,
+    LPT_OPERATION,
+)
 from dynamisbench_soccer.m4.runner import MAX_OUTPUT, MAX_SOURCE, WALL_SECONDS, execute_payload
 from dynamisbench_soccer.m4.task_registry import load_registry
 from dynamisbench_soccer.m4.trials import STUBS, TrialContext, TrialReport, run_episode
@@ -188,7 +193,79 @@ def _controls(score, task, answers: dict, inputs: dict):
         )
 
     method = task.methods[0].id
-    if method == IMU_POSITION:
+    if method == LPT_OPERATION:
+        data = json.loads(inputs[positive["selected_trials"][0]])
+        angle = data["meta"]["acquisition"]["sources"][0]["geometry"]["cable_angle_rad"]
+        cable_speed = next(
+            o["value"] for o in positive["operands"] if o["field"] == "cable_speed_m_s"
+        )
+        clock_scale = data["clock_scale_bound_ppm"] * 1e-6
+        time, length = data["channels"]["time"], data["channels"]["cable_length"]
+        row = data["row"]
+        forward = (length[row + 1] - length[row]) / ((time[row + 1] - time[row]) * math.cos(angle))
+        for name, value in (
+            ("wrong_projection_angle", cable_speed / math.cos(angle + data["angle_bound_rad"])),
+            ("cable_speed_as_vertical", cable_speed),
+            ("reversed_attachment_direction", -quantity["value"]),
+            ("clock_corner_as_nominal", quantity["value"] / (1 + clock_scale)),
+            ("forward_derivative_stencil", forward),
+        ):
+            scenarios.append(
+                (name, compute_id, positive | {"quantity": quantity | {"value": value}}, ("value",))
+            )
+        for name, field, value in (
+            ("length_as_relative_displacement", "vertical_displacement_m", length[row]),
+            ("acceleration_without_projection", "vertical_acceleration_m_s2", 1.6),
+            ("power_with_gravity_omitted", "vertical_mass_model_power_w", 20 * 2 * 0.52),
+            ("power_with_wrong_mass", "vertical_mass_model_power_w", 122.78916 / 2),
+        ):
+            operands = [
+                operand | {"value": value} if operand["field"] == field else operand
+                for operand in positive["operands"]
+            ]
+            scenarios.append((name, compute_id, positive | {"operands": operands}, ("derivation",)))
+        scenarios.extend(
+            (
+                (
+                    "adjacent_operands_unordered",
+                    compute_id,
+                    positive | {"operands": positive["operands"][::-1]},
+                    (),
+                ),
+                (
+                    "missing_clock_uncertainty",
+                    compute_id,
+                    positive
+                    | {
+                        "quantity": quantity
+                        | {
+                            "uncertainty": cable_speed / math.cos(angle + data["angle_bound_rad"])
+                            - quantity["value"]
+                        }
+                    },
+                    ("uncertainty",),
+                ),
+                (
+                    "attachment_as_com",
+                    compute_id,
+                    positive | {"quantity": quantity | {"estimand": "athlete_com_vertical_speed"}},
+                    ("estimand",),
+                ),
+                (
+                    "unsupported_com_power",
+                    compute_id,
+                    positive | {"claims": positive["claims"] + ["athlete_com_power_observed"]},
+                    ("interpretation_boundary",),
+                ),
+                (
+                    "unsupported_force_plate_power",
+                    refuse_id,
+                    positive | {"claims": positive["claims"] + ["force_platform_power_observed"]},
+                    ("eligibility_or_refusal", "interpretation_boundary"),
+                ),
+            )
+        )
+    elif method == IMU_POSITION:
         signature_id, signature = next(
             (key, row)
             for key, row in answers.items()

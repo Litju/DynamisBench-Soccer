@@ -239,3 +239,176 @@ check_kind = "categorical"
 "tests/test_m5_imu.py::test_frozen_scenarios_source_provenance_and_projection" = "ce1414b623f8aca390fa958659141ecee6ca9f8269c5224ab3b217cb81b3b581"
 "tests/test_m5_imu.py::test_native_contract_rejects_changed_digest_axis_clock_mount_calibration_and_motion" = "5a202071ee45ba7549cfc587e6fa78f6fed215c887ccfa069e4b1c4932b3038c"
 "tests/test_m5_imu.py::test_private_episode_rejects_method_substitution_and_future_incompatible_keys" = "609725ef8b70bf9dff2212ef2ed172168b4383a88f7906dda6087ac15fe53a3e"
+
+[[receipt]]
+id = "RCP-lpt-vertical-attachment-A"
+dimension = "A"
+subfamilies = ["lpt_encoder.lpt"]
+issue = "RES-704"
+claim = "Canonical explicit native timestamps, cable length in metres, source-owned slack flags, and the exact synthetic identity calibration and source hash are checked. Scope is frozen lpt-vertical-attachment revision 1, the single-cable 50 Hz synthetic task and its stated constant projection."
+implementation = ["src/dynamisbench_soccer/m4/measurement.py::_lpt", "src/dynamisbench_soccer/engines/lpt_acquisition.py::_read_cable"]
+reference = ["tests/test_m5_lpt.py::_channel_hash"]
+reference_kind = "closed_form"
+independence = "Sampled polynomial derivatives, sign and corner bounds, conditional power, channel hashes and fixture faults were derived independently of production LPT replay."
+tests = ["tests/test_m5_lpt.py::test_frozen_native_lpt_matches_closed_form_and_engine", "tests/test_m5_lpt.py::test_lpt_rejects_stale_channels_calibration_clock_and_invalid_power"]
+tolerance = 0
+tolerance_unit = ""
+tolerance_basis = "Exact channels, unit, source hash and identity record. A mutated calibration and a stale source digest are rejected."
+check_kind = "categorical"
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/lpt_acquisition.py::_read_cable" = "c0dce2730596d98bf296d223117ecc76252f87b361eb3529239fe932c9e9a490"
+"src/dynamisbench_soccer/m4/measurement.py::_lpt" = "334aa6afe7eae5b5cb87bc4bed03de3356c42e6662772195415a187a0dd320f5"
+"tests/test_m5_lpt.py::_channel_hash" = "a7cc5bc005bf39702d179db7e7cf347eb9e5d54cdc5828b7e8f40200314abb59"
+"tests/test_m5_lpt.py::test_frozen_native_lpt_matches_closed_form_and_engine" = "3f716efea9b7098adfddbb1f9c317e6528b13225d01162966f254a404f38ed78"
+"tests/test_m5_lpt.py::test_lpt_rejects_stale_channels_calibration_clock_and_invalid_power" = "2d7df3d06d8c881613dd7af9a360ded99a22775d3cbab9648e9ca6f69821f6a1"
+
+[[receipt]]
+id = "RCP-lpt-vertical-attachment-B"
+dimension = "B"
+subfamilies = ["lpt_encoder.lpt"]
+issue = "RES-704"
+claim = "Relative signed cable extension is projected to vertical bar attachment displacement under the declared effective angle from upward vertical. Scope is frozen lpt-vertical-attachment revision 1, the single-cable 50 Hz synthetic task and its stated constant projection."
+implementation = ["src/dynamisbench_soccer/m4/measurement.py::_lpt", "src/dynamisbench_soccer/engines/lpt_acquisition.py::vertical"]
+reference = ["tests/test_m5_lpt.py::_independent_stencil", "tests/test_m5_lpt.py::_expected_operands"]
+reference_kind = "closed_form"
+independence = "Sampled polynomial derivatives, sign and corner bounds, conditional power, channel hashes and fixture faults were derived independently of production LPT replay."
+tests = ["tests/test_m5_lpt.py::test_frozen_native_lpt_matches_closed_form_and_engine", "tests/test_m5_lpt.py::test_nonlinear_and_signed_reference_controls", "tests/test_m5_lpt.py::test_frozen_lpt_refusals", "tests/test_m5_lpt.py::test_lpt_rejects_stale_channels_calibration_clock_and_invalid_power"]
+tolerance = 1e-09
+tolerance_unit = "m"
+tolerance_basis = "Independent polynomial displacement and forward direction cosine supply signed truth for ascending and descending attachment motion."
+check_kind = "numeric"
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/lpt_acquisition.py::vertical" = "f227f82bb1341a002130be3b266bf023999a66673902f99758b2d591f27f436e"
+"src/dynamisbench_soccer/m4/measurement.py::_lpt" = "334aa6afe7eae5b5cb87bc4bed03de3356c42e6662772195415a187a0dd320f5"
+"tests/test_m5_lpt.py::_expected_operands" = "6c52cb4f66f7df6741fab6535ad25fa9b0dfb97fc804c227b6786b867960054c"
+"tests/test_m5_lpt.py::_independent_stencil" = "8327a155c9a105d9cf18f3a651a0ebc5fcc93e9f2de6a6330a847afad2e640ab"
+"tests/test_m5_lpt.py::test_frozen_lpt_refusals" = "78ce81391ce5fbe8ce75431fb01fd7fc8b054194afc952fb8bbf2cd1631bfae0"
+"tests/test_m5_lpt.py::test_frozen_native_lpt_matches_closed_form_and_engine" = "3f716efea9b7098adfddbb1f9c317e6528b13225d01162966f254a404f38ed78"
+"tests/test_m5_lpt.py::test_lpt_rejects_stale_channels_calibration_clock_and_invalid_power" = "2d7df3d06d8c881613dd7af9a360ded99a22775d3cbab9648e9ca6f69821f6a1"
+"tests/test_m5_lpt.py::test_nonlinear_and_signed_reference_controls" = "779d3bed52c7edea952dc7bba29eb90282d5f6ab355cf0567e9f204be1375534"
+
+[[receipt]]
+id = "RCP-lpt-vertical-attachment-D"
+dimension = "D"
+subfamilies = ["lpt_encoder.lpt"]
+issue = "RES-704"
+claim = "Slack and native timing faults reject scoring. The acquisition engine checks source-owned binary slack and declared native cable integrity before reconstruction. Scope is frozen lpt-vertical-attachment revision 1, the single-cable 50 Hz synthetic task and its stated constant projection."
+implementation = ["src/dynamisbench_soccer/m4/measurement.py::_lpt", "src/dynamisbench_soccer/engines/lpt_acquisition.py::acquire"]
+reference = ["tests/test_m5_lpt.py::FROZEN_REFUSALS"]
+reference_kind = "closed_form"
+independence = "Sampled polynomial derivatives, sign and corner bounds, conditional power, channel hashes and fixture faults were derived independently of production LPT replay."
+tests = ["tests/test_m5_lpt.py::test_frozen_lpt_refusals", "tests/test_m5_lpt.py::test_lpt_rejects_stale_channels_calibration_clock_and_invalid_power", "tests/test_m5_lpt.py::test_frozen_native_lpt_matches_closed_form_and_engine"]
+tolerance = 0
+tolerance_unit = ""
+tolerance_basis = "Each frozen acquisition fault or invalid timing injection has an exact refusal and supplies no quantity."
+check_kind = "categorical"
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/lpt_acquisition.py::acquire" = "9980148ba8cdc54b945261a11e8747425e1209f700bfb319727c8139976f3358"
+"src/dynamisbench_soccer/m4/measurement.py::_lpt" = "334aa6afe7eae5b5cb87bc4bed03de3356c42e6662772195415a187a0dd320f5"
+"tests/test_m5_lpt.py::FROZEN_REFUSALS" = "c4046a2faff70cc00257d3a8226e1feb87fb2b6ed71f3f69f9a0a113cdf211ed"
+"tests/test_m5_lpt.py::test_frozen_lpt_refusals" = "78ce81391ce5fbe8ce75431fb01fd7fc8b054194afc952fb8bbf2cd1631bfae0"
+"tests/test_m5_lpt.py::test_frozen_native_lpt_matches_closed_form_and_engine" = "3f716efea9b7098adfddbb1f9c317e6528b13225d01162966f254a404f38ed78"
+"tests/test_m5_lpt.py::test_lpt_rejects_stale_channels_calibration_clock_and_invalid_power" = "2d7df3d06d8c881613dd7af9a360ded99a22775d3cbab9648e9ca6f69821f6a1"
+
+[[receipt]]
+id = "RCP-lpt-vertical-attachment-E"
+dimension = "E"
+subfamilies = ["lpt_encoder.lpt"]
+issue = "RES-704"
+claim = "Adjacent unfiltered centered differences recover point speed and acceleration. A quartic and a descending trace distinguish alternate stencils. Scope is frozen lpt-vertical-attachment revision 1, the single-cable 50 Hz synthetic task and its stated constant projection."
+implementation = ["src/dynamisbench_soccer/m4/measurement.py::_lpt", "src/dynamisbench_soccer/engines/lpt_acquisition.py::vertical"]
+reference = ["tests/test_m5_lpt.py::_independent_stencil"]
+reference_kind = "closed_form"
+independence = "Sampled polynomial derivatives, sign and corner bounds, conditional power, channel hashes and fixture faults were derived independently of production LPT replay."
+tests = ["tests/test_m5_lpt.py::test_frozen_native_lpt_matches_closed_form_and_engine", "tests/test_m5_lpt.py::test_nonlinear_and_signed_reference_controls"]
+tolerance = 1e-09
+tolerance_unit = "m/s; m/s^2"
+tolerance_basis = "Exact Taylor expansions supply derivatives of each sampled polynomial, including the discrete stencil correction."
+check_kind = "numeric"
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/lpt_acquisition.py::vertical" = "f227f82bb1341a002130be3b266bf023999a66673902f99758b2d591f27f436e"
+"src/dynamisbench_soccer/m4/measurement.py::_lpt" = "334aa6afe7eae5b5cb87bc4bed03de3356c42e6662772195415a187a0dd320f5"
+"tests/test_m5_lpt.py::_independent_stencil" = "8327a155c9a105d9cf18f3a651a0ebc5fcc93e9f2de6a6330a847afad2e640ab"
+"tests/test_m5_lpt.py::test_frozen_native_lpt_matches_closed_form_and_engine" = "3f716efea9b7098adfddbb1f9c317e6528b13225d01162966f254a404f38ed78"
+"tests/test_m5_lpt.py::test_nonlinear_and_signed_reference_controls" = "779d3bed52c7edea952dc7bba29eb90282d5f6ab355cf0567e9f204be1375534"
+
+[[receipt]]
+id = "RCP-lpt-vertical-attachment-H"
+dimension = "H"
+subfamilies = ["lpt_encoder.lpt"]
+issue = "RES-704"
+claim = "The target is signed bar attachment vertical speed. Cable speed, relative projected displacement and acceleration have distinct operands. Joint angle/clock corners bound the speed. Scope is frozen lpt-vertical-attachment revision 1, the single-cable 50 Hz synthetic task and its stated constant projection."
+implementation = ["src/dynamisbench_soccer/m4/measurement.py::_lpt", "src/dynamisbench_soccer/engines/lpt_acquisition.py::vertical", "src/dynamisbench_soccer/engines/lpt.py::process"]
+reference = ["tests/test_m5_lpt.py::_independent_stencil", "tests/test_m5_lpt.py::_speed_interval", "tests/test_m5_lpt.py::_expected_operands"]
+reference_kind = "closed_form"
+independence = "Sampled polynomial derivatives, sign and corner bounds, conditional power, channel hashes and fixture faults were derived independently of production LPT replay."
+tests = ["tests/test_m5_lpt.py::test_frozen_native_lpt_matches_closed_form_and_engine", "tests/test_m5_lpt.py::test_nonlinear_and_signed_reference_controls", "tests/test_m5_lpt.py::test_frozen_lpt_refusals"]
+tolerance = 1e-09
+tolerance_unit = "m/s"
+tolerance_basis = "Independent Taylor forms and monotonic endpoint geometry yield the tested nominal values and uncertainty. Named operands use absolute tolerance."
+check_kind = "numeric"
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/lpt.py::process" = "5b197309b2e6212f55f1e21e3a614ccc3400fc0404bfcb58d6e0371f1d4396fd"
+"src/dynamisbench_soccer/engines/lpt_acquisition.py::vertical" = "f227f82bb1341a002130be3b266bf023999a66673902f99758b2d591f27f436e"
+"src/dynamisbench_soccer/m4/measurement.py::_lpt" = "334aa6afe7eae5b5cb87bc4bed03de3356c42e6662772195415a187a0dd320f5"
+"tests/test_m5_lpt.py::_expected_operands" = "6c52cb4f66f7df6741fab6535ad25fa9b0dfb97fc804c227b6786b867960054c"
+"tests/test_m5_lpt.py::_independent_stencil" = "8327a155c9a105d9cf18f3a651a0ebc5fcc93e9f2de6a6330a847afad2e640ab"
+"tests/test_m5_lpt.py::_speed_interval" = "8526c0747baf6a390928c9fc02b024dc594589e8c3ba6514daa088c63b1aab5f"
+"tests/test_m5_lpt.py::test_frozen_lpt_refusals" = "78ce81391ce5fbe8ce75431fb01fd7fc8b054194afc952fb8bbf2cd1631bfae0"
+"tests/test_m5_lpt.py::test_frozen_native_lpt_matches_closed_form_and_engine" = "3f716efea9b7098adfddbb1f9c317e6528b13225d01162966f254a404f38ed78"
+"tests/test_m5_lpt.py::test_nonlinear_and_signed_reference_controls" = "779d3bed52c7edea952dc7bba29eb90282d5f6ab355cf0567e9f204be1375534"
+
+[[receipt]]
+id = "RCP-lpt-vertical-attachment-K"
+dimension = "K"
+subfamilies = ["lpt_encoder.lpt"]
+issue = "RES-704"
+claim = "Frozen missing angle, flagged slack, repeated native clock, and unsupported force-platform or COM inference are refused. Additional faults cover stale source, clock grid, calibration, rigid translation and angular domain. Scope is frozen lpt-vertical-attachment revision 1, the single-cable 50 Hz synthetic task and its stated constant projection."
+implementation = ["src/dynamisbench_soccer/m4/measurement.py::_lpt", "src/dynamisbench_soccer/engines/lpt_acquisition.py::acquire"]
+reference = ["tests/test_m5_lpt.py::FROZEN_REFUSALS"]
+reference_kind = "closed_form"
+independence = "Sampled polynomial derivatives, sign and corner bounds, conditional power, channel hashes and fixture faults were derived independently of production LPT replay."
+tests = ["tests/test_m5_lpt.py::test_frozen_lpt_refusals", "tests/test_m5_lpt.py::test_lpt_rejects_stale_channels_calibration_clock_and_invalid_power", "tests/test_m5_lpt.py::test_nonlinear_and_signed_reference_controls"]
+tolerance = 0
+tolerance_unit = ""
+tolerance_basis = "Exact prescribed refusal and empty result for each injected acquisition or interpretation fault. Independently constructed traces reject the wrong acceleration stencil."
+check_kind = "categorical"
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/lpt_acquisition.py::acquire" = "9980148ba8cdc54b945261a11e8747425e1209f700bfb319727c8139976f3358"
+"src/dynamisbench_soccer/m4/measurement.py::_lpt" = "334aa6afe7eae5b5cb87bc4bed03de3356c42e6662772195415a187a0dd320f5"
+"tests/test_m5_lpt.py::FROZEN_REFUSALS" = "c4046a2faff70cc00257d3a8226e1feb87fb2b6ed71f3f69f9a0a113cdf211ed"
+"tests/test_m5_lpt.py::test_frozen_lpt_refusals" = "78ce81391ce5fbe8ce75431fb01fd7fc8b054194afc952fb8bbf2cd1631bfae0"
+"tests/test_m5_lpt.py::test_lpt_rejects_stale_channels_calibration_clock_and_invalid_power" = "2d7df3d06d8c881613dd7af9a360ded99a22775d3cbab9648e9ca6f69821f6a1"
+"tests/test_m5_lpt.py::test_nonlinear_and_signed_reference_controls" = "779d3bed52c7edea952dc7bba29eb90282d5f6ab355cf0567e9f204be1375534"
+
+[[receipt]]
+id = "RCP-lpt-vertical-attachment-O"
+dimension = "O"
+subfamilies = ["lpt_encoder.lpt"]
+issue = "RES-704"
+claim = "The power operand represents the declared rigid translated load, computed as m(g+a)v. Single-cable bar motion supplies neither whole-athlete COM power nor measured force-platform power. Scope is frozen lpt-vertical-attachment revision 1, the single-cable 50 Hz synthetic task and its stated constant projection."
+implementation = ["src/dynamisbench_soccer/m4/measurement.py::_lpt", "src/dynamisbench_soccer/engines/lpt.py::process"]
+reference = ["tests/test_m5_lpt.py::_expected_operands", "tests/test_m5_lpt.py::FROZEN_REFUSALS"]
+reference_kind = "closed_form"
+independence = "Sampled polynomial derivatives, sign and corner bounds, conditional power, channel hashes and fixture faults were derived independently of production LPT replay."
+tests = ["tests/test_m5_lpt.py::test_frozen_native_lpt_matches_closed_form_and_engine", "tests/test_m5_lpt.py::test_nonlinear_and_signed_reference_controls", "tests/test_m5_lpt.py::test_frozen_lpt_refusals", "tests/test_m5_lpt.py::test_lpt_rejects_stale_channels_calibration_clock_and_invalid_power"]
+tolerance = 1e-09
+tolerance_unit = "W"
+tolerance_basis = "Closed-form power uses declared mass and g, and acceleration and velocity from independent polynomial truth. Unsupported interpretations are refused."
+check_kind = "numeric"
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/lpt.py::process" = "5b197309b2e6212f55f1e21e3a614ccc3400fc0404bfcb58d6e0371f1d4396fd"
+"src/dynamisbench_soccer/m4/measurement.py::_lpt" = "334aa6afe7eae5b5cb87bc4bed03de3356c42e6662772195415a187a0dd320f5"
+"tests/test_m5_lpt.py::FROZEN_REFUSALS" = "c4046a2faff70cc00257d3a8226e1feb87fb2b6ed71f3f69f9a0a113cdf211ed"
+"tests/test_m5_lpt.py::_expected_operands" = "6c52cb4f66f7df6741fab6535ad25fa9b0dfb97fc804c227b6786b867960054c"
+"tests/test_m5_lpt.py::test_frozen_lpt_refusals" = "78ce81391ce5fbe8ce75431fb01fd7fc8b054194afc952fb8bbf2cd1631bfae0"
+"tests/test_m5_lpt.py::test_frozen_native_lpt_matches_closed_form_and_engine" = "3f716efea9b7098adfddbb1f9c317e6528b13225d01162966f254a404f38ed78"
+"tests/test_m5_lpt.py::test_lpt_rejects_stale_channels_calibration_clock_and_invalid_power" = "2d7df3d06d8c881613dd7af9a360ded99a22775d3cbab9648e9ca6f69821f6a1"
+"tests/test_m5_lpt.py::test_nonlinear_and_signed_reference_controls" = "779d3bed52c7edea952dc7bba29eb90282d5f6ab355cf0567e9f204be1375534"

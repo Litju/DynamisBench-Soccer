@@ -221,3 +221,27 @@ def test_imu_signature_role_required_and_development_revision_excluded():
     review.evidence["G"] = ReceiptBinding(id="missing", sha256="0" * 64)
     review.inapplicable.pop("G")
     assert _check(task, review)[1] == (f"missing or incompatible receipt for A: {row.id}",)
+
+
+def test_frozen_lpt_requires_native_scope_and_its_own_missing_receipts():
+    task = load_registry(ROOT / "benchmark/tasks")["lpt-vertical-attachment", 1]
+    roles = REQUIRED["native_signal"]
+    review = _profile(task).model_copy(
+        update={
+            "kind": "native_signal",
+            "evidence": {role: ReceiptBinding(id="missing", sha256="0" * 64) for role in roles},
+            "inapplicable": {"G": "no event", "L": "one source"},
+        }
+    )
+    modified = task.model_copy(update={"grader": "measurement.v1"})
+    assert _check(modified, review.model_copy(update={"task_sha256": fingerprint(modified)}))[
+        1
+    ] == ("incompatible frozen native LPT task or review kind",)
+    assert _check(task, review.model_copy(update={"kind": "protocol_assessment"}))[0] == "REFUSED"
+    row = next(
+        row for row in load(ROOT / "qualification/receipts.toml") if row.id == "RCP-gnss_lps-lps-A"
+    )
+    review.evidence["A"] = ReceiptBinding(id=row.id, sha256=_receipt_digest(row))
+    assert _check(task, review)[1] == (f"missing or incompatible receipt for A: {row.id}",)
+    review.evidence.pop("A")
+    assert _check(task, review)[1] == ("missing or invalid required evidence dimensions",)
