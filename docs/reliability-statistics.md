@@ -134,3 +134,14 @@ current mean of 15 N the rolling result must give z = 2, change = 6 N and 95%
 limits [2.7993922, 9.2006078] N. A separate unequal-count fixture checks the
 change SE against 5/√12, a zero descriptive spread, and missing-session
 exclusion without backfill.
+
+### Fixed-session analytical task
+
+The RES-704 longitudinal reference uses the first three baseline sessions and
+equal session weights. A distinct, stable synthetic cohort supplies a plug-in
+trial TE under the same measurement protocol and the same stipulated stationary
+error variance. Its normal-theory interval assumes independent zero-mean
+normal trial errors and conditions on that supplied scale. Coverage with an
+estimated TE, transfer to a real athlete, and empirical device repeatability
+require separate evidence. The point SWC decision and the interval's exclusion
+of zero are separate outputs. [Longitudinal qualification](verification/m5-res704-advanced.md#longitudinal-reference-admission)

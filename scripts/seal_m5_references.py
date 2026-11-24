@@ -145,7 +145,7 @@ def main() -> None:
                     "C": "Named sessions supply the fixed order without hardware timing.",
                     "G": "The operation recovers no protocol event.",
                     "K": "D tests identity and design refusals. No native signal enters.",
-                    "L": "This single-source slice refuses equivalence without a paired study.",
+                    "L": "One source supplies the reference under this design.",
                 }[role]
                 continue
             suffix = {"H": "-native-assessment", "I": "-native-bounds"}.get(role, "")
