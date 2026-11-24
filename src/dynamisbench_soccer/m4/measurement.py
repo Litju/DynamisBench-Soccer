@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import math
 from dataclasses import dataclass
 from typing import Literal
 
@@ -11,7 +12,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 from dynamisbench_soccer.agreement.paired_speed import PairedInput, compare
 from dynamisbench_soccer.data.manifest import DataCategory
-from dynamisbench_soccer.engines import imu
+from dynamisbench_soccer.engines import imu, lpt, lpt_acquisition
 from dynamisbench_soccer.engines.contact import ContactPolicy, contact
 from dynamisbench_soccer.engines.event_time import Estimate, EventRefusal
 from dynamisbench_soccer.engines.gnss_lps import ProcessingOptions, process
@@ -24,7 +25,7 @@ from dynamisbench_soccer.engines.load_cell import process as process_load_cell
 from dynamisbench_soccer.engines.load_cell_acquisition import CellSpec, acquire, check_saturation
 from dynamisbench_soccer.engines.position_clock_bounds import input_error_radii
 from dynamisbench_soccer.engines.timing_gates import GatePolicy, sprint
-from dynamisbench_soccer.m4.admission import CELL_TASK, IMU_TASK, Kind
+from dynamisbench_soccer.m4.admission import CELL_TASK, IMU_TASK, LPT_TASK, Kind
 from dynamisbench_soccer.m4.key_store import digest
 from dynamisbench_soccer.m4.task_registry import Method, RegistryTask
 from dynamisbench_soccer.qc.spec import Status
@@ -45,6 +46,7 @@ ANSWER_VERSION = "m5.measurement-answer.v1"
 IMU_POSITION = "fixed-attitude-sensor-position"
 IMU_SIGNATURE = "specific-force-signature-flight"
 IMU_OPERATIONS = (IMU_POSITION, IMU_SIGNATURE)
+LPT_OPERATION = "fixed-angle-attachment-speed"
 CELL_OPERATION = "unfiltered-net-peak-torque"
 CELL_SPECIFICATION = {
     "operation": "unfiltered_net_peak_force_times_perpendicular_moment_arm",
@@ -129,6 +131,15 @@ PROCEDURES = {
         "s",
         ("DEV-002",),
         ("engines/imu.py::process", "m4/measurement.py::_imu_signature"),
+    ),
+    LPT_OPERATION: Procedure(
+        "lpt_encoder.lpt",
+        "native_signal",
+        "bar_vertical_attachment_speed",
+        "speed",
+        "m/s",
+        ("DEV-001",),
+        ("engines/lpt_acquisition.py::acquire", "m4/measurement.py::_lpt"),
     ),
     CELL_OPERATION: Procedure(
         "load_cell_isometric.load_cell",
@@ -736,6 +747,133 @@ def _imu(operation: str, data: dict[str, object]) -> Reading:
     return _imu_position(spec, native, request)
 
 
+def _lpt(data: dict[str, object]) -> Reading:
+    meta = BundleMeta.model_validate(data["meta"])
+    acquisition, sampling = meta.acquisition, meta.sampling
+    cable = lpt_acquisition.CableSpec.model_validate(data["cable"])
+    geometry = lpt_acquisition.GeometrySpec.model_validate(data["geometry"])
+    raw = data["channels"]
+    names = {
+        "time": Quantity.TIME,
+        "cable_length": Quantity.DISTANCE,
+        "slack": Quantity.DIMENSIONLESS,
+    }
+    if (
+        meta.data_category is not DataCategory.SYNTHETIC
+        or meta.device.device_class is not DeviceClass.LPT
+        or acquisition is None
+        or len(acquisition.sources) != 1
+        or sampling is None
+        or not isinstance(raw, dict)
+        or raw.keys() != names.keys()
+        or {channel.name: channel.quantity for channel in meta.channels} != names
+    ):
+        raise ValueError("reference requires canonical native synthetic LPT distance")
+    (source,) = acquisition.sources
+    if (
+        source.device.device_class is not DeviceClass.LPT
+        or source.id != cable.source
+        or cable.channel != "cable_length"
+        or cable.slack_channel != "slack"
+        or source.raw_format != "generated native sample values for independent RES-704 control"
+        or source.geometry != meta.geometry
+        or source.geometry.attachment_point != "barbell"
+        or geometry.attachment_point != "barbell"
+        or geometry.vertical_line_xy_m is not None
+    ):
+        raise ValueError("reference requires one declared barbell cable with its source slack")
+    if (
+        len(source.calibration) != 1
+        or source.calibration != meta.calibration
+        or (
+            source.calibration[0].channel,
+            source.calibration[0].input_unit,
+            source.calibration[0].output_unit,
+            source.calibration[0].gain,
+            source.calibration[0].offset,
+        )
+        != ("cable_length", "m", "m", 1, 0)
+    ):
+        raise ValueError("reference requires declared metre-to-metre identity calibration")
+    raw_sha = digest((json.dumps(raw, indent=2, sort_keys=True, allow_nan=False) + "\n").encode())
+    if source.source_sha256 != raw_sha or meta.provenance.source_sha256 != raw_sha:
+        raise ValueError("native cable channels disagree with source provenance")
+    bundle = SignalBundle(
+        meta,
+        {
+            channel.name: np.asarray(raw[channel.name], dtype=np.float64)
+            for channel in meta.channels
+        },
+    )
+    time = bundle["time"]
+    if np.any(np.diff(time) <= 0):
+        return Reading("not_eligible", ("nonincreasing_native_clock",))
+    if (
+        sampling.nominal_hz != 50
+        or sampling.measured_hz != 50
+        or sampling.irregular
+        or not np.allclose(time, sampling.t0_s + np.arange(meta.n_rows) / 50, atol=1e-12, rtol=0)
+    ):
+        return Reading("not_eligible", ("unresolved_native_grid",))
+
+    request = data["request"]
+    if request == "force_plate_power":
+        return Reading(
+            "unsupported_claim", ("mass_model_distinct_from_plate_power", "com_unobserved")
+        )
+    if request != "vertical_speed":
+        raise ValueError("unsupported LPT request")
+    native = lpt_acquisition.acquire(bundle, (cable,), geometry)
+    (instrument,) = native.cables
+    if instrument.faults:
+        claim = "cable_slack" if "slack" in instrument.faults else "cable_integrity_failed"
+        return Reading("not_eligible", (claim,))
+    vertical = native.vertical_displacement_m
+    if vertical is None:
+        return Reading("insufficient_evidence", ("cable_only", "vertical_geometry_unobserved"))
+
+    power = lpt.PowerSpec.model_validate(data["power"])
+    angle = source.geometry.cable_angle_rad
+    row, da, ppm = (data["row"], data["angle_bound_rad"], data["clock_scale_bound_ppm"])
+    if (
+        angle is None
+        or type(row) is not int
+        or not 1 <= row < len(time) - 1
+        or not isinstance(da, (int, float))
+        or not (0 <= da <= angle and angle + da < math.acos(1e-3))
+        or not isinstance(ppm, (int, float))
+        or not 0 <= ppm < 1e6
+    ):
+        raise ValueError("invalid native stencil or nonsingular angle/clock bounds")
+    span = float(native.time_s[row + 1] - native.time_s[row - 1])
+    cable_delta = float(instrument.length_m[row + 1] - instrument.length_m[row - 1])
+    cable_speed = cable_delta / span
+    speed = float(vertical[row + 1] - vertical[row - 1]) / span
+    acceleration = (
+        float(vertical[row + 1] - 2 * vertical[row] + vertical[row - 1]) / (span / 2) ** 2
+    )
+    radius = max(
+        abs(cable_speed / (math.cos(angle + a) * (1 + scale * 1e-6)) - speed)
+        for a in (-da, da)
+        for scale in (-ppm, ppm)
+    )
+    return Reading(
+        "eligible",
+        ("fixed_projection", "mass_model_distinct_from_plate_power", "attachment_point_only"),
+        speed,
+        radius,
+        (
+            ("cable_speed_m_s", round(cable_speed, 10)),
+            ("vertical_displacement_m", round(float(vertical[row]), 10)),
+            ("vertical_acceleration_m_s2", round(acceleration, 10)),
+            (
+                "vertical_mass_model_power_w",
+                round(power.system_mass_kg * (lpt.GRAVITY_M_S2 + acceleration) * speed, 10),
+            ),
+        ),
+    )
+
+
 def is_imu_episode(task: RegistryTask) -> bool:
     return (task.task.id, task.task.revision) == IMU_TASK
 
@@ -754,16 +892,20 @@ def checkpoint_methods(task: RegistryTask, checkpoint_id: str) -> tuple[Method, 
 def is_measurement_task(task: RegistryTask) -> bool:
     if (task.task.id, task.task.revision) == CELL_TASK:
         return task.engine == "m5-advanced-development.v1" and task.methods[0].id == CELL_OPERATION
+    if (task.task.id, task.task.revision) == LPT_TASK:
+        return task.engine == "m5-advanced-development.v1" and task.methods[0].id == LPT_OPERATION
     if is_imu_episode(task):
         return (
             task.engine == ENGINE and tuple(method.id for method in task.methods) == IMU_OPERATIONS
         )
     return task.engine == ENGINE and all(
-        method.id not in (CELL_OPERATION, *IMU_OPERATIONS) for method in task.methods
+        method.id not in (CELL_OPERATION, LPT_OPERATION, *IMU_OPERATIONS) for method in task.methods
     )
 
 
 def replay(operation: str, data: dict[str, object]) -> Reading:
+    if operation == LPT_OPERATION:
+        return _lpt(data)
     if operation == CELL_OPERATION:
         return _load_cell(data)
     if operation in IMU_OPERATIONS:

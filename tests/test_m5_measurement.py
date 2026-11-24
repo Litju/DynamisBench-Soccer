@@ -9,6 +9,7 @@ from dynamisbench_soccer.m4.key_store import digest
 from dynamisbench_soccer.m4.measurement import (
     CELL_OPERATION,
     IMU_OPERATIONS,
+    LPT_OPERATION,
     PROCEDURES,
     is_measurement_task,
     replay,
@@ -53,7 +54,7 @@ def test_measurement_episode_replays_without_disclosing_reference(procedure):
         else "unsupported_claim"
     )
     assert {"eligible", "not_eligible", third} <= decisions
-    if procedure == "switch-flight-height":
+    if procedure in ("switch-flight-height", LPT_OPERATION):
         assert "insufficient_evidence" in decisions
 
 
