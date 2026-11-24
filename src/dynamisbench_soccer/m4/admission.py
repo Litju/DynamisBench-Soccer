@@ -43,10 +43,13 @@ CELL_TASK = ("load-cell-net-torque-ramp", 1)
 CELL_TASK_SHA256 = "133670a4fa6026efe72bb52a434fbf64e06ab2e5e82f98c2fd53bb953cb17949"
 IMU_TASK = ("imu-frame-observability", 2)
 IMU_TASK_SHA256 = "e78372488e6195411bbef0b89091d1999ad22fa30c6215d7bd54bd2ad8096d06"
+LPT_TASK = ("lpt-vertical-attachment", 1)
+LPT_TASK_SHA256 = "739adc25c878f2ac703f77387327a75bd6a81e96255814c2bf5c5b8bfdf405ef"
 NATIVE_TASK_RECEIPTS = "native_task_receipts"
 NATIVE_TASK_SCOPES = {
     CELL_TASK: (CELL_TASK_SHA256, frozenset({"C", "E", "H", "I", "K"})),
     IMU_TASK: (IMU_TASK_SHA256, frozenset({"A", "C", "G", "H", "M"})),
+    LPT_TASK: (LPT_TASK_SHA256, frozenset({"A", "B", "D", "E", "H", "K", "O"})),
 }
 STATISTICAL_TASK = ("lps-repeat-session-change", 1)
 STATISTICAL_RECEIPTS = "qualification/task_receipts.toml"
@@ -234,8 +237,9 @@ def evaluate(
         scope = NATIVE_TASK_SCOPES.get(identity)
         if task.task.id == IMU_TASK[0] and identity != IMU_TASK:
             return decision("REFUSED", "IMU development revision is outside the scored scope")
-        if scope is not None and (task_hash != scope[0] or review.kind != "protocol_assessment"):
-            device = "load-cell" if identity == CELL_TASK else "IMU"
+        kind = "native_signal" if identity == LPT_TASK else "protocol_assessment"
+        if scope is not None and (task_hash != scope[0] or review.kind != kind):
+            device = {CELL_TASK: "load-cell", IMU_TASK: "IMU", LPT_TASK: "LPT"}[identity]
             return decision("REFUSED", f"incompatible frozen native {device} task or review kind")
         roles = set(review.evidence)
         if not REQUIRED[review.kind] <= roles <= DIMENSIONS:

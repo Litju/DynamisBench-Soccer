@@ -96,6 +96,69 @@
    "review_url": "https://github.com/Litju/DynamisBench-Soccer/pull/71",
    "reviewer": "Independent Codex scientific review",
    "verdict": "SUPPORTED"
+  },
+  "RCP-lpt-vertical-attachment-A": {
+   "bound_digest": "c68799097f015ca6495017d52a5ab5529db189e2571e4a2e1f9233cfef6146bb",
+   "evidence_head": "d01cd815981b26da4223f5268f843359adeea724",
+   "fix": "",
+   "reason": "Independent canonical raw-channel hashes, native channel declarations, calibration identity, and source integrity checks agree. Support is scoped to frozen LPT task revision 1.",
+   "review_url": "https://github.com/Litju/DynamisBench-Soccer/pull/73",
+   "reviewer": "Independent Codex scientific review",
+   "verdict": "SUPPORTED"
+  },
+  "RCP-lpt-vertical-attachment-B": {
+   "bound_digest": "5a8035c999c531d1727f6fcd2964769dd74df5fbe26cc124742b5d31ae7a152c",
+   "evidence_head": "d01cd815981b26da4223f5268f843359adeea724",
+   "fix": "",
+   "reason": "Independently derived cable projection matches signed displacement in both directions, with missing angle refusal. Support is scoped to frozen LPT task revision 1.",
+   "review_url": "https://github.com/Litju/DynamisBench-Soccer/pull/73",
+   "reviewer": "Independent Codex scientific review",
+   "verdict": "SUPPORTED"
+  },
+  "RCP-lpt-vertical-attachment-D": {
+   "bound_digest": "9513ce105f7983e64e977638f92a1c95015d94ccd8665528e184a08419f2e51b",
+   "evidence_head": "d01cd815981b26da4223f5268f843359adeea724",
+   "fix": "",
+   "reason": "Independent slack and clock fault decisions match, along with declared single-cable acquisition QC. Support is scoped to frozen LPT task revision 1.",
+   "review_url": "https://github.com/Litju/DynamisBench-Soccer/pull/73",
+   "reviewer": "Independent Codex scientific review",
+   "verdict": "SUPPORTED"
+  },
+  "RCP-lpt-vertical-attachment-E": {
+   "bound_digest": "49abcb7ccccfdfd2fdbbb9b110508a6fe621f5b0b8a5b3be556599be1e29ea23",
+   "evidence_head": "d01cd815981b26da4223f5268f843359adeea724",
+   "fix": "",
+   "reason": "Quadratic, signed and quartic controls independently verify adjacent unfiltered stencils and distinguish a wider acceleration stencil. Support is scoped to frozen LPT task revision 1.",
+   "review_url": "https://github.com/Litju/DynamisBench-Soccer/pull/73",
+   "reviewer": "Independent Codex scientific review",
+   "verdict": "SUPPORTED"
+  },
+  "RCP-lpt-vertical-attachment-H": {
+   "bound_digest": "7125f466f245ae0b271a6675cb0f2a56621b0c84622963b128955e7b85b0884d",
+   "evidence_head": "d01cd815981b26da4223f5268f843359adeea724",
+   "fix": "",
+   "reason": "Independent nominal values and joint corners support signed bar attachment speed and its distinct cable, displacement, acceleration and power operands. Support is scoped to frozen LPT task revision 1.",
+   "review_url": "https://github.com/Litju/DynamisBench-Soccer/pull/73",
+   "reviewer": "Independent Codex scientific review",
+   "verdict": "SUPPORTED"
+  },
+  "RCP-lpt-vertical-attachment-K": {
+   "bound_digest": "a416cbdf6051ec5f28b5a430c0b04015ab3991b2ff524adf83e6b54932233ae0",
+   "evidence_head": "d01cd815981b26da4223f5268f843359adeea724",
+   "fix": "",
+   "reason": "Four original refusal reasons and supplemental calibration, angle, power and grid fault controls match independent expectations. Support is scoped to frozen LPT task revision 1.",
+   "review_url": "https://github.com/Litju/DynamisBench-Soccer/pull/73",
+   "reviewer": "Independent Codex scientific review",
+   "verdict": "SUPPORTED"
+  },
+  "RCP-lpt-vertical-attachment-O": {
+   "bound_digest": "de6e2d53f28781cbec86bf7cc2f32ba1fa55b1a17239f27be6e052ad75c447e4",
+   "evidence_head": "d01cd815981b26da4223f5268f843359adeea724",
+   "fix": "",
+   "reason": "Independent rigid translated-load power agrees for three positive computations including a negative-velocity trace. Physical force-platform and athlete COM power claims are refused. Support is scoped to frozen LPT task revision 1.",
+   "review_url": "https://github.com/Litju/DynamisBench-Soccer/pull/73",
+   "reviewer": "Independent Codex scientific review",
+   "verdict": "SUPPORTED"
   }
  },
  "receipts": {

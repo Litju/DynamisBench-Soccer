@@ -56,6 +56,16 @@ match kind:
             "horizontal_positional_speed",
         )
         citations = ["DEV-005", "CX-003"]
+    case "lpt_encoder.lpt":
+        time, length = channels["time"], channels["cable_length"]
+        value = (length[-1] - length[0]) / (time[-1] - time[0])
+        method, unit, dimension, estimand = (
+            "fixed-angle-attachment-speed",
+            "m/s",
+            "speed",
+            "bar_vertical_attachment_speed",
+        )
+        citations = ["DEV-001"]
     case "imu.inertial":
         time = channels["time"]
         if source["request"] == "signature_flight_time":
