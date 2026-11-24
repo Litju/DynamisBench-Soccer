@@ -322,7 +322,11 @@ def _measurement_binding(task: RegistryTask, review: ReviewedSlice) -> bool:
 
 
 def _private_methods(
-    task: RegistryTask, answer: AnswerEnvelope, checkpoint: Checkpoint
+    task: RegistryTask,
+    answer: AnswerEnvelope,
+    checkpoint: Checkpoint,
+    *,
+    inputs: dict[str, bytes] | None = None,
 ) -> dict[str, ExpectedMethod]:
     if set(answer.checkpoints) != {row.id for row in task.checkpoints}:
         raise ValueError("private answer does not cover the declared episode")
@@ -347,7 +351,16 @@ def _private_methods(
 
     if measurement.is_imu_episode(task):
         # Validate both method domains before scoring the first checkpoint.
-        return {row.id: parse(row) for row in task.checkpoints}[checkpoint.id]
+        episode = {row.id: parse(row) for row in task.checkpoints}
+        if inputs is not None:
+            for row in task.checkpoints:
+                (method,) = measurement.checkpoint_methods(task, row.id)
+                payload = task.candidate_payload(row.id, inputs, seed=0)
+                if not _replay_measurement(
+                    episode[row.id][method.id], method, payload, row.artifacts
+                ):
+                    raise ValueError("inconsistent IMU episode reference")
+        return episode[checkpoint.id]
     return parse(checkpoint)
 
 
@@ -442,14 +455,16 @@ def score_checkpoint(
         answer = load_private(custody_root, root, review.answer, admission.task_sha256)
         public = task.candidate_payload(checkpoint_id, inputs, seed=0)
         checkpoint = next(item for item in task.checkpoints if item.id == checkpoint_id)
-        references = _private_methods(task, answer, checkpoint)
+        references = _private_methods(task, answer, checkpoint, inputs=inputs)
         methods = {
             method.id: method for method in measurement.checkpoint_methods(task, checkpoint_id)
         }
         for name, method in methods.items():
             expected = references[name]
             if is_measurement:
-                replay_matches = _replay_measurement(expected, method, public, checkpoint.artifacts)
+                replay_matches = measurement.is_imu_episode(task) or _replay_measurement(
+                    expected, method, public, checkpoint.artifacts
+                )
             elif lps:
                 replay_matches = method.specification == LPS_SPEC and _replay_lps(
                     expected, public, checkpoint.artifacts, method.absolute_tolerance

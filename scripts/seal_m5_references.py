@@ -24,7 +24,7 @@ from dynamisbench_soccer.m4.admission import (
     evaluate,
 )
 from dynamisbench_soccer.m4.custody import AnswerEnvelope, AnswerLocation
-from dynamisbench_soccer.m4.grader import MeasurementSubmission, Submission
+from dynamisbench_soccer.m4.grader import MeasurementSubmission, Submission, _private_methods
 from dynamisbench_soccer.m4.key_store import digest
 from dynamisbench_soccer.m4.measurement import (
     CELL_OPERATION,
@@ -204,6 +204,11 @@ def main() -> None:
             if path.is_file() and "__pycache__" not in path.parts
         } | {"uv.lock", "pyproject.toml", *additional}
         envelope = _expected(task, family, private, approval)
+        if family == "imu":
+            inputs = {
+                artifact.name: (ROOT / artifact.path).read_bytes() for artifact in task.artifacts
+            }
+            _private_methods(task, envelope, task.checkpoints[0], inputs=inputs)
         key_raw = envelope.model_dump_json().encode()
         answer = AnswerLocation(id=secrets.token_hex(16), sha256=digest(key_raw))
         keys[answer.id] = key_raw

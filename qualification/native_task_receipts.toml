@@ -222,7 +222,7 @@ dimension = "M"
 subfamilies = ["imu.inertial"]
 issue = "RES-704"
 claim = "Source sample bytes, artifact digests, checkpoint order and release are bound to the exact original eight synthetic scenarios and revision-specific method conditions. Scope is imu-frame-observability revision 2, the eight immutable synthetic scenarios on the prescribed native 20 Hz identity alignment."
-implementation = ["src/dynamisbench_soccer/m4/measurement.py::_imu"]
+implementation = ["src/dynamisbench_soccer/m4/measurement.py::_imu", "src/dynamisbench_soccer/m4/grader.py::_private_methods"]
 reference = ["tests/test_m5_imu.py::_source_digest"]
 reference_kind = "closed_form"
 independence = "Native rates, sample brackets, constant-acceleration position, equivalent raw observations and channel hashes are derived independently from the synthetic declarations."
@@ -233,8 +233,9 @@ tolerance_basis = "SHA-256 equality and exact checkpoint identity are categorica
 check_kind = "categorical"
 
 [receipt.digests]
+"src/dynamisbench_soccer/m4/grader.py::_private_methods" = "bcfef9239bea7a14c1337ec2d13af7069a890d7e067ce636fe9d648962234ff9"
 "src/dynamisbench_soccer/m4/measurement.py::_imu" = "55d25d7a7d36dd1a096b3e815c47a65f4254657286b3bbcf02f5f559a8c4f4fa"
 "tests/test_m5_imu.py::_source_digest" = "d5d4e12dca74fb28f8ff16cc64184d83f3376a689126a1aa1e563f0512589714"
 "tests/test_m5_imu.py::test_frozen_scenarios_source_provenance_and_projection" = "ce1414b623f8aca390fa958659141ecee6ca9f8269c5224ab3b217cb81b3b581"
 "tests/test_m5_imu.py::test_native_contract_rejects_changed_digest_axis_clock_mount_calibration_and_motion" = "5a202071ee45ba7549cfc587e6fa78f6fed215c887ccfa069e4b1c4932b3038c"
-"tests/test_m5_imu.py::test_private_episode_rejects_method_substitution_and_future_incompatible_keys" = "214d58b645587da6c334dddadf36196d0b35bbfa2de114ba89079445b6e70da5"
+"tests/test_m5_imu.py::test_private_episode_rejects_method_substitution_and_future_incompatible_keys" = "609725ef8b70bf9dff2212ef2ed172168b4383a88f7906dda6087ac15fe53a3e"

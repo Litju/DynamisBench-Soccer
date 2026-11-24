@@ -27,7 +27,9 @@ checkpoint assignment in the manifest. The quantity estimands are unchanged.
 L is inapplicable to the single-IMU scenario. Existing supported B, D, E, F, I,
 J, K and O receipts support the overlapping device dependencies. The exact
 M5-only A/C/G/H/M receipts and tests bind both procedures and add the required
-signature-specific G evidence. No full-M3 ledger promotion is requested.
+signature-specific G evidence. The existing I receipt covers the position
+bias bound and the scoped G receipt directly covers the signature edge-sum
+bound. No full-M3 ledger promotion is requested.
 
 The field is ENU and gravity is −9.80665 m/s² along field Z. Specific force is
 `Rᵀ(a−g)`. The fixed-attitude method requires a declared proper orientation,

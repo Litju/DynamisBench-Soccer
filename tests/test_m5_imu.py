@@ -196,7 +196,7 @@ def test_native_contract_rejects_changed_digest_axis_clock_mount_calibration_and
         replay(IMU_POSITION, data)
 
 
-def test_private_episode_rejects_method_substitution_and_future_incompatible_keys():
+def test_private_episode_rejects_method_substitution_and_future_incompatible_keys(monkeypatch):
     from dynamisbench_soccer.m4.custody import AnswerEnvelope
     from dynamisbench_soccer.m4.grader import _private_methods
     from dynamisbench_soccer.m4.measurement import checkpoint_methods
@@ -222,6 +222,18 @@ def test_private_episode_rejects_method_substitution_and_future_incompatible_key
     envelope = AnswerEnvelope(task_sha256=fingerprint(task), nonce="a" * 64, checkpoints=keys)
     assert tuple(_private_methods(task, envelope, positions[0])) == (IMU_POSITION,)
     assert tuple(_private_methods(task, envelope, signatures[0])) == (IMU_SIGNATURE,)
+    raw = {item.name: (ROOT / item.path).read_bytes() for item in task.artifacts}
+    # Simulate a later key with valid shape but a mismatching production result.
+    domains = []
+
+    def replay_key(expected, method, payload, artifacts):
+        domains.append(method.id)
+        return method.id == IMU_POSITION
+
+    monkeypatch.setattr("dynamisbench_soccer.m4.grader._replay_measurement", replay_key)
+    with pytest.raises(ValueError, match="inconsistent IMU episode reference"):
+        _private_methods(task, envelope, positions[0], inputs=raw)
+    assert domains == [IMU_POSITION] * 6 + [IMU_SIGNATURE]
     keys["c07"] = {IMU_POSITION: refusal}
     with pytest.raises(ValueError, match="methods disagree"):
         _private_methods(task, envelope.model_copy(update={"checkpoints": keys}), positions[0])

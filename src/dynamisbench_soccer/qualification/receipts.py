@@ -334,7 +334,12 @@ def verify(
             continue
         impl_files.add(path)
         if not path.startswith(packages) and not (
-            native_task and path == "src/dynamisbench_soccer/m4/measurement.py"
+            native_task
+            and path
+            in {
+                "src/dynamisbench_soccer/m4/measurement.py",
+                "src/dynamisbench_soccer/m4/grader.py",
+            }
         ):
             errors.append(
                 f"{rid}: implementation {ref} must be statistics code for a statistical task"
