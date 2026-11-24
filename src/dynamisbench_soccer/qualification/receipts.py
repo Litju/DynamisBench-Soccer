@@ -287,7 +287,9 @@ def _has_assertion(node: ast.AST) -> bool:
     return False
 
 
-def verify(receipt: Receipt, root: Path, subfamily_ids: set[str]) -> list[str]:
+def verify(
+    receipt: Receipt, root: Path, subfamily_ids: set[str], *, statistical_task: bool = False
+) -> list[str]:
     """Return every reason this receipt does not establish what it claims (empty = valid)."""
     rid = receipt.id
     errors: list[str] = []
@@ -314,6 +316,9 @@ def verify(receipt: Receipt, root: Path, subfamily_ids: set[str]) -> list[str]:
     if not receipt.implementation or not receipt.reference or not receipt.tests:
         errors.append(f"{rid}: implementation, reference and tests are all required")
         return errors
+    packages = (
+        ("src/dynamisbench_soccer/statistics/",) if statistical_task else IMPLEMENTATION_PACKAGES
+    )
     impl_files = set()
     for ref in receipt.implementation:
         try:
@@ -322,9 +327,11 @@ def verify(receipt: Receipt, root: Path, subfamily_ids: set[str]) -> list[str]:
             errors.append(f"{rid}: {exc}")
             continue
         impl_files.add(path)
-        if not path.startswith(IMPLEMENTATION_PACKAGES):
+        if not path.startswith(packages):
             errors.append(
-                f"{rid}: implementation {ref} must be engine, assessment or agreement code"
+                f"{rid}: implementation {ref} must be statistics code for a statistical task"
+                if statistical_task
+                else f"{rid}: implementation {ref} must be engine, assessment or agreement code"
             )
     for ref in (*receipt.implementation, *receipt.reference, *receipt.tests):
         try:

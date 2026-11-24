@@ -39,7 +39,8 @@ def test_measurement_episode_replays_without_disclosing_reference(procedure):
             assert reading.operands
         else:
             assert reading.value is None and reading.radius is None and not reading.operands
-    assert {"eligible", "not_eligible", "unsupported_claim"} <= decisions
+    third = "insufficient_evidence" if procedure == "fixed-session-change" else "unsupported_claim"
+    assert {"eligible", "not_eligible", third} <= decisions
     if procedure == "switch-flight-height":
         assert "insufficient_evidence" in decisions
 

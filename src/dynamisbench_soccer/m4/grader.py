@@ -119,6 +119,8 @@ def _compare(
     submission: ScientificResponse,
     expected: ExpectedMethod,
     absolute_tolerance: float,
+    *,
+    operand_tolerance: float = 0,
 ) -> tuple[str, ...]:
     findings = []
     if submission.decision != expected.decision or submission.reason not in expected.reasons:
@@ -135,7 +137,11 @@ def _compare(
         findings.append("interpretation_boundary")
     if submission.corrects != expected.corrects:
         findings.append("correction_lineage")
-    if submission.operands != expected.operands:
+    if len(submission.operands) != len(expected.operands) or any(
+        (got.artifact, got.field) != (want.artifact, want.field)
+        or not math.isclose(got.value, want.value, abs_tol=operand_tolerance, rel_tol=0)
+        for got, want in zip(submission.operands, expected.operands, strict=True)
+    ):
         findings.append("derivation")
     actual, target = submission.quantity, expected.quantity
     if actual is None or target is None:
@@ -315,7 +321,14 @@ def _replay_measurement(
         expected.reasons == (reading.reason,)
         and set(expected.allowed_claims) == set(expected.required_claims) == set(reading.claims)
         and expected.allowed_citations == expected.required_citations == method.source_claims
-        and not _compare(evidence, expected, method.absolute_tolerance)
+        and not _compare(
+            evidence,
+            expected,
+            method.absolute_tolerance,
+            operand_tolerance=method.absolute_tolerance
+            if method.id == "fixed-session-change"
+            else 0,
+        )
     )
 
 
@@ -402,7 +415,11 @@ def score_checkpoint(
         return Outcome(outcome="FAIL", findings=("invalid_submission",))
     if candidate.method not in references:
         return Outcome(outcome="FAIL", findings=("unsupported_method",))
+    tolerance = methods[candidate.method].absolute_tolerance
     findings = _compare(
-        candidate, references[candidate.method], methods[candidate.method].absolute_tolerance
+        candidate,
+        references[candidate.method],
+        tolerance,
+        operand_tolerance=tolerance if candidate.method == "fixed-session-change" else 0,
     )
     return Outcome(outcome="FAIL" if findings else "PASS", findings=findings)

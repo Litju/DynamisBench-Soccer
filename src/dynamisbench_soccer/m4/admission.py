@@ -26,11 +26,12 @@ from dynamisbench_soccer.qualification import receipts
 
 Status = Literal["DEVELOPMENT_ONLY_NOT_QUALIFIED", "ENGINEERING_ADMITTED", "REFUSED"]
 # These roles describe evidence needed by this reference, not a subfamily gate.
-Kind = Literal["analytical", "native_signal", "protocol_assessment", "cross_device"]
+Kind = Literal["analytical", "native_signal", "protocol_assessment", "cross_device", "statistical"]
 COMPUTATION = frozenset({"D", "E", "F", "H", "I", "J", "M", "O"})
 NATIVE = COMPUTATION | {"A", "B", "C", "K"}
 REQUIRED: dict[Kind, frozenset[str]] = {
     "analytical": COMPUTATION,
+    "statistical": COMPUTATION,
     "native_signal": NATIVE,
     "protocol_assessment": NATIVE | {"G"},
     "cross_device": NATIVE | {"L"},
@@ -38,6 +39,8 @@ REQUIRED: dict[Kind, frozenset[str]] = {
 DIMENSIONS = frozenset(receipts.DIMENSIONS_M3)
 PACKAGE = "dynamisbench_soccer"
 SOURCE = f"src/{PACKAGE}/"
+STATISTICAL_TASK = ("lps-repeat-session-change", 1)
+STATISTICAL_RECEIPTS = "qualification/task_receipts.toml"
 
 
 class ReceiptBinding(Schema):
@@ -213,18 +216,25 @@ def evaluate(
             return decision("DEVELOPMENT_ONLY_NOT_QUALIFIED", "reference slice lacks review")
         if review.task_sha256 != task_hash or review.source != task.task.source:
             return decision("REFUSED", "task conditions or source differ from reviewed slice")
+        statistical = review.kind == "statistical"
+        if statistical != ((task.task.id, task.task.revision) == STATISTICAL_TASK) or (
+            statistical and any(artifact.category != "analytical" for artifact in task.artifacts)
+        ):
+            return decision("REFUSED", "incompatible statistical task or source category")
         roles = set(review.evidence)
         if not REQUIRED[review.kind] <= roles <= DIMENSIONS:
             return decision("REFUSED", "missing or invalid required evidence dimensions")
         if set(review.inapplicable) != DIMENSIONS - roles:
             return decision("REFUSED", "every omitted dimension needs reviewed inapplicability")
 
-        rows = receipts.load(root / "qualification/receipts.toml")
+        rows = receipts.load(
+            root / (STATISTICAL_RECEIPTS if statistical else "qualification/receipts.toml")
+        )
         counts = Counter(row.id for row in rows)
         inventory = {row.id: row for row in rows}
         audit_document = json.loads(_read(root, "qualification/receipt_audit.json"))
         if not isinstance(audit_document, dict) or not isinstance(
-            audit := audit_document.get("receipts"), dict
+            audit := audit_document.get("task_receipts" if statistical else "receipts"), dict
         ):
             return decision("REFUSED", "invalid Policy A audit map")
         implementations: set[str] = set()
@@ -237,6 +247,7 @@ def evaluate(
                 or counts[identifier] != 1
                 or row.dimension != role
                 or review.source not in row.subfamilies
+                or (statistical and identifier != f"RCP-{task.task.id}-{role}")
             ):
                 return decision(
                     "REFUSED", f"missing or incompatible receipt for {role}: {identifier}"
@@ -252,7 +263,7 @@ def evaluate(
                 or record.get("bound_digest") != current
             ):
                 return decision("REFUSED", f"review absent or stale: {identifier}")
-            errors = receipts.verify(row, root, set(row.subfamilies))
+            errors = receipts.verify(row, root, set(row.subfamilies), statistical_task=statistical)
             if errors:
                 return decision("REFUSED", *errors)
             implementations.update(row.implementation)
