@@ -17,7 +17,12 @@ ROOT = Path(__file__).resolve().parents[1]
 
 def test_every_cited_receipt_test_runs_and_passes() -> None:
     cited = sorted(
-        {t for r in receipts.load(ROOT / "qualification/receipts.toml") for t in r.tests}
+        {
+            t
+            for name in ("receipts", "task_receipts")
+            for r in receipts.load(ROOT / f"qualification/{name}.toml")
+            for t in r.tests
+        }
     )
     if not cited:
         # an empty store is only acceptable while no M3 dimension is rated verified

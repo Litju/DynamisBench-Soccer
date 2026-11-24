@@ -13,12 +13,11 @@ from collections import Counter
 from dataclasses import asdict
 from pathlib import Path
 
-from seal_m5_references import _custody_family, _read_private
+from seal_m5_references import _custody_family, _read_private, _supported
 
 from dynamisbench_soccer.m4.admission import Catalog, evaluate
 from dynamisbench_soccer.m4.grader import score_checkpoint
 from dynamisbench_soccer.m4.key_store import digest
-from dynamisbench_soccer.m4.measurement import ENGINE
 from dynamisbench_soccer.m4.runner import MAX_OUTPUT, MAX_SOURCE, WALL_SECONDS, execute_payload
 from dynamisbench_soccer.m4.task_registry import load_registry
 from dynamisbench_soccer.m4.trials import STUBS, TrialContext, TrialReport, run_episode
@@ -79,7 +78,8 @@ def _controls(score, task, answers: dict, inputs: dict):
         (key, row) for key, row in answers.items() if row["decision"] == "compute"
     )
     refuse_id, refusal = next(
-        (key, row) for key, row in answers.items() if row["reason"] == "unsupported_claim"
+        ((key, row) for key, row in answers.items() if row["reason"] == "unsupported_claim"),
+        next((key, row) for key, row in answers.items() if row["decision"] == "refuse"),
     )
     quantity = positive["quantity"]
     reversed_claims = list(reversed(positive["claims"]))
@@ -138,7 +138,12 @@ def _controls(score, task, answers: dict, inputs: dict):
         (
             "contradictory_free_text",
             compute_id,
-            positive | {"explanation": "Interchangeability is established."},
+            positive
+            | {
+                (
+                    "unsupported_field" if task.grader == "formal.v1" else "explanation"
+                ): "Interchangeability is established."
+            },
             ("invalid_submission",),
         ),
         ("correct_refusal", refuse_id, refusal, ()),
@@ -319,6 +324,95 @@ def _controls(score, task, answers: dict, inputs: dict):
                 ),
             ]
         )
+    elif method == "three-point":
+        scenarios.append(
+            (
+                "equivalent_explanation",
+                compute_id,
+                positive
+                | {"explanation": "Horizontal symmetric difference, excluding vertical motion."},
+                (),
+            )
+        )
+    elif method == "fixed-session-change":
+        data = json.loads(inputs[positive["selected_trials"][0]])
+        sizes = [len(session["trials_m_s"]) for session in data["baseline"][:3]]
+        n_current = len(data["current"]["trials_m_s"])
+        evidence = {o["field"]: o["value"] for o in positive["operands"]}
+        pooled_se = evidence["typical_error"] * (1 / n_current + 1 / sum(sizes)) ** 0.5
+
+        def altered_operand(field, value):
+            return positive | {
+                "operands": [
+                    o | {"value": value} if o["field"] == field else o for o in positive["operands"]
+                ]
+            }
+
+        scenarios.extend(
+            [
+                (
+                    "pooled_trial_uncertainty",
+                    compute_id,
+                    altered_operand("change_se", pooled_se),
+                    ("derivation",),
+                ),
+                (
+                    "wrong_cohort_typical_error",
+                    compute_id,
+                    altered_operand("typical_error", evidence["typical_error"] * 2**0.5),
+                    ("derivation",),
+                ),
+                (
+                    "wrong_interval_limit",
+                    compute_id,
+                    altered_operand("interval_upper", evidence["interval_upper"] + 0.001),
+                    ("derivation",),
+                ),
+                (
+                    "inside_operand_tolerance",
+                    compute_id,
+                    altered_operand("change_se", evidence["change_se"] + tolerance / 2),
+                    (),
+                ),
+                (
+                    "wrong_swc_decision",
+                    compute_id,
+                    positive
+                    | {
+                        "claims": [
+                            "point_below_swc" if claim == "point_reaches_swc" else claim
+                            for claim in positive["claims"]
+                        ]
+                    },
+                    ("interpretation_boundary",),
+                ),
+                (
+                    "wrong_signed_change",
+                    compute_id,
+                    positive | {"quantity": quantity | {"value": -quantity["value"]}},
+                    ("value",),
+                ),
+                (
+                    "claims_empirical_reliability",
+                    compute_id,
+                    positive | {"claims": [*positive["claims"], "empirical_reliability"]},
+                    ("interpretation_boundary",),
+                ),
+                (
+                    "includes_te_estimation_uncertainty",
+                    compute_id,
+                    positive
+                    | {
+                        "claims": [
+                            claim
+                            for claim in positive["claims"]
+                            if claim != "te_estimation_uncertainty_excluded"
+                        ]
+                    },
+                    ("interpretation_boundary",),
+                ),
+            ]
+        )
     else:
         scenarios.append(
             (
@@ -394,7 +488,7 @@ def main() -> None:
     ) as receipt:
         for task in registry.values():
             if (
-                task.engine != ENGINE
+                not _supported(task)
                 or task.reference_profile not in reviewed.slices
                 or (args.task and task.task.id != args.task)
             ):
@@ -409,7 +503,9 @@ def main() -> None:
             if digest(oracle_source) != profile.private_inputs_sha256.get("oracle"):
                 parser.error("oracle differs from the reviewed custody digest")
             baselines = STUBS | {
-                "naive": (ROOT / "scripts/m5_controls/naive.py").read_bytes(),
+                "naive": STUBS["naive"]
+                if family == "native"
+                else (ROOT / "scripts/m5_controls/naive.py").read_bytes(),
                 "oracle": oracle_source,
             }
             rows = {

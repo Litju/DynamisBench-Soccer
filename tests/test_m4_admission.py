@@ -134,3 +134,20 @@ def test_mixed_test_oracle_tracks_only_reached_imports(tmp_path: Path) -> None:
     assert "src/dynamisbench_soccer/engine.py" in _oracle_closure(
         tmp_path, {"tests/test_mixed.py::oracle"}
     )
+
+
+def test_statistical_task_cannot_borrow_native_review_or_depart_from_analytical_inputs():
+    task = load_registry(ROOT / "benchmark/tasks")["lps-repeat-session-change", 1]
+    review = _profile(task)
+    mismatch = ("incompatible statistical task or source category",)
+    assert _check(task, review.model_copy(update={"kind": "native_signal"})) == (
+        "REFUSED",
+        mismatch,
+    )
+    wrong = _task()
+    wrong_review = _profile(wrong).model_copy(update={"kind": "statistical"})
+    assert _check(wrong, wrong_review) == ("REFUSED", mismatch)
+    wrong_artifact = task.artifacts[0].model_copy(update={"category": "synthetic"})
+    wrong = task.model_copy(update={"artifacts": (wrong_artifact, *task.artifacts[1:])})
+    wrong_review = _profile(wrong).model_copy(update={"kind": "statistical"})
+    assert _check(wrong, wrong_review) == ("REFUSED", mismatch)

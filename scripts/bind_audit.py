@@ -69,30 +69,33 @@ def render_audit(audit: dict[str, Any]) -> str:
 
 def main(check: bool) -> int:
     audit = json.loads(AUDIT.read_text())
-    loaded = receipts.load(ROOT / "qualification/receipts.toml")
     problems = []
-    for r in loaded:
-        entry = audit["receipts"].get(r.id)
-        if entry is None or entry["verdict"] != "SUPPORTED":
-            problems.append(f"{r.id}: no SUPPORTED audit entry")
-            continue
-        digest = content_digest(r)
-        if check:
-            if entry.get("bound_digest") != digest:
-                problems.append(f"{r.id}: receipt changed since it was audited")
-        else:
-            entry["bound_digest"] = digest
+    total = 0
+    for table in ("receipts", "task_receipts"):
+        loaded = receipts.load(ROOT / f"qualification/{table}.toml")
+        total += len(loaded)
+        for r in loaded:
+            entry = audit.get(table, {}).get(r.id)
+            if entry is None or entry["verdict"] != "SUPPORTED":
+                problems.append(f"{r.id}: no SUPPORTED audit entry")
+                continue
+            digest = content_digest(r)
+            if check:
+                if entry.get("bound_digest") != digest:
+                    problems.append(f"{r.id}: receipt changed since it was audited")
+            else:
+                entry["bound_digest"] = digest
     report = render_audit(audit)
     if check or problems:
         if check and (not REPORT.exists() or REPORT.read_text() != report):
             problems.append("stale generated receipt audit report")
         for p in problems:
             print(f"FAIL {p}", file=sys.stderr)
-        print(f"{len(loaded)} receipts: audit binding {'OK' if not problems else 'BROKEN'}")
+        print(f"{total} receipts: audit binding {'OK' if not problems else 'BROKEN'}")
         return 1 if problems else 0
     AUDIT.write_text(json.dumps(audit, indent=1, sort_keys=True) + "\n")
     REPORT.write_text(report, encoding="utf-8")
-    print(f"bound {len(loaded)} receipts and generated the audit report")
+    print(f"bound {total} receipts and generated the audit report")
     return 1 if problems else 0
 
 

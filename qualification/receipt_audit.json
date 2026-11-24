@@ -1446,5 +1446,79 @@
    "reviewer": "GPT-6.2 Astra",
    "verdict": "SUPPORTED"
   }
+ },
+ "task_receipts": {
+  "RCP-lps-repeat-session-change-D": {
+   "bound_digest": "0c5d1b55fadf2fe8f391855442132f6e91030caefa5a2557d56697361cbb0091",
+   "evidence_head": "81e9964fadc2f6c4f1b8488c9a3c7cc8e0c07aa0",
+   "fix": "",
+   "reason": "Independent exact-archive review verified the scoped statistical claim, its tested decisions or independent numeric truth and disjoint oracle closure. Applies only to this declared analytical summary design.",
+   "review_url": "https://github.com/Litju/DynamisBench-Soccer/pull/70",
+   "reviewer": "Independent Codex model review",
+   "verdict": "SUPPORTED"
+  },
+  "RCP-lps-repeat-session-change-E": {
+   "bound_digest": "62d8a8808345cdb265f493094c17e0d5f6cee78244b2f23802a9f476bce57ef7",
+   "evidence_head": "81e9964fadc2f6c4f1b8488c9a3c7cc8e0c07aa0",
+   "fix": "",
+   "reason": "Independent exact-archive review verified the scoped statistical claim, its tested decisions or independent numeric truth and disjoint oracle closure. Applies only to this declared analytical summary design.",
+   "review_url": "https://github.com/Litju/DynamisBench-Soccer/pull/70",
+   "reviewer": "Independent Codex model review",
+   "verdict": "SUPPORTED"
+  },
+  "RCP-lps-repeat-session-change-F": {
+   "bound_digest": "a63b0534c508d7fe96765bdc0f2ae7537a192d5a75eb7f96ef9c6989cc42f8d7",
+   "evidence_head": "81e9964fadc2f6c4f1b8488c9a3c7cc8e0c07aa0",
+   "fix": "",
+   "reason": "Independent exact-archive review verified the scoped statistical claim, its tested decisions or independent numeric truth and disjoint oracle closure. Applies only to this declared analytical summary design.",
+   "review_url": "https://github.com/Litju/DynamisBench-Soccer/pull/70",
+   "reviewer": "Independent Codex model review",
+   "verdict": "SUPPORTED"
+  },
+  "RCP-lps-repeat-session-change-H": {
+   "bound_digest": "743b756cdcb614b4a8d6631072153fa98b23c881d1b1947cd763ce58228f2a40",
+   "evidence_head": "81e9964fadc2f6c4f1b8488c9a3c7cc8e0c07aa0",
+   "fix": "",
+   "reason": "Independent exact-archive review verified the scoped statistical claim, its tested decisions or independent numeric truth and disjoint oracle closure. Applies only to this declared analytical summary design.",
+   "review_url": "https://github.com/Litju/DynamisBench-Soccer/pull/70",
+   "reviewer": "Independent Codex model review",
+   "verdict": "SUPPORTED"
+  },
+  "RCP-lps-repeat-session-change-I": {
+   "bound_digest": "ae86ad495534fb4dbc0d614be59dc0128a793ec72dbc3985e70cd0e3ddeba3cf",
+   "evidence_head": "81e9964fadc2f6c4f1b8488c9a3c7cc8e0c07aa0",
+   "fix": "",
+   "reason": "Independent exact-archive review verified the scoped statistical claim, its tested decisions or independent numeric truth and disjoint oracle closure. Applies only to this declared analytical summary design.",
+   "review_url": "https://github.com/Litju/DynamisBench-Soccer/pull/70",
+   "reviewer": "Independent Codex model review",
+   "verdict": "SUPPORTED"
+  },
+  "RCP-lps-repeat-session-change-J": {
+   "bound_digest": "11ed1dc6126e958fda43942cb5db7cc233b97ee8708c68fafe75d9b450d848b9",
+   "evidence_head": "81e9964fadc2f6c4f1b8488c9a3c7cc8e0c07aa0",
+   "fix": "",
+   "reason": "Independent exact-archive review verified the scoped statistical claim, its tested decisions or independent numeric truth and disjoint oracle closure. Applies only to this declared analytical summary design.",
+   "review_url": "https://github.com/Litju/DynamisBench-Soccer/pull/70",
+   "reviewer": "Independent Codex model review",
+   "verdict": "SUPPORTED"
+  },
+  "RCP-lps-repeat-session-change-M": {
+   "bound_digest": "50249835b42daad8454a5e5bfa6a87fab1da602948ce0aaa57862d9775b78dfd",
+   "evidence_head": "81e9964fadc2f6c4f1b8488c9a3c7cc8e0c07aa0",
+   "fix": "",
+   "reason": "Independent exact-archive review verified the scoped statistical claim, its tested decisions or independent numeric truth and disjoint oracle closure. Applies only to this declared analytical summary design.",
+   "review_url": "https://github.com/Litju/DynamisBench-Soccer/pull/70",
+   "reviewer": "Independent Codex model review",
+   "verdict": "SUPPORTED"
+  },
+  "RCP-lps-repeat-session-change-O": {
+   "bound_digest": "08f28968662a33ffb52b2aeb1c76d40a8ab7b1d49255abb6e5bef00d2b92bc8f",
+   "evidence_head": "81e9964fadc2f6c4f1b8488c9a3c7cc8e0c07aa0",
+   "fix": "",
+   "reason": "Independent exact-archive review verified the scoped statistical claim, its tested decisions or independent numeric truth and disjoint oracle closure. Applies only to this declared analytical summary design.",
+   "review_url": "https://github.com/Litju/DynamisBench-Soccer/pull/70",
+   "reviewer": "Independent Codex model review",
+   "verdict": "SUPPORTED"
+  }
  }
 }

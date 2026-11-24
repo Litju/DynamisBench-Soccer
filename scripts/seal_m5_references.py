@@ -12,6 +12,7 @@ from pathlib import Path
 from dynamisbench_soccer.m4.admission import (
     DIMENSIONS,
     REQUIRED,
+    STATISTICAL_RECEIPTS,
     Catalog,
     ReceiptBinding,
     ReviewedSlice,
@@ -21,7 +22,7 @@ from dynamisbench_soccer.m4.admission import (
     evaluate,
 )
 from dynamisbench_soccer.m4.custody import AnswerEnvelope, AnswerLocation
-from dynamisbench_soccer.m4.grader import MeasurementSubmission
+from dynamisbench_soccer.m4.grader import MeasurementSubmission, Submission
 from dynamisbench_soccer.m4.key_store import digest
 from dynamisbench_soccer.m4.measurement import ENGINE, PROCEDURES
 from dynamisbench_soccer.m4.task_registry import RegistryTask, fingerprint, load_registry
@@ -47,11 +48,21 @@ def _write_private(path: Path, raw: bytes) -> None:
         stream.write(raw)
 
 
+def _supported(task: RegistryTask) -> bool:
+    return task.engine == ENGINE or (
+        task.engine == "native-lps-speed.v1"
+        and (task.task.id, task.task.revision) == ("native-lps-speed", 2)
+    )
+
+
 def _custody_family(task: RegistryTask) -> str:
+    if task.engine == "native-lps-speed.v1":
+        return "native"
     return {
         "protocol_assessment": "timing",
         "native_signal": "position",
         "cross_device": "paired",
+        "statistical": "longitudinal",
     }[PROCEDURES[task.methods[0].id].kind]
 
 
@@ -70,7 +81,8 @@ def _expected(task, family, directory, approval):
         raise ValueError("independent answer does not cover every checkpoint")
     checkpoints = {}
     for checkpoint, row in expected.items():
-        answer = MeasurementSubmission.model_validate_json(json.dumps(row))
+        schema = Submission if family == "native" else MeasurementSubmission
+        answer = schema.model_validate_json(json.dumps(row))
         if answer.method != task.methods[0].id:
             raise ValueError("independent answer specifies the wrong method")
         checkpoints[checkpoint] = {
@@ -113,35 +125,44 @@ def main() -> None:
     ):
         parser.error("attestation must cover the exact clean head")
     receipts = {receipt.id: receipt for receipt in load(ROOT / "qualification/receipts.toml")}
+    statistical = {receipt.id: receipt for receipt in load(ROOT / STATISTICAL_RECEIPTS)}
     registry = load_registry(ROOT / "benchmark/tasks")
     slices, keys = {}, {}
     for task in registry.values():
-        if task.engine != ENGINE or task.task.id not in approval["approved_tasks"]:
+        if not _supported(task) or task.task.id not in approval["approved_tasks"]:
             continue
         method = task.methods[0]
-        procedure = PROCEDURES[method.id]
         family = _custody_family(task)
+        kind = "native_signal" if family == "native" else PROCEDURES[method.id].kind
+        source = task.task.source
         selected = {}
         inapplicable = {}
         for role in sorted(DIMENSIONS):
-            if role not in REQUIRED[procedure.kind]:
+            if role not in REQUIRED[kind]:
                 inapplicable[role] = {
-                    "G": "The fixed sample or paired fixed samples recover no protocol event.",
+                    "A": "Authored statistical summaries have no sensor acquisition.",
+                    "B": "The measurement model uses no device geometry or calibration stage.",
+                    "C": "Named sessions supply the fixed order without hardware timing.",
+                    "G": "The operation recovers no protocol event.",
+                    "K": "D tests identity and design refusals. No native signal enters.",
                     "L": "This single-source slice refuses equivalence without a paired study.",
                 }[role]
                 continue
             suffix = {"H": "-native-assessment", "I": "-native-bounds"}.get(role, "")
-            if family == "timing":
+            if family == "longitudinal":
+                selected[role] = statistical[f"RCP-{task.task.id}-{role}"]
+                continue
+            if family in {"timing", "native"}:
                 suffix = ""
             elif family == "paired" and role in {"L", "I"}:
                 suffix = "-paired-speed"
-            selected[role] = receipts[f"RCP-{procedure.source.replace('.', '-')}-{role}{suffix}"]
+            selected[role] = receipts[f"RCP-{source.replace('.', '-')}-{role}{suffix}"]
         production = {item for r in selected.values() for item in r.implementation}
         oracle = {item for r in selected.values() for item in r.reference}
         production_files = _closure(ROOT, production)
         oracle_files = _oracle_closure(ROOT, oracle)
         additional = (
-            f"benchmark/tasks/{task.task.id}.json",
+            f"benchmark/tasks/{task.task.id}{'-v2' if family == 'native' else ''}.json",
             "registry/claims/device_metrology.toml",
             "registry/claims/stats_context_rtp.toml",
             "registry/sources.toml",
@@ -162,7 +183,7 @@ def main() -> None:
         slices[task.reference_profile] = ReviewedSlice(
             task_sha256=fingerprint(task),
             source=task.task.source,
-            kind=procedure.kind,
+            kind=kind,
             evidence={
                 role: ReceiptBinding(id=r.id, sha256=_receipt_digest(r))
                 for role, r in selected.items()
@@ -187,7 +208,7 @@ def main() -> None:
     catalog = Catalog(slices=slices).model_dump_json().encode()
     pin = digest(catalog)
     for task in registry.values():
-        if task.reference_profile in slices:
+        if _supported(task) and task.reference_profile in slices:
             result = evaluate(ROOT, task, catalog, pin)
             if result.status != "ENGINEERING_ADMITTED":
                 parser.error(f"{task.task.id}: {'; '.join(result.reasons)}")
