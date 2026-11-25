@@ -98,7 +98,7 @@ jobs:
             "$GITHUB_WORKSPACE/tests/test_m5_measurement.py" "$GITHUB_WORKSPACE/tests/test_m5_paired.py" \
             "$GITHUB_WORKSPACE/tests/test_m5_motion_development.py" "$GITHUB_WORKSPACE/tests/test_m5_force_development.py" \
             "$GITHUB_WORKSPACE/tests/test_m5_load_cell.py" "$GITHUB_WORKSPACE/tests/test_m5_imu.py" \
-            "$GITHUB_WORKSPACE/tests/test_m5_lpt.py" \
+            "$GITHUB_WORKSPACE/tests/test_m5_lpt.py" "$GITHUB_WORKSPACE/tests/test_m5_encoder.py" \
             "$GITHUB_WORKSPACE/tests/test_m5_repeat_session_development.py" \
             "$GITHUB_WORKSPACE/tests/test_m5_longitudinal.py"
       - name: RES-737 offline development-only installed-wheel smoke

@@ -56,6 +56,17 @@ match kind:
             "horizontal_positional_speed",
         )
         citations = ["DEV-005", "CX-003"]
+    case "lpt_encoder.encoder":
+        counts = channels["counts"]
+        scale = source["meta"]["geometry"].get("encoder_counts_per_m") or 1
+        value = (counts[-1] - counts[0]) / scale
+        method, unit, dimension, estimand = (
+            "modular-attachment-change",
+            "m",
+            "length",
+            "signed_vertical_attachment_change",
+        )
+        citations = ["DEV-001"]
     case "lpt_encoder.lpt":
         time, length = channels["time"], channels["cable_length"]
         value = (length[-1] - length[0]) / (time[-1] - time[0])

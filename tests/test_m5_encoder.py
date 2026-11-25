@@ -177,7 +177,13 @@ ENCODER_REFUSALS = (
 
 @pytest.mark.parametrize(("index", "reason", "claims"), ENCODER_REFUSALS)
 def test_frozen_encoder_refusals(index, reason, claims):
-    result = replay(ENCODER_OPERATION, _fixture(index))
+    fixture = _fixture(index)
+    if index == 5:
+        counts = fixture["channels"]["counts"]
+        original = _fixture(1)["channels"]["counts"]
+        assert (counts[0], counts[-1]) == (original[0], original[-1])
+        assert not _allowed_lifts(counts[3] - counts[2], 256, 17)
+    result = replay(ENCODER_OPERATION, fixture)
     assert (result.reason, result.claims) == (reason, claims)
     assert result.value is result.radius is None and not result.operands
 
@@ -222,3 +228,19 @@ def test_encoder_refuses_whole_athlete_com_interpretation():
     result = replay(ENCODER_OPERATION, data)
     assert result.reason == "unsupported_claim" and "com_unobserved" in result.claims
     assert result.value is result.radius is None
+
+
+def test_frozen_encoder_canonical_sources_and_candidate_release():
+    task = load_registry(ROOT / "benchmark/tasks")[TASK, 1]
+    inputs = {item.name: (ROOT / item.path).read_bytes() for item in task.artifacts}
+    visible = set()
+    for checkpoint in task.checkpoints:
+        (artifact,) = checkpoint.artifacts
+        visible.add(artifact)
+        data = json.loads(inputs[artifact])
+        native = _channel_hash(data["channels"])
+        assert data["meta"]["acquisition"]["sources"][0]["source_sha256"] == native
+        assert data["meta"]["provenance"]["source_sha256"] == native
+        candidate = json.loads(task.candidate_payload(checkpoint.id, inputs, seed=704))
+        assert set(candidate["inputs"]) == visible
+        assert set(candidate) == {"task", "checkpoint", "inputs", "seed"}
