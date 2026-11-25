@@ -228,8 +228,16 @@ def test_pair_checks_both_source_hashes_and_same_pair_identity():
         assert set(json.loads(task.candidate_payload(checkpoint.id, raw, 704))["inputs"]) == visible
 
 
+def _difference_bound(rig_bound, plate_bound):
+    return max(abs(a - b) for a in (-rig_bound, rig_bound) for b in (-plate_bound, plate_bound))
+
+
 def test_declared_single_pair_bounds_do_not_supply_statistics():
-    reading = replay(RIG_OPERATION, _fixture(2))
+    data = _fixture(2)
+    reading = replay(RIG_OPERATION, data)
+    assert reading.radius == _difference_bound(2, 3)
+    data["setup"]["net_peak_error_n"] = [1, 6]
+    assert replay(RIG_OPERATION, data).radius == _difference_bound(1, 6)
     assert "paired_variance_unavailable" in reading.claims
     assert "hardware_interchangeability_unknown" in reading.claims
     with pytest.raises(ValueError, match="at least two"):

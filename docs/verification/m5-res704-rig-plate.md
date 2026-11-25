@@ -29,7 +29,7 @@ All fourteen A–M and O roles apply. Each scoped receipt is bound to **both**
 G applies because both RFD operands require an independently resolved onset.
 The rig uses the production load-cell acquisition's direct-force path. The
 plate uses the production single-platform acquisition with its declared +z
-frame and its own unloaded zero window. The task-level event kernel uses
+frame and its own prescribed pre-effort baseline window. The task-level event kernel uses
 the frozen signed rule for both acquired signals. The wider platform
 movement-onset routines use different search and force conventions.
 The first above-threshold sample at the last baseline sample has no supported

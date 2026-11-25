@@ -296,11 +296,11 @@ def _measurement_binding(task: RegistryTask, review: ReviewedSlice) -> bool:
             for role in ("I", "L")
         ):
             return False
-        specification: dict[str, object] = (
-            measurement.CELL_SPECIFICATION
-            if method.id == measurement.CELL_OPERATION
-            else {"operation": method.id}
-        )
+        specification: dict[str, object] = {"operation": method.id}
+        if method.id == measurement.CELL_OPERATION:
+            specification = measurement.CELL_SPECIFICATION
+        elif method.id == measurement.RIG_OPERATION:
+            specification = dict(measurement.RIG_SPECIFICATION)
         if measurement.is_imu_episode(task):
             specification = {
                 "operation": method.id,
@@ -507,6 +507,7 @@ def score_checkpoint(
             measurement.CELL_OPERATION,
             measurement.ENCODER_OPERATION,
             measurement.LPT_OPERATION,
+            measurement.RIG_OPERATION,
             *measurement.IMU_OPERATIONS,
         )
         else 0,
@@ -515,6 +516,7 @@ def score_checkpoint(
             measurement.CELL_OPERATION,
             measurement.ENCODER_OPERATION,
             measurement.LPT_OPERATION,
+            measurement.RIG_OPERATION,
             *measurement.IMU_OPERATIONS,
         ),
     )

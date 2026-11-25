@@ -271,3 +271,41 @@ def test_frozen_encoder_requires_exact_scope_and_refuses_lpt_receipts():
     assert _check(task, review)[1] == (f"missing or incompatible receipt for A: {row.id}",)
     review.evidence.pop("C")
     assert _check(task, review)[1] == ("missing or invalid required evidence dimensions",)
+
+
+def test_rig_pair_scope_requires_event_and_both_native_arms(monkeypatch):
+    from dataclasses import replace
+
+    from dynamisbench_soccer.m4.admission import RIG_ARMS, receipts
+
+    task = load_registry(ROOT / "benchmark/tasks")["rig-plate-net-peak-pair", 1]
+    roles = REQUIRED["rig_plate_pair"]
+    review = _profile(task).model_copy(
+        update={
+            "kind": "rig_plate_pair",
+            "evidence": {role: ReceiptBinding(id="missing", sha256="0" * 64) for role in roles},
+            "inapplicable": {},
+        }
+    )
+    altered = task.model_copy(update={"grader": "formal.v1"})
+    assert _check(altered, review.model_copy(update={"task_sha256": fingerprint(altered)}))[1] == (
+        "incompatible frozen native rig/plate task or review kind",
+    )
+    assert _check(task, review.model_copy(update={"kind": "cross_device"}))[1] == (
+        "incompatible rig/plate paired reference kind",
+    )
+    event = review.evidence.pop("G")
+    assert _check(task, review)[1] == ("missing or invalid required evidence dimensions",)
+    review.evidence["G"] = event
+
+    inventory = ROOT / "qualification/native_task_receipts.toml"
+    row = next(r for r in load(inventory) if r.id == "RCP-rig-plate-net-peak-pair-A")
+    assert set(row.subfamilies) == RIG_ARMS
+    single = replace(row, subfamilies=(task.task.source,))
+    review.evidence["A"] = ReceiptBinding(id=single.id, sha256=_receipt_digest(single))
+
+    def replace_native_inventory(path):
+        return (single,) if path == inventory else load(path)
+
+    monkeypatch.setattr(receipts, "load", replace_native_inventory)
+    assert _check(task, review)[1] == (f"missing or incompatible receipt for A: {single.id}",)

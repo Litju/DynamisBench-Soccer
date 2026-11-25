@@ -105,6 +105,15 @@ match kind:
             "peak_external_knee_torque_above_baseline",
         )
         citations = ["DEV-006"]
+    case "rig-plate":
+        value = max(source["rig"]["samples"]) - max(source["plate"]["samples"])
+        method, unit, dimension, estimand = (
+            "paired-net-peak-difference",
+            "N",
+            "force",
+            "rig_minus_plate_net_peak_force",
+        )
+        citations = ["DEV-006"]
     case "paired-lps-radar":
         trials = source["trials"]
         # Treat the radial reading as total speed and compare the field-X derivative alone.

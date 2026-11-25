@@ -25,6 +25,7 @@ from dynamisbench_soccer.m4.measurement import (
     IMU_POSITION,
     IMU_SIGNATURE,
     LPT_OPERATION,
+    RIG_OPERATION,
 )
 from dynamisbench_soccer.m4.runner import MAX_OUTPUT, MAX_SOURCE, WALL_SECONDS, execute_payload
 from dynamisbench_soccer.m4.task_registry import load_registry
@@ -194,7 +195,134 @@ def _controls(score, task, answers: dict, inputs: dict):
         )
 
     method = task.methods[0].id
-    if method == ENCODER_OPERATION:
+    if method == RIG_OPERATION:
+        second_id = task.checkpoints[1].id
+        second = answers[second_id]
+        target = second["quantity"]
+        raw = json.loads(inputs[second["selected_trials"][0]])
+        setup = raw["setup"]
+        rig, plate = raw["rig"]["samples"], raw["plate"]["samples"]
+        rig_tare, plate_tare = rig[0], plate[0]
+        for name, value in (
+            ("reversed_pair_order", -target["value"]),
+            ("gross_peaks_without_tare", max(rig) - max(plate)),
+            (
+                "peak_of_net_difference",
+                max(a - rig_tare - b + plate_tare for a, b in zip(rig, plate, strict=True)),
+            ),
+        ):
+            scenarios.append(
+                (
+                    name,
+                    second_id,
+                    second
+                    | {
+                        "quantity": target | {"value": value},
+                    },
+                    ("value",),
+                )
+            )
+        for name, field, value in (
+            ("rig_baseline_omitted", "rig_net_peak_n", max(rig)),
+            ("shared_rig_tare_for_plate", "plate_net_peak_n", max(plate) - rig_tare),
+            ("fixed_baseline_end_as_onset", "rig_rfd_100ms_n_s", (rig[200] - rig[100]) / 0.1),
+            ("wrong_rfd_duration", "plate_rfd_100ms_n_s", (plate[200] - plate[120]) / 0.1),
+            ("rig_rfd_borrowed_for_plate", "plate_rfd_100ms_n_s", 4000),
+        ):
+            operands = [
+                item | {"value": value} if item["field"] == field else item
+                for item in second["operands"]
+            ]
+            scenarios.append((name, second_id, second | {"operands": operands}, ("derivation",)))
+        for arm, error in zip(("rig", "plate"), setup["net_peak_error_n"], strict=True):
+            scenarios.append(
+                (
+                    f"only_{arm}_uncertainty",
+                    second_id,
+                    second
+                    | {
+                        "quantity": target | {"uncertainty": error},
+                    },
+                    ("uncertainty",),
+                )
+            )
+        scenarios.extend(
+            (
+                ("second_eligible", second_id, second, ()),
+                (
+                    "reordered_arm_evidence",
+                    second_id,
+                    second
+                    | {
+                        "operands": second["operands"][::-1],
+                    },
+                    (),
+                ),
+                (
+                    "wrong_pair_artifact",
+                    second_id,
+                    second
+                    | {
+                        "selected_trials": positive["selected_trials"],
+                    },
+                    ("trial_selection",),
+                ),
+                (
+                    "force_torque_conflation",
+                    second_id,
+                    second
+                    | {
+                        "quantity": target | {"unit": "N*m", "dimension": "torque"},
+                    },
+                    ("unit_or_dimension",),
+                ),
+                (
+                    "wrong_nominal_discrepancy_class",
+                    second_id,
+                    second
+                    | {
+                        "claims": [
+                            "inside_declared_peak_tolerance"
+                            if claim == "outside_declared_peak_tolerance"
+                            else claim
+                            for claim in second["claims"]
+                        ],
+                    },
+                    ("interpretation_boundary",),
+                ),
+                (
+                    "assume_coaxial_on_incompatible_pair",
+                    refuse_id,
+                    positive,
+                    ("eligibility_or_refusal",),
+                ),
+                ("axis_refusal_for_clock_failure", "c04", refusal, ("eligibility_or_refusal",)),
+                (
+                    "clock_refusal_for_axis_failure",
+                    refuse_id,
+                    answers["c04"],
+                    ("eligibility_or_refusal",),
+                ),
+            )
+        )
+        for claim in (
+            "measured_interchangeability",
+            "interdevice_reliability_estimated",
+            "bland_altman_limits_estimated",
+            "measured_rig_compliance",
+        ):
+            scenarios.append(
+                (
+                    claim,
+                    compute_id,
+                    positive
+                    | {
+                        "claims": positive["claims"] + [claim],
+                    },
+                    ("interpretation_boundary",),
+                )
+            )
+    elif method == ENCODER_OPERATION:
         data = json.loads(inputs[positive["selected_trials"][0]])
         counts = data["channels"]["counts"]
         direction = data["cable"]["count_direction"]

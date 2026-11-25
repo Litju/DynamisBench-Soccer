@@ -36,6 +36,7 @@ from dynamisbench_soccer.m4.measurement import (
     ENCODER_OPERATION,
     LPT_OPERATION,
     PROCEDURES,
+    RIG_OPERATION,
     checkpoint_methods,
     is_imu_episode,
     is_measurement_task,
@@ -77,6 +78,8 @@ def _custody_family(task: RegistryTask) -> str:
         return "imu"
     if task.methods[0].id == ENCODER_OPERATION:
         return "encoder"
+    if task.methods[0].id == RIG_OPERATION:
+        return "rig"
     if task.methods[0].id == LPT_OPERATION:
         return "lpt"
     if task.methods[0].id == CELL_OPERATION:
@@ -210,6 +213,8 @@ def main() -> None:
             )
         if family in {"lpt", "encoder"}:
             additional += (f"docs/verification/m5-res704-{family}.md",)
+        if family == "rig":
+            additional += ("docs/verification/m5-res704-rig-plate.md",)
         bound = {
             path.relative_to(ROOT).as_posix()
             for directory in ("src", "tests")
@@ -222,7 +227,7 @@ def main() -> None:
                 artifact.name: (ROOT / artifact.path).read_bytes() for artifact in task.artifacts
             }
             _private_methods(task, envelope, task.checkpoints[0], inputs=inputs)
-        if family in {"lpt", "encoder"}:
+        if family in {"lpt", "encoder", "rig"}:
             inputs = {item.name: (ROOT / item.path).read_bytes() for item in task.artifacts}
             for checkpoint in task.checkpoints:
                 expected = _private_methods(task, envelope, checkpoint)[method.id]
