@@ -249,6 +249,132 @@
    "review_url": "https://github.com/Litju/DynamisBench-Soccer/pull/73",
    "reviewer": "Independent Codex scientific review",
    "verdict": "SUPPORTED"
+  },
+  "RCP-rig-plate-net-peak-pair-A": {
+   "bound_digest": "cfb3ca1cba7844f26b727b0363a501c05520e69501be94e20afe6415dc5c2b98",
+   "evidence_head": "b5ff85fe128d0f21d1d76c640007ac17d196fe65",
+   "fix": "",
+   "reason": "Both direct-SI synthetic native source channel arrays and digests reproduce under independent verification. Support covers both instrument arms and the exact frozen task.",
+   "review_url": "https://github.com/Litju/DynamisBench-Soccer/pull/75",
+   "reviewer": "Independent Codex scientific review",
+   "verdict": "SUPPORTED"
+  },
+  "RCP-rig-plate-net-peak-pair-B": {
+   "bound_digest": "b819bd2a7bdd09dd1de7704bb03ff6359e27868bf8d4432523ae4c2c293a014f",
+   "evidence_head": "b5ff85fe128d0f21d1d76c640007ac17d196fe65",
+   "fix": "",
+   "reason": "Separate rig and plate tares and prescribed coaxial +z axes support the exact native matched comparison. Support covers both instrument arms and the exact frozen task.",
+   "review_url": "https://github.com/Litju/DynamisBench-Soccer/pull/75",
+   "reviewer": "Independent Codex scientific review",
+   "verdict": "SUPPORTED"
+  },
+  "RCP-rig-plate-net-peak-pair-C": {
+   "bound_digest": "aaa857c8a9021f8570a67c6e43c9c883936b7e5db7e3588f465d9b2d67659798",
+   "evidence_head": "b5ff85fe128d0f21d1d76c640007ac17d196fe65",
+   "fix": "",
+   "reason": "Both native timestamp grids agree, with categorical refusals for source timing, epoch and trial mismatch. Support covers both instrument arms and the exact frozen task.",
+   "review_url": "https://github.com/Litju/DynamisBench-Soccer/pull/75",
+   "reviewer": "Independent Codex scientific review",
+   "verdict": "SUPPORTED"
+  },
+  "RCP-rig-plate-net-peak-pair-D": {
+   "bound_digest": "d8183e649cc19bdce5e56e86491c487b74f8ee91c22a1d1640e23ebefda91bd8",
+   "evidence_head": "b5ff85fe128d0f21d1d76c640007ac17d196fe65",
+   "fix": "",
+   "reason": "Both arms verify finite source-bound data and refuse unsupported onset bracket or window. Support covers both instrument arms and the exact frozen task.",
+   "review_url": "https://github.com/Litju/DynamisBench-Soccer/pull/75",
+   "reviewer": "Independent Codex scientific review",
+   "verdict": "SUPPORTED"
+  },
+  "RCP-rig-plate-net-peak-pair-E": {
+   "bound_digest": "206b35ef851eef23cef8143b32c6b926d4779cd5533c651593fb55df41179dd0",
+   "evidence_head": "b5ff85fe128d0f21d1d76c640007ac17d196fe65",
+   "fix": "",
+   "reason": "Unfiltered paired force processing and RFDs match independent linear and nonlinear witnesses. Support covers both instrument arms and the exact frozen task.",
+   "review_url": "https://github.com/Litju/DynamisBench-Soccer/pull/75",
+   "reviewer": "Independent Codex scientific review",
+   "verdict": "SUPPORTED"
+  },
+  "RCP-rig-plate-net-peak-pair-F": {
+   "bound_digest": "3e23a7850d3c53dc1bf0b05e6ad71a8df8885dea7a3f73c552a23387715a92ac",
+   "evidence_head": "b5ff85fe128d0f21d1d76c640007ac17d196fe65",
+   "fix": "",
+   "reason": "Independent net peaks and RFD operands agree on both production acquisition paths. Support covers both instrument arms and the exact frozen task.",
+   "review_url": "https://github.com/Litju/DynamisBench-Soccer/pull/75",
+   "reviewer": "Independent Codex scientific review",
+   "verdict": "SUPPORTED"
+  },
+  "RCP-rig-plate-net-peak-pair-G": {
+   "bound_digest": "cfd0078ffbbbd4309e4b0413908d21ac4f1478c439fed56553ddc291e37acc20",
+   "evidence_head": "b5ff85fe128d0f21d1d76c640007ac17d196fe65",
+   "fix": "",
+   "reason": "Separate signed strict threshold and backdate determinations resolve the exact RFD windows in both arms. Support covers both instrument arms and the exact frozen task.",
+   "review_url": "https://github.com/Litju/DynamisBench-Soccer/pull/75",
+   "reviewer": "Independent Codex scientific review",
+   "verdict": "SUPPORTED"
+  },
+  "RCP-rig-plate-net-peak-pair-H": {
+   "bound_digest": "c63207dad070b7415af3bf8ac92abb5b881f577c80c42331ce2c90a527b92ef4",
+   "evidence_head": "b5ff85fe128d0f21d1d76c640007ac17d196fe65",
+   "fix": "",
+   "reason": "Separate net peak subtraction, signed order and nominal threshold match independent asynchronous peak controls. Support covers both instrument arms and the exact frozen task.",
+   "review_url": "https://github.com/Litju/DynamisBench-Soccer/pull/75",
+   "reviewer": "Independent Codex scientific review",
+   "verdict": "SUPPORTED"
+  },
+  "RCP-rig-plate-net-peak-pair-I": {
+   "bound_digest": "5a7f35f368e6bde0816df2cced71e0ac83b322c6b4ffc69faf4afa0fba46f2f1",
+   "evidence_head": "b5ff85fe128d0f21d1d76c640007ac17d196fe65",
+   "fix": "",
+   "reason": "Independently enumerated absolute-error corners reproduce the deterministic discrepancy radius. Support covers both instrument arms and the exact frozen task.",
+   "review_url": "https://github.com/Litju/DynamisBench-Soccer/pull/75",
+   "reviewer": "Independent Codex scientific review",
+   "verdict": "SUPPORTED"
+  },
+  "RCP-rig-plate-net-peak-pair-J": {
+   "bound_digest": "6c0fdab852311684848c3d1bc2e697b9959b5888d3039995687b764fca40750a",
+   "evidence_head": "b5ff85fe128d0f21d1d76c640007ac17d196fe65",
+   "fix": "",
+   "reason": "Noncircular independently authored sampled truth agrees for the frozen cases and asymmetric witnesses. Support covers both instrument arms and the exact frozen task.",
+   "review_url": "https://github.com/Litju/DynamisBench-Soccer/pull/75",
+   "reviewer": "Independent Codex scientific review",
+   "verdict": "SUPPORTED"
+  },
+  "RCP-rig-plate-net-peak-pair-K": {
+   "bound_digest": "21f3aceec770f4adf08e3604577713a1483170d6d63b650f035e129aefd6904e",
+   "evidence_head": "b5ff85fe128d0f21d1d76c640007ac17d196fe65",
+   "fix": "",
+   "reason": "Independent axis and clock faults match all frozen refusals, with supplemental transfer and incomplete-window controls. Support covers both instrument arms and the exact frozen task.",
+   "review_url": "https://github.com/Litju/DynamisBench-Soccer/pull/75",
+   "reviewer": "Independent Codex scientific review",
+   "verdict": "SUPPORTED"
+  },
+  "RCP-rig-plate-net-peak-pair-L": {
+   "bound_digest": "743923b80ddfb57769b61f227e329eec782b58f876ae495f0528c0a8398511ad",
+   "evidence_head": "b5ff85fe128d0f21d1d76c640007ac17d196fe65",
+   "fix": "",
+   "reason": "One synthetic pair supports signed discrepancy and a nominal tolerance decision. Dispersion, reliability and agreement limits are unavailable. Support covers both instrument arms and the exact frozen task.",
+   "review_url": "https://github.com/Litju/DynamisBench-Soccer/pull/75",
+   "reviewer": "Independent Codex scientific review",
+   "verdict": "SUPPORTED"
+  },
+  "RCP-rig-plate-net-peak-pair-M": {
+   "bound_digest": "a2d2edb32e78f4fbf4db3eb623be2aa37ea612a2cca3ee6ba735fee35c21f061",
+   "evidence_head": "b5ff85fe128d0f21d1d76c640007ac17d196fe65",
+   "fix": "",
+   "reason": "All eight internal source hashes and all four artifact bindings agree, with exact checkpoint release. Support covers both instrument arms and the exact frozen task.",
+   "review_url": "https://github.com/Litju/DynamisBench-Soccer/pull/75",
+   "reviewer": "Independent Codex scientific review",
+   "verdict": "SUPPORTED"
+  },
+  "RCP-rig-plate-net-peak-pair-O": {
+   "bound_digest": "7128b59d127c05f1a86d50358af16a76f31eb0501b46af1335d1ad0931c8a948",
+   "evidence_head": "b5ff85fe128d0f21d1d76c640007ac17d196fe65",
+   "fix": "",
+   "reason": "The comparison remains limited to prescribed synthetic force transfer and source-specific interpretation limits. Support covers both instrument arms and the exact frozen task.",
+   "review_url": "https://github.com/Litju/DynamisBench-Soccer/pull/75",
+   "reviewer": "Independent Codex scientific review",
+   "verdict": "SUPPORTED"
   }
  },
  "receipts": {
