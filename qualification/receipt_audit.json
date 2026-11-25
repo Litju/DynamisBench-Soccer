@@ -7,6 +7,96 @@
   "Reviewers could run the cited tests; they did not review the engines line by line."
  ],
  "native_task_receipts": {
+  "RCP-encoder-rollover-attachment-A": {
+   "bound_digest": "f79b4aa13078465c1c903a6ada6410fc6faba422f45243006a39dbe0aa3bbf36",
+   "evidence_head": "27186b29240873566047d5dc51d70fdfd5c710e2",
+   "fix": "",
+   "reason": "Canonical encoder columns, explicit native time, identity record and channel hashes agree with independent checks of the five artifacts. Support is scoped to encoder-rollover-attachment revision 1.",
+   "review_url": "https://github.com/Litju/DynamisBench-Soccer/pull/74",
+   "reviewer": "Independent Codex scientific review",
+   "verdict": "SUPPORTED"
+  },
+  "RCP-encoder-rollover-attachment-C": {
+   "bound_digest": "fce145a5025b7d1da43ea54ed64ee8e473b3f3d078209f07b1a148ad7711f63e",
+   "evidence_head": "27186b29240873566047d5dc51d70fdfd5c710e2",
+   "fix": "",
+   "reason": "Independent sample-index timing matches native elapsed time at 50 Hz. Duplicate, shifted-sample and gap controls refuse. A common clock origin shift preserves elapsed time. Support is scoped to encoder-rollover-attachment revision 1.",
+   "review_url": "https://github.com/Litju/DynamisBench-Soccer/pull/74",
+   "reviewer": "Independent Codex scientific review",
+   "verdict": "SUPPORTED"
+  },
+  "RCP-encoder-rollover-attachment-D": {
+   "bound_digest": "46769fdd2a97643e832274c549bba6ebe0d3acbfd550e27be385a3fc5f84b529",
+   "evidence_head": "27186b29240873566047d5dc51d70fdfd5c710e2",
+   "fix": "",
+   "reason": "Independent raw count and physical increment checks verify invalid residues, the global strict half-turn bound and corrupt interior increments hidden by unchanged endpoints. Support is scoped to encoder-rollover-attachment revision 1.",
+   "review_url": "https://github.com/Litju/DynamisBench-Soccer/pull/74",
+   "reviewer": "Independent Codex scientific review",
+   "verdict": "SUPPORTED"
+  },
+  "RCP-encoder-rollover-attachment-E": {
+   "bound_digest": "441f86250000e03a511370084830267863be4b9af9c1ce69fda127c7b5e29c1b",
+   "evidence_head": "27186b29240873566047d5dc51d70fdfd5c710e2",
+   "fix": "",
+   "reason": "Independent modular lifts reproduce signed direction, including reverse boundary and full-turn witnesses. A true half-turn tie is refused. Support is scoped to encoder-rollover-attachment revision 1.",
+   "review_url": "https://github.com/Litju/DynamisBench-Soccer/pull/74",
+   "reviewer": "Independent Codex scientific review",
+   "verdict": "SUPPORTED"
+  },
+  "RCP-encoder-rollover-attachment-F": {
+   "bound_digest": "af96cd7cd0f23a6a673ac2eca00f09fde673383a4938ae2a0dee87eabad9a133",
+   "evidence_head": "27186b29240873566047d5dc51d70fdfd5c710e2",
+   "fix": "",
+   "reason": "Independent rational count-to-metre conversion and tether projection agree with cable motion, signed vertical motion and mean velocity on three traces. Support is scoped to encoder-rollover-attachment revision 1.",
+   "review_url": "https://github.com/Litju/DynamisBench-Soccer/pull/74",
+   "reviewer": "Independent Codex scientific review",
+   "verdict": "SUPPORTED"
+  },
+  "RCP-encoder-rollover-attachment-H": {
+   "bound_digest": "2c9c6c7043768f45846a838b7bdeef4c2045e078a535b5d7f4caf1e503d39f4d",
+   "evidence_head": "27186b29240873566047d5dc51d70fdfd5c710e2",
+   "fix": "",
+   "reason": "The test and private results identify a signed attachment length, with distinct cable and mean velocity operands and exact COM refusal. Support is scoped to encoder-rollover-attachment revision 1.",
+   "review_url": "https://github.com/Litju/DynamisBench-Soccer/pull/74",
+   "reviewer": "Independent Codex scientific review",
+   "verdict": "SUPPORTED"
+  },
+  "RCP-encoder-rollover-attachment-I": {
+   "bound_digest": "9d566222ccd41449cbfde0c30bdf53ad18e8ada52514004099f901248234d7be",
+   "evidence_head": "27186b29240873566047d5dc51d70fdfd5c710e2",
+   "fix": "",
+   "reason": "Independent endpoint arithmetic agrees with a one-count conditional bound through the source scale and projection. Support is scoped to encoder-rollover-attachment revision 1.",
+   "review_url": "https://github.com/Litju/DynamisBench-Soccer/pull/74",
+   "reviewer": "Independent Codex scientific review",
+   "verdict": "SUPPORTED"
+  },
+  "RCP-encoder-rollover-attachment-J": {
+   "bound_digest": "e5a22ceef84b376f5d1b28f0abe0a8704d0a7d7e3a0993f1bf6f1b699ed545c1",
+   "evidence_head": "27186b29240873566047d5dc51d70fdfd5c710e2",
+   "fix": "",
+   "reason": "Independent integer-lift enumeration and rational physical truth agree with native replay. The reference closure is noncircular. Support is scoped to encoder-rollover-attachment revision 1.",
+   "review_url": "https://github.com/Litju/DynamisBench-Soccer/pull/74",
+   "reviewer": "Independent Codex scientific review",
+   "verdict": "SUPPORTED"
+  },
+  "RCP-encoder-rollover-attachment-K": {
+   "bound_digest": "9f16b230e5f86e5f486da7251ec67e5931dc42fca54273d73d4eca4b2b755849",
+   "evidence_head": "27186b29240873566047d5dc51d70fdfd5c710e2",
+   "fix": "",
+   "reason": "All four original refusals, plus true tie, malformed residues, native timing and COM fault controls, match prespecified outcomes. Support is scoped to encoder-rollover-attachment revision 1.",
+   "review_url": "https://github.com/Litju/DynamisBench-Soccer/pull/74",
+   "reviewer": "Independent Codex scientific review",
+   "verdict": "SUPPORTED"
+  },
+  "RCP-encoder-rollover-attachment-O": {
+   "bound_digest": "8fb2279cd648bbb8f4c8672e290018ec2aa648fcc0ae1cec64d43c839f297c40",
+   "evidence_head": "27186b29240873566047d5dc51d70fdfd5c710e2",
+   "fix": "",
+   "reason": "The independently verified computation and refusals keep instrument-point motion and conditional quantization distinct from unsupported whole-athlete COM inference. Support is scoped to encoder-rollover-attachment revision 1.",
+   "review_url": "https://github.com/Litju/DynamisBench-Soccer/pull/74",
+   "reviewer": "Independent Codex scientific review",
+   "verdict": "SUPPORTED"
+  },
   "RCP-imu-frame-observability-A": {
    "bound_digest": "68002d085bd88be7d2e9538a41f1f0b5f9da1c46592f91d017b35e82812c6c00",
    "evidence_head": "aff82fd52a7607da8048bde591fa0c646753bf43",
