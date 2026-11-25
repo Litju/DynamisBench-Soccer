@@ -25,7 +25,7 @@ from dynamisbench_soccer.engines.load_cell import process as process_load_cell
 from dynamisbench_soccer.engines.load_cell_acquisition import CellSpec, acquire, check_saturation
 from dynamisbench_soccer.engines.position_clock_bounds import input_error_radii
 from dynamisbench_soccer.engines.timing_gates import GatePolicy, sprint
-from dynamisbench_soccer.m4.admission import CELL_TASK, IMU_TASK, LPT_TASK, Kind
+from dynamisbench_soccer.m4.admission import CELL_TASK, ENCODER_TASK, IMU_TASK, LPT_TASK, Kind
 from dynamisbench_soccer.m4.key_store import digest
 from dynamisbench_soccer.m4.task_registry import Method, RegistryTask
 from dynamisbench_soccer.qc.spec import Status
@@ -46,6 +46,7 @@ ANSWER_VERSION = "m5.measurement-answer.v1"
 IMU_POSITION = "fixed-attitude-sensor-position"
 IMU_SIGNATURE = "specific-force-signature-flight"
 IMU_OPERATIONS = (IMU_POSITION, IMU_SIGNATURE)
+ENCODER_OPERATION = "modular-attachment-change"
 LPT_OPERATION = "fixed-angle-attachment-speed"
 CELL_OPERATION = "unfiltered-net-peak-torque"
 CELL_SPECIFICATION = {
@@ -131,6 +132,15 @@ PROCEDURES = {
         "s",
         ("DEV-002",),
         ("engines/imu.py::process", "m4/measurement.py::_imu_signature"),
+    ),
+    ENCODER_OPERATION: Procedure(
+        "lpt_encoder.encoder",
+        "native_signal",
+        "signed_vertical_attachment_change",
+        "length",
+        "m",
+        ("DEV-001",),
+        ("engines/lpt_acquisition.py::acquire", "m4/measurement.py::_encoder"),
     ),
     LPT_OPERATION: Procedure(
         "lpt_encoder.lpt",
@@ -874,6 +884,114 @@ def _lpt(data: dict[str, object]) -> Reading:
     )
 
 
+def _encoder(data: dict[str, object]) -> Reading:
+    meta = BundleMeta.model_validate(data["meta"])
+    acquisition, sampling = meta.acquisition, meta.sampling
+    cable = lpt_acquisition.CableSpec.model_validate(data["cable"])
+    geometry = lpt_acquisition.GeometrySpec.model_validate(data["geometry"])
+    raw = data["channels"]
+    names = {"time": Quantity.TIME, "counts": Quantity.COUNT}
+    if (
+        meta.data_category is not DataCategory.SYNTHETIC
+        or meta.device.device_class is not DeviceClass.ENCODER
+        or acquisition is None
+        or len(acquisition.sources) != 1
+        or sampling is None
+        or not isinstance(raw, dict)
+        or raw.keys() != names.keys()
+        or {column.name: column.quantity for column in meta.channels} != names
+    ):
+        raise ValueError("reference requires one native synthetic encoder with counts and time")
+    (source,) = acquisition.sources
+    if (
+        source.device.device_class is not DeviceClass.ENCODER
+        or source.id != cable.source
+        or cable.channel != "counts"
+        or cable.count_modulus is None
+        or cable.slack_channel is not None
+        or cable.initial_length_m is not None
+        or source.raw_format != "generated native sample values for independent RES-704 control"
+        or source.geometry != meta.geometry
+        or source.geometry.attachment_point != "barbell"
+        or geometry.attachment_point != "barbell"
+        or geometry.vertical_line_xy_m is not None
+    ):
+        raise ValueError("reference requires a declared modular counter on one bar attachment")
+    if (
+        len(source.calibration) != 1
+        or source.calibration != meta.calibration
+        or (
+            source.calibration[0].channel,
+            source.calibration[0].input_unit,
+            source.calibration[0].output_unit,
+            source.calibration[0].gain,
+            source.calibration[0].offset,
+        )
+        != ("counts", "1", "1", 1, 0)
+    ):
+        raise ValueError("reference requires declared native count identity calibration")
+    raw_sha = digest((json.dumps(raw, indent=2, sort_keys=True, allow_nan=False) + "\n").encode())
+    if source.source_sha256 != raw_sha or meta.provenance.source_sha256 != raw_sha:
+        raise ValueError("native encoder channels disagree with source provenance")
+    counts = raw["counts"]
+    if not isinstance(counts, list) or any(type(count) is not int for count in counts):
+        raise ValueError("native encoder counts must be JSON integers")
+    bundle = SignalBundle(
+        meta,
+        {column.name: np.asarray(raw[column.name], dtype=np.float64) for column in meta.channels},
+    )
+    if (
+        sampling.nominal_hz != 50
+        or sampling.measured_hz != 50
+        or sampling.irregular
+        or not np.allclose(
+            bundle["time"], sampling.t0_s + np.arange(meta.n_rows) / 50, atol=1e-12, rtol=0
+        )
+    ):
+        return Reading("not_eligible", ("unresolved_native_grid",))
+
+    request = data["request"]
+    if request == "com_change":
+        return Reading("unsupported_claim", ("attachment_point_only", "com_unobserved"))
+    if request != "vertical_change":
+        raise ValueError("unsupported encoder request")
+    try:
+        native = lpt_acquisition.acquire(bundle, (cable,), geometry)
+    except ValueError as exc:
+        if str(exc) == "missing encoder counts_per_m":
+            return Reading("insufficient_evidence", ("missing_count_scale",))
+        if str(exc) == "encoder rollover is ambiguous at the declared speed and sample intervals":
+            return Reading("not_eligible", ("ambiguous_rollover",))
+        raise
+
+    (instrument,) = native.cables
+    if instrument.faults:
+        return Reading("not_eligible", ("implausible_count_jump",))
+    vertical = native.vertical_displacement_m
+    if vertical is None:
+        return Reading("insufficient_evidence", ("cable_only", "vertical_geometry_unobserved"))
+
+    resolution, angle = instrument.resolution_m, source.geometry.cable_angle_rad
+    assert resolution is not None and angle is not None
+    elapsed = float(native.time_s[-1] - native.time_s[0])
+    cable_change = float(instrument.length_m[-1] - instrument.length_m[0])
+    change = float(vertical[-1])
+    # Native unwrapping produced exact integers before converting them to metres.
+    count_change = round(cable_change / resolution)
+    return Reading(
+        "eligible",
+        ("signed_native_rollover", "attachment_point_only", "endpoint_quantization_bound"),
+        change,
+        resolution / math.cos(angle),
+        (
+            ("signed_count_change", float(count_change)),
+            ("elapsed_s", round(elapsed, 10)),
+            ("cable_displacement_m", round(cable_change, 10)),
+            ("mean_vertical_velocity_m_s", round(change / elapsed, 10)),
+        ),
+    )
+
+
 def is_imu_episode(task: RegistryTask) -> bool:
     return (task.task.id, task.task.revision) == IMU_TASK
 
@@ -892,6 +1010,10 @@ def checkpoint_methods(task: RegistryTask, checkpoint_id: str) -> tuple[Method, 
 def is_measurement_task(task: RegistryTask) -> bool:
     if (task.task.id, task.task.revision) == CELL_TASK:
         return task.engine == "m5-advanced-development.v1" and task.methods[0].id == CELL_OPERATION
+    if (task.task.id, task.task.revision) == ENCODER_TASK:
+        return (
+            task.engine == "m5-advanced-development.v1" and task.methods[0].id == ENCODER_OPERATION
+        )
     if (task.task.id, task.task.revision) == LPT_TASK:
         return task.engine == "m5-advanced-development.v1" and task.methods[0].id == LPT_OPERATION
     if is_imu_episode(task):
@@ -899,11 +1021,14 @@ def is_measurement_task(task: RegistryTask) -> bool:
             task.engine == ENGINE and tuple(method.id for method in task.methods) == IMU_OPERATIONS
         )
     return task.engine == ENGINE and all(
-        method.id not in (CELL_OPERATION, LPT_OPERATION, *IMU_OPERATIONS) for method in task.methods
+        method.id not in (CELL_OPERATION, ENCODER_OPERATION, LPT_OPERATION, *IMU_OPERATIONS)
+        for method in task.methods
     )
 
 
 def replay(operation: str, data: dict[str, object]) -> Reading:
+    if operation == ENCODER_OPERATION:
+        return _encoder(data)
     if operation == LPT_OPERATION:
         return _lpt(data)
     if operation == CELL_OPERATION:

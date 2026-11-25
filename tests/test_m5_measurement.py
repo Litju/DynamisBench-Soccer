@@ -8,6 +8,7 @@ from dynamisbench_soccer.m4.grader import MeasurementSubmission, _check_submissi
 from dynamisbench_soccer.m4.key_store import digest
 from dynamisbench_soccer.m4.measurement import (
     CELL_OPERATION,
+    ENCODER_OPERATION,
     IMU_OPERATIONS,
     LPT_OPERATION,
     PROCEDURES,
@@ -50,7 +51,7 @@ def test_measurement_episode_replays_without_disclosing_reference(procedure):
             assert reading.value is None and reading.radius is None and not reading.operands
     third = (
         "insufficient_evidence"
-        if procedure in ("fixed-session-change", CELL_OPERATION)
+        if procedure in ("fixed-session-change", CELL_OPERATION, ENCODER_OPERATION)
         else "unsupported_claim"
     )
     assert {"eligible", "not_eligible", third} <= decisions
