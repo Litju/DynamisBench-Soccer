@@ -662,3 +662,368 @@ check_kind = "categorical"
 "tests/test_m5_encoder.py::test_encoder_refuses_whole_athlete_com_interpretation" = "4a02ffd2bc2604f6a7eecfebb51a1d66d5443bd6ec1439e5ba68f1abd77c34aa"
 "tests/test_m5_encoder.py::test_frozen_encoder_refusals" = "9c4e236206c0bfa6b202465dd8404e0b8456c752d5c499783523136bff00bd8f"
 "tests/test_m5_encoder.py::test_frozen_signed_encoder_matches_independent_forward_counts" = "33d87f26dd6d88b030ec1b209351f1a50b05278c9a308d6170af5c57ab2a4647"
+
+[[receipt]]
+id = "RCP-rig-plate-net-peak-pair-A"
+dimension = "A"
+subfamilies = ["load_cell_isometric.isometric_rig", "force_platform.single"]
+issue = "RES-704"
+claim = "Each instrument has its own declared direct-SI native source and digest. Both engine acquisition paths agree with the independent force traces. Scope is the four frozen rig-plate-net-peak-pair revision 1 cases, a single synthetic paired fixed-bar IMTP under declared direct-force and shared native 1000 Hz conditions."
+implementation = ["src/dynamisbench_soccer/m4/measurement.py::_rig_pair", "src/dynamisbench_soccer/m4/measurement.py::_rig_bundle", "src/dynamisbench_soccer/engines/load_cell_acquisition.py::acquire", "src/dynamisbench_soccer/engines/force_platform_acquisition.py::acquire"]
+reference = ["tests/test_m5_rig_plate.py::_array_digest", "tests/test_m5_rig_plate.py::_closed_form"]
+reference_kind = "closed_form"
+independence = "The prescribed ramp slopes, asymmetric nonlinear witness, deterministic differential bounds and refusal classes are independently derived without production outputs."
+tests = ["tests/test_m5_rig_plate.py::test_frozen_both_arms_reconstruct_independent_tares_peaks_and_rfd", "tests/test_m5_rig_plate.py::test_pair_checks_both_source_hashes_and_same_pair_identity"]
+tolerance = 0
+tolerance_unit = ""
+tolerance_basis = "Native source hashes must agree, and modifying either complete sample vector is refused."
+check_kind = "categorical"
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/force_platform_acquisition.py::acquire" = "f5d6601ab3f1e987b0add265a1f5f73303eb4d1bc6c6dadda49864f6f36ce645"
+"src/dynamisbench_soccer/engines/load_cell_acquisition.py::acquire" = "d7c0808fcde88154aa4a71903348f8f5a19aa50f3edd6d0b938c66ad114f3cd8"
+"src/dynamisbench_soccer/m4/measurement.py::_rig_bundle" = "f92ea4e13abb52b33b614b58d5697d9f22bebe3e691c19a2c422bbbd2961d8ad"
+"src/dynamisbench_soccer/m4/measurement.py::_rig_pair" = "6e5148574711816f7dce5b2a30bc9fc707141f9afc42b70b5f3eb27af90b43ba"
+"tests/test_m5_rig_plate.py::_array_digest" = "1cb7b952dac7dc3f2394a458dcb9847dd29f04bc61b7e4eb4a979d76911ee45f"
+"tests/test_m5_rig_plate.py::_closed_form" = "13fa04ba3f461fd8a8b7348066a191ece60fb1d30fb1b07e08d9267fd13174f9"
+"tests/test_m5_rig_plate.py::test_frozen_both_arms_reconstruct_independent_tares_peaks_and_rfd" = "ffe1d770ec1378fa8a122db90c4727406e259d7466d18e72036eff418a581b5c"
+"tests/test_m5_rig_plate.py::test_pair_checks_both_source_hashes_and_same_pair_identity" = "78c1707f74a9cd071a324aeb67d3f229c462de754b9d4c6f04980543b7e2b77e"
+
+[[receipt]]
+id = "RCP-rig-plate-net-peak-pair-B"
+dimension = "B"
+subfamilies = ["load_cell_isometric.isometric_rig", "force_platform.single"]
+issue = "RES-704"
+claim = "Direct calibrated newtons pass through with separate native tare subtraction, and only declared coaxial vertical +z geometry supports comparing the two forces. Scope is the four frozen rig-plate-net-peak-pair revision 1 cases, a single synthetic paired fixed-bar IMTP under declared direct-force and shared native 1000 Hz conditions."
+implementation = ["src/dynamisbench_soccer/m4/measurement.py::_rig_pair", "src/dynamisbench_soccer/m4/measurement.py::_rig_bundle", "src/dynamisbench_soccer/m4/measurement.py::_rig_vertical", "src/dynamisbench_soccer/engines/load_cell_acquisition.py::acquire", "src/dynamisbench_soccer/engines/force_platform_acquisition.py::acquire"]
+reference = ["tests/test_m5_rig_plate.py::_closed_form", "tests/test_m5_rig_plate.py::FAULTS"]
+reference_kind = "closed_form"
+independence = "The prescribed ramp slopes, asymmetric nonlinear witness, deterministic differential bounds and refusal classes are independently derived without production outputs."
+tests = ["tests/test_m5_rig_plate.py::test_frozen_both_arms_reconstruct_independent_tares_peaks_and_rfd", "tests/test_m5_rig_plate.py::test_asymmetric_independent_onsets_different_peak_times_and_nominal_classification", "tests/test_m5_rig_plate.py::test_frozen_rig_plate_refusals", "tests/test_m5_rig_plate.py::test_pair_checks_both_source_hashes_and_same_pair_identity"]
+tolerance = 1e-08
+tolerance_unit = "N"
+tolerance_basis = "Independent tare and peak values on both arms. Incompatible axis or ideal transfer declaration yields categorical refusal."
+check_kind = "numeric"
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/force_platform_acquisition.py::acquire" = "f5d6601ab3f1e987b0add265a1f5f73303eb4d1bc6c6dadda49864f6f36ce645"
+"src/dynamisbench_soccer/engines/load_cell_acquisition.py::acquire" = "d7c0808fcde88154aa4a71903348f8f5a19aa50f3edd6d0b938c66ad114f3cd8"
+"src/dynamisbench_soccer/m4/measurement.py::_rig_bundle" = "f92ea4e13abb52b33b614b58d5697d9f22bebe3e691c19a2c422bbbd2961d8ad"
+"src/dynamisbench_soccer/m4/measurement.py::_rig_pair" = "6e5148574711816f7dce5b2a30bc9fc707141f9afc42b70b5f3eb27af90b43ba"
+"src/dynamisbench_soccer/m4/measurement.py::_rig_vertical" = "1e266e9ee2b756b207097fb5b30fab801235291ddd7bb04c6f7e88b898424e65"
+"tests/test_m5_rig_plate.py::FAULTS" = "6d5a04c91d97677b9b854a66949188bb44e992e1f3993d5f32cdd14243a42a85"
+"tests/test_m5_rig_plate.py::_closed_form" = "13fa04ba3f461fd8a8b7348066a191ece60fb1d30fb1b07e08d9267fd13174f9"
+"tests/test_m5_rig_plate.py::test_asymmetric_independent_onsets_different_peak_times_and_nominal_classification" = "057164e70cc906cb3501ff6ec3aa60c9c20eed546e2815323ca243de79bc2293"
+"tests/test_m5_rig_plate.py::test_frozen_both_arms_reconstruct_independent_tares_peaks_and_rfd" = "ffe1d770ec1378fa8a122db90c4727406e259d7466d18e72036eff418a581b5c"
+"tests/test_m5_rig_plate.py::test_frozen_rig_plate_refusals" = "d1c3a71e00fdca5951955e47a3f030b42feb5df5251bd0b71e081b5a83a20530"
+"tests/test_m5_rig_plate.py::test_pair_checks_both_source_hashes_and_same_pair_identity" = "78c1707f74a9cd071a324aeb67d3f229c462de754b9d4c6f04980543b7e2b77e"
+
+[[receipt]]
+id = "RCP-rig-plate-net-peak-pair-C"
+dimension = "C"
+subfamilies = ["load_cell_isometric.isometric_rig", "force_platform.single"]
+issue = "RES-704"
+claim = "Both reconstructed native grids and the same trial, clock epoch, rate and protocol identity support the comparison without alignment or resampling. Scope is the four frozen rig-plate-net-peak-pair revision 1 cases, a single synthetic paired fixed-bar IMTP under declared direct-force and shared native 1000 Hz conditions."
+implementation = ["src/dynamisbench_soccer/m4/measurement.py::_rig_pair", "src/dynamisbench_soccer/m4/measurement.py::_rig_clock", "src/dynamisbench_soccer/engines/load_cell_acquisition.py::acquire", "src/dynamisbench_soccer/engines/force_platform_acquisition.py::acquire"]
+reference = ["tests/test_m5_rig_plate.py::_closed_form", "tests/test_m5_rig_plate.py::FAULTS"]
+reference_kind = "closed_form"
+independence = "The prescribed ramp slopes, asymmetric nonlinear witness, deterministic differential bounds and refusal classes are independently derived without production outputs."
+tests = ["tests/test_m5_rig_plate.py::test_frozen_both_arms_reconstruct_independent_tares_peaks_and_rfd", "tests/test_m5_rig_plate.py::test_frozen_rig_plate_refusals", "tests/test_m5_rig_plate.py::test_pair_checks_both_source_hashes_and_same_pair_identity"]
+tolerance = 1e-15
+tolerance_unit = "s"
+tolerance_basis = "Native sample index divided by 1000 yields both ideal grids. Trial, rate and epoch mismatches are categorical."
+check_kind = "numeric"
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/force_platform_acquisition.py::acquire" = "f5d6601ab3f1e987b0add265a1f5f73303eb4d1bc6c6dadda49864f6f36ce645"
+"src/dynamisbench_soccer/engines/load_cell_acquisition.py::acquire" = "d7c0808fcde88154aa4a71903348f8f5a19aa50f3edd6d0b938c66ad114f3cd8"
+"src/dynamisbench_soccer/m4/measurement.py::_rig_clock" = "5b8873a1429ef103e73473debceab6bb66316413d4f281f0c4b6108f63e34a53"
+"src/dynamisbench_soccer/m4/measurement.py::_rig_pair" = "6e5148574711816f7dce5b2a30bc9fc707141f9afc42b70b5f3eb27af90b43ba"
+"tests/test_m5_rig_plate.py::FAULTS" = "6d5a04c91d97677b9b854a66949188bb44e992e1f3993d5f32cdd14243a42a85"
+"tests/test_m5_rig_plate.py::_closed_form" = "13fa04ba3f461fd8a8b7348066a191ece60fb1d30fb1b07e08d9267fd13174f9"
+"tests/test_m5_rig_plate.py::test_frozen_both_arms_reconstruct_independent_tares_peaks_and_rfd" = "ffe1d770ec1378fa8a122db90c4727406e259d7466d18e72036eff418a581b5c"
+"tests/test_m5_rig_plate.py::test_frozen_rig_plate_refusals" = "d1c3a71e00fdca5951955e47a3f030b42feb5df5251bd0b71e081b5a83a20530"
+"tests/test_m5_rig_plate.py::test_pair_checks_both_source_hashes_and_same_pair_identity" = "78c1707f74a9cd071a324aeb67d3f229c462de754b9d4c6f04980543b7e2b77e"
+
+[[receipt]]
+id = "RCP-rig-plate-net-peak-pair-D"
+dimension = "D"
+subfamilies = ["load_cell_isometric.isometric_rig", "force_platform.single"]
+issue = "RES-704"
+claim = "Both synthetic force vectors are source-bound and finite, and neither an unresolved baseline bracket nor an incomplete RFD window supplies an eligible comparison. Scope is the four frozen rig-plate-net-peak-pair revision 1 cases, a single synthetic paired fixed-bar IMTP under declared direct-force and shared native 1000 Hz conditions."
+implementation = ["src/dynamisbench_soccer/m4/measurement.py::_rig_pair", "src/dynamisbench_soccer/m4/measurement.py::_rig_bundle", "src/dynamisbench_soccer/m4/measurement.py::_rig_window", "src/dynamisbench_soccer/engines/load_cell_acquisition.py::acquire", "src/dynamisbench_soccer/engines/force_platform_acquisition.py::acquire"]
+reference = ["tests/test_m5_rig_plate.py::_closed_form", "tests/test_m5_rig_plate.py::FAULTS"]
+reference_kind = "closed_form"
+independence = "The prescribed ramp slopes, asymmetric nonlinear witness, deterministic differential bounds and refusal classes are independently derived without production outputs."
+tests = ["tests/test_m5_rig_plate.py::test_frozen_both_arms_reconstruct_independent_tares_peaks_and_rfd", "tests/test_m5_rig_plate.py::test_each_arm_needs_baseline_bracket_and_complete_window", "tests/test_m5_rig_plate.py::test_pair_checks_both_source_hashes_and_same_pair_identity"]
+tolerance = 0
+tolerance_unit = ""
+tolerance_basis = "Rejected source mutations and missing bracket/window support yield no eligible output. No hardware clipping claim."
+check_kind = "categorical"
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/force_platform_acquisition.py::acquire" = "f5d6601ab3f1e987b0add265a1f5f73303eb4d1bc6c6dadda49864f6f36ce645"
+"src/dynamisbench_soccer/engines/load_cell_acquisition.py::acquire" = "d7c0808fcde88154aa4a71903348f8f5a19aa50f3edd6d0b938c66ad114f3cd8"
+"src/dynamisbench_soccer/m4/measurement.py::_rig_bundle" = "f92ea4e13abb52b33b614b58d5697d9f22bebe3e691c19a2c422bbbd2961d8ad"
+"src/dynamisbench_soccer/m4/measurement.py::_rig_pair" = "6e5148574711816f7dce5b2a30bc9fc707141f9afc42b70b5f3eb27af90b43ba"
+"src/dynamisbench_soccer/m4/measurement.py::_rig_window" = "ca6cdcf53601b3a34db25807aca3e0737436488f6e32d879e8de332c85eb878b"
+"tests/test_m5_rig_plate.py::FAULTS" = "6d5a04c91d97677b9b854a66949188bb44e992e1f3993d5f32cdd14243a42a85"
+"tests/test_m5_rig_plate.py::_closed_form" = "13fa04ba3f461fd8a8b7348066a191ece60fb1d30fb1b07e08d9267fd13174f9"
+"tests/test_m5_rig_plate.py::test_each_arm_needs_baseline_bracket_and_complete_window" = "2072d8cf6a88fca91692c6e4fb8909ef333b001f93c8220490e65d5c8f55efa7"
+"tests/test_m5_rig_plate.py::test_frozen_both_arms_reconstruct_independent_tares_peaks_and_rfd" = "ffe1d770ec1378fa8a122db90c4727406e259d7466d18e72036eff418a581b5c"
+"tests/test_m5_rig_plate.py::test_pair_checks_both_source_hashes_and_same_pair_identity" = "78c1707f74a9cd071a324aeb67d3f229c462de754b9d4c6f04980543b7e2b77e"
+
+[[receipt]]
+id = "RCP-rig-plate-net-peak-pair-E"
+dimension = "E"
+subfamilies = ["load_cell_isometric.isometric_rig", "force_platform.single"]
+issue = "RES-704"
+claim = "Both arms use unfiltered baseline-corrected force and separate 100 ms endpoint RFD. Asymmetric nonlinear traces distinguish a shared or misdated endpoint. Scope is the four frozen rig-plate-net-peak-pair revision 1 cases, a single synthetic paired fixed-bar IMTP under declared direct-force and shared native 1000 Hz conditions."
+implementation = ["src/dynamisbench_soccer/m4/measurement.py::_rig_pair", "src/dynamisbench_soccer/m4/measurement.py::_rig_window", "src/dynamisbench_soccer/engines/load_cell_acquisition.py::acquire", "src/dynamisbench_soccer/engines/force_platform_acquisition.py::acquire"]
+reference = ["tests/test_m5_rig_plate.py::_closed_form", "tests/test_m5_rig_plate.py::_asymmetric_truth"]
+reference_kind = "closed_form"
+independence = "The prescribed ramp slopes, asymmetric nonlinear witness, deterministic differential bounds and refusal classes are independently derived without production outputs."
+tests = ["tests/test_m5_rig_plate.py::test_frozen_both_arms_reconstruct_independent_tares_peaks_and_rfd", "tests/test_m5_rig_plate.py::test_asymmetric_independent_onsets_different_peak_times_and_nominal_classification"]
+tolerance = 1e-08
+tolerance_unit = "N; N/s"
+tolerance_basis = "Slopes and signed peaks come from independent piecewise and quadratic descriptions. No smoothing or interpolation enters."
+check_kind = "numeric"
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/force_platform_acquisition.py::acquire" = "f5d6601ab3f1e987b0add265a1f5f73303eb4d1bc6c6dadda49864f6f36ce645"
+"src/dynamisbench_soccer/engines/load_cell_acquisition.py::acquire" = "d7c0808fcde88154aa4a71903348f8f5a19aa50f3edd6d0b938c66ad114f3cd8"
+"src/dynamisbench_soccer/m4/measurement.py::_rig_pair" = "6e5148574711816f7dce5b2a30bc9fc707141f9afc42b70b5f3eb27af90b43ba"
+"src/dynamisbench_soccer/m4/measurement.py::_rig_window" = "ca6cdcf53601b3a34db25807aca3e0737436488f6e32d879e8de332c85eb878b"
+"tests/test_m5_rig_plate.py::_asymmetric_truth" = "6d5d0003e7eeab0f1c82828c81b9d177c42174a440560eed31c1e666334f6faa"
+"tests/test_m5_rig_plate.py::_closed_form" = "13fa04ba3f461fd8a8b7348066a191ece60fb1d30fb1b07e08d9267fd13174f9"
+"tests/test_m5_rig_plate.py::test_asymmetric_independent_onsets_different_peak_times_and_nominal_classification" = "057164e70cc906cb3501ff6ec3aa60c9c20eed546e2815323ca243de79bc2293"
+"tests/test_m5_rig_plate.py::test_frozen_both_arms_reconstruct_independent_tares_peaks_and_rfd" = "ffe1d770ec1378fa8a122db90c4727406e259d7466d18e72036eff418a581b5c"
+
+[[receipt]]
+id = "RCP-rig-plate-net-peak-pair-F"
+dimension = "F"
+subfamilies = ["load_cell_isometric.isometric_rig", "force_platform.single"]
+issue = "RES-704"
+claim = "Native rig and platform processing reconstruct each independent net peak and RFD operand, with separate tare offsets and different reference slopes. Scope is the four frozen rig-plate-net-peak-pair revision 1 cases, a single synthetic paired fixed-bar IMTP under declared direct-force and shared native 1000 Hz conditions."
+implementation = ["src/dynamisbench_soccer/m4/measurement.py::_rig_pair", "src/dynamisbench_soccer/engines/load_cell_acquisition.py::acquire", "src/dynamisbench_soccer/engines/force_platform_acquisition.py::acquire"]
+reference = ["tests/test_m5_rig_plate.py::_closed_form", "tests/test_m5_rig_plate.py::_asymmetric_truth"]
+reference_kind = "closed_form"
+independence = "The prescribed ramp slopes, asymmetric nonlinear witness, deterministic differential bounds and refusal classes are independently derived without production outputs."
+tests = ["tests/test_m5_rig_plate.py::test_frozen_both_arms_reconstruct_independent_tares_peaks_and_rfd", "tests/test_m5_rig_plate.py::test_asymmetric_independent_onsets_different_peak_times_and_nominal_classification"]
+tolerance = 1e-08
+tolerance_unit = "N; N/s"
+tolerance_basis = "Independent fixed linear increments and sampled nonlinear excursions determine all four operands."
+check_kind = "numeric"
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/force_platform_acquisition.py::acquire" = "f5d6601ab3f1e987b0add265a1f5f73303eb4d1bc6c6dadda49864f6f36ce645"
+"src/dynamisbench_soccer/engines/load_cell_acquisition.py::acquire" = "d7c0808fcde88154aa4a71903348f8f5a19aa50f3edd6d0b938c66ad114f3cd8"
+"src/dynamisbench_soccer/m4/measurement.py::_rig_pair" = "6e5148574711816f7dce5b2a30bc9fc707141f9afc42b70b5f3eb27af90b43ba"
+"tests/test_m5_rig_plate.py::_asymmetric_truth" = "6d5d0003e7eeab0f1c82828c81b9d177c42174a440560eed31c1e666334f6faa"
+"tests/test_m5_rig_plate.py::_closed_form" = "13fa04ba3f461fd8a8b7348066a191ece60fb1d30fb1b07e08d9267fd13174f9"
+"tests/test_m5_rig_plate.py::test_asymmetric_independent_onsets_different_peak_times_and_nominal_classification" = "057164e70cc906cb3501ff6ec3aa60c9c20eed546e2815323ca243de79bc2293"
+"tests/test_m5_rig_plate.py::test_frozen_both_arms_reconstruct_independent_tares_peaks_and_rfd" = "ffe1d770ec1378fa8a122db90c4727406e259d7466d18e72036eff418a581b5c"
+
+[[receipt]]
+id = "RCP-rig-plate-net-peak-pair-G"
+dimension = "G"
+subfamilies = ["load_cell_isometric.isometric_rig", "force_platform.single"]
+issue = "RES-704"
+claim = "For each arm the first strict positive crossing follows the last baseline sample and is backdated by one sample to an eligible 100 ms native interval. Scope is the four frozen rig-plate-net-peak-pair revision 1 cases, a single synthetic paired fixed-bar IMTP under declared direct-force and shared native 1000 Hz conditions."
+implementation = ["src/dynamisbench_soccer/m4/measurement.py::_rig_pair", "src/dynamisbench_soccer/m4/measurement.py::_rig_window", "src/dynamisbench_soccer/engines/load_cell_acquisition.py::acquire", "src/dynamisbench_soccer/engines/force_platform_acquisition.py::acquire"]
+reference = ["tests/test_m5_rig_plate.py::_asymmetric_truth"]
+reference_kind = "closed_form"
+independence = "The prescribed ramp slopes, asymmetric nonlinear witness, deterministic differential bounds and refusal classes are independently derived without production outputs."
+tests = ["tests/test_m5_rig_plate.py::test_frozen_both_arms_reconstruct_independent_tares_peaks_and_rfd", "tests/test_m5_rig_plate.py::test_asymmetric_independent_onsets_different_peak_times_and_nominal_classification", "tests/test_m5_rig_plate.py::test_each_arm_needs_baseline_bracket_and_complete_window"]
+tolerance = 1e-08
+tolerance_unit = "N/s"
+tolerance_basis = "Independent non-simultaneous threshold witnesses detect wrong onset or endpoint. Unsupported brackets and short windows refuse."
+check_kind = "numeric"
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/force_platform_acquisition.py::acquire" = "f5d6601ab3f1e987b0add265a1f5f73303eb4d1bc6c6dadda49864f6f36ce645"
+"src/dynamisbench_soccer/engines/load_cell_acquisition.py::acquire" = "d7c0808fcde88154aa4a71903348f8f5a19aa50f3edd6d0b938c66ad114f3cd8"
+"src/dynamisbench_soccer/m4/measurement.py::_rig_pair" = "6e5148574711816f7dce5b2a30bc9fc707141f9afc42b70b5f3eb27af90b43ba"
+"src/dynamisbench_soccer/m4/measurement.py::_rig_window" = "ca6cdcf53601b3a34db25807aca3e0737436488f6e32d879e8de332c85eb878b"
+"tests/test_m5_rig_plate.py::_asymmetric_truth" = "6d5d0003e7eeab0f1c82828c81b9d177c42174a440560eed31c1e666334f6faa"
+"tests/test_m5_rig_plate.py::test_asymmetric_independent_onsets_different_peak_times_and_nominal_classification" = "057164e70cc906cb3501ff6ec3aa60c9c20eed546e2815323ca243de79bc2293"
+"tests/test_m5_rig_plate.py::test_each_arm_needs_baseline_bracket_and_complete_window" = "2072d8cf6a88fca91692c6e4fb8909ef333b001f93c8220490e65d5c8f55efa7"
+"tests/test_m5_rig_plate.py::test_frozen_both_arms_reconstruct_independent_tares_peaks_and_rfd" = "ffe1d770ec1378fa8a122db90c4727406e259d7466d18e72036eff418a581b5c"
+
+[[receipt]]
+id = "RCP-rig-plate-net-peak-pair-H"
+dimension = "H"
+subfamilies = ["load_cell_isometric.isometric_rig", "force_platform.single"]
+issue = "RES-704"
+claim = "The signed difference is rig net peak minus plate net peak. Asynchronous peaks and an uncertainty span crossing the nominal tolerance distinguish competing estimands and decisions. Scope is the four frozen rig-plate-net-peak-pair revision 1 cases, a single synthetic paired fixed-bar IMTP under declared direct-force and shared native 1000 Hz conditions."
+implementation = ["src/dynamisbench_soccer/m4/measurement.py::_rig_pair", "src/dynamisbench_soccer/engines/load_cell_acquisition.py::acquire", "src/dynamisbench_soccer/engines/force_platform_acquisition.py::acquire"]
+reference = ["tests/test_m5_rig_plate.py::_asymmetric_truth", "tests/test_m5_rig_plate.py::_closed_form"]
+reference_kind = "closed_form"
+independence = "The prescribed ramp slopes, asymmetric nonlinear witness, deterministic differential bounds and refusal classes are independently derived without production outputs."
+tests = ["tests/test_m5_rig_plate.py::test_frozen_both_arms_reconstruct_independent_tares_peaks_and_rfd", "tests/test_m5_rig_plate.py::test_asymmetric_independent_onsets_different_peak_times_and_nominal_classification"]
+tolerance = 1e-08
+tolerance_unit = "N"
+tolerance_basis = "Independent sign and peak selection checks at zero, negative and positive discrepancies. Classification uses the nominal tolerance."
+check_kind = "numeric"
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/force_platform_acquisition.py::acquire" = "f5d6601ab3f1e987b0add265a1f5f73303eb4d1bc6c6dadda49864f6f36ce645"
+"src/dynamisbench_soccer/engines/load_cell_acquisition.py::acquire" = "d7c0808fcde88154aa4a71903348f8f5a19aa50f3edd6d0b938c66ad114f3cd8"
+"src/dynamisbench_soccer/m4/measurement.py::_rig_pair" = "6e5148574711816f7dce5b2a30bc9fc707141f9afc42b70b5f3eb27af90b43ba"
+"tests/test_m5_rig_plate.py::_asymmetric_truth" = "6d5d0003e7eeab0f1c82828c81b9d177c42174a440560eed31c1e666334f6faa"
+"tests/test_m5_rig_plate.py::_closed_form" = "13fa04ba3f461fd8a8b7348066a191ece60fb1d30fb1b07e08d9267fd13174f9"
+"tests/test_m5_rig_plate.py::test_asymmetric_independent_onsets_different_peak_times_and_nominal_classification" = "057164e70cc906cb3501ff6ec3aa60c9c20eed546e2815323ca243de79bc2293"
+"tests/test_m5_rig_plate.py::test_frozen_both_arms_reconstruct_independent_tares_peaks_and_rfd" = "ffe1d770ec1378fa8a122db90c4727406e259d7466d18e72036eff418a581b5c"
+
+[[receipt]]
+id = "RCP-rig-plate-net-peak-pair-I"
+dimension = "I"
+subfamilies = ["load_cell_isometric.isometric_rig", "force_platform.single"]
+issue = "RES-704"
+claim = "Conditional absolute net-peak bounds on the two forces are summed as the worst case signed discrepancy shift, without distribution or independence assumptions. Scope is the four frozen rig-plate-net-peak-pair revision 1 cases, a single synthetic paired fixed-bar IMTP under declared direct-force and shared native 1000 Hz conditions."
+implementation = ["src/dynamisbench_soccer/m4/measurement.py::_rig_pair", "src/dynamisbench_soccer/engines/load_cell_acquisition.py::acquire", "src/dynamisbench_soccer/engines/force_platform_acquisition.py::acquire"]
+reference = ["tests/test_m5_rig_plate.py::_difference_bound"]
+reference_kind = "closed_form"
+independence = "The prescribed ramp slopes, asymmetric nonlinear witness, deterministic differential bounds and refusal classes are independently derived without production outputs."
+tests = ["tests/test_m5_rig_plate.py::test_declared_single_pair_bounds_do_not_supply_statistics", "tests/test_m5_rig_plate.py::test_asymmetric_independent_onsets_different_peak_times_and_nominal_classification"]
+tolerance = 1e-08
+tolerance_unit = "N"
+tolerance_basis = "Independent signed error corner enumeration gives the conditional radius for original and altered declarations."
+check_kind = "numeric"
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/force_platform_acquisition.py::acquire" = "f5d6601ab3f1e987b0add265a1f5f73303eb4d1bc6c6dadda49864f6f36ce645"
+"src/dynamisbench_soccer/engines/load_cell_acquisition.py::acquire" = "d7c0808fcde88154aa4a71903348f8f5a19aa50f3edd6d0b938c66ad114f3cd8"
+"src/dynamisbench_soccer/m4/measurement.py::_rig_pair" = "6e5148574711816f7dce5b2a30bc9fc707141f9afc42b70b5f3eb27af90b43ba"
+"tests/test_m5_rig_plate.py::_difference_bound" = "605270bc39f65f2e9cfa1f3d27cc2dacecfcc7675e4ca3150e8b536ad004f3f1"
+"tests/test_m5_rig_plate.py::test_asymmetric_independent_onsets_different_peak_times_and_nominal_classification" = "057164e70cc906cb3501ff6ec3aa60c9c20eed546e2815323ca243de79bc2293"
+"tests/test_m5_rig_plate.py::test_declared_single_pair_bounds_do_not_supply_statistics" = "a1a4280a4ea3e1af43417bddbf65abc52a8ca963a69d5ccbf2cce1f44d723bf6"
+
+[[receipt]]
+id = "RCP-rig-plate-net-peak-pair-J"
+dimension = "J"
+subfamilies = ["load_cell_isometric.isometric_rig", "force_platform.single"]
+issue = "RES-704"
+claim = "Independent sampled ramp laws and nonlinear asymmetric controls agree with native processing on both instrument arms without using production outputs as reference. Scope is the four frozen rig-plate-net-peak-pair revision 1 cases, a single synthetic paired fixed-bar IMTP under declared direct-force and shared native 1000 Hz conditions."
+implementation = ["src/dynamisbench_soccer/m4/measurement.py::_rig_pair", "src/dynamisbench_soccer/engines/load_cell_acquisition.py::acquire", "src/dynamisbench_soccer/engines/force_platform_acquisition.py::acquire"]
+reference = ["tests/test_m5_rig_plate.py::_closed_form", "tests/test_m5_rig_plate.py::_asymmetric_truth"]
+reference_kind = "closed_form"
+independence = "The prescribed ramp slopes, asymmetric nonlinear witness, deterministic differential bounds and refusal classes are independently derived without production outputs."
+tests = ["tests/test_m5_rig_plate.py::test_frozen_both_arms_reconstruct_independent_tares_peaks_and_rfd", "tests/test_m5_rig_plate.py::test_asymmetric_independent_onsets_different_peak_times_and_nominal_classification"]
+tolerance = 1e-08
+tolerance_unit = "N; N/s"
+tolerance_basis = "Independently prescribed traces supply the physical quantities and both signs. The external private key is separately authored."
+check_kind = "numeric"
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/force_platform_acquisition.py::acquire" = "f5d6601ab3f1e987b0add265a1f5f73303eb4d1bc6c6dadda49864f6f36ce645"
+"src/dynamisbench_soccer/engines/load_cell_acquisition.py::acquire" = "d7c0808fcde88154aa4a71903348f8f5a19aa50f3edd6d0b938c66ad114f3cd8"
+"src/dynamisbench_soccer/m4/measurement.py::_rig_pair" = "6e5148574711816f7dce5b2a30bc9fc707141f9afc42b70b5f3eb27af90b43ba"
+"tests/test_m5_rig_plate.py::_asymmetric_truth" = "6d5d0003e7eeab0f1c82828c81b9d177c42174a440560eed31c1e666334f6faa"
+"tests/test_m5_rig_plate.py::_closed_form" = "13fa04ba3f461fd8a8b7348066a191ece60fb1d30fb1b07e08d9267fd13174f9"
+"tests/test_m5_rig_plate.py::test_asymmetric_independent_onsets_different_peak_times_and_nominal_classification" = "057164e70cc906cb3501ff6ec3aa60c9c20eed546e2815323ca243de79bc2293"
+"tests/test_m5_rig_plate.py::test_frozen_both_arms_reconstruct_independent_tares_peaks_and_rfd" = "ffe1d770ec1378fa8a122db90c4727406e259d7466d18e72036eff418a581b5c"
+
+[[receipt]]
+id = "RCP-rig-plate-net-peak-pair-K"
+dimension = "K"
+subfamilies = ["load_cell_isometric.isometric_rig", "force_platform.single"]
+issue = "RES-704"
+claim = "The incompatible axis and unlinked clock cases refuse as prescribed. Additional transfer, trial, native rate, unbracketed onset and short-window faults fail closed. Scope is the four frozen rig-plate-net-peak-pair revision 1 cases, a single synthetic paired fixed-bar IMTP under declared direct-force and shared native 1000 Hz conditions."
+implementation = ["src/dynamisbench_soccer/m4/measurement.py::_rig_pair", "src/dynamisbench_soccer/m4/measurement.py::_rig_window", "src/dynamisbench_soccer/engines/load_cell_acquisition.py::acquire", "src/dynamisbench_soccer/engines/force_platform_acquisition.py::acquire"]
+reference = ["tests/test_m5_rig_plate.py::FAULTS"]
+reference_kind = "closed_form"
+independence = "The prescribed ramp slopes, asymmetric nonlinear witness, deterministic differential bounds and refusal classes are independently derived without production outputs."
+tests = ["tests/test_m5_rig_plate.py::test_frozen_rig_plate_refusals", "tests/test_m5_rig_plate.py::test_each_arm_needs_baseline_bracket_and_complete_window", "tests/test_m5_rig_plate.py::test_pair_checks_both_source_hashes_and_same_pair_identity"]
+tolerance = 0
+tolerance_unit = ""
+tolerance_basis = "Exact refusal classes and no computed result on unresolved inputs."
+check_kind = "categorical"
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/force_platform_acquisition.py::acquire" = "f5d6601ab3f1e987b0add265a1f5f73303eb4d1bc6c6dadda49864f6f36ce645"
+"src/dynamisbench_soccer/engines/load_cell_acquisition.py::acquire" = "d7c0808fcde88154aa4a71903348f8f5a19aa50f3edd6d0b938c66ad114f3cd8"
+"src/dynamisbench_soccer/m4/measurement.py::_rig_pair" = "6e5148574711816f7dce5b2a30bc9fc707141f9afc42b70b5f3eb27af90b43ba"
+"src/dynamisbench_soccer/m4/measurement.py::_rig_window" = "ca6cdcf53601b3a34db25807aca3e0737436488f6e32d879e8de332c85eb878b"
+"tests/test_m5_rig_plate.py::FAULTS" = "6d5a04c91d97677b9b854a66949188bb44e992e1f3993d5f32cdd14243a42a85"
+"tests/test_m5_rig_plate.py::test_each_arm_needs_baseline_bracket_and_complete_window" = "2072d8cf6a88fca91692c6e4fb8909ef333b001f93c8220490e65d5c8f55efa7"
+"tests/test_m5_rig_plate.py::test_frozen_rig_plate_refusals" = "d1c3a71e00fdca5951955e47a3f030b42feb5df5251bd0b71e081b5a83a20530"
+"tests/test_m5_rig_plate.py::test_pair_checks_both_source_hashes_and_same_pair_identity" = "78c1707f74a9cd071a324aeb67d3f229c462de754b9d4c6f04980543b7e2b77e"
+
+[[receipt]]
+id = "RCP-rig-plate-net-peak-pair-L"
+dimension = "L"
+subfamilies = ["load_cell_isometric.isometric_rig", "force_platform.single"]
+issue = "RES-704"
+claim = "The matched signs describe a single synthetic paired discrepancy. An incompatible pair is refused and no between-trial dispersion or empirical agreement is inferred. Scope is the four frozen rig-plate-net-peak-pair revision 1 cases, a single synthetic paired fixed-bar IMTP under declared direct-force and shared native 1000 Hz conditions."
+implementation = ["src/dynamisbench_soccer/m4/measurement.py::_rig_pair", "src/dynamisbench_soccer/engines/load_cell_acquisition.py::acquire", "src/dynamisbench_soccer/engines/force_platform_acquisition.py::acquire"]
+reference = ["tests/test_m5_rig_plate.py::_asymmetric_truth", "tests/test_m5_rig_plate.py::FAULTS"]
+reference_kind = "closed_form"
+independence = "The prescribed ramp slopes, asymmetric nonlinear witness, deterministic differential bounds and refusal classes are independently derived without production outputs."
+tests = ["tests/test_m5_rig_plate.py::test_frozen_both_arms_reconstruct_independent_tares_peaks_and_rfd", "tests/test_m5_rig_plate.py::test_asymmetric_independent_onsets_different_peak_times_and_nominal_classification", "tests/test_m5_rig_plate.py::test_frozen_rig_plate_refusals", "tests/test_m5_rig_plate.py::test_declared_single_pair_bounds_do_not_supply_statistics"]
+tolerance = 0
+tolerance_unit = ""
+tolerance_basis = "Exact comparison-type, variance-unavailable, hardware-unknown and refusal claims. RES-674 functions reject a single pair."
+check_kind = "categorical"
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/force_platform_acquisition.py::acquire" = "f5d6601ab3f1e987b0add265a1f5f73303eb4d1bc6c6dadda49864f6f36ce645"
+"src/dynamisbench_soccer/engines/load_cell_acquisition.py::acquire" = "d7c0808fcde88154aa4a71903348f8f5a19aa50f3edd6d0b938c66ad114f3cd8"
+"src/dynamisbench_soccer/m4/measurement.py::_rig_pair" = "6e5148574711816f7dce5b2a30bc9fc707141f9afc42b70b5f3eb27af90b43ba"
+"tests/test_m5_rig_plate.py::FAULTS" = "6d5a04c91d97677b9b854a66949188bb44e992e1f3993d5f32cdd14243a42a85"
+"tests/test_m5_rig_plate.py::_asymmetric_truth" = "6d5d0003e7eeab0f1c82828c81b9d177c42174a440560eed31c1e666334f6faa"
+"tests/test_m5_rig_plate.py::test_asymmetric_independent_onsets_different_peak_times_and_nominal_classification" = "057164e70cc906cb3501ff6ec3aa60c9c20eed546e2815323ca243de79bc2293"
+"tests/test_m5_rig_plate.py::test_declared_single_pair_bounds_do_not_supply_statistics" = "a1a4280a4ea3e1af43417bddbf65abc52a8ca963a69d5ccbf2cce1f44d723bf6"
+"tests/test_m5_rig_plate.py::test_frozen_both_arms_reconstruct_independent_tares_peaks_and_rfd" = "ffe1d770ec1378fa8a122db90c4727406e259d7466d18e72036eff418a581b5c"
+"tests/test_m5_rig_plate.py::test_frozen_rig_plate_refusals" = "d1c3a71e00fdca5951955e47a3f030b42feb5df5251bd0b71e081b5a83a20530"
+
+[[receipt]]
+id = "RCP-rig-plate-net-peak-pair-M"
+dimension = "M"
+subfamilies = ["load_cell_isometric.isometric_rig", "force_platform.single"]
+issue = "RES-704"
+claim = "Both internal source sample hashes and all frozen pair artifact identities are bound, with deterministic released input projection and no substitute sample source. Scope is the four frozen rig-plate-net-peak-pair revision 1 cases, a single synthetic paired fixed-bar IMTP under declared direct-force and shared native 1000 Hz conditions."
+implementation = ["src/dynamisbench_soccer/m4/measurement.py::_rig_pair", "src/dynamisbench_soccer/m4/measurement.py::_rig_bundle", "src/dynamisbench_soccer/engines/load_cell_acquisition.py::acquire", "src/dynamisbench_soccer/engines/force_platform_acquisition.py::acquire"]
+reference = ["tests/test_m5_rig_plate.py::_array_digest"]
+reference_kind = "closed_form"
+independence = "The prescribed ramp slopes, asymmetric nonlinear witness, deterministic differential bounds and refusal classes are independently derived without production outputs."
+tests = ["tests/test_m5_rig_plate.py::test_pair_checks_both_source_hashes_and_same_pair_identity", "tests/test_m5_rig_plate.py::test_frozen_both_arms_reconstruct_independent_tares_peaks_and_rfd"]
+tolerance = 0
+tolerance_unit = ""
+tolerance_basis = "SHA-256 consistency is exact. Sample substitution in either instrument and future checkpoint input exposure fail the controls."
+check_kind = "categorical"
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/force_platform_acquisition.py::acquire" = "f5d6601ab3f1e987b0add265a1f5f73303eb4d1bc6c6dadda49864f6f36ce645"
+"src/dynamisbench_soccer/engines/load_cell_acquisition.py::acquire" = "d7c0808fcde88154aa4a71903348f8f5a19aa50f3edd6d0b938c66ad114f3cd8"
+"src/dynamisbench_soccer/m4/measurement.py::_rig_bundle" = "f92ea4e13abb52b33b614b58d5697d9f22bebe3e691c19a2c422bbbd2961d8ad"
+"src/dynamisbench_soccer/m4/measurement.py::_rig_pair" = "6e5148574711816f7dce5b2a30bc9fc707141f9afc42b70b5f3eb27af90b43ba"
+"tests/test_m5_rig_plate.py::_array_digest" = "1cb7b952dac7dc3f2394a458dcb9847dd29f04bc61b7e4eb4a979d76911ee45f"
+"tests/test_m5_rig_plate.py::test_frozen_both_arms_reconstruct_independent_tares_peaks_and_rfd" = "ffe1d770ec1378fa8a122db90c4727406e259d7466d18e72036eff418a581b5c"
+"tests/test_m5_rig_plate.py::test_pair_checks_both_source_hashes_and_same_pair_identity" = "78c1707f74a9cd071a324aeb67d3f229c462de754b9d4c6f04980543b7e2b77e"
+
+[[receipt]]
+id = "RCP-rig-plate-net-peak-pair-O"
+dimension = "O"
+subfamilies = ["load_cell_isometric.isometric_rig", "force_platform.single"]
+issue = "RES-704"
+claim = "Mathematical equality and nominal synthetic discrepancy limits supply no measured agreement, reliability, rig compliance or instrument interchangeability claim. Scope is the four frozen rig-plate-net-peak-pair revision 1 cases, a single synthetic paired fixed-bar IMTP under declared direct-force and shared native 1000 Hz conditions."
+implementation = ["src/dynamisbench_soccer/m4/measurement.py::_rig_pair", "src/dynamisbench_soccer/engines/load_cell_acquisition.py::acquire", "src/dynamisbench_soccer/engines/force_platform_acquisition.py::acquire"]
+reference = ["tests/test_m5_rig_plate.py::_difference_bound", "tests/test_m5_rig_plate.py::FAULTS"]
+reference_kind = "closed_form"
+independence = "The prescribed ramp slopes, asymmetric nonlinear witness, deterministic differential bounds and refusal classes are independently derived without production outputs."
+tests = ["tests/test_m5_rig_plate.py::test_frozen_both_arms_reconstruct_independent_tares_peaks_and_rfd", "tests/test_m5_rig_plate.py::test_frozen_rig_plate_refusals", "tests/test_m5_rig_plate.py::test_declared_single_pair_bounds_do_not_supply_statistics"]
+tolerance = 0
+tolerance_unit = ""
+tolerance_basis = "Exact synthetic single-pair and interpretation-boundary claims, plus refusal to compute one-pair empirical statistics."
+check_kind = "categorical"
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/force_platform_acquisition.py::acquire" = "f5d6601ab3f1e987b0add265a1f5f73303eb4d1bc6c6dadda49864f6f36ce645"
+"src/dynamisbench_soccer/engines/load_cell_acquisition.py::acquire" = "d7c0808fcde88154aa4a71903348f8f5a19aa50f3edd6d0b938c66ad114f3cd8"
+"src/dynamisbench_soccer/m4/measurement.py::_rig_pair" = "6e5148574711816f7dce5b2a30bc9fc707141f9afc42b70b5f3eb27af90b43ba"
+"tests/test_m5_rig_plate.py::FAULTS" = "6d5a04c91d97677b9b854a66949188bb44e992e1f3993d5f32cdd14243a42a85"
+"tests/test_m5_rig_plate.py::_difference_bound" = "605270bc39f65f2e9cfa1f3d27cc2dacecfcc7675e4ca3150e8b536ad004f3f1"
+"tests/test_m5_rig_plate.py::test_declared_single_pair_bounds_do_not_supply_statistics" = "a1a4280a4ea3e1af43417bddbf65abc52a8ca963a69d5ccbf2cce1f44d723bf6"
+"tests/test_m5_rig_plate.py::test_frozen_both_arms_reconstruct_independent_tares_peaks_and_rfd" = "ffe1d770ec1378fa8a122db90c4727406e259d7466d18e72036eff418a581b5c"
+"tests/test_m5_rig_plate.py::test_frozen_rig_plate_refusals" = "d1c3a71e00fdca5951955e47a3f030b42feb5df5251bd0b71e081b5a83a20530"
