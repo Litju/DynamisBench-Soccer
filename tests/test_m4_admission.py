@@ -245,3 +245,29 @@ def test_frozen_lpt_requires_native_scope_and_its_own_missing_receipts():
     assert _check(task, review)[1] == (f"missing or incompatible receipt for A: {row.id}",)
     review.evidence.pop("A")
     assert _check(task, review)[1] == ("missing or invalid required evidence dimensions",)
+
+
+def test_frozen_encoder_requires_exact_scope_and_refuses_lpt_receipts():
+    task = load_registry(ROOT / "benchmark/tasks")["encoder-rollover-attachment", 1]
+    roles = REQUIRED["native_signal"]
+    review = _profile(task).model_copy(
+        update={
+            "kind": "native_signal",
+            "evidence": {role: ReceiptBinding(id="missing", sha256="0" * 64) for role in roles},
+            "inapplicable": {"G": "no event", "L": "one encoder"},
+        }
+    )
+    altered = task.model_copy(update={"grader": "measurement.v1"})
+    altered_review = review.model_copy(update={"task_sha256": fingerprint(altered)})
+    assert _check(altered, altered_review)[1] == (
+        "incompatible frozen native encoder task or review kind",
+    )
+    row = next(
+        row
+        for row in load(ROOT / "qualification/native_task_receipts.toml")
+        if row.id == "RCP-lpt-vertical-attachment-A"
+    )
+    review.evidence["A"] = ReceiptBinding(id=row.id, sha256=_receipt_digest(row))
+    assert _check(task, review)[1] == (f"missing or incompatible receipt for A: {row.id}",)
+    review.evidence.pop("C")
+    assert _check(task, review)[1] == ("missing or invalid required evidence dimensions",)

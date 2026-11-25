@@ -21,6 +21,7 @@ from dynamisbench_soccer.m4.grader import score_checkpoint
 from dynamisbench_soccer.m4.key_store import digest
 from dynamisbench_soccer.m4.measurement import (
     CELL_OPERATION,
+    ENCODER_OPERATION,
     IMU_POSITION,
     IMU_SIGNATURE,
     LPT_OPERATION,
@@ -193,7 +194,81 @@ def _controls(score, task, answers: dict, inputs: dict):
         )
 
     method = task.methods[0].id
-    if method == LPT_OPERATION:
+    if method == ENCODER_OPERATION:
+        data = json.loads(inputs[positive["selected_trials"][0]])
+        counts = data["channels"]["counts"]
+        direction = data["cable"]["count_direction"]
+        scale = data["meta"]["geometry"]["encoder_counts_per_m"]
+        endpoint_shortcut = (counts[-1] - counts[0]) * direction
+        for name, value in (
+            ("raw_endpoint_subtraction", endpoint_shortcut / scale),
+            ("direction_ignored", -quantity["value"]),
+            ("wrong_count_modulus", -23 / scale),
+            ("wrong_distance_scale", quantity["value"] / 2),
+            ("incorrect_vertical_projection", quantity["value"] / 0.8),
+        ):
+            scenarios.append(
+                (name, compute_id, positive | {"quantity": quantity | {"value": value}}, ("value",))
+            )
+        for name, field, value in (
+            ("unsigned_count_change", "signed_count_change", 24),
+            ("interior_wrap_ignored", "signed_count_change", endpoint_shortcut),
+            ("wrong_native_elapsed", "elapsed_s", 0.14),
+            ("end_count_as_cable_change", "cable_displacement_m", counts[-1] / scale),
+            ("absolute_value_velocity", "mean_vertical_velocity_m_s", 0.5),
+        ):
+            operands = [
+                item | {"value": value} if item["field"] == field else item
+                for item in positive["operands"]
+            ]
+            scenarios.append((name, compute_id, positive | {"operands": operands}, ("derivation",)))
+        scenarios.extend(
+            (
+                (
+                    "reordered_encoder_operands",
+                    compute_id,
+                    positive
+                    | {
+                        "operands": positive["operands"][::-1],
+                    },
+                    (),
+                ),
+                (
+                    "one_half_count_only",
+                    compute_id,
+                    positive
+                    | {
+                        "quantity": quantity | {"uncertainty": 0.5 / scale},
+                    },
+                    ("uncertainty",),
+                ),
+                (
+                    "attachment_as_whole_athlete_com",
+                    compute_id,
+                    positive
+                    | {
+                        "quantity": quantity | {"estimand": "whole_athlete_com_displacement"},
+                    },
+                    ("estimand",),
+                ),
+                (
+                    "unsupported_whole_athlete_com_claim",
+                    compute_id,
+                    positive
+                    | {
+                        "claims": positive["claims"] + ["whole_athlete_com_observed"],
+                    },
+                    ("interpretation_boundary",),
+                ),
+                (
+                    "valid_endpoints_hide_invalid_increments",
+                    "c05",
+                    positive,
+                    ("eligibility_or_refusal",),
+                ),
+            )
+        )
+    elif method == LPT_OPERATION:
         data = json.loads(inputs[positive["selected_trials"][0]])
         angle = data["meta"]["acquisition"]["sources"][0]["geometry"]["cable_angle_rad"]
         cable_speed = next(

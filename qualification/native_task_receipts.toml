@@ -412,3 +412,253 @@ check_kind = "numeric"
 "tests/test_m5_lpt.py::test_frozen_native_lpt_matches_closed_form_and_engine" = "3f716efea9b7098adfddbb1f9c317e6528b13225d01162966f254a404f38ed78"
 "tests/test_m5_lpt.py::test_lpt_rejects_stale_channels_calibration_clock_and_invalid_power" = "2d7df3d06d8c881613dd7af9a360ded99a22775d3cbab9648e9ca6f69821f6a1"
 "tests/test_m5_lpt.py::test_nonlinear_and_signed_reference_controls" = "779d3bed52c7edea952dc7bba29eb90282d5f6ab355cf0567e9f204be1375534"
+
+[[receipt]]
+id = "RCP-encoder-rollover-attachment-A"
+dimension = "A"
+subfamilies = ["lpt_encoder.encoder"]
+issue = "RES-704"
+claim = "Canonical source-owned integer residues, native time, encoder identity, identity calibration and exact source-channel hashes are verified. Scope is encoder-rollover-attachment revision 1, the frozen synthetic single bar encoder on its explicit 50 Hz native grid."
+implementation = ["src/dynamisbench_soccer/m4/measurement.py::_encoder", "src/dynamisbench_soccer/engines/lpt_acquisition.py::_read_cable"]
+reference = ["tests/test_m5_encoder.py::_channel_hash"]
+reference_kind = "closed_form"
+independence = "Integer lift enumeration, rational distance and quantization, declared source hashes and fixture fault classes were derived independently of the production encoder pipeline."
+tests = ["tests/test_m5_encoder.py::test_frozen_signed_encoder_matches_independent_forward_counts", "tests/test_m5_encoder.py::test_native_counter_refuses_invalid_residues", "tests/test_m5_encoder.py::test_frozen_encoder_canonical_sources_and_candidate_release"]
+tolerance = 0
+tolerance_unit = ""
+tolerance_basis = "Native columns, count integer/range failures, and source data digests are categorical."
+check_kind = "categorical"
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/lpt_acquisition.py::_read_cable" = "c0dce2730596d98bf296d223117ecc76252f87b361eb3529239fe932c9e9a490"
+"src/dynamisbench_soccer/m4/measurement.py::_encoder" = "ed72e8d24472faf5a57e92789cd65e9f573f2b4a7d48fc7b2236dfac7e08d478"
+"tests/test_m5_encoder.py::_channel_hash" = "a7cc5bc005bf39702d179db7e7cf347eb9e5d54cdc5828b7e8f40200314abb59"
+"tests/test_m5_encoder.py::test_frozen_encoder_canonical_sources_and_candidate_release" = "ed9f2fea63c3f10d5000c208f615f041a329ffb4cea5182d4fd6b67eca845d0e"
+"tests/test_m5_encoder.py::test_frozen_signed_encoder_matches_independent_forward_counts" = "33d87f26dd6d88b030ec1b209351f1a50b05278c9a308d6170af5c57ab2a4647"
+"tests/test_m5_encoder.py::test_native_counter_refuses_invalid_residues" = "eef96a38573cbec759ad84bb5c4d98af162ca90d86dc3b68340962f5e6a9af22"
+
+[[receipt]]
+id = "RCP-encoder-rollover-attachment-C"
+dimension = "C"
+subfamilies = ["lpt_encoder.encoder"]
+issue = "RES-704"
+claim = "Native sampling and endpoint elapsed time follow the explicit complete 50 Hz grid. Duplicate, jittered and missing samples invalidate the exact reference. Scope is encoder-rollover-attachment revision 1, the frozen synthetic single bar encoder on its explicit 50 Hz native grid."
+implementation = ["src/dynamisbench_soccer/m4/measurement.py::_encoder", "src/dynamisbench_soccer/engines/lpt_acquisition.py::_common_time"]
+reference = ["tests/test_m5_encoder.py::_independent_truth"]
+reference_kind = "closed_form"
+independence = "Integer lift enumeration, rational distance and quantization, declared source hashes and fixture fault classes were derived independently of the production encoder pipeline."
+tests = ["tests/test_m5_encoder.py::test_frozen_signed_encoder_matches_independent_forward_counts", "tests/test_m5_encoder.py::test_independent_reverse_boundary_and_full_turn", "tests/test_m5_encoder.py::test_native_counter_refuses_duplicate_jitter_and_gap"]
+tolerance = 1e-09
+tolerance_unit = "s"
+tolerance_basis = "Index difference divided by 50 gives the independent elapsed time, including a shifted origin. Grid faults are categorical."
+check_kind = "numeric"
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/lpt_acquisition.py::_common_time" = "deb9276ca8aa5d2d7f3f53b1f7aacac1e901fc110f89eb15a307b7ca58a94a03"
+"src/dynamisbench_soccer/m4/measurement.py::_encoder" = "ed72e8d24472faf5a57e92789cd65e9f573f2b4a7d48fc7b2236dfac7e08d478"
+"tests/test_m5_encoder.py::_independent_truth" = "2be7a177ff5ef0126424a9efdd5bba93d24b3480afed9fde3755966f7340b959"
+"tests/test_m5_encoder.py::test_frozen_signed_encoder_matches_independent_forward_counts" = "33d87f26dd6d88b030ec1b209351f1a50b05278c9a308d6170af5c57ab2a4647"
+"tests/test_m5_encoder.py::test_independent_reverse_boundary_and_full_turn" = "b15fdc5b6c4f433410a15fbc7e1b8245cf48dd0a5e585220496b9bbc472118ec"
+"tests/test_m5_encoder.py::test_native_counter_refuses_duplicate_jitter_and_gap" = "248e95d43bcb7fc3935322163e94731b26e58805dfcb5cb2a8ae683c6781045c"
+
+[[receipt]]
+id = "RCP-encoder-rollover-attachment-D"
+dimension = "D"
+subfamilies = ["lpt_encoder.encoder"]
+issue = "RES-704"
+claim = "Raw residues and counter origin must fall inside the declared modulus. The strict global half-turn criterion and actual per-interval limits both apply. Scope is encoder-rollover-attachment revision 1, the frozen synthetic single bar encoder on its explicit 50 Hz native grid."
+implementation = ["src/dynamisbench_soccer/m4/measurement.py::_encoder", "src/dynamisbench_soccer/engines/lpt_acquisition.py::_unwrap_counts", "src/dynamisbench_soccer/engines/lpt_acquisition.py::_read_cable"]
+reference = ["tests/test_m5_encoder.py::_allowed_lifts", "tests/test_m5_encoder.py::ENCODER_REFUSALS"]
+reference_kind = "closed_form"
+independence = "Integer lift enumeration, rational distance and quantization, declared source hashes and fixture fault classes were derived independently of the production encoder pipeline."
+tests = ["tests/test_m5_encoder.py::test_frozen_signed_encoder_matches_independent_forward_counts", "tests/test_m5_encoder.py::test_frozen_encoder_refusals", "tests/test_m5_encoder.py::test_true_half_turn_tie_and_frozen_global_guard", "tests/test_m5_encoder.py::test_native_counter_refuses_invalid_residues"]
+tolerance = 0
+tolerance_unit = ""
+tolerance_basis = "Integer residue/range, global ambiguity and invalid observed step outcomes match exact predicates."
+check_kind = "categorical"
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/lpt_acquisition.py::_read_cable" = "c0dce2730596d98bf296d223117ecc76252f87b361eb3529239fe932c9e9a490"
+"src/dynamisbench_soccer/engines/lpt_acquisition.py::_unwrap_counts" = "0e6896e5e572d3f2ff6a2a3b58be6d1fb54ad25a2acf39f557c1c53f0fb2c416"
+"src/dynamisbench_soccer/m4/measurement.py::_encoder" = "ed72e8d24472faf5a57e92789cd65e9f573f2b4a7d48fc7b2236dfac7e08d478"
+"tests/test_m5_encoder.py::ENCODER_REFUSALS" = "057f72a8fcb6288e4a71d025bf72737a1f8a21ee89d1e25457e32f4916e336a1"
+"tests/test_m5_encoder.py::_allowed_lifts" = "cca3acd0477534421c4e2291b7f14d035d9ae0febf80005c6583982835c68639"
+"tests/test_m5_encoder.py::test_frozen_encoder_refusals" = "9c4e236206c0bfa6b202465dd8404e0b8456c752d5c499783523136bff00bd8f"
+"tests/test_m5_encoder.py::test_frozen_signed_encoder_matches_independent_forward_counts" = "33d87f26dd6d88b030ec1b209351f1a50b05278c9a308d6170af5c57ab2a4647"
+"tests/test_m5_encoder.py::test_native_counter_refuses_invalid_residues" = "eef96a38573cbec759ad84bb5c4d98af162ca90d86dc3b68340962f5e6a9af22"
+"tests/test_m5_encoder.py::test_true_half_turn_tie_and_frozen_global_guard" = "5d9bacb68cf9173e21928500730bc8575f4975643033261887414ce70bd1baad"
+
+[[receipt]]
+id = "RCP-encoder-rollover-attachment-E"
+dimension = "E"
+subfamilies = ["lpt_encoder.encoder"]
+issue = "RES-704"
+claim = "Signed modular unwrapping precedes direction and scale conversion. Positive and negative electronic boundary crossings and a signed full turn agree with exact integer lifts. Scope is encoder-rollover-attachment revision 1, the frozen synthetic single bar encoder on its explicit 50 Hz native grid."
+implementation = ["src/dynamisbench_soccer/m4/measurement.py::_encoder", "src/dynamisbench_soccer/engines/lpt_acquisition.py::_unwrap_counts"]
+reference = ["tests/test_m5_encoder.py::_allowed_lifts", "tests/test_m5_encoder.py::_independent_truth"]
+reference_kind = "closed_form"
+independence = "Integer lift enumeration, rational distance and quantization, declared source hashes and fixture fault classes were derived independently of the production encoder pipeline."
+tests = ["tests/test_m5_encoder.py::test_frozen_signed_encoder_matches_independent_forward_counts", "tests/test_m5_encoder.py::test_independent_reverse_boundary_and_full_turn", "tests/test_m5_encoder.py::test_true_half_turn_tie_and_frozen_global_guard"]
+tolerance = 1e-09
+tolerance_unit = "count"
+tolerance_basis = "Independent enumerated lifts give the exact signed integer change, including identical endpoint residues after one turn."
+check_kind = "numeric"
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/lpt_acquisition.py::_unwrap_counts" = "0e6896e5e572d3f2ff6a2a3b58be6d1fb54ad25a2acf39f557c1c53f0fb2c416"
+"src/dynamisbench_soccer/m4/measurement.py::_encoder" = "ed72e8d24472faf5a57e92789cd65e9f573f2b4a7d48fc7b2236dfac7e08d478"
+"tests/test_m5_encoder.py::_allowed_lifts" = "cca3acd0477534421c4e2291b7f14d035d9ae0febf80005c6583982835c68639"
+"tests/test_m5_encoder.py::_independent_truth" = "2be7a177ff5ef0126424a9efdd5bba93d24b3480afed9fde3755966f7340b959"
+"tests/test_m5_encoder.py::test_frozen_signed_encoder_matches_independent_forward_counts" = "33d87f26dd6d88b030ec1b209351f1a50b05278c9a308d6170af5c57ab2a4647"
+"tests/test_m5_encoder.py::test_independent_reverse_boundary_and_full_turn" = "b15fdc5b6c4f433410a15fbc7e1b8245cf48dd0a5e585220496b9bbc472118ec"
+"tests/test_m5_encoder.py::test_true_half_turn_tie_and_frozen_global_guard" = "5d9bacb68cf9173e21928500730bc8575f4975643033261887414ce70bd1baad"
+
+[[receipt]]
+id = "RCP-encoder-rollover-attachment-F"
+dimension = "F"
+subfamilies = ["lpt_encoder.encoder"]
+issue = "RES-704"
+claim = "Relative cable displacement, vertical projection and signed mean velocity reconstruct independently derived values on three positive traces. Scope is encoder-rollover-attachment revision 1, the frozen synthetic single bar encoder on its explicit 50 Hz native grid."
+implementation = ["src/dynamisbench_soccer/m4/measurement.py::_encoder", "src/dynamisbench_soccer/engines/lpt_acquisition.py::acquire", "src/dynamisbench_soccer/engines/lpt_acquisition.py::vertical"]
+reference = ["tests/test_m5_encoder.py::_independent_truth"]
+reference_kind = "closed_form"
+independence = "Integer lift enumeration, rational distance and quantization, declared source hashes and fixture fault classes were derived independently of the production encoder pipeline."
+tests = ["tests/test_m5_encoder.py::test_frozen_signed_encoder_matches_independent_forward_counts", "tests/test_m5_encoder.py::test_independent_reverse_boundary_and_full_turn"]
+tolerance = 1e-09
+tolerance_unit = "m; m/s"
+tolerance_basis = "Exact rational endpoint transformation and expected native elapsed time supply the physical references."
+check_kind = "numeric"
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/lpt_acquisition.py::acquire" = "9980148ba8cdc54b945261a11e8747425e1209f700bfb319727c8139976f3358"
+"src/dynamisbench_soccer/engines/lpt_acquisition.py::vertical" = "f227f82bb1341a002130be3b266bf023999a66673902f99758b2d591f27f436e"
+"src/dynamisbench_soccer/m4/measurement.py::_encoder" = "ed72e8d24472faf5a57e92789cd65e9f573f2b4a7d48fc7b2236dfac7e08d478"
+"tests/test_m5_encoder.py::_independent_truth" = "2be7a177ff5ef0126424a9efdd5bba93d24b3480afed9fde3755966f7340b959"
+"tests/test_m5_encoder.py::test_frozen_signed_encoder_matches_independent_forward_counts" = "33d87f26dd6d88b030ec1b209351f1a50b05278c9a308d6170af5c57ab2a4647"
+"tests/test_m5_encoder.py::test_independent_reverse_boundary_and_full_turn" = "b15fdc5b6c4f433410a15fbc7e1b8245cf48dd0a5e585220496b9bbc472118ec"
+
+[[receipt]]
+id = "RCP-encoder-rollover-attachment-H"
+dimension = "H"
+subfamilies = ["lpt_encoder.encoder"]
+issue = "RES-704"
+claim = "The graded estimand is signed vertical change of the bar attachment. Cable distance and mean vertical velocity remain distinct and COM inference is refused. Scope is encoder-rollover-attachment revision 1, the frozen synthetic single bar encoder on its explicit 50 Hz native grid."
+implementation = ["src/dynamisbench_soccer/m4/measurement.py::_encoder", "src/dynamisbench_soccer/engines/lpt_acquisition.py::vertical"]
+reference = ["tests/test_m5_encoder.py::_independent_truth", "tests/test_m5_encoder.py::ENCODER_REFUSALS"]
+reference_kind = "closed_form"
+independence = "Integer lift enumeration, rational distance and quantization, declared source hashes and fixture fault classes were derived independently of the production encoder pipeline."
+tests = ["tests/test_m5_encoder.py::test_frozen_signed_encoder_matches_independent_forward_counts", "tests/test_m5_encoder.py::test_independent_reverse_boundary_and_full_turn", "tests/test_m5_encoder.py::test_frozen_encoder_refusals", "tests/test_m5_encoder.py::test_encoder_refuses_whole_athlete_com_interpretation"]
+tolerance = 1e-09
+tolerance_unit = "m"
+tolerance_basis = "Independent rational length projection and signed velocity check the operands. Unsupported COM interpretation is categorical."
+check_kind = "numeric"
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/lpt_acquisition.py::vertical" = "f227f82bb1341a002130be3b266bf023999a66673902f99758b2d591f27f436e"
+"src/dynamisbench_soccer/m4/measurement.py::_encoder" = "ed72e8d24472faf5a57e92789cd65e9f573f2b4a7d48fc7b2236dfac7e08d478"
+"tests/test_m5_encoder.py::ENCODER_REFUSALS" = "057f72a8fcb6288e4a71d025bf72737a1f8a21ee89d1e25457e32f4916e336a1"
+"tests/test_m5_encoder.py::_independent_truth" = "2be7a177ff5ef0126424a9efdd5bba93d24b3480afed9fde3755966f7340b959"
+"tests/test_m5_encoder.py::test_encoder_refuses_whole_athlete_com_interpretation" = "4a02ffd2bc2604f6a7eecfebb51a1d66d5443bd6ec1439e5ba68f1abd77c34aa"
+"tests/test_m5_encoder.py::test_frozen_encoder_refusals" = "9c4e236206c0bfa6b202465dd8404e0b8456c752d5c499783523136bff00bd8f"
+"tests/test_m5_encoder.py::test_frozen_signed_encoder_matches_independent_forward_counts" = "33d87f26dd6d88b030ec1b209351f1a50b05278c9a308d6170af5c57ab2a4647"
+"tests/test_m5_encoder.py::test_independent_reverse_boundary_and_full_turn" = "b15fdc5b6c4f433410a15fbc7e1b8245cf48dd0a5e585220496b9bbc472118ec"
+
+[[receipt]]
+id = "RCP-encoder-rollover-attachment-I"
+dimension = "I"
+subfamilies = ["lpt_encoder.encoder"]
+issue = "RES-704"
+claim = "Two half-count endpoint errors give a one-count maximum span error divided by counts per metre and the declared direction cosine. Scope is encoder-rollover-attachment revision 1, the frozen synthetic single bar encoder on its explicit 50 Hz native grid."
+implementation = ["src/dynamisbench_soccer/m4/measurement.py::_encoder", "src/dynamisbench_soccer/engines/lpt_acquisition.py::vertical"]
+reference = ["tests/test_m5_encoder.py::_independent_truth"]
+reference_kind = "closed_form"
+independence = "Integer lift enumeration, rational distance and quantization, declared source hashes and fixture fault classes were derived independently of the production encoder pipeline."
+tests = ["tests/test_m5_encoder.py::test_frozen_signed_encoder_matches_independent_forward_counts", "tests/test_m5_encoder.py::test_independent_reverse_boundary_and_full_turn"]
+tolerance = 1e-09
+tolerance_unit = "m"
+tolerance_basis = "Unit endpoint count radius divided by scale and the direction cosine matches the independent rational geometry."
+check_kind = "numeric"
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/lpt_acquisition.py::vertical" = "f227f82bb1341a002130be3b266bf023999a66673902f99758b2d591f27f436e"
+"src/dynamisbench_soccer/m4/measurement.py::_encoder" = "ed72e8d24472faf5a57e92789cd65e9f573f2b4a7d48fc7b2236dfac7e08d478"
+"tests/test_m5_encoder.py::_independent_truth" = "2be7a177ff5ef0126424a9efdd5bba93d24b3480afed9fde3755966f7340b959"
+"tests/test_m5_encoder.py::test_frozen_signed_encoder_matches_independent_forward_counts" = "33d87f26dd6d88b030ec1b209351f1a50b05278c9a308d6170af5c57ab2a4647"
+"tests/test_m5_encoder.py::test_independent_reverse_boundary_and_full_turn" = "b15fdc5b6c4f433410a15fbc7e1b8245cf48dd0a5e585220496b9bbc472118ec"
+
+[[receipt]]
+id = "RCP-encoder-rollover-attachment-J"
+dimension = "J"
+subfamilies = ["lpt_encoder.encoder"]
+issue = "RES-704"
+claim = "Native reconstruction and both supplementary numerical controls agree with an independent lift enumeration and rational projection, with no engine code in the reference. Scope is encoder-rollover-attachment revision 1, the frozen synthetic single bar encoder on its explicit 50 Hz native grid."
+implementation = ["src/dynamisbench_soccer/m4/measurement.py::_encoder", "src/dynamisbench_soccer/engines/lpt_acquisition.py::acquire"]
+reference = ["tests/test_m5_encoder.py::_allowed_lifts", "tests/test_m5_encoder.py::_independent_truth"]
+reference_kind = "closed_form"
+independence = "Integer lift enumeration, rational distance and quantization, declared source hashes and fixture fault classes were derived independently of the production encoder pipeline."
+tests = ["tests/test_m5_encoder.py::test_frozen_signed_encoder_matches_independent_forward_counts", "tests/test_m5_encoder.py::test_independent_reverse_boundary_and_full_turn", "tests/test_m5_encoder.py::test_true_half_turn_tie_and_frozen_global_guard"]
+tolerance = 1e-09
+tolerance_unit = "m"
+tolerance_basis = "Expected physical values use forward residue examples, exhaustive local lift enumeration, and rational scaling."
+check_kind = "numeric"
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/lpt_acquisition.py::acquire" = "9980148ba8cdc54b945261a11e8747425e1209f700bfb319727c8139976f3358"
+"src/dynamisbench_soccer/m4/measurement.py::_encoder" = "ed72e8d24472faf5a57e92789cd65e9f573f2b4a7d48fc7b2236dfac7e08d478"
+"tests/test_m5_encoder.py::_allowed_lifts" = "cca3acd0477534421c4e2291b7f14d035d9ae0febf80005c6583982835c68639"
+"tests/test_m5_encoder.py::_independent_truth" = "2be7a177ff5ef0126424a9efdd5bba93d24b3480afed9fde3755966f7340b959"
+"tests/test_m5_encoder.py::test_frozen_signed_encoder_matches_independent_forward_counts" = "33d87f26dd6d88b030ec1b209351f1a50b05278c9a308d6170af5c57ab2a4647"
+"tests/test_m5_encoder.py::test_independent_reverse_boundary_and_full_turn" = "b15fdc5b6c4f433410a15fbc7e1b8245cf48dd0a5e585220496b9bbc472118ec"
+"tests/test_m5_encoder.py::test_true_half_turn_tie_and_frozen_global_guard" = "5d9bacb68cf9173e21928500730bc8575f4975643033261887414ce70bd1baad"
+
+[[receipt]]
+id = "RCP-encoder-rollover-attachment-K"
+dimension = "K"
+subfamilies = ["lpt_encoder.encoder"]
+issue = "RES-704"
+claim = "The four frozen fault decisions and supplementary integer, timing and true half-turn controls refuse invalid or underdetermined computation. Scope is encoder-rollover-attachment revision 1, the frozen synthetic single bar encoder on its explicit 50 Hz native grid."
+implementation = ["src/dynamisbench_soccer/m4/measurement.py::_encoder", "src/dynamisbench_soccer/engines/lpt_acquisition.py::_unwrap_counts"]
+reference = ["tests/test_m5_encoder.py::ENCODER_REFUSALS", "tests/test_m5_encoder.py::_allowed_lifts"]
+reference_kind = "closed_form"
+independence = "Integer lift enumeration, rational distance and quantization, declared source hashes and fixture fault classes were derived independently of the production encoder pipeline."
+tests = ["tests/test_m5_encoder.py::test_frozen_encoder_refusals", "tests/test_m5_encoder.py::test_true_half_turn_tie_and_frozen_global_guard", "tests/test_m5_encoder.py::test_native_counter_refuses_invalid_residues", "tests/test_m5_encoder.py::test_native_counter_refuses_duplicate_jitter_and_gap", "tests/test_m5_encoder.py::test_encoder_refuses_whole_athlete_com_interpretation"]
+tolerance = 0
+tolerance_unit = ""
+tolerance_basis = "The frozen reasons and absence of quantities, and supplemental malformed-input or ambiguity decisions, are exact."
+check_kind = "categorical"
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/lpt_acquisition.py::_unwrap_counts" = "0e6896e5e572d3f2ff6a2a3b58be6d1fb54ad25a2acf39f557c1c53f0fb2c416"
+"src/dynamisbench_soccer/m4/measurement.py::_encoder" = "ed72e8d24472faf5a57e92789cd65e9f573f2b4a7d48fc7b2236dfac7e08d478"
+"tests/test_m5_encoder.py::ENCODER_REFUSALS" = "057f72a8fcb6288e4a71d025bf72737a1f8a21ee89d1e25457e32f4916e336a1"
+"tests/test_m5_encoder.py::_allowed_lifts" = "cca3acd0477534421c4e2291b7f14d035d9ae0febf80005c6583982835c68639"
+"tests/test_m5_encoder.py::test_encoder_refuses_whole_athlete_com_interpretation" = "4a02ffd2bc2604f6a7eecfebb51a1d66d5443bd6ec1439e5ba68f1abd77c34aa"
+"tests/test_m5_encoder.py::test_frozen_encoder_refusals" = "9c4e236206c0bfa6b202465dd8404e0b8456c752d5c499783523136bff00bd8f"
+"tests/test_m5_encoder.py::test_native_counter_refuses_duplicate_jitter_and_gap" = "248e95d43bcb7fc3935322163e94731b26e58805dfcb5cb2a8ae683c6781045c"
+"tests/test_m5_encoder.py::test_native_counter_refuses_invalid_residues" = "eef96a38573cbec759ad84bb5c4d98af162ca90d86dc3b68340962f5e6a9af22"
+"tests/test_m5_encoder.py::test_true_half_turn_tie_and_frozen_global_guard" = "5d9bacb68cf9173e21928500730bc8575f4975643033261887414ce70bd1baad"
+
+[[receipt]]
+id = "RCP-encoder-rollover-attachment-O"
+dimension = "O"
+subfamilies = ["lpt_encoder.encoder"]
+issue = "RES-704"
+claim = "The source identifies an attachment point and conditional quantization bound. A synthetic encoder cannot establish athlete whole-body COM motion. Scope is encoder-rollover-attachment revision 1, the frozen synthetic single bar encoder on its explicit 50 Hz native grid."
+implementation = ["src/dynamisbench_soccer/m4/measurement.py::_encoder", "src/dynamisbench_soccer/engines/lpt_acquisition.py::vertical"]
+reference = ["tests/test_m5_encoder.py::ENCODER_REFUSALS", "tests/test_m5_encoder.py::_independent_truth"]
+reference_kind = "closed_form"
+independence = "Integer lift enumeration, rational distance and quantization, declared source hashes and fixture fault classes were derived independently of the production encoder pipeline."
+tests = ["tests/test_m5_encoder.py::test_frozen_signed_encoder_matches_independent_forward_counts", "tests/test_m5_encoder.py::test_frozen_encoder_refusals", "tests/test_m5_encoder.py::test_encoder_refuses_whole_athlete_com_interpretation"]
+tolerance = 0
+tolerance_unit = ""
+tolerance_basis = "Missing geometry withholds vertical inference, and the intact source still refuses a whole-athlete COM interpretation."
+check_kind = "categorical"
+
+[receipt.digests]
+"src/dynamisbench_soccer/engines/lpt_acquisition.py::vertical" = "f227f82bb1341a002130be3b266bf023999a66673902f99758b2d591f27f436e"
+"src/dynamisbench_soccer/m4/measurement.py::_encoder" = "ed72e8d24472faf5a57e92789cd65e9f573f2b4a7d48fc7b2236dfac7e08d478"
+"tests/test_m5_encoder.py::ENCODER_REFUSALS" = "057f72a8fcb6288e4a71d025bf72737a1f8a21ee89d1e25457e32f4916e336a1"
+"tests/test_m5_encoder.py::_independent_truth" = "2be7a177ff5ef0126424a9efdd5bba93d24b3480afed9fde3755966f7340b959"
+"tests/test_m5_encoder.py::test_encoder_refuses_whole_athlete_com_interpretation" = "4a02ffd2bc2604f6a7eecfebb51a1d66d5443bd6ec1439e5ba68f1abd77c34aa"
+"tests/test_m5_encoder.py::test_frozen_encoder_refusals" = "9c4e236206c0bfa6b202465dd8404e0b8456c752d5c499783523136bff00bd8f"
+"tests/test_m5_encoder.py::test_frozen_signed_encoder_matches_independent_forward_counts" = "33d87f26dd6d88b030ec1b209351f1a50b05278c9a308d6170af5c57ab2a4647"

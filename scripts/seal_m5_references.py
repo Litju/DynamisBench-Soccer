@@ -33,6 +33,7 @@ from dynamisbench_soccer.m4.grader import (
 from dynamisbench_soccer.m4.key_store import digest
 from dynamisbench_soccer.m4.measurement import (
     CELL_OPERATION,
+    ENCODER_OPERATION,
     LPT_OPERATION,
     PROCEDURES,
     checkpoint_methods,
@@ -74,6 +75,8 @@ def _custody_family(task: RegistryTask) -> str:
         return "native"
     if is_imu_episode(task):
         return "imu"
+    if task.methods[0].id == ENCODER_OPERATION:
+        return "encoder"
     if task.methods[0].id == LPT_OPERATION:
         return "lpt"
     if task.methods[0].id == CELL_OPERATION:
@@ -182,7 +185,7 @@ def main() -> None:
                     parser.error(f"missing scoped native task receipt {identifier}")
                 selected[role] = native_receipts[identifier]
                 continue
-            if family in {"timing", "native", "cell", "imu", "lpt"}:
+            if family in {"timing", "native", "cell", "imu", "lpt", "encoder"}:
                 suffix = ""
             elif family == "paired" and role in {"L", "I"}:
                 suffix = "-paired-speed"
@@ -205,8 +208,8 @@ def main() -> None:
                 "benchmark/tasks/imu-frame-observability.json",
                 "docs/verification/m5-res704-imu.md",
             )
-        if family == "lpt":
-            additional += ("docs/verification/m5-res704-lpt.md",)
+        if family in {"lpt", "encoder"}:
+            additional += (f"docs/verification/m5-res704-{family}.md",)
         bound = {
             path.relative_to(ROOT).as_posix()
             for directory in ("src", "tests")
@@ -219,13 +222,13 @@ def main() -> None:
                 artifact.name: (ROOT / artifact.path).read_bytes() for artifact in task.artifacts
             }
             _private_methods(task, envelope, task.checkpoints[0], inputs=inputs)
-        if family == "lpt":
+        if family in {"lpt", "encoder"}:
             inputs = {item.name: (ROOT / item.path).read_bytes() for item in task.artifacts}
             for checkpoint in task.checkpoints:
                 expected = _private_methods(task, envelope, checkpoint)[method.id]
                 payload = task.candidate_payload(checkpoint.id, inputs, seed=0)
                 if not _replay_measurement(expected, method, payload, checkpoint.artifacts):
-                    raise ValueError("inconsistent LPT episode reference")
+                    raise ValueError(f"inconsistent {task.task.id} episode reference")
         key_raw = envelope.model_dump_json().encode()
         answer = AnswerLocation(id=secrets.token_hex(16), sha256=digest(key_raw))
         keys[answer.id] = key_raw

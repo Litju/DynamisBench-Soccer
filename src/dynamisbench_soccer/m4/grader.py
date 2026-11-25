@@ -16,7 +16,7 @@ from dynamisbench_soccer.engines.gnss_lps_acquisition import (
 )
 from dynamisbench_soccer.engines.lps_speed import horizontal_speed, position_error_radius
 from dynamisbench_soccer.m4 import measurement
-from dynamisbench_soccer.m4.admission import LPT_TASK, ReviewedSlice, evaluate
+from dynamisbench_soccer.m4.admission import ENCODER_TASK, LPT_TASK, ReviewedSlice, evaluate
 from dynamisbench_soccer.m4.contracts import _unique_object
 from dynamisbench_soccer.m4.custody import AnswerEnvelope, load_private
 from dynamisbench_soccer.m4.task_registry import (
@@ -268,7 +268,7 @@ def _replay_lps(
 def _measurement_binding(task: RegistryTask, review: ReviewedSlice) -> bool:
     grader = (
         "development-diagnostic.v1"
-        if (task.task.id, task.task.revision) == LPT_TASK
+        if (task.task.id, task.task.revision) in (LPT_TASK, ENCODER_TASK)
         else measurement.GRADER
     )
     if not (
@@ -505,11 +505,17 @@ def score_checkpoint(
         in (
             "fixed-session-change",
             measurement.CELL_OPERATION,
+            measurement.ENCODER_OPERATION,
             measurement.LPT_OPERATION,
             *measurement.IMU_OPERATIONS,
         )
         else 0,
         unordered_operands=candidate.method
-        in (measurement.CELL_OPERATION, measurement.LPT_OPERATION, *measurement.IMU_OPERATIONS),
+        in (
+            measurement.CELL_OPERATION,
+            measurement.ENCODER_OPERATION,
+            measurement.LPT_OPERATION,
+            *measurement.IMU_OPERATIONS,
+        ),
     )
     return Outcome(outcome="FAIL" if findings else "PASS", findings=findings)
