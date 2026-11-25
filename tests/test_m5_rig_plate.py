@@ -244,3 +244,17 @@ def test_declared_single_pair_bounds_do_not_supply_statistics():
         bland_altman([[815, 800]], missing="raise")
     with pytest.raises(ValueError, match="at least two"):
         paired_reliability([[815, 800]], single_measure_icc=0.5, missing="raise")
+
+
+def test_private_campaign_naive_dispatch_executes_in_linux_runner():
+    from dynamisbench_soccer.m4.grader import MeasurementSubmission
+    from dynamisbench_soccer.m4.runner import execute_payload
+
+    task = load_registry(ROOT / "benchmark/tasks")[TASK, 1]
+    inputs = {item.name: (ROOT / item.path).read_bytes() for item in task.artifacts}
+    source = (ROOT / "scripts/m5_controls/naive.py").read_bytes()
+    execution = execute_payload(task.candidate_payload("c01", inputs, 704), source)
+    assert execution.outcome == "graded" and execution.workspace_removed
+    answer = MeasurementSubmission.model_validate_json(execution.stdout)
+    assert answer.method == RIG_OPERATION
+    assert answer.quantity is not None and answer.quantity.value == -675

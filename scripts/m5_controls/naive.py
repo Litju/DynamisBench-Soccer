@@ -105,7 +105,7 @@ match kind:
             "peak_external_knee_torque_above_baseline",
         )
         citations = ["DEV-006"]
-    case "rig-plate":
+    case "load_cell_isometric.isometric_rig":
         value = max(source["rig"]["samples"]) - max(source["plate"]["samples"])
         method, unit, dimension, estimand = (
             "paired-net-peak-difference",
