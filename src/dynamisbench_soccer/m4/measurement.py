@@ -12,7 +12,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 from dynamisbench_soccer.agreement.paired_speed import PairedInput, compare
 from dynamisbench_soccer.data.manifest import DataCategory
-from dynamisbench_soccer.engines import imu, lpt, lpt_acquisition
+from dynamisbench_soccer.engines import force_platform_acquisition, imu, lpt, lpt_acquisition
 from dynamisbench_soccer.engines.contact import ContactPolicy, contact
 from dynamisbench_soccer.engines.event_time import Estimate, EventRefusal
 from dynamisbench_soccer.engines.gnss_lps import ProcessingOptions, process
@@ -25,7 +25,14 @@ from dynamisbench_soccer.engines.load_cell import process as process_load_cell
 from dynamisbench_soccer.engines.load_cell_acquisition import CellSpec, acquire, check_saturation
 from dynamisbench_soccer.engines.position_clock_bounds import input_error_radii
 from dynamisbench_soccer.engines.timing_gates import GatePolicy, sprint
-from dynamisbench_soccer.m4.admission import CELL_TASK, ENCODER_TASK, IMU_TASK, LPT_TASK, Kind
+from dynamisbench_soccer.m4.admission import (
+    CELL_TASK,
+    ENCODER_TASK,
+    IMU_TASK,
+    LPT_TASK,
+    RIG_TASK,
+    Kind,
+)
 from dynamisbench_soccer.m4.key_store import digest
 from dynamisbench_soccer.m4.task_registry import Method, RegistryTask
 from dynamisbench_soccer.qc.spec import Status
@@ -33,6 +40,7 @@ from dynamisbench_soccer.signals.schema import (
     BundleMeta,
     Calibration,
     DeviceClass,
+    FloatArray,
     Quantity,
     Side,
     SignalBundle,
@@ -48,6 +56,11 @@ IMU_SIGNATURE = "specific-force-signature-flight"
 IMU_OPERATIONS = (IMU_POSITION, IMU_SIGNATURE)
 ENCODER_OPERATION = "modular-attachment-change"
 LPT_OPERATION = "fixed-angle-attachment-speed"
+RIG_OPERATION = "paired-net-peak-difference"
+RIG_SPECIFICATION = {
+    "operation": "signed_difference_of_separately_baseline_corrected_peaks",
+    "diagnostic": "individual_unfiltered_100ms_RFD",
+}
 CELL_OPERATION = "unfiltered-net-peak-torque"
 CELL_SPECIFICATION = {
     "operation": "unfiltered_net_peak_force_times_perpendicular_moment_arm",
@@ -150,6 +163,19 @@ PROCEDURES = {
         "m/s",
         ("DEV-001",),
         ("engines/lpt_acquisition.py::acquire", "m4/measurement.py::_lpt"),
+    ),
+    RIG_OPERATION: Procedure(
+        "load_cell_isometric.isometric_rig",
+        "rig_plate_pair",
+        "rig_minus_plate_net_peak_force",
+        "force",
+        "N",
+        ("DEV-006",),
+        (
+            "engines/load_cell_acquisition.py::acquire",
+            "engines/force_platform_acquisition.py::acquire",
+            "m4/measurement.py::_rig_pair",
+        ),
     ),
     CELL_OPERATION: Procedure(
         "load_cell_isometric.load_cell",
@@ -992,6 +1018,183 @@ def _encoder(data: dict[str, object]) -> Reading:
     )
 
 
+class RigPairSetup(BaseModel):
+    model_config = ConfigDict(extra="forbid", allow_inf_nan=False)
+    baseline_samples: int = Field(ge=2)
+    onset_threshold_n: float = Field(gt=0)
+    window_samples: Literal[100]
+    load_transfer: str
+    net_peak_error_n: tuple[float, float]
+    peak_difference_limit_n: float = Field(gt=0)
+
+
+def _rig_bundle(data: object, device: DeviceClass) -> SignalBundle:
+    if not isinstance(data, dict):
+        raise ValueError("expected an instrument record")
+    meta = BundleMeta.model_validate(data["meta"])
+    samples = data["samples"]
+    acquisition, sampling = meta.acquisition, meta.sampling
+    if (
+        meta.data_category is not DataCategory.SYNTHETIC
+        or meta.device.device_class is not device
+        or acquisition is None
+        or sampling is None
+        or len(acquisition.sources) != 1
+        or len(meta.channels) != 1
+        or meta.channels[0].name != "force"
+        or meta.channels[0].quantity is not Quantity.FORCE
+        or meta.channels[0].plate != (1 if device is DeviceClass.FORCE_PLATE else None)
+        or not isinstance(samples, list)
+        or any(type(value) not in (int, float) for value in samples)
+    ):
+        raise ValueError("expected direct synthetic single-channel newton acquisition")
+    (source,) = acquisition.sources
+    if (
+        source.device.device_class is not device
+        or source.geometry != meta.geometry
+        or source.raw_format != "Prescribed native synthetic array on the uniform shared counter"
+        or source.calibration
+        != [
+            Calibration(
+                date="2000-01-01",
+                method="Prescribed direct synthetic force, no electrical correction",
+            )
+        ]
+        or meta.calibration
+    ):
+        raise ValueError("unexpected synthetic arm source or calibration")
+    sha = digest((json.dumps(samples, separators=(",", ":"), allow_nan=False) + "\n").encode())
+    if source.source_sha256 != sha or meta.provenance.source_sha256 != sha:
+        raise ValueError("paired force arm disagrees with its source SHA-256")
+    return SignalBundle(meta, {"force": np.asarray(samples, dtype=np.float64)})
+
+
+def _rig_clock(meta: BundleMeta) -> tuple[str, str] | None:
+    acquisition, sampling = meta.acquisition, meta.sampling
+    assert acquisition is not None and sampling is not None
+    if (
+        len(acquisition.clocks) != 1
+        or sampling.nominal_hz != 1000
+        or sampling.measured_hz != 1000
+        or sampling.irregular
+    ):
+        return None
+    (clock,) = acquisition.clocks
+    if (
+        clock.source != "host"
+        or clock.epoch.strip().lower() in {"", "unknown", "unrecorded", "not recorded"}
+        or clock.drift_ppm not in (0, None)
+    ):
+        return None
+    return clock.id, clock.epoch
+
+
+def _rig_vertical(bundle: SignalBundle) -> bool:
+    meta = bundle.meta
+    assert meta.acquisition is not None
+    return (
+        meta.channels[0].axis == "z"
+        and meta.channels[0].frame == "field"
+        and len(meta.acquisition.frames) == 1
+        and meta.acquisition.frames[0].id == "field"
+        and meta.acquisition.frames[0].kind == "field"
+        and meta.acquisition.frames[0].parent is None
+        and meta.acquisition.frames[0].definition == "Laboratory vertical field frame, +z up"
+    )
+
+
+def _rig_window(net: FloatArray, setup: RigPairSetup) -> tuple[float, float] | None:
+    first = setup.baseline_samples - 1
+    crossing = np.flatnonzero(net[first:] > setup.onset_threshold_n)
+    if not len(crossing) or crossing[0] == 0:
+        return None
+    onset = first + int(crossing[0]) - 1
+    end = onset + setup.window_samples
+    if end >= len(net):
+        return None
+    return float(net.max()), float(net[end] - net[onset]) / 0.1
+
+
+def _rig_pair(data: dict[str, object]) -> Reading:
+    setup = RigPairSetup.model_validate(data["setup"])
+    rig = _rig_bundle(data["rig"], DeviceClass.ISOMETRIC_DYNAMOMETER)
+    plate = _rig_bundle(data["plate"], DeviceClass.FORCE_PLATE)
+    left, right = rig.meta, plate.meta
+    clock = _rig_clock(left)
+    if (
+        clock is None
+        or clock != _rig_clock(right)
+        or left.session != right.session
+        or left.subject != right.subject
+        or left.sampling != right.sampling
+        or left.n_rows != right.n_rows
+        or left.test_id != right.test_id
+        or left.protocol != right.protocol
+    ):
+        return Reading("not_eligible", ("pair_timing_or_identity_unresolved",))
+    if (
+        setup.load_transfer != "coaxial_quasistatic"
+        or not _rig_vertical(rig)
+        or not _rig_vertical(plate)
+        or left.geometry.attachment_point != "Vertical bar line of action"
+        or left.geometry.rig_compliance_m_per_n != 0
+        or right.geometry.plate_layout != "single"
+        or left.test_id != "imtp"
+        or left.protocol.protocol_id != "res704.fixed-imtp.v1"
+    ):
+        return Reading("unsupported_claim", ("estimand_mismatch",))
+    if setup.baseline_samples >= left.n_rows or min(setup.net_peak_error_n) < 0:
+        raise ValueError("invalid baseline length or unsigned net peak bounds")
+
+    native_rig = acquire(rig)
+    t0 = float(native_rig.timing.time_s[0])
+    native_plate = force_platform_acquisition.acquire(
+        plate,
+        (
+            force_platform_acquisition.PlateSpec(
+                plate=1, zero_window_s=(t0, t0 + setup.baseline_samples / 1000)
+            ),
+        ),
+    )
+    if (
+        not np.array_equal(native_rig.timing.time_s, native_plate.time_s)
+        or not native_rig.timing.uniform
+        or native_plate.resampled
+    ):
+        return Reading("not_eligible", ("pair_timing_or_identity_unresolved",))
+    rig_force = native_rig.force_n
+    rig_metrics = _rig_window(rig_force - rig_force[: setup.baseline_samples].mean(), setup)
+    plate_metrics = _rig_window(native_plate.vertical_force_n, setup)
+    if rig_metrics is None or plate_metrics is None:
+        return Reading("not_eligible", ("unresolved_pair_rfd_window",))
+    rig_peak, rig_rfd = rig_metrics
+    plate_peak, plate_rfd = plate_metrics
+    difference = rig_peak - plate_peak
+    classification = (
+        "inside_declared_peak_tolerance"
+        if abs(difference) <= setup.peak_difference_limit_n
+        else "outside_declared_peak_tolerance"
+    )
+    return Reading(
+        "eligible",
+        (
+            "matched_net_vertical_force",
+            "analytical_single_pair",
+            classification,
+            "paired_variance_unavailable",
+            "hardware_interchangeability_unknown",
+        ),
+        difference,
+        sum(setup.net_peak_error_n),
+        (
+            ("rig_net_peak_n", round(rig_peak, 10)),
+            ("plate_net_peak_n", round(plate_peak, 10)),
+            ("rig_rfd_100ms_n_s", round(rig_rfd, 10)),
+            ("plate_rfd_100ms_n_s", round(plate_rfd, 10)),
+        ),
+    )
+
+
 def is_imu_episode(task: RegistryTask) -> bool:
     return (task.task.id, task.task.revision) == IMU_TASK
 
@@ -1008,6 +1211,8 @@ def checkpoint_methods(task: RegistryTask, checkpoint_id: str) -> tuple[Method, 
 
 
 def is_measurement_task(task: RegistryTask) -> bool:
+    if (task.task.id, task.task.revision) == RIG_TASK:
+        return task.engine == "m5-advanced-development.v1" and task.methods[0].id == RIG_OPERATION
     if (task.task.id, task.task.revision) == CELL_TASK:
         return task.engine == "m5-advanced-development.v1" and task.methods[0].id == CELL_OPERATION
     if (task.task.id, task.task.revision) == ENCODER_TASK:
@@ -1021,7 +1226,8 @@ def is_measurement_task(task: RegistryTask) -> bool:
             task.engine == ENGINE and tuple(method.id for method in task.methods) == IMU_OPERATIONS
         )
     return task.engine == ENGINE and all(
-        method.id not in (CELL_OPERATION, ENCODER_OPERATION, LPT_OPERATION, *IMU_OPERATIONS)
+        method.id
+        not in (CELL_OPERATION, ENCODER_OPERATION, LPT_OPERATION, RIG_OPERATION, *IMU_OPERATIONS)
         for method in task.methods
     )
 
@@ -1031,6 +1237,8 @@ def replay(operation: str, data: dict[str, object]) -> Reading:
         return _encoder(data)
     if operation == LPT_OPERATION:
         return _lpt(data)
+    if operation == RIG_OPERATION:
+        return _rig_pair(data)
     if operation == CELL_OPERATION:
         return _load_cell(data)
     if operation in IMU_OPERATIONS:

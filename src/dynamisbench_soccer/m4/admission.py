@@ -26,7 +26,14 @@ from dynamisbench_soccer.qualification import receipts
 
 Status = Literal["DEVELOPMENT_ONLY_NOT_QUALIFIED", "ENGINEERING_ADMITTED", "REFUSED"]
 # These roles describe evidence needed by this reference, not a subfamily gate.
-Kind = Literal["analytical", "native_signal", "protocol_assessment", "cross_device", "statistical"]
+Kind = Literal[
+    "analytical",
+    "native_signal",
+    "protocol_assessment",
+    "cross_device",
+    "statistical",
+    "rig_plate_pair",
+]
 COMPUTATION = frozenset({"D", "E", "F", "H", "I", "J", "M", "O"})
 NATIVE = COMPUTATION | {"A", "B", "C", "K"}
 REQUIRED: dict[Kind, frozenset[str]] = {
@@ -35,6 +42,7 @@ REQUIRED: dict[Kind, frozenset[str]] = {
     "native_signal": NATIVE,
     "protocol_assessment": NATIVE | {"G"},
     "cross_device": NATIVE | {"L"},
+    "rig_plate_pair": NATIVE | {"G", "L"},
 }
 DIMENSIONS = frozenset(receipts.DIMENSIONS_M3)
 PACKAGE = "dynamisbench_soccer"
@@ -47,8 +55,12 @@ LPT_TASK = ("lpt-vertical-attachment", 1)
 LPT_TASK_SHA256 = "739adc25c878f2ac703f77387327a75bd6a81e96255814c2bf5c5b8bfdf405ef"
 ENCODER_TASK = ("encoder-rollover-attachment", 1)
 ENCODER_TASK_SHA256 = "2c257b0f0d9c7e51694f2a1e8528380009e7a92963e546128e67fb349b24a1ce"
+RIG_TASK = ("rig-plate-net-peak-pair", 1)
+RIG_TASK_SHA256 = "b38b7a355d2ae0339fed655887fab9e6976fc1e68e8bad803dd1571f5d7b9fa5"
+RIG_ARMS = frozenset({"load_cell_isometric.isometric_rig", "force_platform.single"})
 NATIVE_TASK_RECEIPTS = "native_task_receipts"
 NATIVE_TASK_SCOPES = {
+    RIG_TASK: (RIG_TASK_SHA256, REQUIRED["rig_plate_pair"]),
     CELL_TASK: (CELL_TASK_SHA256, frozenset({"C", "E", "H", "I", "K"})),
     IMU_TASK: (IMU_TASK_SHA256, frozenset({"A", "C", "G", "H", "M"})),
     LPT_TASK: (LPT_TASK_SHA256, frozenset({"A", "B", "D", "E", "H", "K", "O"})),
@@ -244,8 +256,14 @@ def evaluate(
         if task.task.id == IMU_TASK[0] and identity != IMU_TASK:
             return decision("REFUSED", "IMU development revision is outside the scored scope")
         kind = "native_signal" if identity in (LPT_TASK, ENCODER_TASK) else "protocol_assessment"
+        rig_pair = identity == RIG_TASK
+        if (review.kind == "rig_plate_pair") != rig_pair:
+            return decision("REFUSED", "incompatible rig/plate paired reference kind")
+        if rig_pair:
+            kind = "rig_plate_pair"
         if scope is not None and (task_hash != scope[0] or review.kind != kind):
             device = {
+                RIG_TASK: "rig/plate",
                 CELL_TASK: "load-cell",
                 IMU_TASK: "IMU",
                 LPT_TASK: "LPT",
@@ -283,6 +301,7 @@ def evaluate(
                 or counts[identifier] != 1
                 or row.dimension != role
                 or review.source not in row.subfamilies
+                or (rig_pair and (len(row.subfamilies) != 2 or set(row.subfamilies) != RIG_ARMS))
                 or ((statistical or scoped) and identifier != f"RCP-{task.task.id}-{role}")
                 or (scoped and row.issue != "RES-704")
             ):
